@@ -29,7 +29,8 @@ osi_p_whc(
 \value{
 The function returns by default the amount of plant available water in the ploughing layer of the soil (in mm). A numeric value.
 If another type of output is selected, the function gives also the amount of water at 'wilting point' or 'field capacity' or 'water holding capacity'.
-Also the saturated permeability 'Ksat' can be selected. Units are always in mm, except for Water Holding Capacity (%) and Ksat.
+Also the saturated permeability 'Ksat' can be selected. 
+Soil water holding capacity is evaluated given a threshold value and expressed as a distance to target.
 }
 \description{
 This function calculates different kind of Water Retention Indices given the continuous pedotransferfunctions of Wosten et al. (2001)
