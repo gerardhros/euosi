@@ -65,7 +65,7 @@
   # switch to english categories
   osi_crops[crop_cat1=='akkerbouw', crop_cat1 := 'arable']
   osi_crops[crop_cat1=='mais', crop_cat1 := 'maize']
-  osi_crops[crop_cat1=='grassland', crop_cat1 := 'grassland']
+  osi_crops[crop_cat1=='grasland', crop_cat1 := 'grassland']
   osi_crops[crop_cat1=='natuur', crop_cat1 := 'nature']
 
   # add country
