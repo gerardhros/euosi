@@ -11,8 +11,8 @@
 #' @references \url{https://en.wikipedia.org/wiki/Generalised_logistic_function}
 #' 
 #' @examples 
-#' evaluate_logistic(x = 5, b = 2, x0 = 3, v = 2.6)
-#' evaluate_logistic(x = c(0.1,0.5,1.5,3.5), b = 2, x0 = 3, v = 2.6)
+#' osi_evaluate_logistic(x = 5, b = 2, x0 = 3, v = 2.6)
+#' osi_evaluate_logistic(x = c(0.1,0.5,1.5,3.5), b = 2, x0 = 3, v = 2.6)
 #' 
 #' @return 
 #' A transformed variable after applying a logistic evaluation function. A numeric value.
@@ -45,8 +45,8 @@ osi_evaluate_logistic <- function(x, b, x0, v, increasing = TRUE) {
 #' @param x.top (numeric) The value at which x reaches the plateau
 #' 
 #' @examples 
-#' evaluate_parabolic(x = 5, x.top = 8)
-#' evaluate_parabolic(x = c(0.1,0.5,1.5,3.5), x.top = 6.5)
+#' osi_evaluate_parabolic(x = 5, x.top = 8)
+#' osi_evaluate_parabolic(x = c(0.1,0.5,1.5,3.5), x.top = 6.5)
 #' 
 #' @return 
 #' A transformed variable after applying a parabolic evaluation function. A numeric value.
