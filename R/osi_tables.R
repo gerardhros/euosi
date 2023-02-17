@@ -22,6 +22,8 @@
 #'   \item{osi_parm_type}{the type of the parameter. Options: measurement, field property}
 #'   \item{osi_parm_description}{a short description of the parameters}
 #'   \item{osi_parm_unit}{the unit of the parameter}
+#'   \item{osi_parm_min}{the maximum allowed value for the parameter}
+#'   \item{osi_parm_max}{the minimum allowed value for the parameter}
 #'}
 "osi_parms"
 

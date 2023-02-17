@@ -1,12 +1,12 @@
-﻿osi_parm_id;osi_parm_name;osi_parm_type;osi_parm_description;osi_parm_unit
-1;A_CLAY_MI;measurement;clay content;%
-2;A_SAND_MI;measurement;sand content;%
-3;A_SILT_MI;measurement;silt content;%
-4;A_CACO3_MI;measurement;carbonate content;%
-5;A_SOM_LOI;measurement;soil organic matter;%
-6;A_C_OF;measurement;soil organic carbon;g/kg
-7;A_PH_CC;measurement;acidity (pH-CaCl2);-
-8;A_N_RT;measurement;total nitrogen;mg/kg
-9;A_CN_FR;measurement;carbon to nitrogen ratio;-
-10;B_SOILTYPE_AGR;field property;agronomic soil type class;-
-11;B_TEXTURE_USDA;field property;soil texture usda;-
+﻿osi_parm_id;osi_parm_name;osi_parm_type;osi_parm_description;osi_parm_unit;osi_parm_min;osi_parm_max
+1;A_CLAY_MI;measurement;clay content;%;0;100
+2;A_SAND_MI;measurement;sand content;%;0;100
+3;A_SILT_MI;measurement;silt content;%;0;100
+4;A_CACO3_MI;measurement;carbonate content;%;0;25
+5;A_SOM_LOI;measurement;soil organic matter;%;0;75
+6;A_C_OF;measurement;soil organic carbon;g/kg;0;750
+7;A_PH_CC;measurement;acidity (pH-CaCl2);-;2;9
+8;A_N_RT;measurement;total nitrogen;mg/kg;100;50000
+9;A_CN_FR;measurement;carbon to nitrogen ratio;-;4;40
+10;B_SOILTYPE_AGR;field property;agronomic soil type class;-;;
+11;B_TEXTURE_USDA;field property;soil texture usda;-;;
