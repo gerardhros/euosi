@@ -38,7 +38,7 @@
 #'   \item{osi_soil_cat1}{soil category 1, might be in the language of the country}
 #'   \item{osi_soil_cat2}{soil category 2, in english}
 #'}
-"osi_parms"
+"osi_soiltype"
 
 #' Table with country specific threshold values to evaluate soilquality'
 #'  

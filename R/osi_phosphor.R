@@ -12,7 +12,7 @@
 #' 
 #' @examples 
 #' osi_c_posphor(B_LU = 265, A_P_AL = 45, A_P_CC = 2.5,B_COUNTRY='NL')
-#' osi_c_posphor(B_LU = c(265,1019),A_P_AL = c(35,54),A_P_CC = c(2.5,4.5), A_P_WA = c(35,65))
+#' osi_c_posphor(B_LU = 1019,A_P_AL = 54,A_P_CC = 4.5, A_P_WA = 65,B_COUNTRY ='NL')
 #' 
 #' @return 
 #' The phosphate availability index in the Netherlands estimated from extractable soil P fractions. A numeric value.
@@ -90,7 +90,7 @@ osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA 
   checkmate::assert_numeric(A_P_CC, lower = 0.1, upper = 100, any.missing = TRUE, len = arg.length)
   checkmate::assert_numeric(A_P_WA, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
   checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(osi_crops$crop_code), empty.ok = FALSE)
+  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   
   # check that there is only 1 scoring function for P
   checkmate::assert_data_table(dt.thresholds,max.rows = 1)
@@ -104,7 +104,7 @@ osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA 
                    value = NA_real_
                   )
   
-  dt <- merge(dt,osi_crops,by.x = 'B_LU', by.y = 'crop_code',all.x=TRUE)
+  dt <- merge(dt,dt.crops,by.x = 'B_LU', by.y = 'crop_code',all.x=TRUE)
   
   # set the order to the original inputs
   setorder(dt, id)
