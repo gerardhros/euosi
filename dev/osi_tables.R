@@ -4,7 +4,7 @@
   require(data.table)
   require(usethis)
   
-    # make table for all countries (https://datahub.io/core/country-list#r)
+# make table for all countries (https://datahub.io/core/country-list#r)
   
     # get information where to find the location where csv data is stored
     # library("jsonlite")
@@ -29,4 +29,16 @@
   
   # save updated crop table
   usethis::use_data(osi_countries,overwrite = TRUE)
-          
+
+# make a table for all soil properties being used for calculating the OSI
+  
+  # loaddata
+  osi_parms <- fread('dev/osi_parameters.csv',encoding = 'UTF-8')
+
+  # save updated crop table
+  usethis::use_data(osi_parms,overwrite = TRUE)
+  
+  
+  
+    
+  
