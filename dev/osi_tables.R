@@ -38,7 +38,21 @@
   # save updated crop table
   usethis::use_data(osi_parms,overwrite = TRUE)
   
+# make a table for all soil types available, being country dependent
   
+  # loaddata
+  osi_soiltype <- fread('dev/osi_soiltype.csv',encoding = 'UTF-8')
+  
+  # save updated crop table
+  usethis::use_data(osi_soiltype,overwrite = TRUE)
+  
+# make a table for all soil indicator evaluation functions, being country and soil function dependent
+  
+  # loaddata
+  osi_thresholds <- fread('dev/osi_thresholds.csv',encoding = 'UTF-8')
+  
+  # save updated crop table
+  usethis::use_data(osi_thresholds,overwrite = TRUE)
   
     
   
