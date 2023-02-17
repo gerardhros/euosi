@@ -38,7 +38,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                       ID = 1, output = 'all') {
   
   # add visual bindings
-  i_c_p = i_p_whc = NULL
+  i_c_p = i_p_whc = i_p_dens = i_p_wef = NULL
   
   # define variables used within the function
   
@@ -66,10 +66,15 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
   # merge relevant properties from package tables
   
   
-  # calculate all soil quality indicators
+  # calculate all soil chemical indicators
   dt[,i_c_p := osi_c_posphor(B_LU = B_LU, A_P_AL = A_P_AL, A_P_CC = A_P_CC, A_P_WA = A_P_WA, B_COUNTRY)]
+  
+  # calculate all soil physical indicators
   dt[,i_p_whc := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SILT_MI = A_SILT_MI,A_SOM_LOI = A_SOM_LOI)]
-
+  dt[,i_p_dens := osi_p_density(A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI)]
+  dt[,i_p_wef := osi_p_wef(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI)]
+  
+  
   # aggregate indicators before scoring
   
     # aggregate per year per indicator
