@@ -27,7 +27,7 @@
   # make copy for package table
   osi_countries <- copy(d1)
   
-  # save updated crop table
+  # save updated country table
   usethis::use_data(osi_countries,overwrite = TRUE)
 
 # make a table for all soil properties being used for calculating the OSI
@@ -35,7 +35,7 @@
   # loaddata
   osi_parms <- fread('dev/osi_parameters.csv',encoding = 'UTF-8')
 
-  # save updated crop table
+  # save updated osi parameter table
   usethis::use_data(osi_parms,overwrite = TRUE)
   
 # make a table for all soil types available, being country dependent
@@ -51,8 +51,25 @@
   # loaddata
   osi_thresholds <- fread('dev/osi_thresholds.csv',encoding = 'UTF-8')
   
-  # save updated crop table
+  # save updated threshold table
   usethis::use_data(osi_thresholds,overwrite = TRUE)
+
+# make crop table
+  
+  # load (for the moment a copy of OBIC crop list)
+  osi_crops <- OBIC::crops.obic
+
+  # select only selected categories
+  osi_crops <- osi_crops[,.(crop_code,crop_name,crop_cat1 = crop_category)]
+  
+  # switch to english categories
+  osi_crops[crop_cat1=='akkerbouw', crop_cat1 := 'arable']
+  osi_crops[crop_cat1=='mais', crop_cat1 := 'maize']
+  osi_crops[crop_cat1=='grassland', crop_cat1 := 'grassland']
+  osi_crops[crop_cat1=='natuur', crop_cat1 := 'nature']
+
+  # save updated crop table
+  usethis::use_data(osi_crops,overwrite = TRUE)
   
     
   

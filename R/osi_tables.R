@@ -60,5 +60,15 @@
 #'}
 "osi_thresholds"
 
-
-											
+#' Linking table between crops and different functions in OBIC
+#' 
+#' This table helps to link the different crops in the OBIC functions with the crops selected by the user
+#' 
+#' @format A data.frame with 465 rows and 3 columns:
+#' \describe{
+#'   \item{crop_code}{The BRP gewascode of the crop}
+#'   \item{crop_name}{The name of the crop, in lower case}
+#'   \item{crop_cat1}{Classification of crop per land use type (arable, maize, grass, nature)}
+#'   \item{osi_country}{the country name where the crop codes are applicable}
+#' }
+"osi_crops"
