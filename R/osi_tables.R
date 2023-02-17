@@ -13,7 +13,7 @@
 
 #' Table with OSI parameters being used in the package
 #' 
-#' This table contains all parameters being used in the OSI package to calculate the soil quality idnex.
+#' This table contains all parameters being used in the OSI package to calculate the soil quality index.
 #' 
 #' @format A data.table with x rows and x columns:
 #' \describe{
@@ -25,3 +25,15 @@
 #'}
 "osi_parms"
 
+#' Table with country specific soil types being used to evaluate soil quality
+#' 
+#' This table contains categories of soil types being used to evaluate soil quality. Categories vary per country.
+#' 
+#' @format A data.table with 9 rows and 4 columns:
+#' \describe{
+#'   \item{osi_soil_id}{the soil category id}
+#'   \item{osi_country}{the name of the country where the soil category is used}
+#'   \item{osi_soil_cat1}{soil category 1, might be in the language of the country}
+#'   \item{osi_soil_cat2}{soil category 2, in english}
+#'}
+"osi_parms"
