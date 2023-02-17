@@ -68,6 +68,9 @@
   osi_crops[crop_cat1=='grassland', crop_cat1 := 'grassland']
   osi_crops[crop_cat1=='natuur', crop_cat1 := 'nature']
 
+  # add country
+  osi_crops[,osi_country :='NL']
+  
   # save updated crop table
   usethis::use_data(osi_crops,overwrite = TRUE)
   
