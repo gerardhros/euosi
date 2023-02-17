@@ -1,5 +1,5 @@
 library(data.table)
 library(testthat)
-library(OBIC)
+library(euosi)
 
-test_check("OBIC")
+test_check("euosi")

@@ -11,7 +11,7 @@
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor(B_LU = 265, A_P_AL = 45, A_P_CC = 2.5)
+#' osi_c_posphor(B_LU = 265, A_P_AL = 45, A_P_CC = 2.5,B_COUNTRY='NL')
 #' osi_c_posphor(B_LU = c(265,1019),A_P_AL = c(35,54),A_P_CC = c(2.5,4.5), A_P_WA = c(35,65))
 #' 
 #' @return 
@@ -19,6 +19,9 @@
 #' 
 #' @export
 osi_c_posphor <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY) {
+  
+  # add visual bindings
+  i_c_p = NULL
   
   # note that qualitative checks on the inputs are done by the country specific functions
   
@@ -69,6 +72,7 @@ osi_c_posphor <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = N
 osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_) {
   
   # set visual bindings
+  i_c_p = osi_country = osi_indicator = id = crop_cat1 = NULL
   
   # Load in the crops data set and the parms dataset
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -82,9 +86,9 @@ osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA 
   arg.length <- max(length(B_LU),length(A_P_AL),length(A_P_CC),length(A_P_WA))
   
   # check the values (update the limits later via dt.parms)
-  checkmate::assert_numeric(A_P_AL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length.grass)
-  checkmate::assert_numeric(A_P_CC, lower = 0.1, upper = 100, any.missing = TRUE, len = arg.length.grass)
-  checkmate::assert_numeric(A_P_WA, lower = 1, upper = 250, any.missing = TRUE, len = arg.length.arable)
+  checkmate::assert_numeric(A_P_AL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
+  checkmate::assert_numeric(A_P_CC, lower = 0.1, upper = 100, any.missing = TRUE, len = arg.length)
+  checkmate::assert_numeric(A_P_WA, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
   checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(osi_crops$crop_code), empty.ok = FALSE)
   
