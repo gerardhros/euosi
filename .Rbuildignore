@@ -1,0 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^doc$
+^docs$
+^Meta$
+^dev$
+^DEV$
+^\.github$
+^codecov\.yml$
