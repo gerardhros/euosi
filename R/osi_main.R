@@ -37,6 +37,9 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                       A_P_AL, A_P_CC, A_P_WA,
                       ID = 1, output = 'all') {
   
+  # add visual bindings
+  i_c_p = i_p_whc = NULL
+  
   # define variables used within the function
   
   # combine input into one data.table
@@ -65,7 +68,8 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
   
   # calculate all soil quality indicators
   dt[,i_c_p := osi_c_posphor(B_LU = B_LU, A_P_AL = A_P_AL, A_P_CC = A_P_CC, A_P_WA = A_P_WA, B_COUNTRY)]
-  
+  dt[,i_p_whc := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SILT_MI = A_SILT_MI,A_SOM_LOI = A_SOM_LOI)]
+
   # aggregate indicators before scoring
   
     # aggregate per year per indicator
@@ -85,12 +89,12 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
   #  Step 6 Combine all outputs into one ------------------
   
   # combine both outputs
-  if(output == 'all'){out <- data.table(out.ind,out.score[, -"ID"],out.recom[, -"ID"])}
-  if(output == 'indicators'){out <- out.ind}
-  if(output == 'recommendations'){out <- out.recom}
-  if(output == 'scores'){out <- out.score}
-  if(output == 'obic_score'){out <- out.score[,'S_T_OBI_A']}
-  if(output == 'unaggregated'){out <- dt.melt}
+  if(output == 'all'){out <- NULL}
+  if(output == 'indicators'){out <- NULL}
+  if(output == 'recommendations'){out <- NULL}
+  if(output == 'scores'){out <- NULL}
+  if(output == 'obic_score'){out <- NULL}
+  if(output == 'unaggregated'){out <- NULL}
   
   
   # return output

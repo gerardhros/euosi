@@ -16,7 +16,8 @@ Depends:
     R (>= 3.5.0)
 Imports: 
     checkmate,
-    data.table
+    data.table,
+    OBIC
 License: 
     GPL-3 + file LICENSE
 Encoding: UTF-8
