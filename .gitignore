@@ -37,3 +37,14 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# documetnation
+doc
+Meta
+inst/doc
+
+# files in development folder
+dev/*.tif
+dev/*.gpkg
+dev/*brp19.Rdata
+dev/brp*.rds
