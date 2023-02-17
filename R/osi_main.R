@@ -67,8 +67,13 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
   
   
   # calculate all soil chemical indicators
-  dt[,i_c_p := osi_c_posphor(B_LU = B_LU, A_P_AL = A_P_AL, A_P_CC = A_P_CC, A_P_WA = A_P_WA, B_COUNTRY)]
-  
+  dt[,i_c_p := osi_c_posphor(B_LU = B_LU, A_P_AL = A_P_AL, A_P_CC = A_P_CC, 
+                             A_P_WA = A_P_WA, B_COUNTRY)]
+  # dt[,i_c_k := osi_c_potassium_nl(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+  #                                 A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI,
+  #                                 A_PH_CC = A_PH_CC, A_CEC_CO = A_CEC_CO, 
+  #                                 A_K_CO_PO = A_K_CO_PO, A_K_CC = A_K_CC)]
+  # 
   # calculate all soil physical indicators
   dt[,i_p_whc := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SILT_MI = A_SILT_MI,A_SOM_LOI = A_SOM_LOI)]
   dt[,i_p_dens := osi_p_density(A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI)]
