@@ -38,7 +38,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                       ID = 1, output = 'all') {
   
   # add visual bindings
-  i_c_p = i_p_whc = i_p_dens = i_p_wef = NULL
+  i_c_p = i_p_whc = i_p_dens = i_p_wef = i_p_paw = i_p_ksat = NULL
   
   # define variables used within the function
   
@@ -75,7 +75,9 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
   #                                 A_K_CO_PO = A_K_CO_PO, A_K_CC = A_K_CC)]
   # 
   # calculate all soil physical indicators
-  dt[,i_p_whc := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SILT_MI = A_SILT_MI,A_SOM_LOI = A_SOM_LOI)]
+  dt[,i_p_whc := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SILT_MI = A_SILT_MI,A_SOM_LOI = A_SOM_LOI,type = 'whc')]
+  dt[,i_p_paw := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SILT_MI = A_SILT_MI,A_SOM_LOI = A_SOM_LOI,type = 'paw')]
+  dt[,i_p_ksat := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SILT_MI = A_SILT_MI,A_SOM_LOI = A_SOM_LOI,type = 'ksat')]
   dt[,i_p_dens := osi_p_density(A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI)]
   dt[,i_p_wef := osi_p_wef(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI)]
   

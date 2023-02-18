@@ -15,10 +15,10 @@
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium(B_LU_BRP = 265, B_SOILTYPE_AGR = 'dekzand',
+#' osi_c_potassium(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',
 #' A_SOM_LOI = 4, A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
 #' A_K_CO_PO = 8.5, A_K_CC = 145, B_COUNTRY = 'NL')
-#' osi_c_potassium(265, 'dekzand',4, 11,5.4,  125,8.5, 145)
+#' osi_c_potassium(265, 'dekzand',4, 11,5.4,  125,8.5, 145,'NL')
 #' osi_c_potassium(c(265,1019), rep('dekzand',2),c(4,6), c(11,14),
 #' c(5.4,5.6),  c(125,145),c(8.5,3.5), c(145,180),c('NL','NL'))
 #' 
@@ -29,6 +29,8 @@
 osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC, 
                                A_CEC_CO, A_K_CO_PO, A_K_CC,B_COUNTRY) {
   
+  # add visual bindings
+  i_c_k = NULL
   
   # desired length of inputs
   arg.length <- max(length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO), length(A_K_CO_PO), 
@@ -96,12 +98,18 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   # add visual bindings
   id = crop_category = soiltype.n = crop_code = soiltype = NULL
   b = cF = kindex1 = kindex2 = A_PH_KCL = A_K_CO = NULL
+  osi_country = osi_indicator = crop_cat1 = osi_soil_cat1 = osi_soil_cat2 = value = NULL
+  osi_threshold_cropcat = osi_threshold_soilcat = i_c_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'NL']
   dt.soils <- as.data.table(euosi::osi_soiltype)
   dt.soils <- dt.soils[osi_country == 'NL']
+  
+  # Load in the thresholds
+  dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  dt.thresholds <- dt.thresholds[osi_country == 'NL' & osi_indicator == 'i_c_k']
   
   # Check inputs
   arg.length <- max(length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO), length(A_K_CO_PO), 
@@ -117,6 +125,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   checkmate::assert_numeric(A_K_CC, lower = 0, upper = 800, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_K_CO_PO, lower = 0.1, upper = 50, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_CEC_CO, lower = 1, upper = 1000, any.missing = FALSE, len = arg.length)
+  checkmate::assert_data_table(dt.thresholds,max.rows = 6, min.rows = 6)
   
   # Collect the data
   dt <- data.table(id = 1:arg.length,
@@ -136,7 +145,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
               by.x = "B_LU", by.y = "crop_code", all.x = TRUE)
   dt <- merge(dt, dt.soils[, list(osi_soil_cat1, osi_soil_cat2)], 
               by.x = "B_SOILTYPE_AGR", by.y = "osi_soil_cat1",all.x = TRUE)
-  
+
   # Calculate the K availability for grassland (CBGV, 2019)
   dt.grass <- dt[crop_cat1 == 'grassland']
   
@@ -199,13 +208,35 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   dt.nature[,value := 0]
   
   # score the K index given threshold for agronomic production / product quality
-  dt.grass[, i_c_k := osi_evaluate_logistic(value, b = 8, x0 = 2.5, v = 8)]
-  dt.maize[, i_c_k := osi_evaluate_logistic(value, b = 8, x0 = 2.5, v = 8)]
-  dt.arable[grepl('zand|dal|veen',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = 0.3, x0 = 9, v = 1.1)]
-  dt.arable[grepl('klei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10, i_c_k := osi_evaluate_logistic(value, b = 0.5, x0 = 11.5, v = 1.1)]
-  dt.arable[grepl('klei',B_SOILTYPE_AGR) & A_SOM_LOI > 10, i_c_k := osi_evaluate_logistic(D_K, b = 0.4, x0 = 11.5, v = 1.1)]
-  dt.arable[grepl('loess',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(D_K, b = 0.5, x0 = 11.5, v = 1.1)]
-  dt.nature[, i_c_k := 1]
+  
+    # subset
+    dths <- dt.thresholds[osi_threshold_cropcat == 'grassland']
+  
+    # evaluate grassland
+    dt.grass[, i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+  
+    # subset and evaluate for maize
+    dths <- dt.thresholds[osi_threshold_cropcat == 'maize']
+    dt.grass[, i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+    
+    # subset and evaluate for arable sandy soils
+    dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'sand']
+    dt.arable[grepl('zand|dal',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+  
+    # subset and evaluate for arable peat soils
+    dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'peat']
+    dt.arable[grepl('peat',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+    
+    # subset and evaluate for arable clay soils
+    dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'clay']
+    dt.arable[grepl('klei',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+    
+    # subset and evaluate for arable loess soils
+    dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'loess']
+    dt.arable[grepl('loess',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+    
+    # evaluate nature soils
+    dt.nature[, i_c_k := 1]
   
   # Combine both tables and extract values
   dt <- rbindlist(list(dt.arable,dt.grass, dt.maize,dt.nature), fill = TRUE)
