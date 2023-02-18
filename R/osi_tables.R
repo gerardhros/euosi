@@ -24,6 +24,9 @@
 #'   \item{osi_parm_unit}{the unit of the parameter}
 #'   \item{osi_parm_min}{the maximum allowed value for the parameter}
 #'   \item{osi_parm_max}{the minimum allowed value for the parameter}
+#'   \item{osi_parm_data_type}{the data type of the parameter: numeric, character or boolean}
+#'   \item{osi_parm_enum}{does the parameter have predefined options}
+#'   \item{osi_parm_options}{allowed options for the parameteer}
 #'}
 "osi_parms"
 
