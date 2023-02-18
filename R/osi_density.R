@@ -18,13 +18,19 @@
 #' @export
 osi_p_density <- function(A_SOM_LOI, A_CLAY_MI) {
   
-  # set visual bidnings
+  # set visual bindings
   dens.sand = dens.clay = cf = density = crit1 = NULL
+  osi_indicator = osi_country = NULL
+  
+  # Load in the thresholds
+  dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  dt.thresholds <- dt.thresholds[osi_country == 'EU' & osi_indicator == 'i_p_dens']
   
   # Check input
   arg.length <- max(length(A_SOM_LOI), length(A_CLAY_MI))
   checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  checkmate::assert_data_table(dt.thresholds,max.rows = 1)
   
   # Collect data into a table
   dt <- data.table(A_SOM_LOI = A_SOM_LOI,
@@ -46,7 +52,11 @@ osi_p_density <- function(A_SOM_LOI, A_CLAY_MI) {
   dt[,crit1 := pmin(1.6,1.75 - 0.009 * A_CLAY_MI)*1000]
   
   # calculate the open soil index socre
-  dt[,value := osi_evaluate_logistic(x = density, b = 0.010, x0 = crit1, v = 1.5, increasing = FALSE)]
+  dt[,value := osi_evaluate_logistic(x = density, 
+                                     b = dt.thresholds$osi_st_c1, 
+                                     x0 = crit1, 
+                                     v = dt.thresholds$osi_st_c3, 
+                                     increasing = FALSE)]
 
   # return value
   value <- dt[, value]

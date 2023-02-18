@@ -48,7 +48,7 @@
   
 # make a table for all soil indicator evaluation functions, being country and soil function dependent
   
-  # loaddata
+  # load data
   osi_thresholds <- fread('dev/osi_thresholds.csv',encoding = 'UTF-8',dec=',')
   
   # save updated threshold table

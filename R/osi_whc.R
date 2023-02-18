@@ -1,13 +1,13 @@
 #' Calculate indicators for water holding capacity in  the topsoil
 #'
 #' This function calculates different kind of Water Retention Indices given the continuous pedotransferfunctions of Wosten et al. (2001)
-#' These include : 'wilting point','field capacity','water holding capacity','plant available water' and 'Ksat'
+#' These include : 'water holding capacity','plant available water' and 'Ksat'
 #' 
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_SILT_MI (numeric) The silt content of the soil (\%)
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
-#' @param type (character) The type of water retention index. Options include c('wilting point','field capacity','water holding capacity','plant available water','Ksat')
+#' @param type (character) The type of water retention index. Options include c('water holding capacity', 'whc','plant available water','paw','Ksat' or 'ksat')
 #' @param ptf (character) Pedotransfer functions to calculate van Genuchten parameters. Options include c('Wosten1999', 'Wosten2001', 'Klasse')
 #'
 #' @references Wosten et al. (2001) Pedotransfer functions: bridging the gap between available basic soil data and missing hydraulic characteristics. Journal of Hydrology 251, p123.
@@ -22,16 +22,20 @@
 #' type = 'water holding capacity')
 #' 
 #' @return 
-#' The function returns by default the amount of plant available water in the ploughing layer of the soil (in mm). A numeric value.
-#' If another type of output is selected, the function gives also the amount of water at 'wilting point' or 'field capacity' or 'water holding capacity'.
-#' Also the saturated permeability 'Ksat' can be selected. 
-#' Soil water holding capacity is evaluated given a threshold value and expressed as a distance to target.
+#' The function returns by default the water holding capacity ('whc') of the top soil (in mm). A numeric value.
+#' Other outputs include 'plant available water' (or 'paw') or 'ksat' being the saturated permeability.
+#' Soil functions are evaluated given a threshold value and expressed as a distance to target.
 #' 
 #' @export
-osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_SOM_LOI,type = 'water holding capacity', ptf = 'Wosten1999') {
+osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_SOM_LOI,type = 'whc', ptf = 'Wosten1999') {
   
   # Add visual bindings
   id = thetaS = thetaR = alfa = n = fc = wp = whc = paw = ksat = density = Pleem = mineral = NULL
+  osi_country = osi_indicator = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
+  
+  # Load in the thresholds
+  dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  dt.thresholds <- dt.thresholds[osi_country == 'EU' & osi_indicator %in%  c('i_p_whc','i_p_paw','i_p_ksat')]
   
   # Check inputs
   arg.length <- max(length(A_CLAY_MI), length(A_SAND_MI),length(A_SILT_MI), length(A_SOM_LOI))
@@ -40,9 +44,10 @@ osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_SOM_LOI,type = 'water hold
   checkmate::assert_numeric(A_SILT_MI, lower = 0, upper = 100, any.missing = FALSE)
   checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE)
   checkmate::assert_character(type, any.missing = FALSE, min.len = 1, len = 1)
-  checkmate::assert_subset(type, choices = c('wilting point','field capacity','water holding capacity','plant available water','Ksat'), empty.ok = FALSE)
+  checkmate::assert_subset(type, choices = c('water holding capacity','plant available water','Ksat','whc','paw','ksat'), empty.ok = FALSE)
   checkmate::assert_character(ptf, any.missing = FALSE, min.len = 1, len = 1)
   checkmate::assert_subset(ptf, choices = c('Wosten1999', 'Wosten2001', 'Klasse'), empty.ok = FALSE)
+  checkmate::assert_data_table(dt.thresholds,max.rows = 3, min.rows = 3)
   
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
@@ -93,13 +98,30 @@ osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_SOM_LOI,type = 'water hold
   dt[,fc := fc * p.depth * 1000]
   
   # select Water Retention index, and convert to a soil quality index
-  # NOTE: UPDATE WITH thresholds from osi_thresholds
+
+    # subset and evaluate for water holding capcity
+    if(type %in% c('water holding capacity','whc')){
+      
+      dths <- dt.thresholds[osi_indicator == 'i_p_whc']
+      dt[, value := osi_evaluate_logistic(whc, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+      
+    }
   
-  if(type=='wilting point'){dt[,value := osi_evaluate_logistic(wp, b = 0.05, x0 = 10, v = .1)]}
-  if(type=='field capacity'){dt[,value := osi_evaluate_logistic(fc, b = 0.05, x0 = 10, v = .1)]}
-  if(type=='water holding capacity'){dt[,value := osi_evaluate_logistic(whc, b = 10, x0 = 0.2, v = 0.3)]}
-  if(type=='plant available water'){dt[,value := osi_evaluate_logistic(paw, b = 0.072, x0 = 45, v = 1.2)]}
-  if(type=='Ksat'){dt[,value := osi_evaluate_logistic(ksat, b = 0.2, x0 = 6, v = 0.3)]}
+    # subset and evaluate for plant available water
+    if(type %in% c('plant available water','paw')){
+      
+      dths <- dt.thresholds[osi_indicator == 'i_p_paw']
+      dt[, value := osi_evaluate_logistic(paw, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+      
+    }
+  
+    # subset and evaluate for plant available water
+    if(type %in% c('Ksat','ksat')){
+      
+      dths <- dt.thresholds[osi_indicator == 'i_p_ksat']
+      dt[, value := osi_evaluate_logistic(ksat, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+      
+    }
   
   # return selected Water Retention index
   value <- dt[, value]

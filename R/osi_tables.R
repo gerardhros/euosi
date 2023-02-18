@@ -56,8 +56,8 @@
 #'   \item{osi_category}{the soil quality category: chemical, biological, physical, other}
 #'   \item{osi_indicator}{the osi indicator for which the threshold applies}
 #'   \item{osi_indicator_name}{the osi indicator name}
-#'   \item{osi_indicator_app}{the osi category for which specific thresholds apply. if empy, then the threshold is generally applicable}
-#'   \item{osi_indicator_app_class}{the sub category for which the thresholds apply, being a subset of osi_indicator_app}
+#'   \item{osi_threshold_cropcat}{the osi crop category for which specific thresholds apply. if empy, then the threshold is generally applicable}
+#'   \item{osi_threshold_soilcat}{the osi soil category for which specific thresholds apply. if empy, then the threshold is generally applicable}
 #'   \item{osi_scoringtype}{the soil evaluation function to score the soil function. Options: parabolic, logistic, linear}
 #'   \item{osi_st_c1}{the first coefficient of the scoring function selected}
 #'   \item{osi_st_c2}{the second coefficient of the scoring function selected}

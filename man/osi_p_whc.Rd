@@ -9,7 +9,7 @@ osi_p_whc(
   A_SAND_MI,
   A_SILT_MI,
   A_SOM_LOI,
-  type = "water holding capacity",
+  type = "whc",
   ptf = "Wosten1999"
 )
 }
@@ -22,19 +22,18 @@ osi_p_whc(
 
 \item{A_SOM_LOI}{(numeric) The organic matter content of the soil (\%)}
 
-\item{type}{(character) The type of water retention index. Options include c('wilting point','field capacity','water holding capacity','plant available water','Ksat')}
+\item{type}{(character) The type of water retention index. Options include c('water holding capacity', 'whc','plant available water','paw','Ksat' or 'ksat')}
 
 \item{ptf}{(character) Pedotransfer functions to calculate van Genuchten parameters. Options include c('Wosten1999', 'Wosten2001', 'Klasse')}
 }
 \value{
-The function returns by default the amount of plant available water in the ploughing layer of the soil (in mm). A numeric value.
-If another type of output is selected, the function gives also the amount of water at 'wilting point' or 'field capacity' or 'water holding capacity'.
-Also the saturated permeability 'Ksat' can be selected. 
-Soil water holding capacity is evaluated given a threshold value and expressed as a distance to target.
+The function returns by default the water holding capacity ('whc') of the top soil (in mm). A numeric value.
+Other outputs include 'plant available water' (or 'paw') or 'ksat' being the saturated permeability.
+Soil functions are evaluated given a threshold value and expressed as a distance to target.
 }
 \description{
 This function calculates different kind of Water Retention Indices given the continuous pedotransferfunctions of Wosten et al. (2001)
-These include : 'wilting point','field capacity','water holding capacity','plant available water' and 'Ksat'
+These include : 'water holding capacity','plant available water' and 'Ksat'
 }
 \examples{
 osi_p_whc(A_CLAY_MI = 20.5,A_SAND_MI = 65,A_SILT_MI = 14.5,A_SOM_LOI = 3.5)

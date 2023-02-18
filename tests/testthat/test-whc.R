@@ -103,45 +103,5 @@ test_that("osi_p_whc works", {
     tolerance = 1
   )
   
-  # wilting point
-  expect_equal(
-    osi_p_whc(
-      A_CLAY_MI = rep(10,7), 
-      A_SILT_MI = seq(5,90,length.out = 7),
-      A_SAND_MI = 100 - 10 - seq(5,90,length.out = 7),
-      A_SOM_LOI = rep(6,7),
-      type = 'wilting point',
-      ptf = 'Wosten1999'
-    ),
-    expected = c(0.014,0.0876,0.137,0.1596,0.165,0.1599,0.149),
-    tolerance = 1
-  )
-  
-  expect_equal(
-    osi_p_whc(
-      A_CLAY_MI = rep(25,7), 
-      A_SILT_MI = rep(5,7),
-      A_SAND_MI = rep(70,7),
-      A_SOM_LOI = seq(1,40,length.out = 7),
-      type = 'wilting point',
-      ptf = 'Wosten1999'
-    ),
-    expected = c(0.014,0.255,0.552,0.675,0.6694,0.515,0.166),
-    tolerance = 1
-  )
-  
-  # field capacity
-  expect_equal(
-    osi_p_whc(
-      A_CLAY_MI = rep(25,7), 
-      A_SILT_MI = rep(5,7),
-      A_SAND_MI = rep(70,7),
-      A_SOM_LOI = seq(1,40,length.out = 7),
-      type = 'field capacity',
-      ptf = 'Wosten1999'
-    ),
-    expected = c(0.755,0.943,0.969,0.979,0.9856,0.991,0.995),
-    tolerance = 1
-  )
-  
 })
+
