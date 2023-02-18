@@ -15,3 +15,4 @@ EU;agronomy;physical;i_p_whc;water holding capacity;;;logistic;10;0,2;0,3
 EU;agronomy;physical;i_p_paw;plant available water;;;logistic;0,072;45;1,2
 EU;agronomy;physical;i_p_ksat;saturated permeability;;;logistic;0,2;6;0,3
 EU;agronomy;physical;i_p_wef;wind erodobility;;;linear;;;
+NL;agronomy;biological;i_b_pmn;potentially mineralizable nitrogen;;;logistic;0,2;20;1,2

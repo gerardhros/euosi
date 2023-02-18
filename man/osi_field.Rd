@@ -15,6 +15,7 @@ osi_field(
   A_PH_CC,
   A_N_RT,
   A_CN_FR,
+  A_N_PMN,
   A_P_AL,
   A_P_CC,
   A_P_WA,
@@ -42,6 +43,8 @@ osi_field(
 \item{A_N_RT}{(numeric) The organic nitrogen content of the soil in mg N / kg}
 
 \item{A_CN_FR}{(numeric) The carbon to nitrogen ratio (-)}
+
+\item{A_N_PMN}{(numeric) The potentially mineralizable N pool (mg N / kg soil)}
 
 \item{A_P_AL}{(numeric) The P-AL content of the soil}
 

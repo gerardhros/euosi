@@ -13,9 +13,11 @@
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
 #' @param A_CN_FR (numeric) The carbon to nitrogen ratio (-)
+#' @param A_N_PMN (numeric) The potentially mineralizable N pool (mg N / kg soil) 
 #' @param A_P_AL (numeric) The P-AL content of the soil
 #' @param A_P_CC (numeric) The plant available P content, extracted with 0.01M CaCl2 (mg / kg)
 #' @param A_P_WA (numeric) The P-content of the soil extracted with water (mg P2O5 / 100 ml soil)
+#' @param B_COUNTRY (character) The country code
 #' @param output (character) An optional argument to select output: obic_score, scores, indicators, recommendations, or all. (default = all)
 #' 
 #' @details 
@@ -33,12 +35,12 @@
 #' @export
 osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                       A_SOM_LOI, A_SAND_MI, A_SILT_MI, A_CLAY_MI,A_PH_CC,
-                      A_N_RT,A_CN_FR,
+                      A_N_RT,A_CN_FR, A_N_PMN,
                       A_P_AL, A_P_CC, A_P_WA,
                       ID = 1, output = 'all') {
   
   # add visual bindings
-  i_c_p = i_p_whc = i_p_dens = i_p_wef = i_p_paw = i_p_ksat = NULL
+  i_c_p = i_p_whc = i_p_dens = i_p_wef = i_p_paw = i_p_ksat = i_b_pmn = NULL
   
   # define variables used within the function
   
@@ -81,6 +83,8 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
   dt[,i_p_dens := osi_p_density(A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI)]
   dt[,i_p_wef := osi_p_wef(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI)]
   
+  # calculate all soil biological indicators
+  dt[,i_b_pmn := osi_b_pmn(B_LU = B_LU,B_SOILTYPE_AGR = B_SOILTYPE_AGR,A_N_PMN = A_N_PMN,B_COUNTRY = B_COUNTRY)]
   
   # aggregate indicators before scoring
   
