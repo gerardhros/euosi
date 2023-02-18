@@ -26,13 +26,14 @@ osi_b_pmn <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN, B_COUNTRY) {
   # note that qualitative checks on the inputs are done by the country specific functions
   
   # Check length of desired input
-  arg.length <- max(length(A_N_PMN), length(B_LU), length(B_SOILTYPE_AGR))
+  arg.length <- max(length(A_N_PMN), length(B_LU), length(B_SOILTYPE_AGR),length(B_COUNTRY))
   
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
                    A_N_PMN = A_N_PMN,
                    B_LU = B_LU,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                   B_COUNTRY = B_COUNTRY,
                    value = NA_real_
                   )
   
