@@ -1,0 +1,34 @@
+---
+title: "Description of tables"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document shows the references of the data presented in the tables 
+
+## CROP CODES 
+
+
+## Netherlands:
+
+
+
+## Belgium (Flanders): 
+
+https://lv.vlaanderen.be/subsidies/verzamelaanvraag-en-bedrijfssubsidies/verzamelaanvraag-2015/tabellen
+
+Downloaded: Tabel teeltcodes - combinaties VLM BO (April 2023);
+Data extracted: Omschrijving hoofdteelt / Object, Teeltcode, Groep
+
+## France:
+
+https://www.data.gouv.fr/fr/datasets/codes-cultures-pac/ 
+
+Downloaded: n-cultures-2022.ods (April 2023);
+Data extracted: code_culture, nom_culture
+
