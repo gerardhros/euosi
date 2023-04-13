@@ -2,10 +2,12 @@
 #' 
 #' This function calculates the phosphate availability for all European countries (if available). 
 #' 
-#' @param B_LU (numeric) The crop code
+#' @param B_LU (character) The crop code
 #' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate
 #' @param A_P_CC (numeric) The P-content of the soil extracted with CaCl2
 #' @param A_P_WA (numeric) The P-content of the soil extracted with water
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
+#' @param B_SOILTYPE_AGR (character) The agricultural type of soil
 #' @param B_COUNTRY (character) The country code
 #' 
 #' @import data.table
@@ -131,3 +133,56 @@ osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA 
   
 }
 
+osi_c_posphor_fr <- function(B_LU, B_SOILTYPE_AGR, A_P_OL = NA_real_) {
+  
+  # set visual bindings
+  i_c_p = osi_country = osi_indicator = id = crop_cat1 = NULL
+  
+  # Load in the crops data set and the parms dataset
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.parms <- as.data.table(euosi::osi_parms)
+  dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  dt.soiltype <- as.data.table(eusoi::osi_soiltype)
+  
+  # subset crops dataset to French situation 
+  dt.crops <- dt.crops[dt.crops$crop_code==B_LU,]
+  
+  # subset thresholds to French situation for phosphorus
+  dt.thresholds <- dt.thresholds[dt.thresholds$osi_country=='FR' & dt.thresholds$osi_indicator=='i_c_p' & 
+                                   dt.thresholds$osi_threshold_cropcat==dt.crops$crop_phosphate &
+                                   dt.thresholds$osi_threshold_soilcat==B_SOILTYPE_AGR,] 
+  
+  # Check length of desired input
+  arg.length <- max(length(B_LU),length(A_P_OL),length(B_SOILTYPE_AGR))
+  
+  # check the values (update the limits later via dt.parms)
+  checkmate::assert_numeric(A_P_OL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
+  checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(dt.soiltype$soil_cat1), empty.ok = FALSE)
+  
+  # check that there are only 1 scoring function for P
+  checkmate::assert_data_table(dt.thresholds,max.rows = 1)
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   A_P_OL = A_P_OL,
+                   B_LU = B_LU,
+                   B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                   value = A_P_OL)
+  
+  dt <- merge(dt,dt.crops,by.x = 'B_LU', by.y = 'crop_code',all.x=TRUE)
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # convert to the OSI score
+  dt[,i_c_p := osi_evaluate_logistic(x = value, b= dt.thresholds$osi_st_c1,x0 = dt.thresholds$osi_st_c2,v = dt.thresholds$osi_st_c3)]
+  
+  # return value
+  value <- dt[, i_c_p]
+  
+  return(value)
+  
+}
