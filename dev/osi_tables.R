@@ -58,7 +58,7 @@
   
   # load (for the moment a copy of OBIC crop list)
   osi_crops <- OBIC::crops.obic
-
+  
   # select only selected categories
   osi_crops <- osi_crops[,.(crop_code,crop_name,crop_cat1 = crop_category)]
   
@@ -73,6 +73,14 @@
   
   # save updated crop table
   usethis::use_data(osi_crops,overwrite = TRUE)
+  
+  write.csv(osi_crops,'osi_crops.csv')
+  
+  
+  # Update csv file with crop data from France
+  osi_crops<-read.csv('osi_crops.csv')
+  usethis::use_data(osi_crops,overwrite = TRUE)
+  
   
     
   
