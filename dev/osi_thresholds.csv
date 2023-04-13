@@ -1,18 +1,279 @@
-ï»¿osi_country;osi_esd;osi_category;osi_indicator;osi_indicator_name;osi_threshold_cropcat;osi_threshold_soilcat;osi_scoringtype;osi_st_c1;osi_st_c2;osi_st_c3
-NL;agronomy;chemical;i_c_n;soil nitrogen supply;arable;;parabolic;100;;
-NL;agronomy;chemical;i_c_n;soil nitrogen supply;grassland;;parabolic;140;;
-NL;agronomy;chemical;i_c_p;soil phosphorus buffering;;;logistic;1,3;1,3;0,35
-NL;agronomy;chemical;i_c_k;soil potassium supply;maize;;logistic;8;2,5;8
-NL;agronomy;chemical;i_c_k;soil potassium supply;grassland;;logistic;8;2,5;8
-NL;agronomy;chemical;i_c_k;soil potassium supply;arable;sand;logistic;0,3;9;1,1
-NL;agronomy;chemical;i_c_k;soil potassium supply;arable;clay;logistic;0,5;11,5;1,1
-NL;agronomy;chemical;i_c_k;soil potassium supply;arable;loess;logistic;0,5;11,5;1,1
-NL;agronomy;chemical;i_c_k;soil potassium supply;arable;peat;logistic;0,3;9;1,1
-NL;agronomy;chemical;i_c_s;soil sulpher supply;arable;;logistic;0,5;-4;3
-NL;agronomy;chemical;i_c_s;soil sulpher supply;grassland;;logistic;0,29;15;1,7
-EU;agronomy;physical;i_p_dens;rootability for rooting zone;;;logistic;0,01;;1,5
-EU;agronomy;physical;i_p_whc;water holding capacity;;;logistic;10;0,2;0,3
-EU;agronomy;physical;i_p_paw;plant available water;;;logistic;0,072;45;1,2
-EU;agronomy;physical;i_p_ksat;saturated permeability;;;logistic;0,2;6;0,3
-EU;agronomy;physical;i_p_wef;wind erodobility;;;linear;;;
-NL;agronomy;biological;i_b_pmn;potentially mineralizable nitrogen;;;logistic;0,2;20;1,2
+,osi_country,osi_esd,osi_category,osi_indicator,osi_indicator_name,osi_threshold_cropcat,osi_threshold_soilcat,osi_scoringtype,osi_st_c1,osi_st_c2,osi_st_c3
+1,NL,agronomy,chemical,i_c_n,soil nitrogen supply,arable,,parabolic,100,NA,NA
+2,NL,agronomy,chemical,i_c_n,soil nitrogen supply,grassland,,parabolic,140,NA,NA
+3,NL,agronomy,chemical,i_c_p,soil phosphorus buffering,,,logistic,1.3,1.3,0.35
+4,NL,agronomy,chemical,i_c_k,soil potassium supply,maize,,logistic,8,2.5,8
+5,NL,agronomy,chemical,i_c_k,soil potassium supply,grassland,,logistic,8,2.5,8
+6,NL,agronomy,chemical,i_c_k,soil potassium supply,arable,sand,logistic,0.3,9,1.1
+7,NL,agronomy,chemical,i_c_k,soil potassium supply,arable,clay,logistic,0.5,11.5,1.1
+8,NL,agronomy,chemical,i_c_k,soil potassium supply,arable,loess,logistic,0.5,11.5,1.1
+9,NL,agronomy,chemical,i_c_k,soil potassium supply,arable,peat,logistic,0.3,9,1.1
+10,NL,agronomy,chemical,i_c_s,soil sulpher supply,arable,,logistic,0.5,-4,3
+11,NL,agronomy,chemical,i_c_s,soil sulpher supply,grassland,,logistic,0.29,15,1.7
+12,EU,agronomy,physical,i_p_dens,rootability for rooting zone,,,logistic,0.01,NA,1.5
+13,EU,agronomy,physical,i_p_whc,water holding capacity,,,logistic,10,0.2,0.3
+14,EU,agronomy,physical,i_p_paw,plant available water,,,logistic,0.072,45,1.2
+15,EU,agronomy,physical,i_p_ksat,saturated permeability,,,logistic,0.2,6,0.3
+16,EU,agronomy,physical,i_p_wef,wind erodobility,,,linear,NA,NA,NA
+17,NL,agronomy,biological,i_b_pmn,potentially mineralizable nitrogen,,,logistic,0.2,20,1.2
+18,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Nord-Picardie; Limons battants,logistic,0.08,23.81,1.00
+19,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Nord-Picardie; Limons battants,logistic,0.07,23.81,1.00
+20,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Nord-Picardie; Limons battants,logistic,0.07,10.72,1.00
+21,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Nord-Picardie; Limons argileux,logistic,0.08,23.81,1.00
+22,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Nord-Picardie; Limons argileux,logistic,0.07,23.81,1.00
+23,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Nord-Picardie; Limons argileux,logistic,0.07,10.72,1.00
+24,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Nord-Picardie; Argiles,logistic,0.08,23.81,1.00
+25,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Nord-Picardie; Argiles,logistic,0.07,23.81,1.00
+26,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Nord-Picardie; Argiles,logistic,0.07,10.72,1.00
+27,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Nord-Picardie; Cranettes,logistic,0.03,65.27,1.00
+28,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Nord-Picardie; Cranettes,logistic,0.04,58.72,1.00
+29,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Nord-Picardie; Cranettes,logistic,0.04,28.18,1.00
+30,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Champagne Ardenne; Craie,logistic,0.03,65.27,1.00
+31,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Champagne Ardenne; Craie,logistic,0.04,58.72,1.00
+32,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Champagne Ardenne; Craie,logistic,0.04,28.18,1.00
+33,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Champagne Ardenne; Limons ,logistic,0.08,23.81,1.00
+34,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Champagne Ardenne; Limons ,logistic,0.07,23.81,1.00
+35,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Champagne Ardenne; Limons ,logistic,0.07,10.72,1.00
+36,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Champagne Ardenne; Limons argileux,logistic,0.08,23.81,1.00
+37,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Champagne Ardenne; Limons argileux,logistic,0.07,23.81,1.00
+38,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Champagne Ardenne; Limons argileux,logistic,0.07,10.72,1.00
+39,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Champagne Ardenne; Argilo-calcaire,logistic,0.08,28.18,1.00
+40,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Champagne Ardenne; Argilo-calcaire,logistic,0.06,28.18,1.00
+41,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Champagne Ardenne; Argilo-calcaire,logistic,0.06,15.09,1.00
+42,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Champagne Ardenne; Argilo-calcaire prof,logistic,0.08,28.18,1.00
+43,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Champagne Ardenne; Argilo-calcaire prof,logistic,0.06,28.18,1.00
+44,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Champagne Ardenne; Argilo-calcaire prof,logistic,0.06,15.09,1.00
+45,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Champagne Ardenne; Sable,logistic,0.08,23.81,1.00
+46,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Champagne Ardenne; Sable,logistic,0.07,23.81,1.00
+47,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Champagne Ardenne; Sable,logistic,0.07,10.72,1.00
+48,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,"Lorraine; Argilo-calcaires profonds (Barrois, Haye), argiles calcaires du plateau lorrain",logistic,0.08,28.18,1.00
+49,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,"Lorraine; Argilo-calcaires profonds (Barrois, Haye), argiles calcaires du plateau lorrain",logistic,0.06,28.18,1.00
+50,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,"Lorraine; Argilo-calcaires profonds (Barrois, Haye), argiles calcaires du plateau lorrain",logistic,0.06,15.09,1.00
+51,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Lorraine; Argilo-calcaire superficiels (prof <= 40 cm),logistic,0.08,28.18,1.00
+52,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Lorraine; Argilo-calcaire superficiels (prof <= 40 cm),logistic,0.06,28.18,1.00
+53,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Lorraine; Argilo-calcaire superficiels (prof <= 40 cm),logistic,0.06,15.09,1.00
+54,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Lorraine; Limons,logistic,0.08,23.81,1.00
+55,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Lorraine; Limons,logistic,0.07,23.81,1.00
+56,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Lorraine; Limons,logistic,0.07,10.72,1.00
+57,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Lorraine; Limons argileux,logistic,0.08,23.81,1.00
+58,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Lorraine; Limons argileux,logistic,0.07,23.81,1.00
+59,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Lorraine; Limons argileux,logistic,0.07,10.72,1.00
+60,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Lorraine; Argiles lourdes,logistic,0.08,23.81,1.00
+61,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Lorraine; Argiles lourdes,logistic,0.07,23.81,1.00
+62,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Lorraine; Argiles lourdes,logistic,0.07,10.72,1.00
+63,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Alsace; Limons loess,logistic,0.08,23.81,1.00
+64,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Alsace; Limons loess,logistic,0.07,23.81,1.00
+65,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Alsace; Limons loess,logistic,0.07,10.72,1.00
+66,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Alsace; Alluvions de l'Ill,logistic,0.08,23.81,1.00
+67,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Alsace; Alluvions de l'Ill,logistic,0.07,23.81,1.00
+68,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Alsace; Alluvions de l'Ill,logistic,0.07,10.72,1.00
+69,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Alsace; Limons lehm,logistic,0.08,23.81,1.00
+70,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Alsace; Limons lehm,logistic,0.07,23.81,1.00
+71,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Alsace; Limons lehm,logistic,0.07,10.72,1.00
+72,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,"Alsace; Hardt superficielle, Ried brun caillouteux",logistic,0.08,28.18,1.00
+73,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,"Alsace; Hardt superficielle, Ried brun caillouteux",logistic,0.06,28.18,1.00
+74,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,"Alsace; Hardt superficielle, Ried brun caillouteux",logistic,0.06,15.09,1.00
+75,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,"Alsace; Hardt profonde, Ried brun profond, basse plain sous-vosgienne",logistic,0.08,28.18,1.00
+76,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,"Alsace; Hardt profonde, Ried brun profond, basse plain sous-vosgienne",logistic,0.06,28.18,1.00
+77,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,"Alsace; Hardt profonde, Ried brun profond, basse plain sous-vosgienne",logistic,0.06,15.09,1.00
+78,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,"Alsace; Argilo-calcaires caillouteux Alsace bossue, basse plaine sous-vosgienne",logistic,0.08,28.18,1.00
+79,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,"Alsace; Argilo-calcaires caillouteux Alsace bossue, basse plaine sous-vosgienne",logistic,0.06,28.18,1.00
+80,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,"Alsace; Argilo-calcaires caillouteux Alsace bossue, basse plaine sous-vosgienne",logistic,0.06,15.09,1.00
+81,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,"Alsace; Argilo-calcaires caillouteux Alsace bossue, basse plain sous-vosgienne",logistic,0.08,28.18,1.00
+82,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,"Alsace; Argilo-calcaires caillouteux Alsace bossue, basse plain sous-vosgienne",logistic,0.06,28.18,1.00
+83,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,"Alsace; Argilo-calcaires caillouteux Alsace bossue, basse plain sous-vosgienne",logistic,0.06,15.09,1.00
+84,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Franche Comté; Limons (A%<20%),logistic,0.08,23.81,1.00
+85,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Franche Comté; Limons (A%<20%),logistic,0.07,23.81,1.00
+86,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Franche Comté; Limons (A%<20%),logistic,0.07,10.72,1.00
+87,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Franche Comté; Limons argileux,logistic,0.08,23.81,1.00
+88,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Franche Comté; Limons argileux,logistic,0.07,23.81,1.00
+89,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Franche Comté; Limons argileux,logistic,0.07,10.72,1.00
+90,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Franche Comté; Limons arg. Superf. De plateaux,logistic,0.08,23.81,1.00
+91,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Franche Comté; Limons arg. Superf. De plateaux,logistic,0.07,23.81,1.00
+92,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Franche Comté; Limons arg. Superf. De plateaux,logistic,0.07,10.72,1.00
+93,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Franche Comté; sols argileux de vallees,logistic,0.08,23.81,1.00
+94,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Franche Comté; sols argileux de vallees,logistic,0.07,23.81,1.00
+95,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Franche Comté; sols argileux de vallees,logistic,0.07,10.72,1.00
+96,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,"Franche Comté; sols argileux , calcaires, de vallees",logistic,0.08,28.18,1.00
+97,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,"Franche Comté; sols argileux , calcaires, de vallees",logistic,0.06,28.18,1.00
+98,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,"Franche Comté; sols argileux , calcaires, de vallees",logistic,0.06,15.09,1.00
+99,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Franche Comté; Limons hydromorphes,logistic,0.08,23.81,1.00
+100,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Franche Comté; Limons hydromorphes,logistic,0.07,23.81,1.00
+101,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Franche Comté; Limons hydromorphes,logistic,0.07,10.72,1.00
+102,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Franche Comté; argiles hydromorphes,logistic,0.08,23.81,1.00
+103,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Franche Comté; argiles hydromorphes,logistic,0.07,23.81,1.00
+104,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Franche Comté; argiles hydromorphes,logistic,0.07,10.72,1.00
+105,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Bourgogne; Argilo-calcaires,logistic,0.08,28.18,1.00
+106,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Bourgogne; Argilo-calcaires,logistic,0.06,28.18,1.00
+107,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Bourgogne; Argilo-calcaires,logistic,0.06,15.09,1.00
+108,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Bourgogne; Argilo-calcaires,logistic,0.08,28.18,1.00
+109,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Bourgogne; Argilo-calcaires,logistic,0.06,28.18,1.00
+110,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Bourgogne; Argilo-calcaires,logistic,0.06,15.09,1.00
+111,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Bourgogne; limons,logistic,0.08,23.81,1.00
+112,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Bourgogne; limons,logistic,0.07,23.81,1.00
+113,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Bourgogne; limons,logistic,0.07,10.72,1.00
+114,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Bourgogne; limons,logistic,0.08,23.81,1.00
+115,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Bourgogne; limons,logistic,0.07,23.81,1.00
+116,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Bourgogne; limons,logistic,0.07,10.72,1.00
+117,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Bourgogne; sols,logistic,0.08,23.81,1.00
+118,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Bourgogne; sols,logistic,0.07,23.81,1.00
+119,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Bourgogne; sols,logistic,0.07,10.72,1.00
+120,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Bourgogne; alluvions,logistic,0.08,23.81,1.00
+121,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Bourgogne; alluvions,logistic,0.07,23.81,1.00
+122,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Bourgogne; alluvions,logistic,0.07,10.72,1.00
+123,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Limousin; Argilo-calcaires superficiels caillouteux,logistic,0.08,28.18,1.00
+124,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Limousin; Argilo-calcaires superficiels caillouteux,logistic,0.06,28.18,1.00
+125,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Limousin; Argilo-calcaires superficiels caillouteux,logistic,0.06,15.09,1.00
+126,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Limousin; Argilo-calcaires profonds peu caillouteux,logistic,0.08,28.18,1.00
+127,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Limousin; Argilo-calcaires profonds peu caillouteux,logistic,0.06,28.18,1.00
+128,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Limousin; Argilo-calcaires profonds peu caillouteux,logistic,0.06,15.09,1.00
+129,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Limousin; limon argileux,logistic,0.08,23.81,1.00
+130,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Limousin; limon argileux,logistic,0.07,23.81,1.00
+131,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Limousin; limon argileux,logistic,0.07,10.72,1.00
+132,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Limousin; limon battant,logistic,0.08,23.81,1.00
+133,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Limousin; limon battant,logistic,0.07,23.81,1.00
+134,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Limousin; limon battant,logistic,0.07,10.72,1.00
+135,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Limousin; sables,logistic,0.08,23.81,1.00
+136,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Limousin; sables,logistic,0.07,23.81,1.00
+137,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Limousin; sables,logistic,0.07,10.72,1.00
+138,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Limousin; limon sableux,logistic,0.08,23.81,1.00
+139,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Limousin; limon sableux,logistic,0.07,23.81,1.00
+140,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Limousin; limon sableux,logistic,0.07,10.72,1.00
+141,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Limousin; limons sur argile à silex,logistic,0.08,23.81,1.00
+142,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Limousin; limons sur argile à silex,logistic,0.07,23.81,1.00
+143,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Limousin; limons sur argile à silex,logistic,0.07,10.72,1.00
+144,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Limousin; Argile lourde,logistic,0.08,23.81,1.00
+145,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Limousin; Argile lourde,logistic,0.07,23.81,1.00
+146,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Limousin; Argile lourde,logistic,0.07,10.72,1.00
+147,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Bassin parisien; limons battants,logistic,0.08,23.81,1.00
+148,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Bassin parisien; limons battants,logistic,0.07,23.81,1.00
+149,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Bassin parisien; limons battants,logistic,0.07,10.72,1.00
+150,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Bassin parisien; limons de Beauce,logistic,0.08,23.81,1.00
+151,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Bassin parisien; limons de Beauce,logistic,0.07,23.81,1.00
+152,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Bassin parisien; limons de Beauce,logistic,0.07,10.72,1.00
+153,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Bassin parisien; sables,logistic,0.08,23.81,1.00
+154,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Bassin parisien; sables,logistic,0.07,23.81,1.00
+155,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Bassin parisien; sables,logistic,0.07,10.72,1.00
+156,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Bassin parisien; limons sableux,logistic,0.08,23.81,1.00
+157,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Bassin parisien; limons sableux,logistic,0.07,23.81,1.00
+158,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Bassin parisien; limons sableux,logistic,0.07,10.72,1.00
+159,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Bassin parisien; Argile-calcaires superficiels caillouteux,logistic,0.08,28.18,1.00
+160,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Bassin parisien; Argile-calcaires superficiels caillouteux,logistic,0.06,28.18,1.00
+161,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Bassin parisien; Argile-calcaires superficiels caillouteux,logistic,0.06,15.09,1.00
+162,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Bassin parisien; Argilo-calcaires profonds peu caillouteux,logistic,0.08,28.18,1.00
+163,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Bassin parisien; Argilo-calcaires profonds peu caillouteux,logistic,0.06,28.18,1.00
+164,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Bassin parisien; Argilo-calcaires profonds peu caillouteux,logistic,0.06,15.09,1.00
+165,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Centre Bassin parisien; Argilo-calcaires de Beauce,logistic,0.08,28.18,1.00
+166,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Centre Bassin parisien; Argilo-calcaires de Beauce,logistic,0.06,28.18,1.00
+167,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Centre Bassin parisien; Argilo-calcaires de Beauce,logistic,0.06,15.09,1.00
+168,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Haute Normandie; limons des plateaux,logistic,0.08,23.81,1.00
+169,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Haute Normandie; limons des plateaux,logistic,0.07,23.81,1.00
+170,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Haute Normandie; limons des plateaux,logistic,0.07,10.72,1.00
+171,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Haute Normandie; limons caillouteux sur argile à silex,logistic,0.08,23.81,1.00
+172,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Haute Normandie; limons caillouteux sur argile à silex,logistic,0.07,23.81,1.00
+173,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Haute Normandie; limons caillouteux sur argile à silex,logistic,0.07,10.72,1.00
+174,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Haute Normandie; argilo-calcaires superficiels sur craie,logistic,0.07,28.18,1.00
+175,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Haute Normandie; argilo-calcaires superficiels sur craie,logistic,0.06,28.18,1.00
+176,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Haute Normandie; argilo-calcaires superficiels sur craie,logistic,0.06,15.09,1.00
+177,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Haute Normandie; sables caillouteux non calcaires,logistic,0.08,23.81,1.00
+178,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Haute Normandie; sables caillouteux non calcaires,logistic,0.07,23.81,1.00
+179,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Haute Normandie; sables caillouteux non calcaires,logistic,0.07,10.72,1.00
+180,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Basse Normandie; Limons,logistic,0.08,23.81,1.00
+181,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Basse Normandie; Limons,logistic,0.07,23.81,1.00
+182,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Basse Normandie; Limons,logistic,0.07,10.72,1.00
+183,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Basse Normandie; Argilo-calcaires,logistic,0.08,28.18,1.00
+184,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Basse Normandie; Argilo-calcaires,logistic,0.06,28.18,1.00
+185,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Basse Normandie; Argilo-calcaires,logistic,0.06,15.09,1.00
+186,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Basse Normandie; Sables,logistic,0.08,23.81,1.00
+187,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Basse Normandie; Sables,logistic,0.07,23.81,1.00
+188,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Basse Normandie; Sables,logistic,0.07,10.72,1.00
+189,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Basse Normandie; Terres lourdes,logistic,0.08,23.81,1.00
+190,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Basse Normandie; Terres lourdes,logistic,0.07,23.81,1.00
+191,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Basse Normandie; Terres lourdes,logistic,0.07,10.72,1.00
+192,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Bretagne Pays de Loire; Limons sains et limons sableux,logistic,0.08,23.81,1.00
+193,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Bretagne Pays de Loire; Limons sains et limons sableux,logistic,0.07,23.81,1.00
+194,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Bretagne Pays de Loire; Limons sains et limons sableux,logistic,0.07,10.72,1.00
+195,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Bretagne Pays de Loire; Limons cailllouteux superficiels,logistic,0.08,23.81,1.00
+196,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Bretagne Pays de Loire; Limons cailllouteux superficiels,logistic,0.07,23.81,1.00
+197,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Bretagne Pays de Loire; Limons cailllouteux superficiels,logistic,0.07,10.72,1.00
+198,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Bretagne Pays de Loire; sables,logistic,0.08,23.81,1.00
+199,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Bretagne Pays de Loire; sables,logistic,0.07,23.81,1.00
+200,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Bretagne Pays de Loire; sables,logistic,0.07,10.72,1.00
+201,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Bretagne Pays de Loire; argilo-calcaires profonds sur marne,logistic,0.08,28.18,1.00
+202,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Bretagne Pays de Loire; argilo-calcaires profonds sur marne,logistic,0.06,28.18,1.00
+203,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Bretagne Pays de Loire; argilo-calcaires profonds sur marne,logistic,0.06,15.09,1.00
+204,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Bretagne Pays de Loire; Argilo-calcaires superfiels,logistic,0.08,28.18,1.00
+205,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Bretagne Pays de Loire; Argilo-calcaires superfiels,logistic,0.06,28.18,1.00
+206,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Bretagne Pays de Loire; Argilo-calcaires superfiels,logistic,0.06,15.09,1.00
+207,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Poitou Charents; Terres de Groie,logistic,0.08,28.18,1.00
+208,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Poitou Charents; Terres de Groie,logistic,0.06,28.18,1.00
+209,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Poitou Charents; Terres de Groie,logistic,0.06,15.09,1.00
+210,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Poitou Charents; Argilo-calcaires profonds sur calcaires marneux,logistic,0.08,28.18,1.00
+211,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Poitou Charents; Argilo-calcaires profonds sur calcaires marneux,logistic,0.06,28.18,1.00
+212,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Poitou Charents; Argilo-calcaires profonds sur calcaires marneux,logistic,0.06,15.09,1.00
+213,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Poitou Charents; Aubues légères et champagnes superficielles,logistic,0.03,65.27,1.00
+214,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Poitou Charents; Aubues légères et champagnes superficielles,logistic,0.04,58.72,1.00
+215,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Poitou Charents; Aubues légères et champagnes superficielles,logistic,0.04,28.18,1.00
+216,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Poitou Charents; Aubues lourdes et champagnes profondes,logistic,0.03,65.27,1.00
+217,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Poitou Charents; Aubues lourdes et champagnes profondes,logistic,0.04,58.72,1.00
+218,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Poitou Charents; Aubues lourdes et champagnes profondes,logistic,0.04,28.18,1.00
+219,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,"Poitou Charents; Limons, terres rouges, bornais, doucins limoneux",logistic,0.08,23.81,1.00
+220,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,"Poitou Charents; Limons, terres rouges, bornais, doucins limoneux",logistic,0.07,23.81,1.00
+221,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,"Poitou Charents; Limons, terres rouges, bornais, doucins limoneux",logistic,0.07,10.72,1.00
+222,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Poitou Charents; Sols sableux,logistic,0.08,23.81,1.00
+223,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Poitou Charents; Sols sableux,logistic,0.07,23.81,1.00
+224,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Poitou Charents; Sols sableux,logistic,0.07,10.72,1.00
+225,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Haute Marne; Limons,logistic,0.08,23.81,1.00
+226,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Haute Marne; Limons,logistic,0.07,23.81,1.00
+227,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Haute Marne; Limons,logistic,0.07,10.72,1.00
+228,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,"Haute Marne; Sols superficiels du Barrois (G1, G2) et autres sols argileux (G3, G4) à 30% argile",logistic,0.08,28.18,1.00
+229,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,"Haute Marne; Sols superficiels du Barrois (G1, G2) et autres sols argileux (G3, G4) à 30% argile",logistic,0.06,28.18,1.00
+230,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,"Haute Marne; Sols superficiels du Barrois (G1, G2) et autres sols argileux (G3, G4) à 30% argile",logistic,0.06,15.09,1.00
+231,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,"Haute Marne; Sols superficiels du Barrois (G1, G2) et autres sols argileux (G3, G4) à 40% argile",logistic,0.08,28.18,1.00
+232,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,"Haute Marne; Sols superficiels du Barrois (G1, G2) et autres sols argileux (G3, G4) à 40% argile",logistic,0.06,28.18,1.00
+233,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,"Haute Marne; Sols superficiels du Barrois (G1, G2) et autres sols argileux (G3, G4) à 40% argile",logistic,0.06,15.09,1.00
+234,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Auvergne; Terre noire,logistic,0.08,23.81,1.00
+235,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Auvergne; Terre noire,logistic,0.07,23.81,1.00
+236,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Auvergne; Terre noire,logistic,0.07,10.72,1.00
+237,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Auvergne; Argilo-calcaire,logistic,0.08,28.18,1.00
+238,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Auvergne; Argilo-calcaire,logistic,0.06,28.18,1.00
+239,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Auvergne; Argilo-calcaire,logistic,0.06,15.09,1.00
+240,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Auvergne; Granitique,logistic,0.08,23.81,1.00
+241,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Auvergne; Granitique,logistic,0.07,23.81,1.00
+242,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Auvergne; Granitique,logistic,0.07,10.72,1.00
+243,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Auvergne; Sologne,logistic,0.08,23.81,1.00
+244,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Auvergne; Sologne,logistic,0.07,23.81,1.00
+245,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Auvergne; Sologne,logistic,0.07,10.72,1.00
+246,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Auvergne; Alluvions récentes (sableuses),logistic,0.08,23.81,1.00
+247,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Auvergne; Alluvions récentes (sableuses),logistic,0.07,23.81,1.00
+248,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Auvergne; Alluvions récentes (sableuses),logistic,0.07,10.72,1.00
+249,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Rhone Alpes Saône-et-Loire; Varenne,logistic,0.08,23.81,1.00
+250,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Rhone Alpes Saône-et-Loire; Varenne,logistic,0.07,23.81,1.00
+251,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Rhone Alpes Saône-et-Loire; Varenne,logistic,0.07,10.72,1.00
+252,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,"Rhone Alpes Saône-et-Loire; Gravier, diluvium",logistic,0.08,23.81,1.00
+253,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,"Rhone Alpes Saône-et-Loire; Gravier, diluvium",logistic,0.07,23.81,1.00
+254,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,"Rhone Alpes Saône-et-Loire; Gravier, diluvium",logistic,0.07,10.72,1.00
+255,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Rhone Alpes Saône-et-Loire; Limon blanc sain,logistic,0.08,23.81,1.00
+256,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Rhone Alpes Saône-et-Loire; Limon blanc sain,logistic,0.07,23.81,1.00
+257,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Rhone Alpes Saône-et-Loire; Limon blanc sain,logistic,0.07,10.72,1.00
+258,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Rhone Alpes Saône-et-Loire; Limon blanc humide,logistic,0.08,23.81,1.00
+259,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Rhone Alpes Saône-et-Loire; Limon blanc humide,logistic,0.07,23.81,1.00
+260,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Rhone Alpes Saône-et-Loire; Limon blanc humide,logistic,0.07,10.72,1.00
+261,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Rhone Alpes Saône-et-Loire; Limon argileux sain,logistic,0.08,23.81,1.00
+262,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Rhone Alpes Saône-et-Loire; Limon argileux sain,logistic,0.07,23.81,1.00
+263,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Rhone Alpes Saône-et-Loire; Limon argileux sain,logistic,0.07,10.72,1.00
+264,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Rhone Alpes Saône-et-Loire; Limon argileux humide,logistic,0.08,23.81,1.00
+265,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Rhone Alpes Saône-et-Loire; Limon argileux humide,logistic,0.07,23.81,1.00
+266,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Rhone Alpes Saône-et-Loire; Limon argileux humide,logistic,0.07,10.72,1.00
+267,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Rhone Alpes Saône-et-Loire; Argilo-calcaire prof.,logistic,0.08,28.18,1.00
+268,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Rhone Alpes Saône-et-Loire; Argilo-calcaire prof.,logistic,0.06,28.18,1.00
+269,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Rhone Alpes Saône-et-Loire; Argilo-calcaire prof.,logistic,0.06,15.09,1.00
+270,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,Rhone Alpes Saône-et-Loire; Argilo-calcaire superficiel,logistic,0.08,28.18,1.00
+271,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,Rhone Alpes Saône-et-Loire; Argilo-calcaire superficiel,logistic,0.06,28.18,1.00
+272,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,Rhone Alpes Saône-et-Loire; Argilo-calcaire superficiel,logistic,0.06,15.09,1.00
+273,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,"Sud Ouest; Sols acides limoneux ou argileux (boulbènes, alluvions, Ségala)",logistic,0.08,19.45,1.00
+274,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,"Sud Ouest; Sols acides limoneux ou argileux (boulbènes, alluvions, Ségala)",logistic,0.06,15.09,1.00
+275,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,"Sud Ouest; Sols acides limoneux ou argileux (boulbènes, alluvions, Ségala)",logistic,0.11,10.72,1.00
+276,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,High,"Sud Ouest; Sols basiques ou argilo-calcaires (terreforts, alluvions)",logistic,0.08,19.45,1.00
+277,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Moderate,"Sud Ouest; Sols basiques ou argilo-calcaires (terreforts, alluvions)",logistic,0.06,15.09,1.00
+278,FR,agronomy,chemical,i_c_p,soil phosphorus buffering,Low,"Sud Ouest; Sols basiques ou argilo-calcaires (terreforts, alluvions)",logistic,0.11,10.72,1.00
