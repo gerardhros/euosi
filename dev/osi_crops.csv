@@ -457,324 +457,324 @@
 456,NL,656,zonnekroon,overig,rust,NA,NA,akkerbouw,other,14,arable,overig,akkerbouw,mais,veeteelt,185,140,112,112,150,silphium perfoliatum,overig,overig
 457,FR,AVH,Avoine d’hiver,NA ,NA,NA,NA,Arable,Cereals,NA,Low,NA,NA,Low,NA,NA,NA,NA,NA,NA,NA,NA,NA
 458,FR,AVP,Avoine de printemps,NA ,NA,NA,NA,Arable,Cereals,NA,Low,NA,NA,Low,NA,NA,NA,NA,NA,NA,NA,NA,NA
-459,FR,BDH,Ble dur d’hiver,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-460,FR,BDP,Ble dur de printemps,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-461,FR,BTH,Ble tendre d’hiver,NA ,NA,NA,NA,Arable,Cereals,NA,Low,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-462,FR,BTP,Ble tendre de printemps,NA ,NA,NA,NA,Arable,Cereals,NA,Low,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-463,FR,EPE,epeautre,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+459,FR,BDH,Ble dur d’hiver,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+460,FR,BDP,Ble dur de printemps,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+461,FR,BTH,Ble tendre d’hiver,NA ,NA,NA,NA,Arable,Cereals,NA,Low,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+462,FR,BTP,Ble tendre de printemps,NA ,NA,NA,NA,Arable,Cereals,NA,Low,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+463,FR,EPE,epeautre,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 464,FR,MID,Mais doux,NA ,NA,NA,NA,Arable,Cereals,NA,Low,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 465,FR,MIE,Mais ensilage,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 466,FR,MIS,Mais,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-467,FR,MLT,Millet,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-468,FR,MOH,Moha,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-469,FR,ORH,Orge d'hiver,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-470,FR,ORP,Orge de printemps,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-471,FR,RIZ,Riz,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-472,FR,SRS,Sarrasin,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-473,FR,SGH,Seigle d’hiver,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-474,FR,SGP,Seigle de printemps,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-475,FR,SOG,Sorgho,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-476,FR,TTH,Triticale d’hiver,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-477,FR,TTP,Triticale de printemps,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-478,FR,CHA,Autre cereale d’hiver de genre Avena,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-479,FR,CHH,Autre cereale d’hiver de genre Hordeum,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-480,FR,CHS,Autre cereale d’hiver de genre Secale,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-481,FR,CHT,Autre cereale d’hiver de genre Triticum,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-482,FR,CPA,Autre cereale de printemps de genre Avena,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-483,FR,CPH,Autre cereale de printemps de genre Hordeum,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-484,FR,CPS,Autre cereale de printemps de genre Secale,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-485,FR,CPT,Autre cereale de printemps de genre Triticum,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-486,FR,CPZ,Autre cereale de printemps de genre Zea,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-487,FR,CGH,Autre cereale de genre Phalaris,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-488,FR,CGP,Autre cereale de genre Panicum,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-489,FR,CGO,Autre cereale de genre Sorghum,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-490,FR,CGS,Autre cereale de genre Setaria,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-491,FR,CGF,Autre cereale de genre Fagopyrum,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-492,FR,CAG,Autre cereale ou pseudo-cereale d’un autre genre,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-493,FR,MCR,Melange de cereales ou pseudo-cereales pures ou en melange avec des proteagineux non preponderants et/ou des oleagineux,NA ,NA,NA,NA,Arable,Cereals,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-494,FR,CML,Cameline,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-495,FR,CZH,Colza d’hiver,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-496,FR,CZP,Colza de printemps,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-497,FR,LIH,Lin non textile d’hiver,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-498,FR,LIP,Lin non textile de printemps,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-499,FR,MOT,Moutarde,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-500,FR,NVE,Navette d’ete,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-501,FR,NVH,Navette d’hiver,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-502,FR,NYG,Nyger,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-503,FR,OEI,Œillette (Pavot),NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+467,FR,MLT,Millet,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+468,FR,MOH,Moha,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+469,FR,ORH,Orge d'hiver,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+470,FR,ORP,Orge de printemps,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+471,FR,RIZ,Riz,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+472,FR,SRS,Sarrasin,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+473,FR,SGH,Seigle d’hiver,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+474,FR,SGP,Seigle de printemps,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+475,FR,SOG,Sorgho,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+476,FR,TTH,Triticale d’hiver,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+477,FR,TTP,Triticale de printemps,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+478,FR,CHA,Autre cereale d’hiver de genre Avena,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+479,FR,CHH,Autre cereale d’hiver de genre Hordeum,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+480,FR,CHS,Autre cereale d’hiver de genre Secale,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+481,FR,CHT,Autre cereale d’hiver de genre Triticum,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+482,FR,CPA,Autre cereale de printemps de genre Avena,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+483,FR,CPH,Autre cereale de printemps de genre Hordeum,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+484,FR,CPS,Autre cereale de printemps de genre Secale,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+485,FR,CPT,Autre cereale de printemps de genre Triticum,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+486,FR,CPZ,Autre cereale de printemps de genre Zea,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+487,FR,CGH,Autre cereale de genre Phalaris,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+488,FR,CGP,Autre cereale de genre Panicum,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+489,FR,CGO,Autre cereale de genre Sorghum,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+490,FR,CGS,Autre cereale de genre Setaria,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+491,FR,CGF,Autre cereale de genre Fagopyrum,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+492,FR,CAG,Autre cereale ou pseudo-cereale d’un autre genre,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+493,FR,MCR,Melange de cereales ou pseudo-cereales pures ou en melange avec des proteagineux non preponderants et/ou des oleagineux,NA ,NA,NA,NA,Arable,Cereals,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+494,FR,CML,Cameline,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+495,FR,CZH,Colza d’hiver,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+496,FR,CZP,Colza de printemps,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+497,FR,LIH,Lin non textile d’hiver,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+498,FR,LIP,Lin non textile de printemps,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+499,FR,MOT,Moutarde,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+500,FR,NVE,Navette d’ete,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+501,FR,NVH,Navette d’hiver,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+502,FR,NYG,Nyger,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+503,FR,OEI,Œillette (Pavot),NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 504,FR,SOJ,Soja,NA ,NA,NA,NA,Arable,Oilseeds,NA,Low,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 505,FR,TRN,Tournesol,NA ,NA,NA,NA,Arable,Oilseeds,NA,Low,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-506,FR,OHN,Autre oleagineux d’hiver d’espèce Brassica napus,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-507,FR,OHR,Autre oleagineux d’hiver d’espèce Brassica rapa,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-508,FR,OPN,Autre oleagineux de printemps d’espèce Brassica napus,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-509,FR,OPR,Autre oleagineux de printemps d’espèce Brassica rapa,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-510,FR,OEH,Autre oleagineux d’espèce Helianthus,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-511,FR,OAG,Autre oleagineux d’un autre genre,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-512,FR,MOL,Melange d’oleagineux,NA ,NA,NA,NA,Arable,Oilseeds,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-513,FR,FVL,Feverole,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-514,FR,JOD,Jarosse deshydratee,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-515,FR,LDH,Lupin doux d’hiver,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-516,FR,LDP,Lupin doux de printemps,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+506,FR,OHN,Autre oleagineux d’hiver d’espèce Brassica napus,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+507,FR,OHR,Autre oleagineux d’hiver d’espèce Brassica rapa,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+508,FR,OPN,Autre oleagineux de printemps d’espèce Brassica napus,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+509,FR,OPR,Autre oleagineux de printemps d’espèce Brassica rapa,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+510,FR,OEH,Autre oleagineux d’espèce Helianthus,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+511,FR,OAG,Autre oleagineux d’un autre genre,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+512,FR,MOL,Melange d’oleagineux,NA ,NA,NA,NA,Arable,Oilseeds,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+513,FR,FVL,Feverole,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+514,FR,JOD,Jarosse deshydratee,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+515,FR,LDH,Lupin doux d’hiver,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+516,FR,LDP,Lupin doux de printemps,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 517,FR,LUD,Luzerne deshydratee,NA ,NA,NA,NA,Arable,Legumes,NA,High,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-518,FR,MED,Melilot deshydrate,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+518,FR,MED,Melilot deshydrate,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 519,FR,PHI,Pois d’hiver,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 520,FR,PPR,Pois de printemps,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-521,FR,SAD,Sainfoin deshydrate,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-522,FR,SED,Serradelle deshydratee,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-523,FR,TRD,Trèfle deshydrate,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-524,FR,VED,Vesce deshydratee,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-525,FR,PAG,Autre proteagineux d’un autre genre,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-526,FR,MLD,Melange de legumineuses deshydratees,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+521,FR,SAD,Sainfoin deshydrate,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+522,FR,SED,Serradelle deshydratee,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+523,FR,TRD,Trèfle deshydrate,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+524,FR,VED,Vesce deshydratee,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+525,FR,PAG,Autre proteagineux d’un autre genre,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+526,FR,MLD,Melange de legumineuses deshydratees,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 527,FR,MPP,Melange de proteagineux (pois et/ou lupin et/ou feverole),NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 528,FR,MPC,Melange de proteagineux preponderants (pois et/ou lupin et/ou feverole) et de cereales,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-529,FR,CHV,Chanvre,NA ,NA,NA,NA,Arable,Hennep/Flax,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-530,FR,LIF,Lin fibres,NA ,NA,NA,NA,Arable,Hennep/Flax,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-531,FR,J5M,Jachère de 5 ans ou moins,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-532,FR,J6S,Jachère de 6 ans ou plus declaree comme SIE,NA ,NA,NA,NA,Arable,Fallow,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-533,FR,J6P,Jachère de 6 ans ou plus,NA ,NA,NA,NA,Arable,Fallow,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-534,FR,JNO,Jachère noire,NA ,NA,NA,NA,Arable,Fallow,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-535,FR,ARA,Arachide,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-536,FR,CRN,Cornille,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-537,FR,DOL,Dolique,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-538,FR,FNU,Fenugrec,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-539,FR,GES,Gesse,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-540,FR,LEC,Lentille cultivee (non fourragère),NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-541,FR,LOT,Lotier,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-542,FR,MIN,Minette,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+529,FR,CHV,Chanvre,NA ,NA,NA,NA,Arable,Hennep/Flax,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+530,FR,LIF,Lin fibres,NA ,NA,NA,NA,Arable,Hennep/Flax,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+531,FR,J5M,Jachère de 5 ans ou moins,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+532,FR,J6S,Jachère de 6 ans ou plus declaree comme SIE,NA ,NA,NA,NA,Arable,Fallow,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+533,FR,J6P,Jachère de 6 ans ou plus,NA ,NA,NA,NA,Arable,Fallow,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+534,FR,JNO,Jachère noire,NA ,NA,NA,NA,Arable,Fallow,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+535,FR,ARA,Arachide,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+536,FR,CRN,Cornille,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+537,FR,DOL,Dolique,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+538,FR,FNU,Fenugrec,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+539,FR,GES,Gesse,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+540,FR,LEC,Lentille cultivee (non fourragère),NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+541,FR,LOT,Lotier,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+542,FR,MIN,Minette,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 543,FR,PCH,Pois chiche,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-544,FR,MLS,Melange de legumineuses non fourragères preponderantes et de cereales et/ou oleagineux,NA ,NA,NA,NA,Arable,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-545,FR,FFO,Feverole fourragère,NA ,NA,NA,NA,Grassland,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-546,FR,JOS,Jarosse,NA ,NA,NA,NA,Grassland,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-547,FR,LFH,Lupin fourrager d’hiver,NA ,NA,NA,NA,Grassland,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-548,FR,LFP,Lupin fourrager de printemps,NA ,NA,NA,NA,Grassland,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+544,FR,MLS,Melange de legumineuses non fourragères preponderantes et de cereales et/ou oleagineux,NA ,NA,NA,NA,Arable,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+545,FR,FFO,Feverole fourragère,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+546,FR,JOS,Jarosse,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+547,FR,LFH,Lupin fourrager d’hiver,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+548,FR,LFP,Lupin fourrager de printemps,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 549,FR,LUZ,Luzerne,NA ,NA,NA,NA,Grassland,Legumes,NA,High,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-550,FR,MEL,Melilot,NA ,NA,NA,NA,Grassland,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+550,FR,MEL,Melilot,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 551,FR,PFH,Pois fourrager d’hiver,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 552,FR,PFP,Pois fourrager de printemps,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-553,FR,SAI,Sainfoin,NA ,NA,NA,NA,Grassland,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-554,FR,SER,Serradelle,NA ,NA,NA,NA,Grassland,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-555,FR,TRE,Trèfle,NA ,NA,NA,NA,Grassland,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-556,FR,VES,Vesce,NA ,NA,NA,NA,Grassland,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-557,FR,MLF,Melange de legumineuses fourragères,NA ,NA,NA,NA,Grassland,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-558,FR,MLC,Melange de legumineuses fourragères preponderantes et de cereales et/ou d’oleagineux,NA ,NA,NA,NA,Grassland,Legumes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+553,FR,SAI,Sainfoin,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+554,FR,SER,Serradelle,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+555,FR,TRE,Trèfle,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+556,FR,VES,Vesce,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+557,FR,MLF,Melange de legumineuses fourragères,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+558,FR,MLC,Melange de legumineuses fourragères preponderantes et de cereales et/ou d’oleagineux,NA ,NA,NA,NA,Grassland,Legumes,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 559,FR,BVF,Betterave fourragère,NA ,NA,NA,NA,Arable,Fodder,NA,High,NA,NA,High,NA,NA,NA,NA,NA,NA,NA,NA,NA
-560,FR,CAF,Carotte fourragère,NA ,NA,NA,NA,Arable,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-561,FR,CHF,Chou fourrager,NA ,NA,NA,NA,Arable,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-562,FR,LEF,Lentille fourragère,NA ,NA,NA,NA,Arable,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-563,FR,NVF,Navet fourrager,NA ,NA,NA,NA,Arable,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-564,FR,RDF,Radis fourrager,NA ,NA,NA,NA,Arable,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-565,FR,FSG,Autre plante fourragère sarclee d’un autre genre,NA ,NA,NA,NA,Arable,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-566,FR,FAG,Autre fourrage annuel d’un autre genre,NA ,NA,NA,NA,Arable,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-567,FR,CPL,Fourrage compose de cereales et/ou de proteagineux (en proportion < 50%)  et/ou de legumineuses fourragères (en proportion < 50%)  et/ou des oleagineux,NA ,NA,NA,NA,Arable,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-568,FR,BRH,Bourrache de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-569,FR,BRO,Brome de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-570,FR,CRA,Cresson alenois de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-571,FR,DTY,Dactyle de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-572,FR,FET,Fetuque de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-573,FR,FLO,Fleole de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-574,FR,PAT,Pâturin commun de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-575,FR,PCL,Phacelie de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+560,FR,CAF,Carotte fourragère,NA ,NA,NA,NA,Arable,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+561,FR,CHF,Chou fourrager,NA ,NA,NA,NA,Arable,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+562,FR,LEF,Lentille fourragère,NA ,NA,NA,NA,Arable,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+563,FR,NVF,Navet fourrager,NA ,NA,NA,NA,Arable,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+564,FR,RDF,Radis fourrager,NA ,NA,NA,NA,Arable,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+565,FR,FSG,Autre plante fourragère sarclee d’un autre genre,NA ,NA,NA,NA,Arable,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+566,FR,FAG,Autre fourrage annuel d’un autre genre,NA ,NA,NA,NA,Arable,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+567,FR,CPL,Fourrage compose de cereales et/ou de proteagineux (en proportion < 50%)  et/ou de legumineuses fourragères (en proportion < 50%)  et/ou des oleagineux,NA ,NA,NA,NA,Arable,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+568,FR,BRH,Bourrache de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+569,FR,BRO,Brome de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+570,FR,CRA,Cresson alenois de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+571,FR,DTY,Dactyle de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+572,FR,FET,Fetuque de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+573,FR,FLO,Fleole de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+574,FR,PAT,Pâturin commun de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+575,FR,PCL,Phacelie de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 576,FR,RGA,Ray-grass de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-577,FR,XFE,X-Festulolium de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-578,FR,GFP,Autre graminee fourragère pure de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-579,FR,MLG,Melange de legumineuses preponderantes et de graminees fourragères de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-580,FR,PTR,Autre prairie temporaire de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-581,FR,PRL,Prairie en rotation longue (6 ans ou plus),NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-582,FR,PPH,Prairie permanente - herbe,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-583,FR,SPH,Surface pastorale - herbe predominante et ressources fourragères ligneuses presentes,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-584,FR,SPL,Surface pastorale - ressources fourragères ligneuses predominantes,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-585,FR,BOP,Bois pâture (prairie herbacee sous couvert d’arbres),NA ,NA,NA,NA,Forest,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-586,FR,CAE,Châtaigneraie entretenue par des porcins ou des petits ruminants,NA ,NA,NA,NA,Forest,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-587,FR,CEE,Chênaie entretenue par des porcins ou des petits ruminants,NA ,NA,NA,NA,Forest,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-588,FR,ROS,Roselière,NA ,NA,NA,NA,Grassland,Fodder,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-589,FR,AIL,Ail,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-590,FR,ART,Artichaut,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-591,FR,AUB,Aubergine,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-592,FR,AVO,Avocat,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+577,FR,XFE,X-Festulolium de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+578,FR,GFP,Autre graminee fourragère pure de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+579,FR,MLG,Melange de legumineuses preponderantes et de graminees fourragères de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+580,FR,PTR,Autre prairie temporaire de 5 ans ou moins,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+581,FR,PRL,Prairie en rotation longue (6 ans ou plus),NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+582,FR,PPH,Prairie permanente - herbe,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+583,FR,SPH,Surface pastorale - herbe predominante et ressources fourragères ligneuses presentes,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+584,FR,SPL,Surface pastorale - ressources fourragères ligneuses predominantes,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+585,FR,BOP,Bois pâture (prairie herbacee sous couvert d’arbres),NA ,NA,NA,NA,Forest,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+586,FR,CAE,Châtaigneraie entretenue par des porcins ou des petits ruminants,NA ,NA,NA,NA,Forest,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+587,FR,CEE,Chênaie entretenue par des porcins ou des petits ruminants,NA ,NA,NA,NA,Forest,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+588,FR,ROS,Roselière,NA ,NA,NA,NA,Grassland,Fodder,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+589,FR,AIL,Ail,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+590,FR,ART,Artichaut,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+591,FR,AUB,Aubergine,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+592,FR,AVO,Avocat,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 593,FR,BTN,Betterave non fourragère / Bette,NA ,NA,NA,NA,Arable,Vegetable,NA,High,NA,NA,High,NA,NA,NA,NA,NA,NA,NA,NA,NA
-594,FR,CAR,Carotte,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-595,FR,CEL,Celeri,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-596,FR,CES,Chicoree / Endive / Scarole,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-597,FR,CHU,Chou,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-598,FR,CCN,Concombre / Cornichon,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-599,FR,CMB,Courge musquee / Butternut,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-600,FR,CCT,Courgette / Citrouille,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-601,FR,CRS,Cresson,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-602,FR,EPI,epinard,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-603,FR,FEV,Fève,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-604,FR,FRA,Fraise,NA ,NA,NA,NA,Arable,Fruit,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-605,FR,HAR,Haricot / Flageolet,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-606,FR,HBL,Houblon,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-607,FR,LBF,Laitue / Batavia / Feuille de chêne,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-608,FR,MAC,Mâche,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-609,FR,MLO,Melon,NA ,NA,NA,NA,Arable,Fruit,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-610,FR,NVT,Navet,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-611,FR,OIG,Oignon / echalote,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-612,FR,PAN,Panais,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-613,FR,PAS,Pastèque,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+594,FR,CAR,Carotte,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+595,FR,CEL,Celeri,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+596,FR,CES,Chicoree / Endive / Scarole,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+597,FR,CHU,Chou,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+598,FR,CCN,Concombre / Cornichon,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+599,FR,CMB,Courge musquee / Butternut,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+600,FR,CCT,Courgette / Citrouille,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+601,FR,CRS,Cresson,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+602,FR,EPI,epinard,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+603,FR,FEV,Fève,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+604,FR,FRA,Fraise,NA ,NA,NA,NA,Arable,Fruit,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+605,FR,HAR,Haricot / Flageolet,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+606,FR,HBL,Houblon,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+607,FR,LBF,Laitue / Batavia / Feuille de chêne,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+608,FR,MAC,Mâche,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+609,FR,MLO,Melon,NA ,NA,NA,NA,Arable,Fruit,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+610,FR,NVT,Navet,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+611,FR,OIG,Oignon / echalote,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+612,FR,PAN,Panais,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+613,FR,PAS,Pastèque,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 614,FR,PPO,"Pois (petits pois, pois casses, pois gourmands)",NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-615,FR,POR,Poireau,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-616,FR,PVP,Poivron / Piment,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+615,FR,POR,Poireau,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+616,FR,PVP,Poivron / Piment,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 617,FR,PTC,Pomme de terre de consommation,NA ,NA,NA,NA,Arable,Potatoe,NA,High,NA,NA,High,NA,NA,NA,NA,NA,NA,NA,NA,NA
 618,FR,PTF,Pomme de terre feculière,NA ,NA,NA,NA,Arable,Potatoe,NA,High,NA,NA,High,NA,NA,NA,NA,NA,NA,NA,NA,NA
-619,FR,POT,Potiron / Potimarron,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-620,FR,RDI,Radis,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-621,FR,ROQ,Roquette,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-622,FR,RUT,Rutabaga,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-623,FR,SFI,Salsifis,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-624,FR,TAB,Tabac,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-625,FR,TOM,Tomate,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-626,FR,TOT,Tomate pour transformation,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-627,FR,TOP,Topinambour,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-628,FR,FLA,Autre legume ou fruit annuel,NA ,NA,NA,NA,Arable,Vegetable,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-629,FR,FLP,Autre legume ou fruit perenne,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-630,FR,PIS,Pistache,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-631,FR,PWT,Poire Williams pour transformation,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-632,FR,PRU,Prune d’Ente pour transformation,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-633,FR,VRG,Autres vergers,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-634,FR,VRC,Vigne : raisins de cuve en production,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-635,FR,VRT,Vigne : raisins de table,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-636,FR,VRN,Vigne : raisins de cuve non en production,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-637,FR,RVI,Restructuration du vignoble,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-638,FR,AGR,Agrume,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-639,FR,CAB,Caroube,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-640,FR,CBT,Cerise bigarreau pour transformation,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-641,FR,CTG,Châtaigne,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-642,FR,NOS,Noisette,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-643,FR,NOX,Noix,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-644,FR,OLI,Oliveraie,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-645,FR,PVT,Pêche Pavie pour transformation,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-646,FR,PEP,Pepinière,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-647,FR,PFR,Petit fruit rouge,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-648,FR,ANE,Aneth,NA ,NA,NA,NA,Arable,Permanent,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-649,FR,ANG,Angelique,NA ,NA,NA,NA,Arable,Flowers,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-650,FR,ANI,Anis,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-651,FR,BAR,Bardane,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-652,FR,BAS,Basilic,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-653,FR,BLT,Bleuet,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-654,FR,BUR,Bugle rampant,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-655,FR,CMM,Camomille,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-656,FR,CAV,Carvi,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-657,FR,CRF,Cerfeuil,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-658,FR,CHR,Chardon Marie,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-659,FR,CIB,Ciboulette,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-660,FR,CRD,Coriandre,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-661,FR,CUM,Cumin,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-662,FR,EST,Estragon,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-663,FR,FNO,Fenouil,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-664,FR,GAI,Gaillet,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-665,FR,LAV,Lavande / Lavandin,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-666,FR,MRG,Marguerite,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-667,FR,MAV,Mauve,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-668,FR,MRJ,Marjolaine / Origan,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-669,FR,MLI,Melisse,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-670,FR,MTH,Menthe,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-671,FR,MLP,Millepertuis,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-672,FR,OSE,Oseille,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-673,FR,ORT,Ortie,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-674,FR,PAQ,Pâquerette,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-675,FR,PSE,Pensee,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-676,FR,PSL,Persil,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-677,FR,PSY,Plantain psyllium,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-678,FR,PMV,Primevère,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-679,FR,PSN,Psyllium noir de Provence,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-680,FR,ROM,Romarin,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-681,FR,SRI,Sariette,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-682,FR,SGE,Sauge,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-683,FR,THY,Thym,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-684,FR,VAL,Valeriane,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-685,FR,VER,Veronique,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-686,FR,PPA,Autres plantes ornementales et PPAM annuelles,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-687,FR,PPP,Autres plantes ornementales et PPAM perennes,NA ,NA,NA,NA,Arable,Floriculture,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-688,FR,MPA,Autre melange de plantes fixant l’azote,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-689,FR,MCT,Miscanthus,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-690,FR,ACP,Autre culture perenne,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-691,FR,CSS,Culture sous serre hors sol,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-692,FR,TCR,Taillis à courte rotation,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-693,FR,TRU,Truffière (plants mycorhizes),NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-694,FR,SBO,Surface boisee sur une ancienne terre agricole,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-695,FR,SNE,Surface agricole temporairement non exploitee,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-696,FR,MRS,Marais salant,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-697,FR,BFP,Bande admissible le long d’une forêt AVEC production,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-698,FR,BFS,Bande admissible le long d’une forêt SANS production,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-699,FR,BTA,Bande tampon,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-700,FR,BOR,Bordure de champ,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-701,FR,CID,Cultures conduites en interrangs : 2 cultures representant chacune plus de 25%,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-702,FR,CIT,Cultures conduites en interrangs : 3 cultures representant chacune plus de 25%,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-703,FR,CUA,Culture sous abattis,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-704,FR,CUR,Curcuma,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-705,FR,GER,Geranium,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-706,FR,HPC,Horticulture ornementale de plein champ,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-707,FR,HSA,Horticulture ornementale sous abri,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-708,FR,LSA,Legume sous abri,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-709,FR,PPF,Plante à parfum (autre que geranium et vetiver),NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-710,FR,PAR,Plante aromatique (autre que vanille),NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-711,FR,PMD,Plante medicinale,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-712,FR,TBT,Tubercule tropical,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-713,FR,VNL,Vanille,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-714,FR,VNB,Vanille sous bois,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-715,FR,VGD,Verger (DOM),NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-716,FR,VET,Vetiver,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-717,FR,YLA,Ylang-ylang,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-718,FR,ACA,Autre culture non precisee dans la liste (admissible),NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-719,FR,ANA,Ananas,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-720,FR,BCA,Banane creole (fruit et legume) – autre,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-721,FR,BCF,Banane creole (fruit et legume) – fermage,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-722,FR,BCI,Banane creole (fruit et legume) – indivision,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-723,FR,BCP,Banane creole (fruit et legume) – propriete ou faire valoir direct,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-724,FR,BCR,Banane creole (fruit et legume) – reforme foncière,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-725,FR,BEA,Banane export – autre,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-726,FR,BEF,Banane export – fermage,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-727,FR,BEI,Banane export – indivision,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-728,FR,BEP,Banane export – propriete ou faire valoir direct,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-729,FR,BER,Banane export - reforme foncière,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-730,FR,CAC,Cafe / Cacao,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-731,FR,CSA,Canne à sucre – autre,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-732,FR,CSF,Canne à sucre – fermage,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-733,FR,CSI,Canne à sucre – indivision,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-734,FR,CSP,Canne à sucre – propriete ou faire valoir direct,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-735,FR,CSR,Canne à sucre – reforme foncière,NA ,NA,NA,NA,Arable,Other,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-736,FR,DLT,Lotier cornicule,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+619,FR,POT,Potiron / Potimarron,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+620,FR,RDI,Radis,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+621,FR,ROQ,Roquette,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+622,FR,RUT,Rutabaga,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+623,FR,SFI,Salsifis,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+624,FR,TAB,Tabac,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+625,FR,TOM,Tomate,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+626,FR,TOT,Tomate pour transformation,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+627,FR,TOP,Topinambour,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+628,FR,FLA,Autre legume ou fruit annuel,NA ,NA,NA,NA,Arable,Vegetable,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+629,FR,FLP,Autre legume ou fruit perenne,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+630,FR,PIS,Pistache,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+631,FR,PWT,Poire Williams pour transformation,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+632,FR,PRU,Prune d’Ente pour transformation,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+633,FR,VRG,Autres vergers,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+634,FR,VRC,Vigne : raisins de cuve en production,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+635,FR,VRT,Vigne : raisins de table,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+636,FR,VRN,Vigne : raisins de cuve non en production,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+637,FR,RVI,Restructuration du vignoble,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+638,FR,AGR,Agrume,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+639,FR,CAB,Caroube,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+640,FR,CBT,Cerise bigarreau pour transformation,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+641,FR,CTG,Châtaigne,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+642,FR,NOS,Noisette,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+643,FR,NOX,Noix,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+644,FR,OLI,Oliveraie,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+645,FR,PVT,Pêche Pavie pour transformation,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+646,FR,PEP,Pepinière,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+647,FR,PFR,Petit fruit rouge,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+648,FR,ANE,Aneth,NA ,NA,NA,NA,Arable,Permanent,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+649,FR,ANG,Angelique,NA ,NA,NA,NA,Arable,Flowers,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+650,FR,ANI,Anis,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+651,FR,BAR,Bardane,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+652,FR,BAS,Basilic,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+653,FR,BLT,Bleuet,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+654,FR,BUR,Bugle rampant,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+655,FR,CMM,Camomille,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+656,FR,CAV,Carvi,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+657,FR,CRF,Cerfeuil,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+658,FR,CHR,Chardon Marie,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+659,FR,CIB,Ciboulette,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+660,FR,CRD,Coriandre,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+661,FR,CUM,Cumin,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+662,FR,EST,Estragon,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+663,FR,FNO,Fenouil,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+664,FR,GAI,Gaillet,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+665,FR,LAV,Lavande / Lavandin,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+666,FR,MRG,Marguerite,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+667,FR,MAV,Mauve,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+668,FR,MRJ,Marjolaine / Origan,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+669,FR,MLI,Melisse,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+670,FR,MTH,Menthe,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+671,FR,MLP,Millepertuis,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+672,FR,OSE,Oseille,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+673,FR,ORT,Ortie,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+674,FR,PAQ,Pâquerette,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+675,FR,PSE,Pensee,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+676,FR,PSL,Persil,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+677,FR,PSY,Plantain psyllium,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+678,FR,PMV,Primevère,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+679,FR,PSN,Psyllium noir de Provence,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+680,FR,ROM,Romarin,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+681,FR,SRI,Sariette,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+682,FR,SGE,Sauge,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+683,FR,THY,Thym,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+684,FR,VAL,Valeriane,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+685,FR,VER,Veronique,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+686,FR,PPA,Autres plantes ornementales et PPAM annuelles,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+687,FR,PPP,Autres plantes ornementales et PPAM perennes,NA ,NA,NA,NA,Arable,Floriculture,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+688,FR,MPA,Autre melange de plantes fixant l’azote,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+689,FR,MCT,Miscanthus,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+690,FR,ACP,Autre culture perenne,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+691,FR,CSS,Culture sous serre hors sol,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+692,FR,TCR,Taillis à courte rotation,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+693,FR,TRU,Truffière (plants mycorhizes),NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+694,FR,SBO,Surface boisee sur une ancienne terre agricole,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+695,FR,SNE,Surface agricole temporairement non exploitee,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+696,FR,MRS,Marais salant,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+697,FR,BFP,Bande admissible le long d’une forêt AVEC production,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+698,FR,BFS,Bande admissible le long d’une forêt SANS production,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+699,FR,BTA,Bande tampon,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+700,FR,BOR,Bordure de champ,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+701,FR,CID,Cultures conduites en interrangs : 2 cultures representant chacune plus de 25%,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+702,FR,CIT,Cultures conduites en interrangs : 3 cultures representant chacune plus de 25%,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+703,FR,CUA,Culture sous abattis,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+704,FR,CUR,Curcuma,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+705,FR,GER,Geranium,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+706,FR,HPC,Horticulture ornementale de plein champ,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+707,FR,HSA,Horticulture ornementale sous abri,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+708,FR,LSA,Legume sous abri,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+709,FR,PPF,Plante à parfum (autre que geranium et vetiver),NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+710,FR,PAR,Plante aromatique (autre que vanille),NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+711,FR,PMD,Plante medicinale,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+712,FR,TBT,Tubercule tropical,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+713,FR,VNL,Vanille,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+714,FR,VNB,Vanille sous bois,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+715,FR,VGD,Verger (DOM),NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+716,FR,VET,Vetiver,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+717,FR,YLA,Ylang-ylang,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+718,FR,ACA,Autre culture non precisee dans la liste (admissible),NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+719,FR,ANA,Ananas,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+720,FR,BCA,Banane creole (fruit et legume) – autre,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+721,FR,BCF,Banane creole (fruit et legume) – fermage,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+722,FR,BCI,Banane creole (fruit et legume) – indivision,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+723,FR,BCP,Banane creole (fruit et legume) – propriete ou faire valoir direct,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+724,FR,BCR,Banane creole (fruit et legume) – reforme foncière,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+725,FR,BEA,Banane export – autre,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+726,FR,BEF,Banane export – fermage,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+727,FR,BEI,Banane export – indivision,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+728,FR,BEP,Banane export – propriete ou faire valoir direct,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+729,FR,BER,Banane export - reforme foncière,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+730,FR,CAC,Cafe / Cacao,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+731,FR,CSA,Canne à sucre – autre,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+732,FR,CSF,Canne à sucre – fermage,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+733,FR,CSI,Canne à sucre – indivision,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+734,FR,CSP,Canne à sucre – propriete ou faire valoir direct,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+735,FR,CSR,Canne à sucre – reforme foncière,NA ,NA,NA,NA,Arable,Other,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+736,FR,DLT,Lotier cornicule,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 737,FR,DLZ,Luzerne cultivee,NA ,NA,NA,NA,Arable,Cover crops,NA,High,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-738,FR,DMD,Moutarde,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-739,FR,DMH,Moha,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-740,FR,DML,"Millet jaune, perle",NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-741,FR,DMN,Minette,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-742,FR,DMT,Melilot,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-743,FR,DNG,Nyger,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-744,FR,DNT,Navette,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-745,FR,DNV,Navet,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+738,FR,DMD,Moutarde,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+739,FR,DMH,Moha,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+740,FR,DML,"Millet jaune, perle",NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+741,FR,DMN,Minette,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+742,FR,DMT,Melilot,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+743,FR,DNG,Nyger,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+744,FR,DNT,Navette,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+745,FR,DNV,Navet,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 746,FR,DPC,Pois chiche,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-747,FR,DPH,Phacelie,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-748,FR,DPS,Pois,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-749,FR,DPT,Pâturin commun,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-750,FR,DRD,"Radis (fourrager, chinois)",NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+747,FR,DPH,Phacelie,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+748,FR,DPS,Pois,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+749,FR,DPT,Pâturin commun,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+750,FR,DRD,"Radis (fourrager, chinois)",NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 751,FR,DRG,Ray-grass,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-752,FR,DRQ,Roquette,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-753,FR,DSD,Serradelle,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-754,FR,DSF,Sorgho fourrager,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-755,FR,DSG,Seigle,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-756,FR,DSH,Sous semis d’herbe ou de legumineuses,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+752,FR,DRQ,Roquette,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+753,FR,DSD,Serradelle,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+754,FR,DSF,Sorgho fourrager,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+755,FR,DSG,Seigle,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+756,FR,DSH,Sous semis d’herbe ou de legumineuses,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 757,FR,DSJ,Soja,NA ,NA,NA,NA,Arable,Cover crops,NA,Low,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-758,FR,DSN,Sainfoin,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-759,FR,DSR,Sarrasin,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-760,FR,DTN,Tournesol,NA ,NA,NA,NA,Arable,Cover crops,NA,Low,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-761,FR,DTR,Trèfle,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+758,FR,DSN,Sainfoin,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+759,FR,DSR,Sarrasin,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+760,FR,DTN,Tournesol,NA ,NA,NA,NA,Arable,Cover crops,NA,Low,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+761,FR,DTR,Trèfle,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 762,FR,DVN,Avoine,NA ,NA,NA,NA,Arable,Cover crops,NA,Low,NA,NA,Low,NA,NA,NA,NA,NA,NA,NA,NA,NA
-763,FR,DVS,Vesce,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-764,FR,DXF,X-Festulolium,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-765,FR,DBM,Brôme,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-766,FR,DBR,Bourrache,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-767,FR,DCF,Chou fourrager,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-768,FR,DCM,Cameline,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-769,FR,DCR,Cresson alenois,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+763,FR,DVS,Vesce,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+764,FR,DXF,X-Festulolium,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+765,FR,DBM,Brôme,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+766,FR,DBR,Bourrache,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+767,FR,DCF,Chou fourrager,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+768,FR,DCM,Cameline,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+769,FR,DCR,Cresson alenois,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
 770,FR,DCZ,Colza,NA ,NA,NA,NA,Arable,Cover crops,NA,High,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
-771,FR,DDC,Dactyle,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-772,FR,DFL,Fleole,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-773,FR,DFN,Fenugrec,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-774,FR,DFT,Fetuque,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-775,FR,DFV,Feverole,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-776,FR,DGS,Gesse cultivee,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-777,FR,DLN,Lin,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-778,FR,DLL,Lentille,NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-779,FR,DLP,"Lupin (blanc, bleu, jaune)",NA ,NA,NA,NA,Arable,Cover crops,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+771,FR,DDC,Dactyle,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+772,FR,DFL,Fleole,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+773,FR,DFN,Fenugrec,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+774,FR,DFT,Fetuque,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+775,FR,DFV,Feverole,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+776,FR,DGS,Gesse cultivee,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+777,FR,DLN,Lin,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+778,FR,DLL,Lentille,NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
+779,FR,DLP,"Lupin (blanc, bleu, jaune)",NA ,NA,NA,NA,Arable,Cover crops,NA,Moderate,NA,NA,Moderate,NA,NA,NA,NA,NA,NA,NA,NA,NA
