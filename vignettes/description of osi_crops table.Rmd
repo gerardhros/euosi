@@ -60,4 +60,5 @@ Downloaded: n-cultures-2022.ods (April 2023);
 Data extracted: code_culture, nom_culture
 
 P AND K CATEGORIES:
-Comifer, 2019, La fertilisation P-K-Mg; Les bases due raisonnement, Page 18. 
+Comifer, 2019, La fertilisation P-K-Mg; Les bases due raisonnement, Page 18. If crops are not mentioned,
+we take them as moderate sensitive as done by Arvalis (communicated during meeting May 2023)
