@@ -11,6 +11,8 @@
 #' @param A_K_CO_PO (numeric) The occupation of the CEC with potassium (\%)
 #' @param A_K_CC (numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg / kg), 
 #' @param B_COUNTRY (character) The country code
+#' @param K_EX (numeric) The exchangeable potassium content (mg/kg)
+#' @param Reg (character) The region to define thresholds
 #' 
 #' @import data.table
 #' 
@@ -247,4 +249,76 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   
   # return the OSI score
   return(out)
+}
+
+#' Calculate the potassium availability index in France
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_K_EX (numeric) The exchangeable K-content of the soil 
+#' @param B_SOILTYPE_AGR (character) The soil type in a particular region
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_fr(B_LU = 'SOJ', A_P_OL = 45, B_SOILTYPE_AGR = 'Nord-Picardie;Limons battants')
+#' 
+#' @return 
+#' The potassium availability index in France estimated from extractable potassium. A numeric value.
+#' 
+#' @export
+
+osi_c_potassium_fr <- function(B_LU, B_SOILTYPE_AGR, A_K_EX = NA_real_) {
+  
+  # set visual bindings
+  i_c_p = osi_country = osi_indicator = id = crop_cat1 = NULL
+  
+  # Load in the crops data set and the parms dataset
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.parms <- as.data.table(euosi::osi_parms)
+  dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  dt.soiltype <- as.data.table(eusoi::osi_soiltype)
+  
+  # subset crops dataset to French situation 
+  dt.crops <- dt.crops[dt.crops$crop_code==B_LU,]
+  
+  # subset thresholds to French situation for potassium
+  dt.thresholds <- dt.thresholds[dt.thresholds$osi_country=='FR' & dt.thresholds$osi_indicator=='i_c_k' & 
+                                   dt.thresholds$osi_threshold_cropcat==dt.crops$crop_potassium &
+                                   dt.thresholds$osi_threshold_soilcat==B_SOILTYPE_AGR,] 
+  
+  # Check length of desired input
+  arg.length <- max(length(B_LU),length(A_K_EX),length(B_SOILTYPE_AGR))
+  
+  # check the values (update the limits later via dt.parms)
+  checkmate::assert_numeric(A_K_EX, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
+  checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(dt.soiltype$soil_cat1), empty.ok = FALSE)
+  
+  # check that there are only 1 scoring function for K
+  checkmate::assert_data_table(dt.thresholds,max.rows = 1)
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   A_K_EX = A_K_EX,
+                   B_LU = B_LU,
+                   B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                   value = A_K_EX)
+  
+  dt <- merge(dt,dt.crops,by.x = 'B_LU', by.y = 'crop_code',all.x=TRUE)
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # convert to the OSI score
+  dt[,i_c_p := osi_evaluate_logistic(x = value, b= dt.thresholds$osi_st_c1,x0 = dt.thresholds$osi_st_c2,v = dt.thresholds$osi_st_c3)]
+  
+  # return value
+  value <- dt[, i_c_k]
+  
+  return(value)
+  
 }
