@@ -139,7 +139,7 @@ osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA 
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen
-#' @param B_SOILTYPE_AGR (character) TThe soil type in a particular region
+#' @param B_SOILTYPE_AGR (character) The soil type in a particular region
 #' 
 #' @import data.table
 #' 
@@ -147,7 +147,7 @@ osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA 
 #' osi_c_posphor_fr(B_LU = 'SOJ', A_P_OL = 45, B_SOILTYPE_AGR = 'Nord-Picardie;Limons battants')
 #' 
 #' @return 
-#' The phosphate availability index in the Netherlands estimated from extractable soil P fractions. A numeric value.
+#' The phosphate availability index in France estimated from extractable soil P Olsen A numeric value.
 #' 
 #' @export
 

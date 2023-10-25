@@ -26,6 +26,7 @@ Two thresholds exist     (1) Timp = soil supplies the crop need, above this conc
                          (2) Trenf = below this threshold, soil needs to be replenished, fertilizer recommendation > supply 
 
 The logistic function is based on the P Olsen evaluation in comparison with the export by the plant: score 0 when supply = 0; score 1 when supply = export
+The growth rate and offset are based on the threshold values, the growth rate near the maximum is set to 1. 
 
 See page 25 in reference. !!! Threshold values are given in mg/kg P2O5, conversion is done by =(Treshold/(141.943x10^3))x2x30.97*10^3
 

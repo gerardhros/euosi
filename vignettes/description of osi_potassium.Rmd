@@ -1,5 +1,5 @@
 ---
-title: "Description of osi_phosphor"
+title: "Description of osi_potassium"
 output:
   html_document: default
   pdf_document: default
@@ -25,7 +25,8 @@ Principle: The exchangeable potassium is evaluated based on (1) the crop needs (
 Two thresholds exist     (1) Timp = soil supplies the crop need, above this concentration no fertilizer response
                          (2) Trenf = below this threshold, soil needs to be replenished, fertilizer recommendation > supply 
 
-The logistic function is based on the P Olsen evaluation in comparison with the export by the plant: score 0 when supply = 0; score 1 when supply = export
+The logistic function is based on the exchangeable K in comparison with the export by the plant: score 0 when supply = 0; score 1 when supply = export. 
+The growth rate and offset are based on the threshold values, the growth rate near the maximum is set to 1. 
 
 See page 25 in reference. !!! Threshold values are given in mg/kg K2O5, conversion is done by =(Treshold/(158
 1936^3))x2x39.0983*10^3

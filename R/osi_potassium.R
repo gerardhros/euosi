@@ -272,7 +272,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
 osi_c_potassium_fr <- function(B_LU, B_SOILTYPE_AGR, A_K_EX = NA_real_) {
   
   # set visual bindings
-  i_c_p = osi_country = osi_indicator = id = crop_cat1 = NULL
+  i_c_k = osi_country = osi_indicator = id = crop_cat1 = NULL
   
   # Load in the crops data set and the parms dataset
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -314,7 +314,7 @@ osi_c_potassium_fr <- function(B_LU, B_SOILTYPE_AGR, A_K_EX = NA_real_) {
   setorder(dt, id)
   
   # convert to the OSI score
-  dt[,i_c_p := osi_evaluate_logistic(x = value, b= dt.thresholds$osi_st_c1,x0 = dt.thresholds$osi_st_c2,v = dt.thresholds$osi_st_c3)]
+  dt[,i_c_k := osi_evaluate_logistic(x = value, b= dt.thresholds$osi_st_c1,x0 = dt.thresholds$osi_st_c2,v = dt.thresholds$osi_st_c3)]
   
   # return value
   value <- dt[, i_c_k]
