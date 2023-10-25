@@ -538,5 +538,5 @@
 537,FR,agronomy,chemical,i_c_k,soil potassium supply,High,"Sud Ouest; Sols basiques ou argilo-calcaires (terreforts, alluvions)",logistic,0.032297743,135.9351137,1
 538,FR,agronomy,chemical,i_c_k,soil potassium supply,Moderate,"Sud Ouest; Sols basiques ou argilo-calcaires (terreforts, alluvions)",logistic,0.201860897,49.43095043,1
 539,FR,agronomy,chemical,i_c_k,soil potassium supply,Low,"Sud Ouest; Sols basiques ou argilo-calcaires (terreforts, alluvions)",logistic,0.096124236,38.55614134,1
-540,FR,agronomy,chemical,i_c_n,soil nitrogen supply,arable,,parabolic,100,NA,NA
-541,FR,agronomy,chemical,i_c_n,soil nitrogen supply,grassland,,parabolic,140,NA,NA
+540,FR,agronomy,chemical,i_c_n,soil nitrogen supply,Arable,,parabolic,100,NA,NA
+541,FR,agronomy,chemical,i_c_n,soil nitrogen supply,Grassland,,parabolic,140,NA,NA
