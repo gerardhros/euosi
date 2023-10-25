@@ -40,7 +40,7 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT, B_COUNTRY) {
                    value = NA_real_
   )
   
-  # calculate the open soil index score for phosphor availability
+  # calculate the open soil index score for nitrogen availability
   dt[B_COUNTRY == 'NL', i_c_n := osi_c_nitrogen_nl(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
                                                    A_SOM_LOI = A_SOM_LOI,A_N_RT = A_N_RT)]
   
@@ -133,6 +133,92 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
     # set OSI score for others  
     dt[grepl('nature',crop_cat1), i_c_n := 1]
     
+  # select output variable
+  out <- dt[,i_c_n]
+  
+  # return value
+  return(out)
+}
+
+#' Calculate the soil nitrogen supplying capacity in France
+#' 
+#' This function calculates the NSC (nitrogen supply capacity) for the soil
+#' 
+#' @param B_LU (character) The crop code from the BRP 
+#' @param A_CACO3_IF (numeric) The % of carbonated lime 
+#' @param A_CLAY_MI (numeric) The percentage clay content in the soil
+#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
+#' @param A_SOM_LOI (numeric) The LOI soil organic matter in the soil % 
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_nitrogen_nl(B_LU = 256, B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4.5,A_N_RT = 2500)
+#' osi_c_nitrogen_nl(1019,'dekzand',5.5,2315)
+#' 
+#' @return 
+#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
+#' 
+#' A_C_OF = 20
+#' A_SAND_MI = 20
+#' A_N_RT = 1.2*1000
+#' A_CLAY_MI = 20
+#' A_CACO3_IF = 0
+#' B_LU <- 'CML'
+#' 
+#' @export
+osi_c_nitrogen_nl <- function(A_C_OF, A_SAND_MI, A_N_RT, A_CLAY_MI, A_CACO3_IF, B_LU) {
+  
+  # add visual bindings
+  osi_country = osi_indicator = crop_code = crop_cat1 = osi_threshold_cropcat = NULL
+  A_CN_FR = D_BDS = D_RD = D_OC = D_GA = id = value = i_c_n = osi_st_c1 = NULL
+  
+  # Load in the datasets
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'FR']
+  
+  # load and subset thresholds to Dutch situation for PMN
+  dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  dt.thresholds <- dt.thresholds[osi_country=='FR' & osi_indicator=='i_c_n']
+  
+  # check length and of arguments
+  arg.length <- max(length(A_N_RT), length(A_C_OF),length(B_LU), length(A_CACO3_IF),length(A_SAND_MI))
+  checkmate::assert_numeric(A_N_RT, lower = 0.1, upper = 30000, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_C_OF, lower = 0, upper = 3000, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_SAND_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  checkmate::assert_data_table(dt.thresholds,max.rows = 2,min.rows = 2)
+  
+  # Collect data in an internal table
+  dt <- data.table(B_LU = B_LU,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_CACO3_IF = A_CACO3_IF,
+                   A_C_OF = A_C_OF,
+                   A_N_RT = A_N_RT,
+                   A_SAND_MI = A_SAND_MI,
+                   value = NA_real_
+  )
+  
+  # merge with crop_category  
+  dt <- merge(dt, dt.crops[, list(crop_code, crop_category)], 
+              by.x = "B_LU", by.y = "crop_code", all.x = TRUE)
+  
+  # calculate derivative supporting soil properties
+  dt[, D_BDS := 0.80806 + (0.823844*exp(0.0578*0.1*A_C_OF)) + (0.0014065 * A_SAND_MI) - (0.0010299 * A_CLAY_MI)] 
+  dt[, D_Nha := dt$A_N_RT * 0.2 * D_BDS * 10000 * 1000 * 10^-6]  #N content in kg/ha
+  
+  # calculate the N supplying capacity for France (kg N/ha/yr)
+  
+  dt[,NSC := ((22/((12+A_CLAY_MI)*(545+A_CACO3_IF))) * dt$D_Nha)*36.5]
+
+  
+  # convert to OSI score
+  
+  # subset and evaluate for arable or grassland soils depending on crop category
+  dths <- dt.thresholds[osi_threshold_cropcat == dt$crop_category]
+  dt[, i_c_n := osi_evaluate_parabolic(NSC, x.top = dths[,osi_st_c1])]
+  
+  
   # select output variable
   out <- dt[,i_c_n]
   
