@@ -540,3 +540,7 @@
 539,FR,agronomy,chemical,i_c_k,soil potassium supply,Low,"Sud Ouest; Sols basiques ou argilo-calcaires (terreforts, alluvions)",logistic,0.096124236,38.55614134,1
 540,FR,agronomy,chemical,i_c_n,soil nitrogen supply,Arable,,parabolic,100,NA,NA
 541,FR,agronomy,chemical,i_c_n,soil nitrogen supply,Grassland,,parabolic,140,NA,NA
+542,FR,agronomy,chemical,i_c_mg,soil magnesium supply,,Sand,logistic,0.13,15.08,1
+543,FR,agronomy,chemical,i_c_mg,soil magnesium supply,,Loam,logistic,0.11,18.09,1
+544,FR,agronomy,chemical,i_c_mg,soil magnesium supply,,Clay Calcareous,logistic,0.08,24.13,1
+545,FR,agronomy,chemical,i_c_mg,soil magnesium supply,,Clay   ,logistic,0.07,30.16,1
