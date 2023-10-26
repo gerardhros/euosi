@@ -28,7 +28,7 @@ Mineralisation of nitrogen is calculated per 10 days, taken into account (1) org
 
 Since we are only interested in soil properties, we take only into account the potential mineralisation of N without temperature and moisture correction 
 
-Mh = 22/((12+clay%)x(545+limestone%))+Norg, multiplied with 36.5 to get it into years since this formula is calibrated for 10 days
+Mh = 22/((12+clay%)x(545+limestone%))*Norg, multiplied with 36.5 to get it into years since this formula is calibrated for 10 days
 
 We used the same limit values as for the NL to get the score (arable vs grassland)
 
