@@ -45,7 +45,7 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC, A
                    A_CEC_CO = A_CEC_CO,
                    A_K_CO_PO = A_K_CO_PO,
                    A_MG_EX = A_MG_EX,
-                   A_CACO3_IF = A_CACO3_IF
+                   A_CACO3_IF = A_CACO3_IF,
                    value = NA_real_
   )
   
