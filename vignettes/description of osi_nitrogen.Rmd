@@ -1,0 +1,40 @@
+---
+title: "Description of osi_nitrogen"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document explains how the phosphorus indicator is calculated for each country and provides references
+
+
+## Netherlands:
+
+
+
+## Belgium (Flanders): 
+
+## France:
+
+Principle:
+
+Cropland:
+20 digital support systems for N are available in France. Our method is based on AzoFert (doi:10.3390/agronomy7040073). 
+Mineralisation of nitrogen is calculated per 10 days, taken into account (1) organic nitrogen (2) clay and CaCO3 content (3) ratio inert:active N fractions (33% for all soils since no sufficient data is available) (4) Fsyst based on management or organic residues, we treat all soils the same so put at 1 (5) f(t) temperature factor based on mean temperature and (5) moisture correction based on field capacity and wilting point 
+
+Since we are only interested in soil properties, we take only into account the potential mineralisation of N without temperature and moisture correction 
+
+Mh = 22/((12+clay%)x(545+limestone%))+Norg, multiplied with 36.5 to get it into years since this formula is calibrated for 10 days
+
+We used the same limit values as for the NL to get the score (arable vs grassland)
+
+
+
+Bulk density was calculated by using the empirically derived function for European cultivated topsoils  doi: 10.1111/j.1365-2389.2011.01412.x
+This calculation was now directly included in the function of N, not separately as done for the OBIC
+
+Grassland:
