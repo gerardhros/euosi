@@ -269,7 +269,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
 #' 
 #' @export
 
-osi_c_potassium_fr <- function(B_LU, B_SOILTYPE_AGR, A_K_EX = NA_real_) {
+osi_c_potassium_fr <- function(B_LU, B_SOILTYPE_AGR, A_K_EX) {
   
   # set visual bindings
   i_c_k = osi_country = osi_indicator = id = crop_cat1 = NULL
