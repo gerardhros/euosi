@@ -1,0 +1,33 @@
+---
+title: "Description of osi_phosphor"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document explains how the phosphorus indicator is calculated for each country and provides references
+
+
+## Netherlands:
+
+
+
+## Belgium (Flanders): 
+
+## France:
+
+Principle: Exchangeable magnesium is evaluated per soil type (CEC, clay, CaCO3), based on table provided by Arvalis (in mg/kg Mg):
+my_tbl <- tibble::tribble(
+  ~Sand..CEC...3.7.cmol.kg., ~Loess..CEC...7.12.cmol.kg., ~Clay.Calcareous, ~Clay...40...clay..without.CaCO3,
+                         30,                          36,               48,                               60
+  )
+
+require(knitr)
+kable(my_tbl, digits = 3, row.names = FALSE, align = "c",
+              caption = NULL)
+
+If Mg levels are lower, fertilization is needed. If Mg levels are higher, fertilization is not needed. 
