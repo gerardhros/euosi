@@ -540,3 +540,5 @@
 539,FR,agronomy,chemical,i_c_k,soil potassium supply,Low,"Sud Ouest; Sols basiques ou argilo-calcaires (terreforts, alluvions)",logistic,0.096124236,38.55614134,1
 540,FR,agronomy,chemical,i_c_n,soil nitrogen supply,Arable,,parabolic,100,NA,NA
 541,FR,agronomy,chemical,i_c_n,soil nitrogen supply,Grassland,,parabolic,140,NA,NA
+542,FR,agronomy,chemical,i_c_zn,soil zinc supply,,Acid,logistic,3.991270,0.500000,1.00
+543,FR,agronomy,chemical,i_c_zn,soil zinc supply,,Alkaline,logistic,1.995635,1.000000,1.00
