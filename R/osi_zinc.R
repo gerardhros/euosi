@@ -115,7 +115,7 @@ osi_c_zinc_fr <- function(A_PH_WA, A_ZN_ED, B_LU) {
   # convert to the OSI score
   # subset and evaluate for lin and mais soils
   i_c_zn <- ifelse(B_LU=='DLN'|B_LU=='MID'|B_LU=='MIE'|B_LU=='MIS',osi::evaluate_logistic(x = dt$value, b= dt.thresholds$osi_st_c1,x0 = dt.thresholds$osi_st_c2,v = dt.thresholds$osi_st_c3),1)
-
+  
   return(value)
   
 }
