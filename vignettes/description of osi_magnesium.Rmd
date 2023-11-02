@@ -9,7 +9,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This document explains how the phosphorus indicator is calculated for each country and provides references
+This document explains how the magnesium indicator is calculated for each country and provides references
 
 
 ## Netherlands:
