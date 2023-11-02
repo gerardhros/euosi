@@ -1,0 +1,31 @@
+---
+title: "Description of osi_copper"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document explains how the zinc indicator is calculated for each country and provides references
+
+
+## Netherlands:
+
+
+
+## Belgium (Flanders): 
+
+## France:
+
+Principle:
+
+For all crops, the Cu supply is evaluated based on the Cu measured in EDTA (mg/kg) and Soil organic matter (%) ratio. Below this threshold, fertilization may be needed.
+The index was calculated based on these threshold values using a logistic function, and giving score 1 when ratio is higher than the threshold. 
+
+Thresholds depend on soil type: 0.4 for argilo calcaires, 0.5 for limons caillouteux and 1 for limons. We included clay > 50 for clay soils with threshold 0.4, and coarse fragments (which is also in LUCAS database) > 35% for stony soils. 
+
+
+Source: https://www.arvalis.fr/infos-techniques/carences-en-oligo-elements-reperer-les-situations-risque-grace-lanalyse-de-terre
