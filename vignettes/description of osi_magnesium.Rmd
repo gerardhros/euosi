@@ -1,5 +1,5 @@
 ---
-title: "Description of osi_phosphor"
+title: "Description of osi_magnesium"
 output:
   html_document: default
   pdf_document: default
