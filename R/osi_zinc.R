@@ -89,7 +89,7 @@ osi_c_zinc_fr <- function(A_PH_WA, A_ZN_ED, B_LU) {
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   
   # subset thresholds to French situation for Magnesium
-  soil_cat_zn <- ifelse(A_PH_WA < 6.5,'Acid', 'Alkaline')
+  soil_cat_zn <- ifelse(A_PH_WA < 6.2,'Acid', 'Alkaline')
   dt.thresholds <- dt.thresholds[dt.thresholds$osi_country=='FR' & dt.thresholds$osi_indicator=='i_c_zn' & dt.thresholds$osi_threshold_soilcat==soil_cat_zn]
   
   
