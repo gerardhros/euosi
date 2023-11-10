@@ -545,3 +545,5 @@
 544,FR,agronomy,chemical,i_c_cu,soil copper supply,,Clay,logistic,9.978175973,0.2,1
 545,FR,agronomy,chemical,i_c_cu,soil copper supply,,Stony Loam,logistic,7.982540778,0.25,1
 546,FR,agronomy,chemical,i_c_cu,soil copper supply,,Loam,logistic,3.991270389,0.5,1
+547,FR,agronomy,chemical,i_c_bo,soil boron supply,,Clay,logistic ,3.326058658,0.6,1
+548,FR,agronomy,chemical,i_c_bo,soil boron supply,,Other,logistic ,4.989087986,0.4,2

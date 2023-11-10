@@ -1,0 +1,31 @@
+---
+title: "Description of osi_boron"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document explains how the boron indicator is calculated for each country and provides references
+
+
+## Netherlands:
+
+
+
+## Belgium (Flanders): 
+
+## France:
+
+Principle:
+
+For sunflower, rapeseed and faba beans (feverole), the B supply is evaluated based on the B measured in hot water (mg/kg). Below this threshold, fertilization may be needed.
+The index was calculated based on these threshold values using a logistic function, and giving score 1 when concentration is higher than the threshold. 
+
+Thresholds depend on soil type: 1.2 for argilo calcaires, 0.8 for other soils. We included clay > 50 for clay soils with threshold 1.2 and 0.8 for other soils. 
+
+
+Source: https://www.arvalis.fr/infos-techniques/carences-en-oligo-elements-reperer-les-situations-risque-grace-lanalyse-de-terre
