@@ -89,7 +89,7 @@ osi_c_copper_fr <- function(A_CLAY_MI, A_CU_ED, A_SOM_LOI,B_CF) {
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   
   # subset thresholds to French situation for Magnesium
-  soil_cat_cu <- ifelse(A_CLAY_MI<50,'Clay',
+  soil_cat_cu <- ifelse(A_CLAY_MI>50,'Clay',
                         ifelse(B_CF>35,'Stony Loam','Loam'))
   dt.thresholds <- dt.thresholds[dt.thresholds$osi_country=='FR' & dt.thresholds$osi_indicator=='i_c_cu' & dt.thresholds$osi_threshold_soilcat==soil_cat_cu]
   
