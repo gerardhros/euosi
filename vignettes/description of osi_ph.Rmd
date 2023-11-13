@@ -22,6 +22,6 @@ This document explains how the pH indicator is calculated for each country and p
 
 Principle:
 
-The pH indicator is calculated based on pH measured in H2O. Different low threshold values are used per soil and crop type: lime with sugarbeet > 7, sandy soils any crop > 5.5, lime with any other crop > 6.5, others = 5.8 - 6.8 is optimal
+The pH indicator is calculated based on pH measured in H2O. Different low threshold values are used per soil and crop type: loam with sugarbeet > 7, sandy soils any crop > 5.5, loam with any other crop > 6.5, others = 5.8 - 6.8 is optimal
 
 
