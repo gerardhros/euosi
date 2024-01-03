@@ -209,7 +209,7 @@ osi_c_nitrogen_nl <- function(A_C_OF, A_SAND_MI, A_N_RT, A_CLAY_MI, A_CACO3_IF, 
   
   # calculate the N supplying capacity for France (kg N/ha/yr)
   
-  dt[,NSC := ((22/((12+A_CLAY_MI)*(545+A_CACO3_IF))) * dt$D_Nha)*36.5]
+  dt[,NSC := ((22/((12+A_CLAY_MI)*(545+A_CACO3_IF))) * dt$D_Nha)*21.35 * 0.33]
 
   
   # convert to OSI score

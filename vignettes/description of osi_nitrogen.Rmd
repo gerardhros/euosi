@@ -28,7 +28,13 @@ Mineralisation of nitrogen is calculated per 10 days, taken into account (1) org
 
 Since we are only interested in soil properties, we take only into account the potential mineralisation of N without temperature and moisture correction 
 
-Mh = 22/((12+clay%)x(545+limestone%))*Norg, multiplied with 36.5 to get it into years since this formula is calibrated for 10 days
+Mh = 22/((12+clay%)x(545+limestone%))*Norg*0.33 *fT * gW, multiplied with 21.35 to get it into years since this formula is calibrated for 10 days. We used 7 months as maximal growing period (7 x 30.5 = 213.5) with 33 % considered as reactive from the total Norg
+
+fT: correction for temperature: e^(K*(Tmoy-Tref)) with K 0.115, Tmoy mean temperature and Tref reference temperature (15 degree).
+COPERNICUS CAN BE USED FOR TEMPERATURE, BUT WHICH PERIOD SHOULD BE CONSIDERED?
+
+gW: correction for moisture: 0.2+0.8((Wsl-Wwp)/(Wfc-Wwp)) with Wsl soil moisture content, wilting point and field capacity. 
+Wilting point and field capacity can be calculated using soil textural classes with eutptf package: https://rdrr.io/github/melwey/euptf/man/euptf-package.html; soil moisture content can be derived from COPERNICUS BUT WHICH PERIOD SHOULD BE CONSIDERED. 
 
 We used the same limit values as for the NL to get the score (arable vs grassland)
 
