@@ -144,30 +144,26 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
 #' 
 #' This function calculates the NSC (nitrogen supply capacity) for the soil
 #' 
-#' @param B_LU (character) The crop code from the BRP 
 #' @param A_CACO3_IF (numeric) The % of carbonated lime 
 #' @param A_CLAY_MI (numeric) The percentage clay content in the soil
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' @param A_SOM_LOI (numeric) The LOI soil organic matter in the soil % 
+#' @param B_LU
+#' @param A_SAND_MI (numeric) The % of sand to calculate the bulk density
+#' @param A_C_OF (numeric) the soil organic carbon content to calculate the bulk density 
 #' 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_nitrogen_nl(B_LU = 256, B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4.5,A_N_RT = 2500)
-#' osi_c_nitrogen_nl(1019,'dekzand',5.5,2315)
 #' 
 #' @return 
 #' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
 #' 
-#' A_C_OF = 20
-#' A_SAND_MI = 20
 #' A_N_RT = 1.2*1000
 #' A_CLAY_MI = 20
 #' A_CACO3_IF = 0
-#' B_LU <- 'CML'
 #' 
 #' @export
-osi_c_nitrogen_nl <- function(A_C_OF, A_SAND_MI, A_N_RT, A_CLAY_MI, A_CACO3_IF, B_LU) {
+osi_c_nitrogen_fr <- function(A_N_RT, A_CLAY_MI, A_CACO3_IF, B_LU,A_SAND_MI,A_C_OF) {
   
   # add visual bindings
   osi_country = osi_indicator = crop_code = crop_cat1 = osi_threshold_cropcat = NULL
