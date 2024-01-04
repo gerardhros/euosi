@@ -257,19 +257,21 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_K_EX (numeric) The exchangeable K-content of the soil 
-#' @param B_SOILTYPE_AGR (character) The soil type in a particular region
+#' @param 	A_CLAY_MI (numeric) The % of clay
+#' @param A_SAND_MI (numeric) The % of sand
+#' @param A_SILT_MI (numeric) The % of silt
 #' 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium_fr(B_LU = 'SOJ', A_P_OL = 45, B_SOILTYPE_AGR = 'Nord-Picardie;Limons battants')
+#' osi_c_potassium_fr(B_LU = 'SOJ', A_P_OL = 45, A_CLAY_MI = 40, A_SAND_MI = 30, A_SILT_MI=30)
 #' 
 #' @return 
 #' The potassium availability index in France estimated from extractable potassium. A numeric value.
 #' 
 #' @export
 
-osi_c_potassium_fr <- function(B_LU, B_SOILTYPE_AGR, A_K_EX) {
+osi_c_potassium_fr <- function(B_LU, A_CLAY_MI,A_SAND_MI ,A_SILT_MI, A_K_EX) {
   
   # set visual bindings
   i_c_k = osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -278,10 +280,16 @@ osi_c_potassium_fr <- function(B_LU, B_SOILTYPE_AGR, A_K_EX) {
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.parms <- as.data.table(euosi::osi_parms)
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  dt.soiltype <- as.data.table(eusoi::osi_soiltype)
-  
+
   # subset crops dataset to French situation 
   dt.crops <- dt.crops[dt.crops$crop_code==B_LU,]
+
+  # define the soil type based on the textural class
+  tri.data<-as.data.frame(cbind(A_CLAY_MI,A_SAND_MI,A_SILT_MI))
+  names(tri.data)<-c('CLAY','SAND','SILT')
+  TT.data<-as.data.frame(soiltexture::TT.points.in.classes(tri.data,"FR.GEPPA.TT"))
+  TT.data2<-TT.data %>% dplyr::select(where(~ sum(.) != 0))
+  B_SOILTYPE_AGR<-names(TT.data2)
   
   # subset thresholds to French situation for potassium
   dt.thresholds <- dt.thresholds[dt.thresholds$osi_country=='FR' & dt.thresholds$osi_indicator=='i_c_k' & 

@@ -28,7 +28,11 @@ Two thresholds exist     (1) Timp = soil supplies the crop need, above this conc
 The logistic function is based on the exchangeable K in comparison with the export by the plant: score 0 when supply = 0; score 1 when supply = export. 
 The growth rate and offset are based on the threshold values, the growth rate near the maximum is set to 1. 
 
-See page 25 in reference. !!! Threshold values are given in mg/kg K2O5, conversion is done by =(Treshold/(158
-1936^3))x2x39.0983*10^3
+See page 25 in reference. !!! Threshold values are given in mg/kg K2O5, conversion is done by =(Treshold*19^-3/(158.
+1936))x2x39.0983*10^3
+
+The threshold differences across soil types and regions seems to be mainly governed by the soil texture. We therefore made a simplification: we calculated median threshold values across textural classes based on the soil type descriptions and across regions. The textural classes are defined as the GEPPA french system of the soil texture wizard (https://cran.r-project.org/web/packages/soiltexture/vignettes/soiltexture_vignette.pdf)
+
+The Growth rate is calculated as (2*log(99))/(-xmin+xmax), the offset is calculated as (log(99)/growthrate)+xmin
 
 Reference: Comifer, 2019, La fertilisation P-K-Mg; Les bases due raisonnement
