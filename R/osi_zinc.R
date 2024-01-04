@@ -41,7 +41,7 @@ osi_c_zinc <- function(B_LU, A_PH_WA,A_ZN_ED, B_COUNTRY) {
   )
   
   # calculate the open soil index score for magnesium availability per country
-  dt[B_COUNTRY == 'FR', i_c_k := osi_c_zinc_fr(A_PH_WA = A_PH_WA,
+  dt[B_COUNTRY == 'FR', i_c_zn := osi_c_zinc_fr(A_PH_WA = A_PH_WA,
                                                A_ZN_ED = A_ZN_ED, B_LU = B_LU)]
   
   # select the output variable
