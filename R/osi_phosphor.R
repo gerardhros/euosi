@@ -139,19 +139,19 @@ osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA 
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen
-#' @param B_SOILTYPE_AGR (character) The soil type in a particular region
+#' @param A_PH_WA (numeric) the pH measured in water
 #' 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor_fr(B_LU = 'SOJ', A_P_OL = 45, B_SOILTYPE_AGR = 'Nord-Picardie;Limons battants')
+#' osi_c_posphor_fr(B_LU = 'SOJ', A_P_OL = 45, A_PH_WA = 6)
 #' 
 #' @return 
 #' The phosphate availability index in France estimated from extractable soil P Olsen A numeric value.
 #' 
 #' @export
 
-osi_c_posphor_fr <- function(B_LU, B_SOILTYPE_AGR, A_P_OL = NA_real_) {
+osi_c_posphor_fr <- function(B_LU, A_PH_WA, A_P_OL = NA_real_) {
   
   # set visual bindings
   i_c_p = osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -160,10 +160,10 @@ osi_c_posphor_fr <- function(B_LU, B_SOILTYPE_AGR, A_P_OL = NA_real_) {
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.parms <- as.data.table(euosi::osi_parms)
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  dt.soiltype <- as.data.table(eusoi::osi_soiltype)
-  
+
   # subset crops dataset to French situation 
   dt.crops <- dt.crops[dt.crops$crop_code==B_LU,]
+  B_SOILTYPE_AGR <- ifelse(A_PH_WA>8,'craie','general')
   
   # subset thresholds to French situation for phosphorus
   dt.thresholds <- dt.thresholds[dt.thresholds$osi_country=='FR' & dt.thresholds$osi_indicator=='i_c_p' & 
@@ -171,7 +171,7 @@ osi_c_posphor_fr <- function(B_LU, B_SOILTYPE_AGR, A_P_OL = NA_real_) {
                                    dt.thresholds$osi_threshold_soilcat==B_SOILTYPE_AGR,] 
   
   # Check length of desired input
-  arg.length <- max(length(B_LU),length(A_P_OL),length(B_SOILTYPE_AGR))
+  arg.length <- max(length(B_LU),length(A_P_OL),length(A_PH_WA))
   
   # check the values (update the limits later via dt.parms)
   checkmate::assert_numeric(A_P_OL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
