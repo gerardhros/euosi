@@ -4,18 +4,27 @@
 \alias{osi_c_ph}
 \title{Calculate the pH index (wrapper function)}
 \usage{
-osi_c_ph(A_PH_WA, A_PH_CC, A_PH_KCL, B_LU, B_TEXTURE_USDA)
+osi_c_ph(
+  B_LU,
+  B_TEXTURE_USDA = NA_real_,
+  A_PH_WA = NA_real_,
+  A_PH_CC = NA_real_,
+  A_PH_KCL = NA_real_,
+  B_COUNTRY
+)
 }
 \arguments{
+\item{B_LU}{(numeric) The crop code}
+
+\item{B_TEXTURE_USDA}{(character) The USDA textural class}
+
 \item{A_PH_WA}{(numeric) The pH measured in h2o}
 
 \item{A_PH_CC}{(numeric) The pH measured in cacl2}
 
 \item{A_PH_KCL}{(numeric) The pH measured in KCl}
 
-\item{B_LU}{(numeric) The crop code}
-
-\item{B_TEXTURE_USDA}{(character) The USDA textural class}
+\item{B_COUNTRY}{(character) The country code}
 }
 \value{
 The index to evaluate the soil pH

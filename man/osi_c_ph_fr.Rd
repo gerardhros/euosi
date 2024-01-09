@@ -2,16 +2,16 @@
 % Please edit documentation in R/osi_ph.R
 \name{osi_c_ph_fr}
 \alias{osi_c_ph_fr}
-\title{#' Calculate the pH index for France}
+\title{Calculate the pH index for France}
 \usage{
-osi_c_ph_fr(B_TEXTURE_USDA, A_PH_WA, B_LU)
+osi_c_ph_fr(B_LU, B_TEXTURE_USDA, A_PH_WA)
 }
 \arguments{
+\item{B_LU}{(character) The crop type}
+
 \item{B_TEXTURE_USDA}{(numeric) The soil textural class}
 
 \item{A_PH_WA}{(numeric) The pH measured in H2O}
-
-\item{B_LU}{(character) The crop type}
 }
 \value{
 The pH index in France estimated from pH in water, the textural class and the crop type

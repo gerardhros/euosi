@@ -4,26 +4,39 @@
 \alias{osi_c_copper}
 \title{Calculate the copper availability index (wrapper function)}
 \usage{
-osi_c_copper(A_CLAY_MI, A_SOM_LOI, A_CU_ED, B_COUNTRY)
+osi_c_copper(
+  B_LU,
+  A_CLAY_MI = NA_real_,
+  B_CF = NA_real_,
+  A_SOM_LOI = NA_real_,
+  A_PH_WA = NA_real_,
+  A_CACO3_IF = NA_real_,
+  A_CU_RT = NA_real_,
+  A_CU_EDTA = NA_real_,
+  A_CU_CC = NA_real_,
+  B_COUNTRY
+)
 }
 \arguments{
-\item{A_CLAY_MI}{(numeric) The clay content %}
-
-\item{A_SOM_LOI}{(numeric) The organic matter content %}
-
-\item{A_CU_ED}{(numeric) The plant available content of Cu in the soil (mg Cu per kg) extracted by EDTA}
-
 \item{B_LU}{(numeric) The crop code}
 
-\item{A_CU_CC}{(numeric) The plant available content of Cu in the soil (mg  Cu per kg) extracted by 0.01M CaCl2}
+\item{A_CLAY_MI}{(numeric) The clay content (\%)}
 
-\item{A_CU_RT}{(numeric) The pseudo-total content of Cu in the soil (mg Cu per kg) extracted by Aqua regia}
+\item{B_CF}{(numeric) The percentage of coarse fragments (\%)}
+
+\item{A_SOM_LOI}{(numeric) The organic matter content (\%)}
 
 \item{A_PH_WA}{(numeric) The acidity of the soil, measured in water (-)}
 
-\item{A_CACO3_IF}{(numeric) The carbonate content %}
+\item{A_CACO3_IF}{(numeric) The carbonate content (\%)}
 
-\item{B_CF}{(numeric) The % of coarse fragments}
+\item{A_CU_RT}{(numeric) The pseudo-total content of Cu in the soil (mg Cu per kg) extracted by Aqua regia}
+
+\item{A_CU_EDTA}{(numeric) The plant available content of Cu in the soil (mg Cu per kg) extracted by EDTA}
+
+\item{A_CU_CC}{(numeric) The plant available content of Cu in the soil (mg  Cu per kg) extracted by 0.01M CaCl2}
+
+\item{B_COUNTRY}{(character) The country code}
 }
 \value{
 The capacity of the soil to supply and buffer copper, evaluated given an optimum threshold for yield. A numeric value.

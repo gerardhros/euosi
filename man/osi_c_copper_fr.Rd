@@ -2,27 +2,24 @@
 % Please edit documentation in R/osi_copper.R
 \name{osi_c_copper_fr}
 \alias{osi_c_copper_fr}
-\title{Calculate the Cu availability index for the Netherlands}
+\title{Calculate the Cu availability index for France}
 \usage{
-osi_c_copper_fr(A_CLAY_MI, A_CU_ED, A_SOM_LOI, B_CF)
+osi_c_copper_fr(B_LU, A_CLAY_MI, B_CF, A_SOM_LOI, A_CU_EDTA)
 }
 \arguments{
-\item{A_CLAY_MI}{(numeric) The clay content %}
+\item{B_LU}{(numeric) The crop code}
 
-\item{A_CU_ED}{(numeric) The plant available content of Cu in the soil (mg Cu per kg) extracted by EDTA}
+\item{A_CLAY_MI}{(numeric) The clay content (\%)}
 
-\item{A_SOM_LOI}{(numeric) The organic matter content %}
+\item{B_CF}{(numeric) The percentage of coarse fragments (\%)}
 
-\item{B_CF}{(numeric) The % of coarse fragments}
+\item{A_SOM_LOI}{(numeric) The organic matter content (\%)}
+
+\item{A_CU_EDTA}{(numeric) The plant available content of Cu in the soil (mg Cu per kg) extracted by EDTA}
 }
 \value{
 The copper availability index in France estimated from extractable copper, clay, coarse fragments and soil organic matter, A numeric value.
 }
 \description{
-This function calculates the Cu availability of a soil, using the agronomic index used in the Netherlands.
-}
-\details{
-#' Calculate the Cu availability index for France 
-
 This function calculates the Cu availability of a soil, using the agronomic index used in France
 }
