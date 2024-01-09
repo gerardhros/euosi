@@ -1,3 +1,8 @@
+# euosi 0.0.5 2024-01-09
+
+## Changed
+* nitrogen supply in France has been corrected in `osi_c_n_fr` for length of growing season
+
 # euosi 0.0.4 2024-01-09
 
 ## Added
