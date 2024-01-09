@@ -94,7 +94,7 @@ osi_evaluate_parabolic <- function(x, x.top, must.plateau = TRUE) {
 #' A transformed variable after applying a logistic evaluation function. A numeric value.
 #'
 #' @export
-evaluate_logistic_gaus_down <- function(x, b, x0, v, optimum, optimum_ofset = 1.5) {
+osi_evaluate_logistic_gaus_down <- function(x, b, x0, v, optimum, optimum_ofset = 1.5) {
   
   # collect in dt
   fun.dt <- data.table(x = x)

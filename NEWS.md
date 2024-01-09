@@ -1,3 +1,11 @@
+# euosi 0.0.7 UNRELEASED 
+
+## Added
+* add logistic curve plus gaussian decline after reaching high values in `osi_evaluate_logistic_gaus_down`
+
+## Changed
+* add possibility to lower score at high values in `osi_evaluate_parabolic`
+
 # euosi 0.0.6 2024-01-09
 
 ## Added
