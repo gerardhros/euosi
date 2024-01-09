@@ -32,3 +32,59 @@ osi_conv_ph <- function(element, A_PH_KCL = NA_real_,A_PH_CC = NA_real_, A_PH_WA
   return(value)
   
 }
+
+#' Calculate A_B_HW
+#' 
+#' This function calculates the hot water extractable B content from A_B_CC (mg / kg).
+#' @param B_SOILTYPE_AGR (character) The agricultural type of soil. Options: duinzand, dekzand, zeeklei, rivierklei, maasklei, dalgrond, moerige_klei, veen en loess
+#' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+#' @param A_B_CC (numeric) The extractable boron content of the soil (ug / kg), measured in a 0.01M CaCl2 extract
+#' @param A_PH_CC (numeric) The pH of the soil, measured in a 0.01M CaCl2 extract (-)
+#' 
+#' @import data.table
+#' 
+#' @references Van Rotterdam & Bussink (2017) and de Haas et al. (2004)
+#'
+#' @export
+osi_conv_hwb <- function(B_SOILTYPE_AGR, A_SOM_LOI = NA_real_, A_B_CC= NA_real_, A_PH_CC= NA_real_){
+  
+  # initialize global variables
+  value1 = value2 = value3 = id = NULL
+  
+  # number of soils
+  arg.length <- max(length(A_B_CC),length(A_SOM_LOI),length(B_SOILTYPE_AGR),length(A_PH_CC))
+  
+  # make local copy of inputs into data.table
+  dt <- data.table(id = 1:arg.length,
+                   B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_B_CC = A_B_CC * 0.001,
+                   A_PH_CC = A_PH_CC,
+                   value1 = NA_real_,
+                   value2 = NA_real_,
+                   value3 = NA_real_,
+                   value = NA_real_)
+  
+  # estimate A_B_HW from A_SOM_LOI or A_B_CC using equations from Rotterdam & Bussink (2017), NMI project 1323
+  dt[grepl('duin|dal|zand',B_SOILTYPE_AGR),value1 := 0.0305 * A_SOM_LOI + 0.2038]
+  dt[grepl('klei|loss|loes',B_SOILTYPE_AGR) & A_PH_CC > 6,value1 := 0.2731 * A_SOM_LOI]
+  dt[grepl('klei|loss|loes',B_SOILTYPE_AGR) & A_PH_CC <= 6,value1 := 0.1829 * A_SOM_LOI]
+  dt[grepl('duin|dal|zand',B_SOILTYPE_AGR),value2 := 2.80599 * A_B_CC + 0.00745]
+  dt[grepl('klei|loss|loes|veen',B_SOILTYPE_AGR),value2 := 4.38902 * A_B_CC - 0.10114]
+  
+  # estimate A_B_HW from A_B_CC using equations from De Haas et al. (2014)
+  dt[grepl('duin',B_SOILTYPE_AGR), value3 := 0.0983 + 2.3256 * A_B_CC]
+  dt[grepl('dekzand',B_SOILTYPE_AGR), value3 := 0.0983 + 2.3256 * A_B_CC - 0.383]
+  dt[grepl('dalgrond',B_SOILTYPE_AGR), value3 := 0.0983 + 2.3256 * A_B_CC + 0.0179]
+  dt[grepl('klei|loss|loes|veen',B_SOILTYPE_AGR), value3 := 0.1795 + 2.356 * A_B_CC]
+  
+  # estimate mean value from three regression equations
+  dt[,value := mean(c(value1, value2, value3),na.rm = TRUE),by=id]
+  
+  # extract output variable
+  value <- dt[,value]
+  
+  # return value
+  return(value)
+  
+}
