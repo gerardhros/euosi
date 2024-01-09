@@ -23,11 +23,11 @@
 #' 
 #' @export
 osi_c_posphor <- function(B_LU, 
-                          B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_character_, 
+                          B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_character_, A_P_OL = NA_real_,
                           A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY) {
   
   # add visual bindings
- 
+  A_P_OL = value = id = . = NULL
   
   # note that qualitative checks on the inputs are done by the country specific functions
   
@@ -88,7 +88,7 @@ osi_c_posphor <- function(B_LU,
 osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = NULL
   
   # convert B_LU to integer
   B_LU <- as.integer(B_LU)
@@ -166,7 +166,8 @@ osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor_fr(B_LU = 'SOJ', A_P_OL = 45, B_SOILTYPE_AGR = 'limons battants', B_AER_FR = 'nord-picardie')
+#' osi_c_posphor_fr(B_LU = 'SOJ', A_P_OL = 45, 
+#' B_SOILTYPE_AGR = 'limons battants', B_AER_FR = 'nord-picardie')
 #' 
 #' @return 
 #' The phosphate availability index in France estimated from extractable soil P Olsen (a numeric value).
@@ -175,7 +176,8 @@ osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA 
 osi_c_posphor_fr <- function(B_LU, B_SOILTYPE_AGR, B_AER_FR, A_P_OL = NA_real_) {
   
   # set visual bindings
-  i_c_p = osi_country = osi_indicator = id = crop_cat1 = NULL
+  value = osi_country = osi_indicator = id = crop_cat1 = NULL
+  crop_code = crop_p = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   
   # Load in the interal datasets
   
