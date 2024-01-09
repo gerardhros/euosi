@@ -1,10 +1,50 @@
-﻿osi_soil_id;osi_country;osi_soil_cat1;osi_soil_cat2
-1;NL;duinzand;sand
-2;NL;dekzand;sand
-3;NL;zeeklei;clay
-4;NL;rivierklei;clay
-5;NL;maasklei;clay
-6;NL;dalgrond;sand
-7;NL;moerige_klei;clay
-8;NL;veen;peat
-9;NL;loess;loess
+osi_soil_id,osi_country,osi_soil_cat1,osi_soil_cat2
+1,NL,duinzand,sand
+2,NL,dekzand,sand
+3,NL,zeeklei,clay
+4,NL,rivierklei,clay
+5,NL,maasklei,clay
+6,NL,dalgrond,sand
+7,NL,moerige_klei,clay
+8,NL,veen,peat
+9,NL,loess,loess
+10,FR,limons battants,
+11,FR,limons argileux,
+12,FR,argiles,
+13,FR,cranettes,
+14,FR,craie,
+15,FR,limons,
+16,FR,argilo-calcaire,
+17,FR,sable,
+18,FR,argilo-calcaire superficiels,
+19,FR,argilo-calcaire profonds,
+20,FR,argiles lourdes,
+21,FR,limons loess,
+22,FR,alluvions,
+23,FR,limons lehm,
+24,FR,hardt superficielle - ried brun caillouteux,
+25,FR,hardt profonde - ried brun caillouteux,
+26,FR,argilo-calcaires caillouteux ,
+27,FR,limons argileux superficiels,
+28,FR,limons hydromorphes,
+29,FR,argiles hydromorphes,
+30,FR,sols,
+31,FR,limons sableux,
+32,FR,sable caillouteux non calcareous,
+33,FR,terres,
+34,FR,limons sains et limons sableux,
+35,FR,limon caillouteux superficiels,
+36,FR,aubues legeres et champagnes superficielles,
+37,FR,aubues lourdes et champagnes profondes,
+38,FR,sableux,
+39,FR,argileux - superficiels,
+40,FR,terre noire,
+41,FR,granitique,
+42,FR,sologne,
+43,FR,varenne,
+44,FR,gravier-diluvium,
+45,FR,limon blanc sain,
+46,FR,limon blanc humide,
+47,FR,limon argileux sain,
+48,FR,limon argileux humide,
+49,FR,acides limoneux ou argileux,

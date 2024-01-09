@@ -49,38 +49,24 @@
 # make a table for all soil indicator evaluation functions, being country and soil function dependent
   
   # load data
-  osi_thresholds <- fread('dev/osi_thresholds.csv',encoding = 'UTF-8',dec=',')
+  osi_thresholds <- fread('dev/osi_thresholds.csv',encoding = 'UTF-8',na.strings = c(NA_character_, "","NA"))
+  
+  # round numbers
+  osi_thresholds[,osi_st_c1 := round(as.numeric(osi_st_c1),3)]
+  osi_thresholds[,osi_st_c2 := round(as.numeric(osi_st_c2),3)]
+  osi_thresholds[,osi_st_c3 := round(as.numeric(osi_st_c3),3)]
   
   # save updated threshold table
   usethis::use_data(osi_thresholds,overwrite = TRUE)
 
-# make crop table
+# make crop table with crop data for France and the Netherlands
   
-  # load (for the moment a copy of OBIC crop list)
-  osi_crops <- OBIC::crops.obic
+  # load crop datat
+  osi_crops <-  fread('dev/osi_crops.csv',encoding = 'UTF-8',na.strings = c(NA_character_, "","NA"))
   
   # select only selected categories
-  osi_crops <- osi_crops[,.(crop_code,crop_name,crop_cat1 = crop_category)]
-  
-  # switch to english categories
-  osi_crops[crop_cat1=='akkerbouw', crop_cat1 := 'arable']
-  osi_crops[crop_cat1=='mais', crop_cat1 := 'maize']
-  osi_crops[crop_cat1=='grasland', crop_cat1 := 'grassland']
-  osi_crops[crop_cat1=='natuur', crop_cat1 := 'nature']
-
-  # add country
-  osi_crops[,osi_country :='NL']
+  osi_crops <- osi_crops[,.(osi_country,crop_code,crop_name,crop_cat1,crop_cat2,crop_n,crop_p,crop_k)]
   
   # save updated crop table
   usethis::use_data(osi_crops,overwrite = TRUE)
-  
-  write.csv(osi_crops,'osi_crops.csv')
-  
-  
-  # Update csv file with crop data from France
-  osi_crops<-read.csv('osi_crops.csv')
-  usethis::use_data(osi_crops,overwrite = TRUE)
-  
-  
-    
   
