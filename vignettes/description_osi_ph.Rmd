@@ -1,0 +1,31 @@
+---
+title: "Description of osi_ph"
+author: 'Elise van Eynde & Gerard Ros'
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Description_osi_ph}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document explains how the pH indicator is calculated for each country and provides references
+
+
+## Netherlands:
+
+
+
+## Belgium (Flanders): 
+
+## France:
+
+Principle:
+
+The pH indicator is calculated based on pH measured in H2O. Different low threshold values are used per soil and crop type: loam with sugarbeet > 7, sandy soils any crop > 5.5, loam with any other crop > 6.5, others = 5.8 - 6.8 is optimal
+
+

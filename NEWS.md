@@ -1,3 +1,14 @@
+# euosi 0.0.4 2024-01-09
+
+## Added
+* `osi_c_b_fr` and `osi_c_b` to assess the soil function to supply boron in France 
+* `osi_c_cu_fr` and `osi_c_cu` to assess the soil function to supply Copper in France 
+* `osi_c_ph_fr` and `osi_c_ph` to assess the the pH in view of a desired target 
+* three vignettes describing background information regarding these functions
+
+## Changed
+* parameters in `osi_parms` and `osi_parameters.csv` updated with new ones for pH, Cu and B for France
+
 # euosi 0.0.3 2024-01-09
 
 ## Added

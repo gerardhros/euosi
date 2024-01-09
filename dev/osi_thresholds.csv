@@ -546,3 +546,9 @@ nr,osi_country,osi_esd,osi_category,osi_indicator,osi_indicator_name,osi_thresho
 545,FR,agronomy,chemical,i_c_cu,soil copper supply,,clay,,logistic,9.978,0.2,1
 546,FR,agronomy,chemical,i_c_cu,soil copper supply,,stony loam,,logistic,7.983,0.25,1
 547,FR,agronomy,chemical,i_c_cu,soil copper supply,,loam,,logistic,3.991,0.5,1
+548,FR,agronomy,chemical,i_c_b,soil boron supply,,clay,,logistic,3.326,0.6,1
+549,FR,agronomy,chemical,i_c_b,soil boron supply,,other,,logistic,4.989,0.4,2
+550,FR,agronomy,chemical,i_c_ph,soil ph,sugar beet,,,logistic,0.9978,5,1
+551,FR,agronomy,chemical,i_c_ph,soil ph,,,,logistic,1.597,4.25,1
+552,FR,agronomy,chemical,i_c_ph,soil ph,,,,logistic,1.140,4.75,1
+553,FR,agronomy,chemical,i_c_ph,soil ph,,,,logistic,1.426,4.4,1
