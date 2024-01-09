@@ -1,4 +1,4 @@
-# euosi 0.0.7 UNRELEASED 
+# euosi 0.0.7 2024-01-09 
 
 ## Added
 * logistic curve plus gaussian decline after reaching high values in `osi_evaluate_logistic_gaus_down`
