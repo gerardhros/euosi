@@ -17,6 +17,9 @@
 #' @import data.table
 #' 
 #' @examples 
+#' osi_c_potassium(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4, 
+#' A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
+#' A_K_CO_PO = 8.5, A_K_CC = 145,B_COUNTRY = 'NL')
 #' 
 #' @return
 #' The capacity of the soil to supply and buffer potassium, evaluated given an optimum threshold for yield. A numeric value.
@@ -105,12 +108,17 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'NL']
+  dt.crops[, crop_code := as.integer(crop_code)]
+  
   dt.soils <- as.data.table(euosi::osi_soiltype)
   dt.soils <- dt.soils[osi_country == 'NL']
   
   # Load in the thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'NL' & osi_indicator == 'i_c_k']
+  
+  # convert B_LU to integer
+  B_LU <- as.integer(B_LU)
   
   # Check inputs
   arg.length <- max(length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO), length(A_K_CO_PO), 
@@ -262,7 +270,8 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium_fr(B_LU = 'SOJ', A_K_AA = 45,B_SOILTYPE_AGR = 'limons battants', B_AER_FR = 'nord picardie')
+#' osi_c_potassium_fr(B_LU = 'SOJ', A_K_AA = 45,
+#' B_SOILTYPE_AGR = 'limons battants', B_AER_FR = 'nord picardie')
 #' 
 #' @return 
 #' The potassium availability index in France estimated from extractable potassium. A numeric value.
@@ -272,6 +281,7 @@ osi_c_potassium_fr <- function(B_LU, B_SOILTYPE_AGR, B_AER_FR, A_K_AA = NA_real_
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
+  crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
