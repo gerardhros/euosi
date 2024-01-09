@@ -4,28 +4,46 @@
 \alias{osi_c_nitrogen}
 \title{Calculate the soil nitrogen supplying capacity (wrapper function)}
 \usage{
-osi_c_nitrogen(B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_N_RT, B_COUNTRY)
+osi_c_nitrogen(
+  B_LU,
+  B_SOILTYPE_AGR = NA_character_,
+  A_CLAY_MI = NA_real_,
+  A_SAND_MI = NA_real_,
+  A_SOM_LOI = NA_real_,
+  A_C_OF = NA_real_,
+  A_N_RT,
+  A_CACO3_IF = NA_real_,
+  B_COUNTRY
+)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code from the BRP}
 
 \item{B_SOILTYPE_AGR}{(character) The agricultural type of soil}
 
-\item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil}
+\item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
 
-\item{A_N_RT}{(numeric) The organic nitrogen content of the soil in mg N / kg}
+\item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
+
+\item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil (\%)}
+
+\item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
+
+\item{A_N_RT}{(numeric) The organic nitrogen content of the soil (mg N / kg)}
+
+\item{A_CACO3_IF}{(numeric) The percentage of carbonated lime (\%)}
 
 \item{B_COUNTRY}{(character) The country code}
 }
 \value{
-the normalized potentially mineralizable Nitrogen pool (mg N / kg), a numeric value, converted to an OSI score.
+the capacity of soils to supply  nitorgen, converted to an OSI score.
 }
 \description{
 This function calculates the nitrogen supplying capacity for soils in Europe
 }
 \examples{
 osi_c_nitrogen(B_LU = 256, B_SOILTYPE_AGR = 'dekzand',A_N_RT = 2500, 
+A_CLAY_MI = 11, A_SAND_MI = 3,A_C_OF = NA,A_CACO3_IF = NA,
 A_SOM_LOI = 4.5, B_COUNTRY = 'NL')
-osi_c_nitrogen(1019,'dekzand',4.5,2315,'NL')
 
 }

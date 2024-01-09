@@ -6,6 +6,9 @@
 \usage{
 osi_c_posphor(
   B_LU,
+  B_SOILTYPE_AGR = NA_character_,
+  B_AER_FR = NA_character_,
+  A_P_OL = NA_real_,
   A_P_AL = NA_real_,
   A_P_CC = NA_real_,
   A_P_WA = NA_real_,
@@ -13,7 +16,13 @@ osi_c_posphor(
 )
 }
 \arguments{
-\item{B_LU}{(numeric) The crop code}
+\item{B_LU}{(character) The crop code}
+
+\item{B_SOILTYPE_AGR}{(character) The agricultural type of soil}
+
+\item{B_AER_FR}{(character) An agroeconomic region in France}
+
+\item{A_P_OL}{(numeric) The P-content of the soil extracted with Olsen (mg/kg)}
 
 \item{A_P_AL}{(numeric) The P-content of the soil extracted with ammonium lactate}
 

@@ -6,13 +6,15 @@
 \usage{
 osi_c_potassium(
   B_LU,
-  B_SOILTYPE_AGR,
-  A_SOM_LOI,
-  A_CLAY_MI,
-  A_PH_CC,
-  A_CEC_CO,
-  A_K_CO_PO,
-  A_K_CC,
+  B_SOILTYPE_AGR = NA_character_,
+  B_AER_FR = NA_character_,
+  A_SOM_LOI = NA,
+  A_CLAY_MI = NA,
+  A_PH_CC = NA,
+  A_CEC_CO = NA,
+  A_K_CO_PO = NA,
+  A_K_CC = NA,
+  A_K_AA = NA,
   B_COUNTRY
 )
 }
@@ -20,6 +22,8 @@ osi_c_potassium(
 \item{B_LU}{(numeric) The crop code}
 
 \item{B_SOILTYPE_AGR}{(character) The agricultural type of soil}
+
+\item{B_AER_FR}{(character) An agroeconomic region in France}
 
 \item{A_SOM_LOI}{(numeric) The organic matter content of the soil (\%)}
 
@@ -33,6 +37,8 @@ osi_c_potassium(
 
 \item{A_K_CC}{(numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg / kg),}
 
+\item{A_K_AA}{(numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction}
+
 \item{B_COUNTRY}{(character) The country code}
 }
 \value{
@@ -42,11 +48,8 @@ The capacity of the soil to supply and buffer potassium, evaluated given an opti
 This function calculates the potassium availability for all European countries (if available).
 }
 \examples{
-osi_c_potassium(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',
-A_SOM_LOI = 4, A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
-A_K_CO_PO = 8.5, A_K_CC = 145, B_COUNTRY = 'NL')
-osi_c_potassium(265, 'dekzand',4, 11,5.4,  125,8.5, 145,'NL')
-osi_c_potassium(c(265,1019), rep('dekzand',2),c(4,6), c(11,14),
-c(5.4,5.6),  c(125,145),c(8.5,3.5), c(145,180),c('NL','NL'))
+osi_c_potassium(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4, 
+A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
+A_K_CO_PO = 8.5, A_K_CC = 145,B_COUNTRY = 'NL')
 
 }
