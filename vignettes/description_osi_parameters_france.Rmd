@@ -1,0 +1,24 @@
+---
+title: "osi_input_france"
+author: 'Elise van Eynde'
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{osi_input_france}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This table provides an overview of all input variables per function for France
+
+
+
+# install.packages("devtools")
+devtools::install_github("lbusett/insert_table")

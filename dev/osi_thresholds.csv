@@ -543,3 +543,6 @@ nr,osi_country,osi_esd,osi_category,osi_indicator,osi_indicator_name,osi_thresho
 542,FR,agronomy,chemical,i_c_zn,soil zinc supply,,acid,,logistic,3.991,0.5,1
 543,FR,agronomy,chemical,i_c_zn,soil zinc supply,,alkaline,,logistic,1.996,1,1
 544,NL,agronomy,chemical,i_c_zn,soil zinc supply,,,,parabolic,100,,
+545,FR,agronomy,chemical,i_c_cu,soil copper supply,,clay,,logistic,9.978,0.2,1
+546,FR,agronomy,chemical,i_c_cu,soil copper supply,,stony loam,,logistic,7.983,0.25,1
+547,FR,agronomy,chemical,i_c_cu,soil copper supply,,loam,,logistic,3.991,0.5,1
