@@ -43,6 +43,7 @@ osi_evaluate_logistic <- function(x, b, x0, v, increasing = TRUE) {
 #' 
 #' @param x (numeric) The values of a calc function to be converted to an evaluation
 #' @param x.top (numeric) The value at which x reaches the plateau
+#' @param must.plateau (boolean) set max at plateau or accept decline after reaching optimum.
 #' 
 #' @examples 
 #' osi_evaluate_parabolic(x = 5, x.top = 8)
@@ -52,7 +53,7 @@ osi_evaluate_logistic <- function(x, b, x0, v, increasing = TRUE) {
 #' A transformed variable after applying a parabolic evaluation function. A numeric value.
 #' 
 #' @export
-osi_evaluate_parabolic <- function(x, x.top) {
+osi_evaluate_parabolic <- function(x, x.top, must.plateau = TRUE) {
   
   # Setting
   a <- 1 / x.top^2
@@ -62,7 +63,9 @@ osi_evaluate_parabolic <- function(x, x.top) {
   y <- 1 - a * (x - b) ^2
   
   # Set plateaus
-  y <- ifelse(x >= x.top, 1, y)
+  if(must.plateau){
+    y <- ifelse(x >= x.top, 1, y)
+  }
   y <- ifelse(y < 0, 0, y)
   
   return(y)
