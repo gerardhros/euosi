@@ -9,23 +9,26 @@
 osi_conv_ph <- function(element, A_PH_KCL = NA_real_,A_PH_CC = NA_real_, A_PH_WA = NA_real_){
   
   # check inputs
-  checkmate::assert_numeric(A_PH_KCL, lower = 3, upper = 10, any.missing = TRUE)
-  checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = TRUE)
-  checkmate::assert_numeric(A_PH_WA, lower = 3, upper = 10, any.missing = TRUE)
-  checkmate::assert_subset(element,choices = c('A_PH_CC','A_PH_KCL','A_PH_WA'),empty.ok = FALSE)
+  checkmate::assert_numeric(A_N_RT, lower = 0.1, upper = 30000, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_C_OF, lower = 0, upper = 3000, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_CN_FR, lower = 5, upper = 25, any.missing = FALSE, len = arg.length)
+  checkmate::assert_subset(element,choices = c('A_SOM_LOI','A_C_OF','A_N_RT','A_CN_FR'),empty.ok = FALSE)
   
   # make internal table with inputs
-  dt <- data.table(A_PH_KCL = A_PH_KCL,
-                   A_PH_CC = A_PH_CC,
-                   A_PH_WA = A_PH_WA)
+  dt <- data.table(A_SOM_LOI = A_SOM_LOI,
+                   A_C_OF = A_C_OF,
+                   A_N_RT = A_N_RT,
+                   A_CN_FR = A_CN_FR)
   
-  # estimate pH from other measurements
-  dt[is.na(A_PH_CC), A_PH_CC := A_PH_KCL * 0.9288 + 0.5262]
-  dt[is.na(A_PH_WA), A_PH_WA := 2.23 + 0.777 * A_PH_KCL]
-  dt[is.na(A_PH_KCL), A_PH_KCL := (A_PH_WA - 2.23) / 0.777]
-  dt[is.na(A_PH_KCL), A_PH_KCL := (A_PH_CC - 0.5262) / 0.9288]
-
-  # select the reqestred pH
+  # estimate SOM properties from other measurements
+  dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
+  dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
+  dt[is.na(A_C_OF) & !is.na(A_N_RT) & !is.na(A_CN_FR), A_C_OF := A_N_RT * A_CN_FR * 0.001]
+  dt[is.na(A_N_RT) & !is.na(A_C_OF) & !is.na(A_CN_FR), A_N_RT := A_C_OF * 1000 / A_CN_FR]
+  dt[is.na(A_CN_FR) & !is.na(A_C_OF) & !is.na(A_N_RT), A_CN_FR := A_C_OF * 1000 / A_N_RT]
+  
+  # select the reqestred property
   value <- dt[,get(element)]
   
   # return value
@@ -83,6 +86,43 @@ osi_conv_hwb <- function(B_SOILTYPE_AGR, A_SOM_LOI = NA_real_, A_B_CC= NA_real_,
   
   # extract output variable
   value <- dt[,value]
+  
+  # return value
+  return(value)
+  
+}
+
+#' Estimate soil organic matter and nutrient values (-)
+#' 
+#' @param element (character) the method requested to be calculated
+#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
+#' @param A_C_OF (numeric) The organic carbon content of the soil in g N / kg
+#' @param A_CN_FR (numeric) The carbon to nitrogen ratio
+#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
+#' 
+#' @export 
+osi_conv_ph <- function(element, A_SOM_LOI = NA_real_,A_C_OF = NA_real_, 
+                        A_N_RT = NA_real_,A_CN_FR = NA_real_){
+  
+  # check inputs
+  checkmate::assert_numeric(A_PH_KCL, lower = 3, upper = 10, any.missing = TRUE)
+  checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = TRUE)
+  checkmate::assert_numeric(A_PH_WA, lower = 3, upper = 10, any.missing = TRUE)
+  checkmate::assert_subset(element,choices = c('A_PH_CC','A_PH_KCL','A_PH_WA'),empty.ok = FALSE)
+  
+  # make internal table with inputs
+  dt <- data.table(A_PH_KCL = A_PH_KCL,
+                   A_PH_CC = A_PH_CC,
+                   A_PH_WA = A_PH_WA)
+  
+  # estimate pH from other measurements
+  dt[is.na(A_PH_CC), A_PH_CC := A_PH_KCL * 0.9288 + 0.5262]
+  dt[is.na(A_PH_WA), A_PH_WA := 2.23 + 0.777 * A_PH_KCL]
+  dt[is.na(A_PH_KCL), A_PH_KCL := (A_PH_WA - 2.23) / 0.777]
+  dt[is.na(A_PH_KCL), A_PH_KCL := (A_PH_CC - 0.5262) / 0.9288]
+  
+  # select the reqestred pH
+  value <- dt[,get(element)]
   
   # return value
   return(value)
