@@ -4,12 +4,14 @@
 \alias{osi_evaluate_parabolic}
 \title{Evaluate a soil quality function using a parabolic function}
 \usage{
-osi_evaluate_parabolic(x, x.top)
+osi_evaluate_parabolic(x, x.top, must.plateau = TRUE)
 }
 \arguments{
 \item{x}{(numeric) The values of a calc function to be converted to an evaluation}
 
 \item{x.top}{(numeric) The value at which x reaches the plateau}
+
+\item{must.plateau}{(boolean) set max at plateau or accept decline after reaching optimum.}
 }
 \value{
 A transformed variable after applying a parabolic evaluation function. A numeric value.
