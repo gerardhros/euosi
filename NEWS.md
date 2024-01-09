@@ -1,7 +1,7 @@
 # euosi 0.0.6 2024-01-09
 
 ## Added
-* `osi_c_mg_fr`, `osi_c_mg_nl` and `osi_c_mg` to assess the soil function to supply boron in France and the Netherlands 
+* `osi_c_mg_fr`, `osi_c_mg_nl` and `osi_c_mg` to assess the soil function to supply magnesium in France and the Netherlands 
 * thresholds for magnesium in `osi_thresholds` for Mg soil assessment in France
 
 # euosi 0.0.5 2024-01-09
