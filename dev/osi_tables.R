@@ -49,7 +49,12 @@
 # make a table for all soil indicator evaluation functions, being country and soil function dependent
   
   # load data
-  osi_thresholds <- fread('dev/osi_thresholds.csv',encoding = 'UTF-8',dec=',')
+  osi_thresholds <- fread('dev/osi_thresholds.csv',encoding = 'UTF-8',na.strings = c(NA_character_, "","NA"))
+  
+  # round numbers
+  osi_thresholds[,osi_st_c1 := round(as.numeric(osi_st_c1),3)]
+  osi_thresholds[,osi_st_c2 := round(as.numeric(osi_st_c2),3)]
+  osi_thresholds[,osi_st_c3 := round(as.numeric(osi_st_c3),3)]
   
   # save updated threshold table
   usethis::use_data(osi_thresholds,overwrite = TRUE)
