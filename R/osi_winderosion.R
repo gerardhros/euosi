@@ -19,6 +19,9 @@ osi_p_wef <- function(B_LU,A_CLAY_MI,A_SILT_MI) {
   # add visual bindings
   id = crop_code = crop_cat1 = loam = NULL
   
+  # ensure B_LU is character
+  B_LU <- as.character(B_LU)
+  
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
 
@@ -26,7 +29,7 @@ osi_p_wef <- function(B_LU,A_CLAY_MI,A_SILT_MI) {
   arg.length <- max(length(A_CLAY_MI), length(A_CLAY_MI))
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE)
   checkmate::assert_numeric(A_SILT_MI, lower = 0, upper = 100, any.missing = FALSE)
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   
   # Collect data in a table

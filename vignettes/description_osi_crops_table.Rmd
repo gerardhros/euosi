@@ -1,8 +1,12 @@
 ---
 title: "Description of osi_crops table"
-output:
-  html_document: default
-  pdf_document: default
+author: 'Elise van Eynde & Gerard Ros'
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Description_osi_crops_table}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
@@ -60,4 +64,5 @@ Downloaded: n-cultures-2022.ods (April 2023);
 Data extracted: code_culture, nom_culture
 
 P AND K CATEGORIES:
-Comifer, 2019, La fertilisation P-K-Mg; Les bases due raisonnement, Page 18. 
+Comifer, 2019, La fertilisation P-K-Mg; Les bases due raisonnement, Page 18. If crops are not mentioned,
+we take them as moderate sensitive as done by Arvalis (communicated during meeting May 2023)

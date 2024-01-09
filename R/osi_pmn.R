@@ -70,7 +70,12 @@ osi_b_pmn <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN, B_COUNTRY) {
 osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
   
   # add visual bindings
-  osi_country = osi_indicator = NULL
+  osi_country = osi_indicator = crop_code = NULL
+  
+  # Load in the crops data set and the parms dataset
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country =='NL']
+  dt.crops[, crop_code := as.integer(crop_code)]
   
   # load and subset thresholds to Dutch situation for PMN
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
@@ -80,7 +85,7 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
   arg.length <- max(length(A_N_PMN), length(B_LU), length(B_SOILTYPE_AGR))
   checkmate::assert_numeric(A_N_PMN, lower = 0, upper = 1000, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(euosi::osi_crops$crop_code), empty.ok = FALSE)
+  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(euosi::osi_soiltype$osi_soil_cat1), empty.ok = FALSE)
   checkmate::assert_data_table(dt.thresholds,max.rows = 1)

@@ -42,6 +42,18 @@ test_that("osi_c_nitrogen works", {
     tolerance = 0.01
   )
   
+  expect_equal(
+    osi_c_nitrogen(B_LU = 'CML', A_CLAY_MI = 15, A_SAND_MI = 20, A_C_OF = 45,A_N_RT = 250,A_CACO3_IF = 0,B_COUNTRY = 'FR'),
+    expected = c(0.765),
+    tolerance = 0.01
+  )
+  
+  expect_equal(
+    osi_c_nitrogen(B_LU = c('CML','CML'), 
+                   A_CLAY_MI = c(5,15), A_SAND_MI = c(65,20), A_C_OF = c(45,25),A_N_RT = c(250,750),A_CACO3_IF = c(0,0),B_COUNTRY = c('FR','FR')),
+    expected = c(0.9776,1.0),
+    tolerance = 0.01
+  )
   
   
 })
