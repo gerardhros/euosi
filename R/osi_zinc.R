@@ -7,19 +7,23 @@
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-) 
 #' @param A_ZN_EDTA (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by EDTA 
 #' @param A_ZN_CC (numeric) The plant available content of Zn in the soil (mg  Zn per kg) extracted by 0.01M CaCl2
+#' @param B_COUNTRY (character) The country code
 #'  
 #' @import data.table
 #' 
 #' @examples 
-
+#' osi_c_zinc(B_LU = 'SOJ', A_ZN_EDTA = 45, A_PH_WA = 6.5,
+#' A_PH_CC = NA, A_ZN_CC = NA, B_COUNTRY='FR')
+#' 
 #' @return
 #' The capacity of the soil to supply and buffer zinc, evaluated given an optimum threshold for yield. A numeric value.
 #' 
 #' @export
-osi_c_zinc <- function(B_LU, A_PH_WA = NA,A_PH_CC = NA,A_ZN_EDTA = NA,A_ZN_CC = NA, B_COUNTRY) {
+osi_c_zinc <- function(B_LU, A_PH_WA = NA_real_,A_PH_CC = NA_real_,A_ZN_EDTA = NA_real_,A_ZN_CC = NA_real_, B_COUNTRY) {
   
   # add visual bindings
-
+  value = NULL
+  
   # desired length of inputs
   arg.length <- max(length(B_LU), length(A_PH_WA), length(A_ZN_EDTA), length(A_PH_CC),length(A_PH_CC))
   
@@ -68,7 +72,8 @@ osi_c_zinc <- function(B_LU, A_PH_WA = NA,A_PH_CC = NA,A_ZN_EDTA = NA,A_ZN_CC = 
 osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
   
   # set visual bindings
-  i_c_zn = osi_country = osi_indicator = id = crop_cat1 = NULL
+  value = osi_country = osi_indicator = id = crop_cat1 = NULL
+  osi_crops = cat_zn = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -85,8 +90,8 @@ osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
   arg.length <- max(length(B_LU),length(A_ZN_EDTA),length(A_PH_WA))
   
   # check the values (update the limits later via dt.parms)
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(osi_crops$crop_code), empty.ok = FALSE)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   checkmate::assert_numeric(A_ZN_EDTA, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
   checkmate::assert_numeric(A_PH_WA, lower = 3, upper = 11, any.missing = TRUE, len = arg.length)
   
@@ -128,14 +133,14 @@ osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
 #' 
 #' This function calculates the availability of Zn for plant uptake
 #' 
-#' @param B_LU_BRP (numeric) The crop code from the BRP
-#' @param B_SOILTYPE_AGR (character) The agricultural type of soil
+#' @param B_LU (numeric) The crop code from the BRP
 #' @param A_PH_CC (numeric) The acidity of the soil, determined in 0.01M CaCl2 (-)
 #' @param A_ZN_CC The plant available Zn content, extracted with 0.01M CaCl2 (mg / kg)
 #' 
 #' @import data.table
 #' 
 #' @examples 
+#' osi_c_zinc_nl(B_LU = 265, A_ZN_CC = 45, A_PH_CC = 6.5)
 #' 
 #' @return 
 #' The function of the soil to supply zinc (a numeric value).
@@ -145,6 +150,7 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
   
   # set visual bindings
   id = crop_code = soiltype = soiltype.n = crop_n = crop_category = D_ZN = NULL
+  osi_country = osi_indicator = NULL
   
   # Load in the datasets
   crops.obic <- as.data.table(OBIC::crops.obic)
@@ -155,7 +161,7 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
   dt.thresholds <- dt.thresholds[osi_country=='NL' & osi_indicator=='i_c_zn']
   
   # Check input
-  arg.length <- max(length(A_ZN_CC), length(B_LU), length(B_SOILTYPE_AGR))
+  arg.length <- max(length(B_LU), length(A_ZN_CC), length(A_PH_CC))
   checkmate::assert_numeric(A_ZN_CC, lower = 5, upper = 50000, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
@@ -171,7 +177,7 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
                   )
   
   # merge properties form crop category and soil type
-  dt <- merge(dt, crops.obic[, list(crop_code, crop_category)], by.x = "B_LU_BRP", by.y = "crop_code")
+  dt <- merge(dt, crops.obic[, list(crop_code, crop_category)], by.x = "B_LU", by.y = "crop_code")
 
   # Calculate Zn-availability
   dt[crop_category =='akkerbouw', D_ZN := 10^(0.88 + 0.56 * log10(A_ZN_CC*0.001) + 0.13 * A_PH_CC)]
@@ -183,7 +189,7 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
   dt[D_ZN > 250, D_ZN := 250]
   
   # convert to OSI score
-  dt[, value := osi_evaluate_parabolic(D_ZN),x.top = dt.thresholds$osi_st_c1]
+  dt[, value := osi_evaluate_parabolic(D_ZN,x.top = dt.thresholds$osi_st_c1)]
   
   # Sort the input in correct order
   setorder(dt, id)
