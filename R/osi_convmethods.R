@@ -128,3 +128,61 @@ osi_conv_ph <- function(element, A_SOM_LOI = NA_real_,A_C_OF = NA_real_,
   return(value)
   
 }
+
+#' Calculate potential mineralizable N for agricultural soils
+#' default values are taken from global ISRIC database
+#' 
+#' @param method (character) Method id that should be used for the conversion
+#' @param A_N_RT (numeric)  Soil organic N content (mg N / kg) of top soil
+#' @param A_CLAY_MI (numeric) Clay content (\%)
+#' @param med_PMN (numeric) Regional median value of PMN (mg N / kg)
+#' @param med_NRT (numeric) Regional median value of soil organic N content (mg N / kg)
+#' @param med_CLAY (numeric) Regional median value of clay content (\%)
+#' 
+#' @import data.table
+#' 
+#' @export
+osi_conv_npmn <- function(A_N_RT, A_CLAY_MI, med_PMN = 51.9, med_NRT = 1425, med_CLAY = 26){
+  
+  # initialize
+  PMN = med_PMN_pred = cor_rg = NULL
+  
+  # Check soil inputs
+  arg.length <- max(length(A_N_RT),length(A_CLAY_MI))
+  checkmate::assert_subset(method,choices = c('M1'),empty.ok = FALSE)
+  checkmate::assert_numeric(A_N_RT, lower = 0.1, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(med_PMN, lower = 0.1, any.missing = FALSE, min.len = 1)
+  checkmate::assert_numeric(med_NRT, lower = 0.1, any.missing = FALSE, min.len = 1)
+  checkmate::assert_numeric(med_CLAY, lower = 0, upper = 100, any.missing = FALSE, min.len = 1)
+  
+  # Collect data in a table
+  # to avoid NaN from clay = 0, it it slightly increased
+  dt <- data.table(id = 1:arg.length,
+                   A_N_RT = A_N_RT,
+                   A_CLAY_MI = A_CLAY_MI + 0.001,
+                   med_PMN = med_PMN,
+                   med_NRT = med_NRT,
+                   med_CLAY = med_CLAY,
+                   value = NA_real_)
+  
+  # Coefficient values of regression model to estimate PMN (mg N / kg), 
+  # built on the large dataset of Dutch soils (R2 = 0.79, N=109.146 samples)
+  b0 <- -3.440931;  b1 <- 1.1012449;  b2 <- 0.055858
+  
+  # predict PMN (based on Dutch emperical relationship)
+  dt[, PMN := exp(b0 + b1 * log(A_N_RT) - b2 * log(A_CLAY_MI))]
+  
+  # Calculate correction factor for regional variation
+  dt[, med_PMN_pred := exp(b0 + b1 * log(med_NRT) - b2 * log(med_CLAY))]
+  dt[, cor_rg := med_PMN / med_PMN_pred]
+  
+  # adjust predicted PMN with regional correction
+  dt[, value := PMN * cor_rg]
+  
+  # extract value
+  value <- dt[, value]
+  
+  # return value
+  return(value)
+}
