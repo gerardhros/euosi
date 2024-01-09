@@ -4,7 +4,7 @@ osi_parm_id,osi_parm_name,osi_parm_type,osi_parm_description,osi_parm_unit,osi_p
 3,A_AL_OX,measurement,aluminium extractable (oxalate),mmol Al/kg,0.1,1000,num,FALSE,
 4,A_AL_RT,measurement,aluminium total content,g Al / kg,0.001,210,num,FALSE,
 5,A_B_CC,measurement,boron plant available (cacl2),\u00B5g B/ kg,0.001,1000,num,FALSE,
-6,A_B_HW,measurement,boron extractable (hot water),define_unit,,,num,FALSE,
+6,A_B_HW,measurement,boron extractable (hot water),mg/kg,0,1000,num,FALSE,
 7,A_CACO3_IF,measurement,carbonated lime,%,0.1,50,num,FALSE,
 8,A_CA_CO,measurement,calcium extractable (bacl2),mmol+/kg,0.1,500,num,FALSE,
 9,A_CA_CO_PO,measurement,calcium occupation of cec,%,1,100,num,FALSE,
@@ -94,7 +94,7 @@ osi_parm_id,osi_parm_name,osi_parm_type,osi_parm_description,osi_parm_unit,osi_p
 93,A_ZN_CC,measurement,zinc plant available (cacl2),\u00B5g Zn/ kg,5,50000,num,FALSE,
 94,A_ZN_RT,measurement,zinc total content,mg Zn / kg,0.001,90000,num,FALSE,
 95,A_ZN_EDTA,measurement,zinc measured in EDTA,mg/kg,0,100,num,FALSE,
-96,A_BO_HW,measureent,boron measured in hot water,mg/kg,0,1000,num,FALSE,
+96,B_AER_FR,field property,region in France with different recommendations for P and K,-,,,char,FALSE,
 97,B_AER_CBS,field property,agricultural economic region in NL cbs2016,-,,,char,TRUE,LG14||LG13||LG12||LG11||LG10||LG09||LG08||LG07||LG06||LG05||LG04||LG03||LG02||LG01
 98,B_AER_CBS_NAME,field property,name of agricultural economic region in NL cbs2016,-,,,char,FALSE,
 99,B_ALT_AHN_3,field property,elevation from ahn3,m,-8,320,num,FALSE,
