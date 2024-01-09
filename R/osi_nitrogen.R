@@ -16,18 +16,18 @@
 #' 
 #' @examples 
 #' osi_c_nitrogen(B_LU = 256, B_SOILTYPE_AGR = 'dekzand',A_N_RT = 2500, 
+#' A_CLAY_MI = 11, A_SAND_MI = 3,A_C_OF = NA,A_CACO3_IF = NA,
 #' A_SOM_LOI = 4.5, B_COUNTRY = 'NL')
-#' osi_c_nitrogen(1019,'dekzand',4.5,2315,'NL')
 #'
 #' @return 
 #' the capacity of soils to supply  nitorgen, converted to an OSI score.
 #' 
 #' @export
-osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA,A_CLAY_MI = NA,A_SAND_MI = NA,A_SOM_LOI = NA,A_C_OF = NA,
-                           A_N_RT, A_CACO3_IF = NA, B_COUNTRY) {
+osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_SOM_LOI = NA_real_,A_C_OF = NA_real_,
+                           A_N_RT, A_CACO3_IF = NA_real_, B_COUNTRY) {
   
   # add visual bindings
-  i_c_n = NULL
+  A_CN_FR = value = id = NULL
   
   # note that qualitative checks on the inputs are done by the country specific functions
   
@@ -40,6 +40,7 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA,A_CLAY_MI = NA,A_SAND_MI = 
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    B_COUNTRY = B_COUNTRY,
                    A_SOM_LOI = A_SOM_LOI,
+                   A_C_OF = A_C_OF,
                    A_N_RT = A_N_RT, 
                    value = NA_real_  
                    )
@@ -47,7 +48,7 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA,A_CLAY_MI = NA,A_SAND_MI = 
   # estimate missing properties (if applicable)
   dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
   dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
-  dt[, A_CN_FR = A_C_OF * 1000/ A_N_RT]
+  dt[, A_CN_FR := A_C_OF * 1000/ A_N_RT]
   
   # calculate the open soil index score for nitrogen availability for the Netherlands
   dt[B_COUNTRY == 'NL', value := osi_c_nitrogen_nl(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
@@ -176,7 +177,8 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_nitrogen_fr(B_LU = 'CML', A_CLAY_MI = 15, A_SAND_MI = 20, A_C_OF = 45,A_N_RT = 2500,A_CACO3_IF = 0)
+#' osi_c_nitrogen_fr(B_LU = 'CML', A_CLAY_MI = 15, A_SAND_MI = 20, 
+#' A_C_OF = 45,A_N_RT = 2500,A_CACO3_IF = 0)
 #' 
 #' @return 
 #' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
@@ -186,7 +188,7 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
   
   # add visual bindings
   osi_country = osi_indicator = NULL
-  D_BDS = id = value = NULL
+  D_BDS = id = value = crop_code = crop_cat1 = D_NHA = D_NSC = osi_st_c1 = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
