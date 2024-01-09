@@ -1,9 +1,10 @@
 Package: euosi
 Type: Package
-Title: Calculate the Open Soil Index Score
-Version: 0.0.5
+Title: Calculate the Open Soil Index Score for Europe
+Version: 0.0.6
 Authors@R: c(
     person(given = "Gerard", family = "Ros", email = "gerard.ros@nmi-agro.nl", role = c("aut","cre")),
+    person(given = "Elise", family = "van Eynde", email = "elise.van-eynde@ec.europa.eu", role = "aut"),
     person(given = "Sven", family = "Verweij", email = "sven.verweij@nmi-agro.nl", role = "aut"),
     person(given = "Yuki", family = "Fujita", email = "yuki.fujita@nmi-agro.nl", role = "ctb"),
     person(given = "Brent", family = "Riechelman", email = 'brent.riechelman@nmi-agro.nl', role = "ctb"),
