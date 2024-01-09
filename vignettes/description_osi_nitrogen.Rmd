@@ -1,8 +1,12 @@
 ---
 title: "Description of osi_nitrogen"
-output:
-  html_document: default
-  pdf_document: default
+author: 'Elise van Eynde & Gerard Ros'
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Description_osi_nitrogen}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
