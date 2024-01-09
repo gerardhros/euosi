@@ -1,14 +1,18 @@
-#' Estimate soil pH values (-)
+#' Estimate soil organic matter and nutrient values (-)
 #' 
 #' @param element (character) the method requested to be calculated
-#' @param A_PH_KCL (numeric) soil pH determined in 1M KCl extract
-#' @param A_PH_CC (numeric) soil pH determined in 0.01m CaCl2 extract
-#' @param A_PH_WA (numeric) soil pH determined in water
+#' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+#' @param A_C_OF (numeric) The organic carbon content of the soil in g C / kg
+#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
+#' @param A_CN_FR (numeric) The C-to-N ratio of the soil organic matter (-)
 #' 
 #' @export 
-osi_conv_ph <- function(element, A_PH_KCL = NA_real_,A_PH_CC = NA_real_, A_PH_WA = NA_real_){
+osi_conv_som <- function(element, A_SOM_LOI = NA_real_,A_C_OF = NA_real_, A_N_RT = NA_real_,A_CN_FR = NA_real_){
+  
+  # add visual bindings
   
   # check inputs
+  arg.length <- max(c(length(A_SOM_LOI),length(A_N_RT),length(A_C_OF),length(A_CN_FR)))
   checkmate::assert_numeric(A_N_RT, lower = 0.1, upper = 30000, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_C_OF, lower = 0, upper = 3000, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
@@ -92,17 +96,15 @@ osi_conv_hwb <- function(B_SOILTYPE_AGR, A_SOM_LOI = NA_real_, A_B_CC= NA_real_,
   
 }
 
-#' Estimate soil organic matter and nutrient values (-)
+#' Estimate soil pH values (-)
 #' 
 #' @param element (character) the method requested to be calculated
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' @param A_C_OF (numeric) The organic carbon content of the soil in g N / kg
-#' @param A_CN_FR (numeric) The carbon to nitrogen ratio
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
+#' @param A_PH_KCL (numeric) The soil pH determined in 1 M KCL extract
+#' @param A_PH_CC (numeric) The soil pH determined in 0.01M CaCl2 extract
+#' @param A_PH_WA (numeric) The soil pH determined in water
 #' 
 #' @export 
-osi_conv_ph <- function(element, A_SOM_LOI = NA_real_,A_C_OF = NA_real_, 
-                        A_N_RT = NA_real_,A_CN_FR = NA_real_){
+osi_conv_ph <- function(element, A_PH_KCL = NA_real_,A_PH_CC = NA_real_, A_PH_WA = NA_real_){
   
   # check inputs
   checkmate::assert_numeric(A_PH_KCL, lower = 3, upper = 10, any.missing = TRUE)
@@ -132,7 +134,6 @@ osi_conv_ph <- function(element, A_SOM_LOI = NA_real_,A_C_OF = NA_real_,
 #' Calculate potential mineralizable N for agricultural soils
 #' default values are taken from global ISRIC database
 #' 
-#' @param method (character) Method id that should be used for the conversion
 #' @param A_N_RT (numeric)  Soil organic N content (mg N / kg) of top soil
 #' @param A_CLAY_MI (numeric) Clay content (\%)
 #' @param med_PMN (numeric) Regional median value of PMN (mg N / kg)
@@ -149,7 +150,6 @@ osi_conv_npmn <- function(A_N_RT, A_CLAY_MI, med_PMN = 51.9, med_NRT = 1425, med
   
   # Check soil inputs
   arg.length <- max(length(A_N_RT),length(A_CLAY_MI))
-  checkmate::assert_subset(method,choices = c('M1'),empty.ok = FALSE)
   checkmate::assert_numeric(A_N_RT, lower = 0.1, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(med_PMN, lower = 0.1, any.missing = FALSE, min.len = 1)

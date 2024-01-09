@@ -87,14 +87,17 @@ osi_evaluate_parabolic <- function(x, x.top, must.plateau = TRUE) {
 #' \url{https://en.wikipedia.org/wiki/Gaussian_function}
 #'
 #' @examples
-#' evaluate_logistic_gaus_down(x = 5, b = 2, x0 = 3, v = 2.6, optimum = 1)
-#' evaluate_logistic_gaus_down(x = c(0.1,0.5,1.5,3.5), b = 2, x0 = 3, v = 2.6, optimum = 0.5)
+#' osi_evaluate_logistic_gaus_down(x = 5, b = 2, x0 = 3, v = 2.6, optimum = 1)
+#' osi_evaluate_logistic_gaus_down(x = c(0.1,0.5,1.5,3.5), b = 2, x0 = 3, v = 2.6, optimum = 0.5)
 #'
 #' @return
 #' A transformed variable after applying a logistic evaluation function. A numeric value.
 #'
 #' @export
 osi_evaluate_logistic_gaus_down <- function(x, b, x0, v, optimum, optimum_ofset = 1.5) {
+  
+  # add visual bindings
+  C = y = NULL
   
   # collect in dt
   fun.dt <- data.table(x = x)
