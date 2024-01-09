@@ -1,7 +1,11 @@
 # euosi 0.0.7 UNRELEASED 
 
 ## Added
-* add logistic curve plus gaussian decline after reaching high values in `osi_evaluate_logistic_gaus_down`
+* logistic curve plus gaussian decline after reaching high values in `osi_evaluate_logistic_gaus_down`
+* conversion methods to estimate soil pH from pH-water, pH-CaCl2 and pH-KCL
+* conversion methos to estimate B-hot water from B-CaCl2
+* conversion methods for SOM, SOC, SON and CN ratio
+* conversion method for Potentially Mineralizable Nitrogen
 
 ## Changed
 * add possibility to lower score at high values in `osi_evaluate_parabolic`
