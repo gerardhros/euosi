@@ -1,4 +1,11 @@
-# euosi UNRELEASED 
+# euosi 0.0.3 2024-01-09
+
+## Added
+* vignette for input and functions for OSI in France, `description_osi_parameters_france`
+* thresholds for Cu in `osi_thresholds` for Cu soil assessment in France
+
+## Changed
+* parameters in `osi_parms` and `osi_parameters.csv` updated with new ones for France
 
 # euosi 0.0.2 2024-01-09
 
