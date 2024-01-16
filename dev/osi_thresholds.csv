@@ -550,9 +550,15 @@ nr,osi_country,osi_esd,osi_category,osi_indicator,osi_indicator_name,osi_thresho
 549,FR,agronomy,chemical,i_c_b,soil boron supply,,other,,logistic,4.989,0.4,2
 550,FR,agronomy,chemical,i_c_ph,soil ph,sugar beet,,,logistic,0.9978,5,1
 551,FR,agronomy,chemical,i_c_ph,soil ph,,,,logistic,1.597,4.25,1
-552,FR,agronomy,chemical,i_c_ph,soil ph,,,,logistic,1.140,4.75,1
+552,FR,agronomy,chemical,i_c_ph,soil ph,,,,logistic,1.14,4.75,1
 553,FR,agronomy,chemical,i_c_ph,soil ph,,,,logistic,1.426,4.4,1
 542,FR,agronomy,chemical,i_c_mg,soil magnesium supply,,sand,,logistic,0.13,15.08,1
 543,FR,agronomy,chemical,i_c_mg,soil magnesium supply,,loam,,logistic,0.11,18.09,1
 544,FR,agronomy,chemical,i_c_mg,soil magnesium supply,,clay calcareous,,logistic,0.08,24.13,1
 545,FR,agronomy,chemical,i_c_mg,soil magnesium supply,,clay,,logistic,0.07,30.16,1
+546,FR,environmental,environmental,i_e_p,soil phosphorus excess,High,general,,logistic,-0.107605632,92.72912366,1
+547,FR,environmental,environmental,i_e_p,soil phosphorus excess,Moderate,general,,logistic,-0.166299613,49.091889,1
+548,FR,environmental,environmental,i_e_p,soil phosphorus excess,Low,general,,logistic,-0.365859149,38.18258033,1
+549,FR,environmental,environmental,i_e_p,soil phosphorus excess,High,craie,,logistic,-0.063079164,123.2751879,1
+550,FR,environmental,environmental,i_e_p,soil phosphorus excess,Moderate,craie,,logistic,-0.070357529,93.82005453,1
+551,FR,environmental,environmental,i_e_p,soil phosphorus excess,Low,craie,,logistic,-0.067751694,147.275667,1

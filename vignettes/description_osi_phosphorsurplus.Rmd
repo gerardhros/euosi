@@ -1,0 +1,32 @@
+---
+title: "Description of osi_phosphorsurplus"
+author: 'Elise van Eynde & Gerard Ros'
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Description_osi_phosphor}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document explains how the phosphorus surplus indicator is calculated for each country and provides references
+
+
+## Netherlands:
+
+
+
+## Belgium (Flanders): 
+
+## France:
+
+Principle: High P-Olsen concentrations are negatively evaluated using a logistic regression, by mirorring the logistic function that was used to evaluate the P-olsen in an agronomic context. The P-olsen is evaluated based on (1) the crop needs (high need, moderate need, low need) which is mentioned in the osi_crops table (2) the soil type based on pH measured in water.
+
+
+See page 25 in reference. !!! Threshold values are given in mg/kg P2O5, conversion is done by =(Treshold/(141.943x10^3))x2x30.97*10^3
+
+Reference: Comifer, 2019, La fertilisation P-K-Mg; Les bases due raisonnement
