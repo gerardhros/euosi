@@ -43,7 +43,7 @@ C is calculated based on the crop rotation using values and approach by https://
 Total C for crop rotation = F1 * crop_c1 + F2 * crop_c2 + F3 * crop_c3 with F the years of crop rotation with crop i. 
 ! They do not give gamma values for many crops, so we have many NA values. Discussion needed how to deal with NA values for one or more of the crops in the rotation + how many crops should we consider in rotation (now two years back, two years ahead). 
 
-
+The erosion rate is evaluated logistically (negative) with threshold value of 2 tons per ha, above this rate the score is 0. 
 
 
 
