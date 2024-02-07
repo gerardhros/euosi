@@ -116,3 +116,10 @@ osi_parm_id,osi_parm_name,osi_parm_type,osi_parm_description,osi_parm_unit,osi_p
 115,B_SOILTYPE_NLEACH_OBIC,field property,soiltype classification according to nitrogen leaching risk,,,,char,TRUE,zand||klei||veen
 116,B_TEXTURE_USDA,field property,soil texture class according to the usda classification,,,,char,TRUE,sand||loamy sand||sandy loam||loam||silt loam||silt||sandy clay loam||clay loam||silty clay loam||sandy clay||silty clay||clay
 117,B_CF,field property,coarse fragments,%,0,100,num,FALSE,
+118,B_LS,field property,slope length and steepness,,0,100,num,FALSE,
+119,B_RE,climatic property,rainfall erosivity,MJ mm/ha h yr,0,5000,num,FALSE,
+120,B_LU_a1,field property,cultivation code of previous -1 crop,,,,char,FALSE,
+121,B_LU_a2,field property,cultivation code of previous -2 crop,,,,char,FALSE,
+122,B_LU_p1,field property,cultivation code of next +1 crop,,,,char,FALSE,
+123,B_LU_p2,field property,cultivation code of next +2 crop,,,,char,FALSE,
+124,B_s,field property ,topsoil structure,,,,char,FALSE,

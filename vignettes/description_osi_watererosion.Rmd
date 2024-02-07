@@ -1,0 +1,51 @@
+---
+title: "Description of osi_watererosion"
+author: 'Elise van Eynde & Gerard Ros'
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Description_osi_potassium}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document explains how the water erosion indicator is calculated and provides references
+
+
+We use a modified version of the RUSLE model , which calculates mean annual soil loss rates by sheet and rill erosion according to the following equation (http://dx.doi.org/10.1016/j.envsci.2015.08.012):
+E = R x K x C x LS x P
+
+With     E = annual average soil loss (t/ha/yr)
+         K = Soil erodibility factor (t ha h /ha/MJ/mm)
+         C = the cover-management factor (-)
+         LS = slope steepness length factor (-)
+         P = the support practices factor (-)
+         R = rainfall erosivity factor (MJ mm /ha/h/yr)
+         
+         
+LS is taken from the map by doi:10.3390/geosciences5020117 (parameters table)
+
+R is taken from the map by doi:10.1016/J.SCITOTENV.2015.01.008
+
+P is set to 1 since we have no information about tillage etc. 
+
+K is calculated based on soil properties using approach by http://dx.doi.org/10.1016/j.scitotenv.2014.02.010
+  Data on soil organic matter, clay, sand, silt is used from LUCAS soil properties
+  Data on structural stability is taken from the European soil database 
+  Textural class USDA was used to define the permeability class. 
+  Stone cover was not taken into account. 
+
+C is calculated based on the crop rotation using values and approach by https://doi.org/10.1016/j.still.2021.105155 which was developed for Germany, but the authors argue that their approach may also be applicable to neighboring countries (Switzerland, Poland, Belgium or the Netherlands). Hopefully they also think it is ok to apply this approach to France as well. 
+Total C for crop rotation = F1 * crop_c1 + F2 * crop_c2 + F3 * crop_c3 with F the years of crop rotation with crop i. 
+! They do not give gamma values for many crops, so we have many NA values. Discussion needed how to deal with NA values for one or more of the crops in the rotation + how many crops should we consider in rotation (now two years back, two years ahead). 
+
+
+
+
+
+
+
