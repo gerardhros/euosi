@@ -9,20 +9,25 @@
 #' @param B_T (numeric) The mean annual temperature in degree Celcius
 #' @param A_C_OF (numeric) The organic carbon content (g/kg)
 #' @param B_TEXTURE_USDA (char) The textural class 
-#' @param B_SOILTYPE_AGR
-#' @param A_SOM_LOI
-#' @param A_CN_FR
-#' @param D_OC
-#' @param A_N_RT
+#' @param B_SOILTYPE_AGR soil type used in NL
+#' @param A_SOM_LOI SOM 
+#' @param A_CN_FR CN ratio
+#' @param D_OC OC calculated from SOM
+#' @param A_N_RT Total N
+#' @param B_TEMP the average temperature in growing season (april - october)
+#' @param B_RAINFALL the cumulative rainfall in april - october
+#' @param B_PET the cumulative potential evapotranspiration in april - october 
 #' 
 #' 
 #' @import data.table
 #' 
 #' @examples 
 #' 
-osi_e_nitrogensurplus <- function(B_LU, 
+osi_e_nitrogensurplus <- function(B_LU, A_N_RT, 
                                   A_C_OF , A_CLAY_MI ,
-                                  A_SAND_MI , B_T = NA_real_, B_COUNTRY) {
+                                  A_SAND_MI ,A_SOM_LOI,A_CN_FR, B_COUNTRY,
+                                  B_TEMP, B_RAINFALL, B_TEXTURE_USDA,B_PET
+                                  ) {
   
   # add visual bindings
   
@@ -68,7 +73,7 @@ osi_e_nitrogensurplus <- function(B_LU,
   
    # calculate the soil N supply for the NL using the Dutch OBIC
     #Calculate derivate soil properties
-  dt[, D_BDS := OBIC::calc_bulk_density(B_SOILTYPE_AGR,A_SOM_LOI)]
+  dt[, D_BDS := 0.80806 + (0.823844*exp(0.0578*0.1*A_C_OF)) + (0.0014065 * A_SAND_MI) - (0.0010299 * A_CLAY_MI)] 
   dt[, D_RD := OBIC::calc_root_depth(B_LU_BRP = B_LU)]
   dt[, D_OC := OBIC::calc_organic_carbon(A_SOM_LOI, D_BDS, D_RD)]
   dt[, D_GA := OBIC::calc_grass_age(id, B_LU_BRP = B_LU)]
@@ -79,12 +84,8 @@ osi_e_nitrogensurplus <- function(B_LU,
     #Calculate N surplus 
   dt[B_COUNTRY == 'NL', n_surplus := ifelse(dt.crops$crop_cat1=='grassland',n_supply-140,ifelse(dt.crops$crop_cat1=='arable',n_supply-100,0))]
   
-    # calculate N leaching
-  dt[B_COUNTRY == 'NL', value := n_surplus*Fqsro*0.5]
-
   # calculate the N supply for FR
     #Calculate derivate soil properties
-  dt[, D_BDS := 0.80806 + (0.823844*exp(0.0578*0.1*A_C_OF)) + (0.0014065 * A_SAND_MI) - (0.0010299 * A_CLAY_MI)] 
   dt[, D_NHA := A_N_RT * 0.2 * D_BDS * 10000 * 1000 * 10^-6]  
   
   # calculate the temperature and moisture content correction 
@@ -97,9 +98,7 @@ osi_e_nitrogensurplus <- function(B_LU,
   
     # calculate the N surplus
   dt[B_COUNTRY == 'FR', n_surplus  := ifelse(dt.crops$crop_cat1=='grassland',n_supply-140,ifelse(dt.crops$crop_cat1=='arable',n_supply-100,0))]
-    # calculate N leaching
-  dt[B_COUNTRY == 'FR', value := n_surplus*Fqsro*0.5]
-  
+
   # calculate the leaching fraction 
     #fle max
   dt[B_TEXTURE_USDA == 'sand' | B_TEXTURE_USDA == 'sandy loam' | B_TEXTURE_USDA == 'sandy clay loam' , flemax := 1 ]
@@ -111,7 +110,7 @@ osi_e_nitrogensurplus <- function(B_LU,
     #flu
   dt$flu <- ifelse(dt$crop_cat1 == 'grassland', 0.85, 1)
     #fp
-  dt[, PS := B_RAINFALL - B_TEMP]
+  dt[, PS := B_RAINFALL - B_PET]
   dt[PS < 50, fp := 0.25]
   dt[PS >= 50 & PS < 100, fp := 1+(PS-100)*0.015]
   dt[PS >= 100 & PS < 300, fp := 1]
