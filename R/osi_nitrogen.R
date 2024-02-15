@@ -184,11 +184,11 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
 #' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
 #' 
 #' @export
-osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF) {
+osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF,B_TEMP,B_SOILMOISTURE) {
   
   # add visual bindings
   osi_country = osi_indicator = NULL
-  D_BDS = id = value = crop_code = crop_cat1 = D_NHA = D_NSC = osi_st_c1 = NULL
+  D_BDS = id = value = crop_code = crop_cat1 = D_NHA = D_NSC = osi_st_c1 = fT = gW = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -204,6 +204,8 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
   checkmate::assert_numeric(A_C_OF, lower = 0, upper = 3000, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_SAND_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(B_TEMP, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(B_SOILMOISTURE, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
   checkmate::assert_subset(B_LU,dt.crops$crop_code)
   checkmate::assert_data_table(dt.thresholds,max.rows = 2,min.rows = 2)
   
@@ -215,6 +217,8 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
                    A_C_OF = A_C_OF,
                    A_N_RT = A_N_RT,
                    A_SAND_MI = A_SAND_MI,
+                   B_TEMP = B_TEMP,
+                   B_SOILMOISTURE = B_SOILMOISTURE,
                    value = NA_real_
                    )
   
@@ -229,8 +233,12 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
   dt[, D_BDS := 0.80806 + (0.823844*exp(0.0578*0.1*A_C_OF)) + (0.0014065 * A_SAND_MI) - (0.0010299 * A_CLAY_MI)] 
   dt[, D_NHA := A_N_RT * 0.2 * D_BDS * 10000 * 1000 * 10^-6]  
   
+  # calculate the temperature and moisture content correction 
+  dt[, fT := exp(0.115*(B_TEMP-15))]
+  dt[, gW := 0.2 + (0.8 * ((B_SOILMOISTURE-Wwp)/(Wfc-Wwp)))]
+  
   # calculate the N supplying capacity for France (kg N/ha/yr)
-  dt[, D_NSC := ((22/((12+A_CLAY_MI)*(545+A_CACO3_IF))) * D_NHA)*21.35 * 0.33]
+  dt[, D_NSC := ((22/((12+A_CLAY_MI)*(545+A_CACO3_IF))) * D_NHA)*21.35 * 0.33 * fT * gW ]
 
   # convert to OSI score
   
