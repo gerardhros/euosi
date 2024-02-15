@@ -1,0 +1,52 @@
+---
+title: "Description of osi_nitrogensurplus"
+author: 'Elise van Eynde & Gerard Ros'
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Description_osi_nitrogen}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document explains how the nitrogen surplus indicator is calculated for each country and provides references
+
+Principle:
+
+The N supply above the optimal value can be lost by leaching. The approach used was the one by De Vries et al. (2021) with referencwe to Velthof et al. (2009): MITERRA Europe. 
+
+Nle = fle * Nsurplus
+
+fle = flemax * flu * min(fp, ft, fc)
+
+  flemax = 1 for sandy soil, 0.75 for loamy soil, 0.50 for clay soil, 0.20 for peat soil
+        !not clear how they define these classes. We use USDA classification and SOM content of > x %
+  flu = 0.85 for grassland and 1 for cropland
+  fp = depends on precipitation surplus (PS) and soil type
+        for sandy and loamy soil (based on USDA because not clear)
+          PS < 50 mm: 0.25
+          50 < PS < 300: 1+(PS-300)*0.003
+          PS>300:1
+        for peat and clay soils
+          PS < 50: 0.25
+          50 < PS < 100: 1+(PS_100)*0.015
+          100 < PS < 300: 1
+          300 < PS < 400: 1-(PS-300)*0.005
+          PS > 400: 0.5
+  ft depends on the temperature (denitirifcation increases with temperature and leaching decreases)
+        T < 5degrees: 1
+        T = 5-15: 0.75
+        T > 15: 0.50
+  fc, denitrification increases with increasing SOC and leaching decreases
+        SOC < 1%, fc = 1
+        SOC = 1-2, fc = 0.90
+        SOC= 2-5, fc=0.75
+        SOC > 5, fc = 0.50
+        
+        
+The evaluation is based on the paper by De Vries et al. (2021), putting an uniform critical threshold of 10 kg N/hayr across EU (which is around the middle of the range they present in Figure 5)
+  
