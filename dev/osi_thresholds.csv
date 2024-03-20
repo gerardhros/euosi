@@ -73,5 +73,9 @@
 72,FR,agronomy,chemical,i_c_k,soil potassium supply,High,Sl,logistic,0.036701981,143.3497562,1
 73,FR,agronomy,chemical,i_c_k,soil potassium supply,Moderate,Sl,logistic,0.672869655,56.35128349,1
 74,FR,agronomy,chemical,i_c_k,soil potassium supply,Low,Sl,logistic,0.161488717,37.07321282,1
-285,FR,agronomy,chemical,i_c_n,soil nitrogen supply,Arable,,parabolic,100,NA,NA
-286,FR,agronomy,chemical,i_c_n,soil nitrogen supply,Grassland,,parabolic,140,NA,NA
+75,FR,agronomy,chemical,i_c_ph,soil ph ,betterave,loam,logistic,3.070208,5.15,1
+76,FR,agronomy,chemical,i_c_ph,soil ph,other,loam,logistic,2.660847,5.75,1
+77,FR,agronomy,chemical,i_c_ph,soil ph,other,sand,logistic,3.99127,5,1
+78,FR,agronomy,chemical,i_c_ph,soil ph,other,other,logistic,3.99127,6.5,1
+79,FR,agronomy,chemical,i_c_n,soil nitrogen supply,Arable,,parabolic,100,NA,NA
+80,FR,agronomy,chemical,i_c_n,soil nitrogen supply,Grassland,,parabolic,140,NA,NA

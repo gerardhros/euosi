@@ -62,11 +62,12 @@ osi_c_ph <- function(B_LU, B_TEXTURE_USDA= NA_real_, A_PH_WA = NA_real_, A_PH_CC
 #' The pH index in France estimated from pH in water, the textural class and the crop type
 #' 
 #' @export
-osi_c_ph_fr <- function(B_LU,B_TEXTURE_USDA, A_PH_WA) {
+osi_c_ph_fr <- function(B_LU,A_CLAY_MI, A_SAND_MI, A_SILT_MI, A_PH_WA) {
   
   # set visual bindings
   osi_c_ph_fr = osi_country = osi_indicator = id = crop_cat1 = NULL
-  cat_crop_ph = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  cat_crop_ph = B_TEXTURE_GEPPA = B_TEXTURE_GEPPA2 = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -78,6 +79,14 @@ osi_c_ph_fr <- function(B_LU,B_TEXTURE_USDA, A_PH_WA) {
   # load in thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country=='FR' & osi_indicator=='i_c_ph']
+  
+  # calculate the French texture
+  tri.data <- as.data.frame(cbind(A_CLAY_MI,A_SAND_MI,A_SILT_MI))
+  names(tri.data) <-C('CLAY','SAND','SILT')
+  TT.data <- as.data.frame(soiltexture::TT.points.in.classes(tri.data2015,"FR.GEPPA.TT",text.tol=1))
+  B_TEXTURE_GEPPA <- factor(names(TT.data2015)[1+max.col(TT.data2015)],ordered=TRUE)
+  B_TEXTURE_GEPPA2 <- ifelse(B_TEXTURE_GEPPA=='L'|B_TEXTURE_GEPPA=='Lsa'|B_TEXTURE_GEPPA=='LAS'|B_TEXTURE_GEPPA=='La'|B_TEXTURE_GEPPA=='LL','loam',
+                             ifelse(B_TEXTURE_GEPPA=='SS'|B_TEXTURE_GEPPA=='Sl'|B_TEXTURE_GEPPA=='S'|B_TEXTURE_GEPPA=='L'|B_TEXTURE_GEPPA=='Sal'|B_TEXTURE_GEPPA=='Sa','sand','other'))
   
   # Check length of desired input
   arg.length <- max(length(A_PH_WA),length(B_TEXTURE_USDA),length(B_LU))
@@ -91,31 +100,16 @@ osi_c_ph_fr <- function(B_LU,B_TEXTURE_USDA, A_PH_WA) {
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
-                   B_TEXTURE_USDA = B_TEXTURE_USDA,
+                   B_TEXTURE_GEPPA2 = B_TEXTURE_GEPPA2,
                    A_PH_WA = A_PH_WA,
                    value = NA_real_)
   
-  # merge subset on crop class
-  dt.sb <- dt[B_LU %in% c('BTN','BVF')][,cat_crop_ph := 'sugar beet']
-  dt.sb <- merge(dt.sb,
+  # merge 
+  dt.sb <- merge(dt,
                  dt.thresholds,
-                 by.x = 'cat_crop_ph',
-                 by.y = 'osi_threshold_cropcat',
-                 all.x = TRUE)
+                 by=c("crop_ph" = "osi_threshold_cropcat" , "B_SOILTYPE_AGR2" = "osi_threshold_soilcat"))
   
-  # merge subset on soil texture class
-  dt.other <- dt[B_LU %in% c('BTN','BVF')]
-  dt.other <- merge(dt.other,
-                    dt.thresholds,
-                    by.x = 'B_TEXTURE_USDA',
-                    by.y = 'osi_threshold_soilcat',
-                    all.x = TRUE)
-  
-  # combine both again
-  dt <- rbind(dt.sb[,.(id,A_PH_WA,osi_st_c1, osi_st_c2, osi_st_c3)],
-              dt.other[,.(id,A_PH_WA,osi_st_c1, osi_st_c2, osi_st_c3)])
-  
-  # convert to the OSI score
+   # convert to the OSI score
   dt[, value := evaluate_logistic(x = A_PH_WA, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
   
   # set the order to the original inputs
