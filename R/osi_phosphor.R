@@ -241,3 +241,53 @@ osi_c_posphor_fr <- function(B_LU, B_SOILTYPE_AGR, B_AER_FR, A_P_OL = NA_real_) 
   return(value)
   
 }
+
+#' Calculate the phosphate availability index in Germany
+#' 
+#' This function calculates the phosphate availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_P_CAL (numeric) The P-content of the soil extracted with ammonium lactate(mg P2O5 / 100g)
+#' @param A_P_DL (numeric) The P-content of the soil extracted with double lactate (mg P / kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_posphor_ge(B_LU = 265, A_P_AL = 45,A_P_DL = 5)
+#' osi_c_posphor_ge(B_LU = c(265,1019),A_P_AL = c(35,54),A_P_DL = c(3.5,5.5))
+#' 
+#' @return 
+#' The phosphate availability index in Germany stimated from extractable soil P fractions. A numeric value.
+#' 
+#' @export
+osi_c_posphor_ge <- function(B_LU, A_P_CAL = NA_real_, A_P_DL = NA_real_) {
+
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_SOM_LOI= A_SOM_LOI,
+                   A_P_CAL = A_P_CAL,
+                   A_P_DL = A_P_DL,
+                   value1 = NA_real_,
+                   value2 = NA_real_,
+                   value = NA_real_)
+  
+  # evaluation conform VDLUFA for cropland and soil types
+  dt[!is.na(A_P_CAL), value1 := OBIC::evaluate_logistic(A_P_CAL, b = 0.2711, x0 = -5.9449, v = 0.0239)]
+  
+  # adjust for peat soils
+  dt[!is.na(A_P_CAL) & A_SOM_LOI > 20, value1 := OBIC::evaluate_logistic(A_P_CAL, b = 0.1743, x0 = 2.92395, v = 0.096079)]
+  
+  # evaluation conform VDLUFA for cropland and soil types
+  dt[!is.na(A_P_DL), value2 := OBIC::evaluate_logistic(A_P_DL, b = 0.5357, x0 = -4.03796, v = 0.01856)]
+  
+  # set value
+  dt[,value := fifelse(!is.na(A_P_CAL),value1,value2)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
+}
+
+
+
