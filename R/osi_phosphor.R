@@ -249,6 +249,7 @@ osi_c_posphor_fr <- function(B_LU, B_SOILTYPE_AGR, B_AER_FR, A_P_OL = NA_real_) 
 #' @param B_LU (numeric) The crop code
 #' @param A_P_CAL (numeric) The P-content of the soil extracted with ammonium lactate(mg P2O5 / 100g)
 #' @param A_P_DL (numeric) The P-content of the soil extracted with double lactate (mg P / kg)
+#' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
 #' 
 #' @import data.table
 #' 
@@ -260,7 +261,7 @@ osi_c_posphor_fr <- function(B_LU, B_SOILTYPE_AGR, B_AER_FR, A_P_OL = NA_real_) 
 #' The phosphate availability index in Germany stimated from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_posphor_ge <- function(B_LU, A_P_CAL = NA_real_, A_P_DL = NA_real_) {
+osi_c_posphor_ge <- function(B_LU, A_SOM_LOI,A_P_CAL = NA_real_, A_P_DL = NA_real_) {
 
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -290,4 +291,228 @@ osi_c_posphor_ge <- function(B_LU, A_P_CAL = NA_real_, A_P_DL = NA_real_) {
 }
 
 
+#' Calculate the phosphate availability index in Italy
+#' 
+#' This function calculates the phosphate availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_posphor_it(B_LU = 265,A_P_OL = 5)
+#' osi_c_posphor_it(B_LU = c(265,1019),A_P_OL = c(3.5,5.5))
+#' 
+#' @return 
+#' The phosphate availability index in Italy derived from extractable soil P fractions. A numeric value.
+#' 
+#' @export
+osi_c_posphor_it <- function(B_LU, A_P_OL) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_P_OL = A_P_OL,
+                   value = NA_real_)
+  
+  # evaluation P-Olsen for cropland and soil types
+  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.43987, x0 = -5.7314, v = 0.011909)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
+}
 
+#' Calculate the phosphate availability index in United Kingdom
+#' 
+#' This function calculates the phosphate availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_posphor_uk(B_LU = 265,A_P_OL = 5)
+#' osi_c_posphor_uk(B_LU = c(265,1019),A_P_OL = c(3.5,5.5))
+#' 
+#' @return 
+#' The phosphate availability index in United Kingdom derived from extractable soil P fractions. A numeric value.
+#' 
+#' @export
+osi_c_posphor_uk <- function(B_LU, A_P_OL) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_P_OL = A_P_OL,
+                   value = NA_real_)
+  
+  # P index derived following P-Olsen.
+  # optimum value is index 2 for all land uses except vegetables (index 3)
+  # evaluation P-Olsen for cropland and soil types
+  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.3111, x0 = 2.77424, v = 0.043408)]
+  
+  # assess soil P status for vegetables
+  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.2864, x0 = 2.78737, v = 0.055188)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
+}
+
+
+#' Calculate the phosphate availability index in Spain
+#' 
+#' This function calculates the phosphate availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_posphor_es(B_LU = 265,A_CLAY_MI = 5,A_P_OL = 5)
+#' osi_c_posphor_es(B_LU = c(265,1019),A_CLAY_MI = c(5,10),A_P_OL = c(3.5,5.5))
+#' 
+#' @return 
+#' The phosphate availability index in Spain derived from extractable soil P fractions. A numeric value.
+#' 
+#' @export
+osi_c_posphor_es <- function(B_LU, A_CLAY_MI,A_P_OL) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_P_OL = A_P_OL,
+                   value = NA_real_)
+  
+  # assess P availability for sandy soils (Arenoso)
+  dt[A_CLAY_MI < 15 & A_SAND_MI > 50, value := OBIC::evaluate_logistic(A_P_OL, b = 0.47947, x0 = -1.94363, v = 0.074075)]
+  
+  # assess P availability for loamy? soils (Franco)
+  dt[A_CLAY_MI < 15 & A_SAND_MI <=50 , value := OBIC::evaluate_logistic(A_P_OL, b = 0.27155, x0 = 2.81733, v = 0.154671)]
+  
+  # assess P availability for clayey soils (Arcilloso)
+  dt[A_CLAY_MI > 15, value := OBIC::evaluate_logistic(A_P_OL, b = 0.20196, x0 = 2.87602, v = 0.133171)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
+}
+
+#' Calculate the phosphate availability index in Denmark
+#' 
+#' This function calculates the phosphate availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_posphor_dk(B_LU = 265,A_P_OL = 5)
+#' osi_c_posphor_dk(B_LU = c(265,1019),A_P_OL = c(3.5,5.5))
+#' 
+#' @return 
+#' The phosphate availability index in Denmark derived from extractable soil P fractions. A numeric value.
+#' 
+#' @export
+osi_c_posphor_dk <- function(B_LU, A_P_OL) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_P_OL = A_P_OL,
+                   value = NA_real_)
+  
+  # evaluation P-Olsen for cropland and soil types
+  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.226612, x0 = 30.137321,v = 1.247315)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
+}
+
+#' Calculate the phosphate availability index in Ireland
+#' 
+#' This function calculates the phosphate availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_posphor_ir(B_LU = 265,A_P_OL = 5)
+#' osi_c_posphor_ir(B_LU = c(265,1019),A_P_OL = c(3.5,5.5))
+#' 
+#' @return 
+#' The phosphate availability index in Ireland derived from extractable soil P fractions. A numeric value.
+#' 
+#' @export
+osi_c_posphor_ir <- function(B_LU, A_P_OL) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_P_OL = A_P_OL,
+                   value = NA_real_)
+  
+  # P index derived following P-Olsen.
+  # evaluation soil P status for grasslands
+  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.6560111, x0 = 3.44709, v = 0.588379)]
+  
+  # evaluation soil P status for other crops
+  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.50194, x0 = 3.91821, v = 0.5799892)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
+}
+
+
+#' Calculate the phosphate availability index in Sweden
+#' 
+#' This function calculates the phosphate availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate (mg P / kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_posphor_se(B_LU = 265,A_P_AL = 5)
+#' osi_c_posphor_se(B_LU = c(265,1019),A_P_AL = c(3.5,5.5))
+#' 
+#' @return 
+#' The phosphate availability index in Sweden derived from extractable soil P fractions. A numeric value.
+#' 
+#' @export
+osi_c_posphor_se <- function(B_LU, A_P_AL) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_P_AL = A_P_AL,
+                   value = NA_real_)
+  
+  # evaluation soil P status III for maize and cereals
+  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
+  
+  # evaluation soil P status II for hostvete
+  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.60458, x0 = 2.8517965, v = 0.0256494)]
+  
+  # evaluation soil P status III for oil crops
+  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
+  
+  # evaluation soil P status IVA for potato and sugar beet
+  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.0695783, x0 = -27.867195, v = 0.0163328)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
+}
