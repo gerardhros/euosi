@@ -51,6 +51,13 @@
   # load data
   osi_thresholds <- fread('dev/osi_thresholds.csv',encoding = 'UTF-8',na.strings = c(NA_character_, "","NA"))
   
+  # add addition from Elise 
+  osi_elise <- fread('D:/ESA/04 articles/2024/25 obi jrc/202505/osi_thresholds_elise.csv')
+  osi_elise <- osi_elise[nr>93]
+  osi_elise[,nr := max(osi_thresholds$nr)+ 1:.N]
+  setnames(osi_elise,'Other','osi_other')
+  osi_thresholds <- rbind(osi_thresholds,osi_elise,fill=TRUE)
+  
   # round numbers
   osi_thresholds[,osi_st_c1 := round(as.numeric(osi_st_c1),3)]
   osi_thresholds[,osi_st_c2 := round(as.numeric(osi_st_c2),3)]
