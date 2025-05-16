@@ -307,6 +307,112 @@ pFpara_class <- function(Pklei, Pleem, Psom, M50){
   return(dt[, list(ThetaR = thres, ThetaS = thsat, alfa = alpha, n, ksat = Ks)])
 }
 
-
+#' Estimate soil texture according to USDA classification to B_TEXTURE_USDA 
+#' 
+#' @param A_CLAY_MI (numeric) Clay content (\%)
+#' @param A_SILT_MI (numeric) Silt content (\%)
+#' @param A_SAND_MI (numeric) Silt content (\%)
+#' @param codes (boolean) return USDA classification names or codes
+#' 
+#' @return Texture according to the USDA classification
+#' 
+#'
+#' @export 
+osi_get_TEXTURE_USDA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, codes = TRUE){
   
+  # check inputs
+  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
   
+  # set internal copies
+  cl <- A_CLAY_MI
+  sa <- A_SAND_MI
+  si <- A_SILT_MI
+  
+  # get soil texture USA classfication full names  
+  if(codes==FALSE){
+  
+    if (cl>40   & sa <=45  & si<=40) {
+      value="clay"
+    } else if (cl>40   & sa <=20  & si<=60    & si>40) {
+      value="silty clay"
+    } else if (cl>35   & cl <=55  & sa<=65    & sa>45  & si<20) {
+      value="sandy clay"
+    } else if (cl>20   & cl <=35  & sa>45     & sa<80  & si <=27.5) {
+      value="sandy clay loam"
+    } else if (cl>27.5 & cl<=40   & sa>20     & sa<=45 & si>15 & si<=52.5) {
+      value="clay loam"
+    } else if (cl>27.5 & cl<=40   & sa<=20    & si>40  & si<=72.5){
+      value="silty clay loam"
+    } else if (cl<=27.5& sa<=50   & si>50     & si<=80){
+      value="silty loam"
+    } else if (cl<=20  & cl>12.5  & sa<=7.5   & si>80  & si<=87.5){
+      value="silty loam"
+    } else if (cl<=12.5& sa <=20  & si>80){
+      value="silt"
+    } else if (cl<=27.5& cl>7.5   & sa <=52.5 & sa>22.5& si<=50 & si>27.5){
+      value="loam"
+    } else if (cl<=7.5 & sa<=52.5 & sa>42.5   & si>40  & si<=50){
+      value="sandy loam"
+    } else if (cl<=20  & sa>52.5  & sa<=70    & si>10  & si<=47.5){
+      value="sandy loam"
+    } else if (cl>10   & cl<=20   & sa<=80    & sa>70  & si<=20){
+      value="sandy loam"
+    } else if (cl<=10  & si<=15   & sa>85     & cl<=10-si*10/15){
+      value="sand"
+    } else if (cl<=15  & si<=30   & sa>70     & cl> 10-si*10/15 & cl<=15-si*15/30){
+      value="loamy sand"
+    } else if (cl<=20  & si<=50   & sa>70     & cl>15-si*15/30){
+      value="sandy loam"
+    } else {
+      value="sandy loam"
+    }  
+  }
+  
+  # get soil texture USDA classification code
+  if(codes==TRUE){
+    
+     dt[grepl('^$|^$|^$|^$|^$|^$|^SaClLo$',B_TEXTURE_USDA), B_SOILTYPE_AGR := 'loam']
+    
+    
+    if (cl>40   & sa <=45  & si<=40) {
+      value="Cl"
+    } else if (cl>40   & sa <=20  & si<=60    & si>40) {
+      value="SiCL"
+    } else if (cl>35   & cl <=55  & sa<=65    & sa>45  & si<20) {
+      value="SaCl"
+    } else if (cl>20   & cl <=35  & sa>45     & sa<80  & si <=27.5) {
+      value="SaCL"
+    } else if (cl>27.5 & cl<=40   & sa>20     & sa<=45 & si>15 & si<=52.5) {
+      value="ClLo"
+    } else if (cl>27.5 & cl<=40   & sa<=20    & si>40  & si<=72.5){
+      value="SiClLo"
+    } else if (cl<=27.5& sa<=50   & si>50     & si<=80){
+      value="SiLo"
+    } else if (cl<=20  & cl>12.5  & sa<=7.5   & si>80  & si<=87.5){
+      value="SiLo"
+    } else if (cl<=12.5& sa <=20  & si>80){
+      value="Si"
+    } else if (cl<=27.5& cl>7.5   & sa <=52.5 & sa>22.5& si<=50 & si>27.5){
+      value="Lo"
+    } else if (cl<=7.5 & sa<=52.5 & sa>42.5   & si>40  & si<=50){
+      value="SaLo"
+    } else if (cl<=20  & sa>52.5  & sa<=70    & si>10  & si<=47.5){
+      value="SaLo"
+    } else if (cl>10   & cl<=20   & sa<=80    & sa>70  & si<=20){
+      value="SaLo"
+    } else if (cl<=10  & si<=15   & sa>85     & cl<=10-si*10/15){
+      value="Sa"
+    } else if (cl<=15  & si<=30   & sa>70     & cl> 10-si*10/15 & cl<=15-si*15/30){
+      value="LoSa"
+    } else if (cl<=20  & si<=50   & sa>70     & cl>15-si*15/30){
+      value="SaLo"
+    } else {
+      value="SaLo"
+    }  
+  }
+  
+  return(value)
+  
+}
