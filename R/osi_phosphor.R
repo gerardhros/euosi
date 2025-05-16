@@ -516,3 +516,146 @@ osi_c_posphor_se <- function(B_LU, A_P_AL) {
   value <- dt[,value]
   return(value)
 }
+
+#' Calculate the phosphorus availability index in Belgium
+#' 
+#' This function calculates the phosphorus availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_P_AL (numeric) The exchangeable P-content of the soil measured via ammonium lactate extraction
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_phosphorus_be(B_LU = 'SOJ', A_P_AL = 45)
+#' 
+#' @return 
+#' The phosphorus availability index in Belgium estimated from extractable phosphorus. A numeric value.
+#' 
+#' @export
+osi_c_posphor_be <- function(B_LU, A_P_AL) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='BE']
+  
+  # parameters
+  dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  dt.thresholds <- dt.thresholds[osi_country == 'BE' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_P_AL = A_P_AL,
+                   value = NA_real_)
+
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU', 
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
+  # merge thresholds
+  dt <- merge(dt,
+              dt.thresholds,
+              by.x = 'crop_cat1',
+              by.y = 'osi_threshold_cropcat',
+              all.x = TRUE)
+  
+  # convert to the OSI score
+  dt[,value := osi_evaluate_logistic(x = A_P_AL, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
+
+#' Calculate the phosphorus availability index in Finland
+#' 
+#' This function calculates the phosphorus availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
+#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
+#' @param A_P_AA (numeric) The exchangeable P-content of the soil measured via ammonium acetate extraction
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_phosphorus_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_P_AA = 45)
+#' 
+#' @return 
+#' The phosphorus availability index in Finland estimated from extractable phosphorus. A numeric value.
+#' 
+#' @export
+osi_c_posphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AA,A_C_OF = 0) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='FI']
+  
+  # parameters
+  dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   B_TEXTURE_USDA = B_TEXTURE_USDA,
+                   B_SOILTYPE_AGR = NA_character_,
+                   A_P_AA = A_P_AA,
+                   value = NA_real_)
+  
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU', 
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
+  # set agricultural soiltype
+  dt[A_C_OF > 200, B_SOILTYPE_AGR := 'organic']
+  dt[grepl('^Cl$|^SiCL$|^SaCL$',B_TEXTURE_USDA), B_SOILTYPE_AGR := 'clay']  
+  dt[grepl('^ClLo$|^SiClLo$|^Lo$|^SiLo$|^LoSa$|^Si$|^SaClLo$',B_TEXTURE_USDA), B_SOILTYPE_AGR := 'loam']
+  dt[is.na(B_SOILTYPE_AGR),B_SOILTYPE_AGR := 'sand']
+  
+  # merge thresholds
+  dt <- merge(dt,
+              dt.thresholds,
+              by.x = 'B_SOILTYPE_AGR',
+              by.y = 'osi_threshold_soilcat',
+              all.x = TRUE)
+  
+  # convert to the OSI score
+  dt[,value := osi_evaluate_logistic(x = A_P_AA, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
