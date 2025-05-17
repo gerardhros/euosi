@@ -39,8 +39,16 @@ osi_c_posphor <- function(B_LU,
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                    B_AER_FR = B_AER_FR,
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_CACO3_IF = A_CACO3_IF,
                    A_P_AL = A_P_AL,
+                   A_P_CAL = A_P_CAL,
+                   A_P_AAA = A_P_AAA,
+                   A_P_M3 = A_P_M3,
+                   A_P_DL = A_P_DL,
                    A_P_CC = A_P_CC,
                    A_P_WA = A_P_WA,
                    A_P_OL = A_P_OL,
@@ -48,11 +56,74 @@ osi_c_posphor <- function(B_LU,
                    value = NA_real_
                    )
   
-  # calculate the open soil index score for phosphor availability in the Netherlands
+  
+  # calculate the OSI score per country
+  
+  # Austria (AT)
+  dt[B_COUNTRY == 'AT', value := osi_c_posphor_at(B_LU = B_LU, A_P_CAL = A_P_CAL)]
+  
+  # Belgium (BE)
+  dt[B_COUNTRY == 'BE', value := osi_c_posphor_be(B_LU = B_LU, A_P_AL = A_P_AL)]
+  
+  # Switzerland (CH)
+  dt[B_COUNTRY == 'CH', value := osi_c_posphor_ch(B_LU = B_LU, A_P_AAA = A_P_AAA)]
+  
+  # Czech Republic (CZ)
+  dt[B_COUNTRY == 'CZ', value := osi_c_posphor_cz(B_LU = B_LU, A_P_M3 = A_P_M3)]
+  
+  # Germany (DE)
+  dt[B_COUNTRY == 'DE', value := osi_c_posphor_de(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_CAL = A_P_CAL, A_P_DL = A_P_DL)]
+  
+  # Denmark (DK)
+  dt[B_COUNTRY == 'DK', value := osi_c_posphor_dk(B_LU = B_LU, A_P_OL = A_P_OL)]
+  
+  # Estonia (EE)
+  dt[B_COUNTRY == 'EE', value := osi_c_posphor_ee(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_M3 = A_P_M3)]
+  
+  # Spain (ES)
+  dt[B_COUNTRY == 'ES', value := osi_c_posphor_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_P_OL = A_P_OL)]
+  
+  # France (FR)
+  dt[B_COUNTRY == 'FR', value := osi_c_posphor_fr(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, B_AER_FR = B_AER_FR, A_P_OL= A_P_OL)]
+  
+  # Finland (FI)
+  dt[B_COUNTRY == 'FI', value := osi_c_posphor_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_AAA = A_P_AAA, A_C_OF = A_C_OF )]
+  
+  # Hungary (HU)
+  dt[B_COUNTRY == 'HU', value := osi_c_posphor_hu(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI, A_CACO3_IF = A_CACO3_IF,A_P_AL = A_P_AL )]
+  
+  # Ireland (IE)
+  dt[B_COUNTRY == 'IE', value := osi_c_posphor_ie(B_LU = B_LU, A_P_OL = A_P_OL)]
+  
+  # Italy (IT)
+  dt[B_COUNTRY == 'IT', value := osi_c_posphor_it(B_LU = B_LU, A_P_OL = A_P_OL)]
+  
+  # Latvia (LV)
+  dt[B_COUNTRY == 'LV', value := osi_c_posphor_lv(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_DL = A_P_DL)]
+  
+  # Lithuania (LT)
+  dt[B_COUNTRY == 'LT', value := osi_c_posphor_lt(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_AL = A_P_AL)]
+  
+  # the Netherlands (NL)
   dt[B_COUNTRY == 'NL', value := osi_c_posphor_nl(B_LU = B_LU, A_P_AL = A_P_AL, A_P_CC = A_P_CC, A_P_WA = A_P_WA)]
   
-  # calculate the open soil index score for phosphor availability in the Netherlands
-  dt[B_COUNTRY == 'FR', value := osi_c_posphor_fr(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, B_AER_FR = B_AER_FR, A_P_OL= A_P_OL)]
+  # Norway (NO)
+  dt[B_COUNTRY == 'NO', value := osi_c_posphor_no(B_LU = B_LU, A_P_AL = A_P_AL)]
+  
+  # Sweden (SE)
+  dt[B_COUNTRY == 'SE', value := osi_c_posphor_se(B_LU = B_LU, A_P_AL = A_P_AL)]
+  
+  # Slovak Republic (SK)
+  dt[B_COUNTRY == 'SK', value := osi_c_posphor_lv(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_P_M3 = A_P_M3)]
+  
+  # Slovenia (SL)
+  dt[B_COUNTRY == 'SL', value := osi_c_posphor_sl(B_LU = B_LU, A_P_AL = A_P_AL)]
+  
+  # Poland (PL)
+  dt[B_COUNTRY == 'PL', value := osi_c_posphor_pl(B_LU = B_LU, A_P_DL = A_P_DL)]
+  
+  # United Kingdom (UK)
+  dt[B_COUNTRY == 'IE', value := osi_c_posphor_uk(B_LU = B_LU, A_P_OL = A_P_OL)]
   
   # sort data.table
   setorder(dt,id)
@@ -210,7 +281,7 @@ osi_c_posphor_be <- function(B_LU, A_P_AL) {
 #' osi_c_phosphorus_ch(A_P_AAA = 50)
 #' 
 #' @return 
-#' The phosphorus availability index in Norway estimated from extractable phosphorus. A numeric value.
+#' The phosphorus availability index in Switzerland estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
 osi_c_posphor_ch <- function(A_P_AAA,B_LU = NA_character_) {
