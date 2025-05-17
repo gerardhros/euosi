@@ -75,7 +75,7 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_c
 #' 
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
-#' @param A_K_CAL (numeric) The exchangeable K-content of the soil measured via Calcium Ammonium Lactate (mg P/ kg)
+#' @param A_K_CAL (numeric) The exchangeable K-content of the soil measured via Calcium Ammonium Lactate (mg K/ kg)
 #' 
 #' @import data.table
 #' 
@@ -223,18 +223,19 @@ osi_c_potassium_be <- function(B_LU, B_TEXTURE_BE, A_K_AA = NA_real_) {
 #' This function calculates the potassium availability. 
 #' 
 #' @param B_LU (character) The crop code
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
 #' @param A_K_M3 (numeric) The exchangeable K-content of the soil measured via Mehlich 3 extracton (mg K/ kg)
 #' 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium_cz(A_K_M3 = 81)
+#' osi_c_potassium_cz(A_K_M3 = 81,B_TEXTURE_HYPRES='C')
 #' 
 #' @return 
 #' The potassium availability index in Czech Republic estimated from extractable potassium. A numeric value.
 #' 
 #' @export
-osi_c_potassium_cz <- function(A_K_M3,B_LU = NA_character_) {
+osi_c_potassium_cz <- function(A_K_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -254,6 +255,7 @@ osi_c_potassium_cz <- function(A_K_M3,B_LU = NA_character_) {
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
+                   B_TEXTURE_HYPRES=B_TEXTURE_HYPRES,
                    A_K_M3 = A_K_M3,
                    value = NA_real_)
   
@@ -404,7 +406,7 @@ osi_c_potassium_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
   #             all.x = TRUE)
   
   # convert to the OSI score
-  dt[B_TEXTURE_USDA == 'Sand',value := osi_evaluate_logistic(x = A_K_M3, b= 0.111228,x0 = 4.8454716,v = 0.00894408)]
+  dt[B_TEXTURE_USDA == 'sand',value := osi_evaluate_logistic(x = A_K_M3, b= 0.111228,x0 = 4.8454716,v = 0.00894408)]
   dt[B_TEXTURE_USDA %in% c('loamy sand'),value := osi_evaluate_logistic(x = A_K_M3, b= 0.0681246,x0 = 2.8658315,v = 0.01832195)]
   dt[B_TEXTURE_USDA %in% c('sandy loam'),value := osi_evaluate_logistic(x = A_K_M3, b= 0.06901738,x0 = 3.22236569,v = 0.006392278)]
   dt[B_TEXTURE_USDA %in% c('loam','sandy clay','sandy clay loam'),
@@ -420,6 +422,52 @@ osi_c_potassium_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
   
   return(value)
   
+}
+
+#' Calculate the potassium availability index in Spain
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#' @param A_K_AA (numeric) The K-content of the soil extracted with ammoninium acetate (mg K/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_es(B_LU = 265,A_K_AA = 5,B_TEXTURE_HYPRES='C')
+#' osi_c_potassium_es(B_LU = c(265,1019),A_K_AA = c(3.5,5.5),B_TEXTURE_HYPRES=c('C','C'))
+#' 
+#' @return 
+#' The potassium availability index in Spain derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_c_potassium_es <- function(B_LU, B_TEXTURE_HYPRES,A_K_AA) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                   A_K_AA = A_K_AA,
+                   value = NA_real_)
+  
+  # franco = loam (M) ; arena = sand (C); silt = limoso (MF); arcilla = clay (F to VF)
+  
+  # evaluate the OSI score for arenose
+  dt[B_TEXTURE_HYPRES %in% c('C'),
+     value := osi_evaluate_logistic(x = A_K_AA, b= 0.02948845,x0 = 23.21207454,v = 0.25785455)]
+  # evaluate the OSI score for franco
+  dt[B_TEXTURE_HYPRES %in% c('MF','M'),
+     value := osi_evaluate_logistic(x = A_K_AA, b= 0.02108017,x0 = 5.43747198,v = 0.17298447)]
+  # evaluate the OSI score for arcilloso
+  dt[B_TEXTURE_HYPRES %in% c('F','VF'),
+     value := osi_evaluate_logistic(x = A_K_AA, b= 0.01665276,x0 = 5.18031011,v = 0.17195884)]
+  
+  # select value
+  value <- dt[,value]
+  
+  # return value
+  return(value)
 }
 
 #' Calculate the potassium availability index in France
@@ -607,6 +655,95 @@ osi_c_potassium_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_K_AL,B_LU = NA_c
   
 }
 
+#' Calculate the potassium availability index in Ireland
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
+#' @param A_K_NaAAA (numeric) The K-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_ie(B_LU = 265,A_SOM_LOI = 2,A_K_NaAAA = 5)
+#' osi_c_potassium_ie(B_LU = c(265,1019),A_SOM_LOI = c(2,4),A_K_NaAAA = c(3.5,5.5))
+#' 
+#' @return 
+#' The potassium availability index in Ireland derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_c_potassium_ie <- function(B_LU, A_SOM_LOI,A_K_NaAAA) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_K_NaAAA = A_K_NaAAA,
+                   value = NA_real_)
+  
+  # Index derived following K index system (K in mg/L)
+  
+  # convert from mg / kg to mg / liter sample volume
+  dt[, BDS := (1/(0.02525 * A_SOM_LOI + 0.6541))]
+  dt[,A_K_NaAAA := A_K_NaAAA * BDS]
+ 
+  # evaluation soil K status
+  dt[A_SOM_LOI <= 20, value := OBIC::evaluate_logistic(A_K_NaAAA, b = 0.04081745, x0 = 53.86819280, v = 0.66253526)]
+  dt[A_SOM_LOI > 20, value := OBIC::evaluate_logistic(A_K_NaAAA, b = 0.02000395 , x0 = 10.63516808  , v = 0.15763251 )]
+  
+  # select value
+  value <- dt[,value]
+  
+  # return value
+  return(value)
+}
+
+#' Calculate the potassium availability index in Italy
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#' @param A_K_AA (numeric) The K-content of the soil extracted with ammoninium acetate (mg K/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_it(B_LU = 265,A_K_AA = 5,B_TEXTURE_HYPRES='C')
+#' osi_c_potassium_it(B_LU = c(265,1019),A_K_AA = c(3.5,5.5),B_TEXTURE_HYPRES=c('C','C'))
+#' 
+#' @return 
+#' The potassium availability index in Italy derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_c_potassium_it <- function(B_LU, B_TEXTURE_HYPRES,A_K_AA) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                   A_K_AA = A_K_AA,
+                   value = NA_real_)
+  
+  # franco = loam (M) ; arena = sand (C); silt = limoso (MF); arcilla = clay (F to VF)
+  
+  # evaluate the OSI score for terreni sabbiosi
+  dt[B_TEXTURE_HYPRES %in% c('C'),
+     value := osi_evaluate_logistic(x = A_K_AA, b= 0.07914907 ,x0 = 33.82005169  ,v = 0.05062077 )]
+  # evaluate the OSI score for terreni medio impasto
+  dt[B_TEXTURE_HYPRES %in% c('MF','M'),
+     value := osi_evaluate_logistic(x = A_K_AA, b= 0.075840953 ,x0 = 5.349772330 ,v = 0.001498863 )]
+  # evaluate the OSI score for terreni argillosi e limos
+  dt[B_TEXTURE_HYPRES %in% c('F','VF'),
+     value := osi_evaluate_logistic(x = A_K_AA, b= 0.04242224 ,x0 = 5.62056414 ,v = 0.01662994 )]
+  
+  # select value
+  value <- dt[,value]
+  
+  # return value
+  return(value)
+}
 
 #' Calculate the potassium availability index in Latvia
 #' 
@@ -697,7 +834,7 @@ osi_c_potassium_lv <- function(A_K_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
 #' osi_c_potassium_lt(A_K_AL = 45,A_SOM_LOI= 1.5)
 #' 
 #' @return 
-#' The potassium availability index in Lithuania estimated from extractable phosphorus. A numeric value.
+#' The potassium availability index in Lithuania estimated from extractable potassium. A numeric value.
 #' 
 #' @export
 osi_c_potassium_lt <- function(A_K_AL,A_SOM_LOI,B_LU = NA_character_) {
@@ -739,8 +876,8 @@ osi_c_potassium_lt <- function(A_K_AL,A_SOM_LOI,B_LU = NA_character_) {
   #             all.x = TRUE)
   
   # estimate the OSI score for mineral and peat soils
-  dt[A_SOM_LOI <= 20,value := osi_evaluate_logistic(x = A_P_AL, b= 0.06542787,x0 = -23.62084916,v = 0.006326486)]
-  dt[A_SOM_LOI > 20,value := osi_evaluate_logistic(x = A_P_AL, b= 0.04211846,x0 = 3.19983935,v = 0.007473128)]
+  dt[A_SOM_LOI <= 20,value := osi_evaluate_logistic(x = A_K_AL, b= 0.06542787,x0 = -23.62084916,v = 0.006326486)]
+  dt[A_SOM_LOI > 20,value := osi_evaluate_logistic(x = A_K_AL, b= 0.04211846,x0 = 3.19983935,v = 0.007473128)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -1023,7 +1160,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
 #' 
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
-#' @param A_K_DL (numeric) The exchangeable K-content of the soil measured via ammonium double lactate extracton (mg P/ kg)
+#' @param A_K_DL (numeric) The exchangeable K-content of the soil measured via ammonium double lactate extracton (mg K/ kg)
 #' 
 #' @import data.table
 #' 
