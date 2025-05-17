@@ -257,3 +257,84 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
   # return value
   return(out)
 }
+
+#' Calculate the soil nitrogen supplying capacity in Belgium
+#' 
+#' This function calculates the NSC (nitrogen supply capacity) for the soil
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
+#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
+#' @param A_CACO3_IF (numeric) The percentage of carbonated lime (\%) 
+#' @param A_N_RT (numeric) The organic nitrogen content of the soil (mg N / kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_nitrogen_be(B_LU = '772',A_N_RT = 1200, A_C_OF = 25, A_CLAY_MI = 3.5, A_SAND_MI = 15,A_CACO3_IF = 0.8)
+#' 
+#' @return 
+#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
+#' 
+#' @export
+osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_IF) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='BE']
+  
+  # parameters
+  dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  dt.thresholds <- dt.thresholds[osi_country == 'FR' & osi_indicator =='i_c_n']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_SAND_MI = A_SAND_MI,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_C_OF = A_C_OF,
+                   A_N_RT = A_N_RT,
+                   A_CACO_IF = A_CACO_IF,
+                   value = NA_real_)
+  
+  # estimate bulk density
+  dt[, D_BDS := 0.80806 + 0.823844*exp(0.0578*0.1*A_C_OF) + 0.0014065 * A_SAND_MI - (0.0010299 * A_CLAY_MI)]
+  
+  # estimate helper variables
+  dt[,D_NHA := A_N_RT * 0.2 * D_BDS * 10000 * 1000 * 10^-6]
+  dt[,D_NSC := (22/((12+A_CLAY_MI)*(545+A_CACO_IF))) * D_NHA * 21.35 * 0.33]
+
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU', 
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
+  # merge thresholds
+  dt <- merge(dt,
+              dt.thresholds,
+              by.x = c('crop_cat1'),
+              by.y = c('osi_threshold_cropcat'),
+              all.x = TRUE)
+  
+  # convert to the OSI score
+  dt[,value := osi_evaluate_parabolic(x = D_NSC, x.top = osi_st_c1)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
