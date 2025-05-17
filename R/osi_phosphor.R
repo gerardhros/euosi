@@ -159,21 +159,25 @@ osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA 
 #' This function calculates the phosphate availability. 
 #' 
 #' @param B_LU (character) The crop code
-#' @param B_SOILTYPE_AGR (character) The soil type in a particular region
-#' @param B_AER_FR (character) An agroeconomic region in France
+#' @param B_SOILTYPE_AGR (character) The soil type in a particular region. Optional.
+#' @param B_AER_FR (character) An agroeconomic region in France. Optional.
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen
-#'  
+#' @param A_PH_WA (numeric) The pH measured in water.
+#' 
 #' @import data.table
 #' 
 #' @examples 
 #' osi_c_posphor_fr(B_LU = 'SOJ', A_P_OL = 45, 
 #' B_SOILTYPE_AGR = 'limons battants', B_AER_FR = 'nord-picardie')
 #' 
+#' @details
+#' The function has two optional arguments soil type (B_SOILTYPE_AGR) and agricultural region (B_AER_FR). When these are unknown, then the soil type is estimated based on the pH value. Threshold values are then generalized for calcareous and non-calcareous soils.
+#' 
 #' @return 
-#' The phosphate availability index in France estimated from extractable soil P Olsen (a numeric value).
+#' The phosphate availability index in France estimated from extractable soil P Olsen (a numeric value). 
 #' 
 #' @export
-osi_c_posphor_fr <- function(B_LU, B_SOILTYPE_AGR, B_AER_FR, A_P_OL = NA_real_) {
+osi_c_posphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_PH_WA = NA_real_) {
   
   # set visual bindings
   value = osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -191,6 +195,13 @@ osi_c_posphor_fr <- function(B_LU, B_SOILTYPE_AGR, B_AER_FR, A_P_OL = NA_real_) 
     # thresholds
     dt.thresholds <- as.data.table(euosi::osi_thresholds)
     dt.thresholds <- dt.thresholds[osi_country == 'FR' & osi_indicator =='i_c_p']
+    
+    # filter the thresholds when no B_AER_FR is given
+    if(sum(is.na(B_AER_FR))>0){
+      dt.thresholds <- dt.thresholds[is.na(osi_threshold_region)]
+    } else {
+      dt.thresholds <- dt.thresholds[!is.na(osi_threshold_region)]
+    }
     
     # soil types
     dt.soiltype <- as.data.table(euosi::osi_soiltype)
@@ -213,6 +224,7 @@ osi_c_posphor_fr <- function(B_LU, B_SOILTYPE_AGR, B_AER_FR, A_P_OL = NA_real_) 
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    B_AER_FR = B_AER_FR,
                    A_P_OL = A_P_OL,
+                   A_PH_WA = A_PH_WA,
                    value = NA_real_)
   
   # merge crop properties
@@ -221,6 +233,9 @@ osi_c_posphor_fr <- function(B_LU, B_SOILTYPE_AGR, B_AER_FR, A_P_OL = NA_real_) 
               by.x = 'B_LU', 
               by.y = 'crop_code',
               all.x=TRUE)
+  
+  # estimate agricultural soil type
+  dt[is.na(B_SOILTYPE_AGR), B_SOILTYPE_AGR := fifelse(A_PH_WA > 8,'craie','general')]
   
   # merge thresholds
   dt <- merge(dt,
