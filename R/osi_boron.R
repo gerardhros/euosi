@@ -115,3 +115,100 @@ osi_c_boron_fr <- function(B_LU,A_CLAY_MI, A_B_HW) {
   return(value)
   
 }
+
+#' Calculate the B availability index for agricultural soils in the Netherlands 
+#' 
+#' This function calculates the B availability of a soil, using the agronomic index used in France
+#' 
+#' @param B_LU (character) The crop type
+#' @param A_CLAY_MI (numeric) The clay content (\%)
+#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
+#' @param A_B_HW (numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water 
+#'
+#' @import data.table
+#' 
+#' @return 
+#' The boron availability index in the Netherlands estimated from hot water extractable boron, and clay, A numeric value.
+#' 
+#' @export
+osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  soil_cat_bo = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
+  
+  # Load in the datasets
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'NL']
+  
+  # Load in parms dataset (to be used later for upper and lowe rlimits)
+  dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # load the threshold values
+  dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  dt.thresholds <- dt.thresholds[osi_country=='NL' & osi_indicator=='i_c_b']
+  
+  # Check length of desired input
+  arg.length <- max(length(A_CLAY_MI),length(A_B_HW),length(B_LU))
+  
+  # check the values (update the limits later via dt.parms)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
+  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_B_HW, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
+  checkmate::assert_numeric(A_CLAY_MI, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
+  checkmate::assert_data_table(dt.thresholds,max.rows = 2)
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_B_HW = A_B_HW,
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_CLAY_MI = A_CLAY_MI,
+                   value = NA_real_)
+  
+  # merge with crop
+  dt <- merge(dt,
+              dt.crop[,.(B_LU, crop_cat1)],
+              by = 'B_LU',
+              all.x = TRUE)
+  
+  
+  
+  # set soil class for merging with threshold
+  dt[, soil_cat_bo := fifelse(A_CLAY_MI > 50,'clay','other')]
+  
+  # merge thresholds
+  dt <- merge(dt,
+              dt.thresholds,
+              by.x = 'soil_cat_bo',
+              by.y = 'osi_threshold_soilcat',
+              all.x = TRUE)
+
+  #add B recommendation
+  dt <- data.table(A_B_HWA = seq(0,1,0.05))
+  dt[,value := 0]
+  dt[A_B_HWA < 0.2,value := 0.4]
+  dt[A_B_HWA >= 0.2 & A_B_HWA < 0.3, value := 0.3]
+  dt[A_B_HWA >= 0.3 & A_B_HWA < 0.35, value := 0.2]
+  plot(I(0.4-value)~A_B_HWA,data=dt,type='l')
+  a = seq(0,1,0.05)
+  lines(a, OBIC::evaluate_logistic(a, b = 4.2, x0 = 1.2, v = 1.2),col='blue')
+    
+  # convert to the OSI score
+  dt[, value := evaluate_logistic(x = A_B_HW, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  
+  # exlcude other crops that a subset
+  dt[!B_LU %in% c('DFV','TRN','FVL'), value := 1]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # select and return value
+  value <- dt[,value]
+  
+  return(value)
+  
+}
+
+
