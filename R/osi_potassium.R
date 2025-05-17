@@ -69,193 +69,211 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_c
   
 }
 
-#' Calculate the K availability index for the Netherlands 
+#' Calculate the potassium availability index in Belgium
 #' 
-#' This function calculates the K availability of a soil, using the agronomic index used in the Netherlands.
+#' This function calculates the potassium availability. 
 #' 
-#' @param B_LU (numeric) The crop code
-#' @param B_SOILTYPE_AGR (character) The agricultural type of soil
-#' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
-#' @param A_CEC_CO (numeric) The cation exchange capacity of the soil (mmol+ / kg), analyzed via Cobalt-hexamine extraction
-#' @param A_K_CO_PO (numeric) The occupation of the CEC with potassium (\%)
-#' @param A_K_CC (numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg / kg), 
+#' @param B_LU (character) The crop code
+#' @param B_TEXTURE_BE (character) The soil texture according to Belgium classification system
+#' @param A_K_AA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction
 #' 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium_nl(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',
-#' A_SOM_LOI = 4, A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
-#' A_K_CO_PO = 8.5, A_K_CC = 145)
-#' osi_c_potassium_nl(265, 'dekzand',4, 11,5.4,  125,8.5, 145)
-#' osi_c_potassium_nl(c(265,1019), rep('dekzand',2),c(4,6), c(11,14),
-#' c(5.4,5.6),  c(125,145),c(8.5,3.5), c(145,180))
+#' osi_c_potassium_be(B_LU = 'SOJ',B_TEXTURE_BE, A_K_AA = 45)
 #' 
-#' @return
-#' The capacity of the soil to supply and buffer potassium, evaluated given an optimum threshold for yield. A numeric value.
+#' @return 
+#' The potassium availability index in Belgium estimated from extractable potassium. A numeric value.
 #' 
 #' @export
-osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC, 
-                               A_CEC_CO, A_K_CO_PO, A_K_CC) {
+osi_c_potassium_be <- function(B_LU, B_TEXTURE_BE, A_K_AA = NA_real_) {
   
-  # add visual bindings
-  id = crop_category = soiltype.n = crop_code = soiltype = NULL
-  b = cF = kindex1 = kindex2 = A_PH_KCL = A_K_CO = NULL
-  osi_country = osi_indicator = crop_cat1 = osi_soil_cat1 = osi_soil_cat2 = value = NULL
-  osi_threshold_cropcat = osi_threshold_soilcat = i_c_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   
-  # Load in the datasets
+  # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
-  dt.crops <- dt.crops[osi_country == 'NL']
-  dt.crops[, crop_code := as.integer(crop_code)]
+  dt.crops <- dt.crops[osi_country=='BE']
   
-  dt.soils <- as.data.table(euosi::osi_soiltype)
-  dt.soils <- dt.soils[osi_country == 'NL']
+  # parameters
+  dt.parms <- as.data.table(euosi::osi_parms)
   
-  # Load in the thresholds
+  # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  dt.thresholds <- dt.thresholds[osi_country == 'NL' & osi_indicator == 'i_c_k']
+  dt.thresholds <- dt.thresholds[osi_country == 'BE' & osi_indicator =='i_c_k']
   
-  # convert B_LU to integer
-  B_LU <- as.integer(B_LU)
-  
-  # Check inputs
-  arg.length <- max(length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO), length(A_K_CO_PO), 
-                    length(A_K_CC), length(A_CLAY_MI), length(B_SOILTYPE_AGR), length(B_LU))
-  
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(dt.soils$osi_soil_cat1), empty.ok = FALSE)
-  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_K_CC, lower = 0, upper = 800, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_K_CO_PO, lower = 0.1, upper = 50, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_CEC_CO, lower = 1, upper = 1000, any.missing = FALSE, len = arg.length)
-  checkmate::assert_data_table(dt.thresholds,max.rows = 6, min.rows = 6)
-  
-  # Collect the data
+  # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
-                   B_SOILTYPE_AGR = B_SOILTYPE_AGR,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_PH_CC = A_PH_CC,
-                   A_CEC_CO = A_CEC_CO,
-                   A_K_CO_PO = A_K_CO_PO,
-                   A_K_CC = A_K_CC,
-                   value = NA_real_
-                   )
-                  
-  # merge with crop and soil classification tables
-  dt <- merge(dt, dt.crops[, list(crop_code, crop_cat1)], 
-              by.x = "B_LU", by.y = "crop_code", all.x = TRUE)
-  dt <- merge(dt, dt.soils[, list(osi_soil_cat1, osi_soil_cat2)], 
-              by.x = "B_SOILTYPE_AGR", by.y = "osi_soil_cat1",all.x = TRUE)
-
-  # Calculate the K availability for grassland (CBGV, 2019)
-  dt.grass <- dt[crop_cat1 == 'grassland']
+                   B_TEXTURE_BE = B_TEXTURE_BE,
+                   A_K_AA = A_K_AA,
+                   value = NA_real_)
   
-  # add K-index where CEC is maximized at 400 mmol+ / kg
-  dt.grass[A_CEC_CO > 400, A_CEC_CO := 400]
-  dt.grass[,value := 4 - exp(-0.08551 * A_K_CC + 0.5264 * log(A_K_CC) - 0.001607 * A_CEC_CO + 
-                               0.1275 * log(A_CEC_CO) + 0.010836 * A_K_CC * log(A_CEC_CO))]
+  # set soil type to categories
+  dt[B_TEXTURE_BE %in% c('S','Z'),B_SOILTYPE_AGR := 'zand']
+  dt[B_TEXTURE_BE %in% c('P','L'),B_SOILTYPE_AGR := 'zandleem']
+  dt[B_TEXTURE_BE %in% c('A'),B_SOILTYPE_AGR := 'leem']
+  dt[is.na(B_SOILTYPE_AGR), B_SOILTYPE_AGR := 'polder']
   
-  # Calculate the K availability for maize (CBGV, 2019)
-  dt.maize <- dt[crop_cat1 == 'maize']
-  dt.maize[,value := (1 - (120 - A_K_CC) / 120) * 2.5]
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU', 
+              by.y = 'crop_code',
+              all.x=TRUE)
   
-  # Calculate the K availability for arable crops (Ros & Bussink, 2011)
-  dt.arable <- dt[crop_cat1 == 'arable']
+  # merge thresholds
+  dt <- merge(dt,
+              dt.thresholds,
+              by.x = c('B_SOILTYPE_AGR', 'crop_cat1'),
+              by.y = c('osi_threshold_soilcat','osi_threshold_cropcat'),
+              all.x = TRUE)
   
-  # derive b-factor, texture dependent correction
-  dt.arable[grepl('duin|rivier|maas|klei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10 & A_CLAY_MI <= 11, b := 1.513]
-  dt.arable[grepl('duin|rivier|maas|klei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10 & A_CLAY_MI > 11, b := 0.60226 + 1.27576 /(1 + 0.09891 * A_CLAY_MI)]
-  dt.arable[grepl('duin|rivier|maas|klei',B_SOILTYPE_AGR) & A_SOM_LOI > 10 & A_CLAY_MI <= 11, b := 1.513] # SHOULD BE CHANGED; UNKNOWN FROM FACTSHEETS
-  dt.arable[grepl('duin|rivier|maas|klei',B_SOILTYPE_AGR) & A_SOM_LOI > 10 & A_CLAY_MI > 11, b := 0.60226 + 1.27576 /(1 + 0.09891 * A_CLAY_MI)] # SHOULD BE CHANGED; UNKNOWN FROM FACTSHEETS
-  dt.arable[grepl('zeeklei',B_SOILTYPE_AGR) & A_SOM_LOI > 10 & A_CLAY_MI <= 5, b := 1.513]
-  dt.arable[grepl('zeeklei',B_SOILTYPE_AGR) & A_SOM_LOI > 10 & A_CLAY_MI > 5, b := 0.60226 + 1.27576 /(1 + 0.09891 * A_CLAY_MI)]
-  dt.arable[grepl('zeeklei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10 & A_CLAY_MI <= 5, b := 1.513]  # SHOULD BE CHANGED; UNKNOWN FROM FACTSHEETS
-  dt.arable[grepl('zeeklei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10 & A_CLAY_MI > 5, b := 0.60226 + 1.27576 /(1 + 0.09891 * A_CLAY_MI)]  # SHOULD BE CHANGED; UNKNOWN FROM FACTSHEETS
-  dt.arable[grepl('loess',B_SOILTYPE_AGR) & A_CLAY_MI <= 11, b := 1.513]
-  dt.arable[grepl('loess',B_SOILTYPE_AGR) & A_CLAY_MI > 11, b := 1.75 - 0.04 * 2 * A_CLAY_MI + 0.00068 * (2 * A_CLAY_MI)^2 - 0.0000041 * (2 * A_CLAY_MI)^3]
+  # convert to the OSI score
+  dt[,value := osi_evaluate_logistic(x = A_K_AA, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
   
-  # pH-KCl needed (not higher than pH is 7)
-  dt.arable[,A_PH_KCL := pmin(7,(A_PH_CC - 0.5262)/0.9288)]
-  
-  # correction factor for texture and OS (the so called F-factor)
-  dt.arable[grepl('zand|dal|veen',B_SOILTYPE_AGR), cF := 20 / (10 + A_SOM_LOI)]
-  dt.arable[grepl('duin|rivier|maas|klei|loess',B_SOILTYPE_AGR) & A_SOM_LOI <= 10, cF := b /(0.15 * A_PH_KCL-0.05)]
-  dt.arable[grepl('duin|rivier|maas|klei|loess',B_SOILTYPE_AGR) & A_SOM_LOI > 10, cF := b /(0.15 * A_PH_KCL-0.05)] # SHOULD BE CHANGED; UNKNOWN FROM FACTSHEETS
-  dt.arable[grepl('zeeklei',B_SOILTYPE_AGR) & A_SOM_LOI > 10, cF := b]
-  dt.arable[grepl('zeeklei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10, cF := b] # SHOULD BE CHANGED; UNKNOWN FROM FACTSHEETS
-  
-  # calculate K-COHEX as mg K per kg soil
-  dt.arable[,A_K_CO := A_K_CO_PO * A_CEC_CO * 0.01 * 39.098]
-  
-  # calculate K-index based on CaCl2-extracble K as wel ass K-CEC
-  dt.arable[grepl('zand|dal|veen',B_SOILTYPE_AGR),kindex1 := A_K_CC * cF * 0.12046]
-  dt.arable[grepl('zand|dal|veen',B_SOILTYPE_AGR),kindex2 := (A_K_CO - 0.17 * A_CEC_CO) * cF * 0.12046]
-  dt.arable[grepl('klei',B_SOILTYPE_AGR),kindex1 := (1.56 * A_K_CC - 17 + 0.29 * A_CEC_CO) * cF * 0.12046]
-  dt.arable[grepl('klei',B_SOILTYPE_AGR),kindex2 := A_K_CO * cF * 0.12046]
-  
-  # calculate K-HCL (mg K2O/ 100 g) for loess, assuming Cohex similar to HCl extraction
-  dt.arable[grepl('loess',B_SOILTYPE_AGR), c('kindex1','kindex2') := A_K_CO * 1.2047 * 0.1]
-  
-  # add check for K-CEC derived Kindex: should not below zero
-  dt.arable[kindex2 < 0, kindex2 := kindex1]
-  dt.arable[kindex1 < 0, kindex1 := kindex2]
-  dt.arable[,value := 0.5 * (kindex1 + kindex2)]
-  
-  # replace negative values by zero
-  dt.arable[value < 0, value := 0]
-  
-  # Calculate the K availability for nature
-  dt.nature <- dt[crop_cat1 == 'nature']
-  dt.nature[,value := 0]
-  
-  # score the K index given threshold for agronomic production / product quality
-  
-    # subset
-    dths <- dt.thresholds[osi_threshold_cropcat == 'grassland']
-  
-    # evaluate grassland
-    dt.grass[, i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
-  
-    # subset and evaluate for maize
-    dths <- dt.thresholds[osi_threshold_cropcat == 'maize']
-    dt.grass[, i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
-    
-    # subset and evaluate for arable sandy soils
-    dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'sand']
-    dt.arable[grepl('zand|dal',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
-  
-    # subset and evaluate for arable peat soils
-    dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'peat']
-    dt.arable[grepl('peat',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
-    
-    # subset and evaluate for arable clay soils
-    dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'clay']
-    dt.arable[grepl('klei',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
-    
-    # subset and evaluate for arable loess soils
-    dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'loess']
-    dt.arable[grepl('loess',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
-    
-    # evaluate nature soils
-    dt.nature[, i_c_k := 1]
-  
-  # Combine both tables and extract values
-  dt <- rbindlist(list(dt.arable,dt.grass, dt.maize,dt.nature), fill = TRUE)
+  # set the order to the original inputs
   setorder(dt, id)
   
-  # select the output variable
-  out <- dt[,i_c_k]
+  # return value
+  value <- dt[, value]
   
-  # return the OSI score
-  return(out)
+  return(value)
+  
+}
+
+#' Calculate the potassium availability index in Germany
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_C_OF (numeric) The carbon content of the soil layer (g/ kg)
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
+#' @param A_K_AA (numeric) The potassium content extracted with AA (g / kg)
+#' 
+#' @import data.table
+#' 
+#' @return 
+#' The potassium availability index in Germany derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_c_potassium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AA) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_C_OF= A_C_OF,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_SAND_MI = A_SAND_MI,
+                   A_SILT_MI = 100 - A_CLAY_MI - A_SILT_MI,
+                   A_K_AA = A_K_AA,
+                   value = NA_real_)
+  
+  # add soil type
+  dt.ge[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
+  dt.ge[A_SAND_MI >= 42 & A_SAND_MI <= 95 & A_SILT_MI <= 40 & A_CLAY_MI <= 17 & A_C_OF < 150,  stype :="BG2"]
+  dt.ge[A_SAND_MI >= 33 & A_SAND_MI <= 83 & A_SILT_MI <= 50 & A_CLAY_MI >= 8 & A_CLAY_MI <= 25 & A_C_OF < 150,  stype :="BG3"]
+  dt.ge[A_SAND_MI <= 75 & A_SILT_MI <= 100 & A_CLAY_MI <= 35 & A_C_OF < 150,  stype :="BG4"]
+  dt.ge[A_SAND_MI <= 65 & A_SILT_MI <= 75 & A_CLAY_MI >= 25 & A_CLAY_MI <= 100 & A_C_OF < 150, stype := "BG5"]
+  dt.ge[ A_C_OF >= 150,  stype := "BG6"]
+  
+  # evaluate A_K_AA for arable soils
+  dt.ge[stype=='BG1' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.4488277, x0 = 9.718321, v = 1.254134)]
+  dt.ge[stype=='BG2' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.4025205, x0 = 11.358496, v = 1.186427)]
+  dt.ge[stype=='BG3' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.3578666, x0 = 14.656902, v = 1.373431)]
+  dt.ge[stype=='BG4' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.3457865, x0 = 17.303152, v = 1.543785)]
+  dt.ge[stype=='BG5' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.2675499, x0 = 25.566018, v = 1.827952)]
+  dt.ge[stype=='BG6' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.3735224, x0 = 17.424734, v = 1.874988)]
+  
+  # evaluate A_K_AA for grassland soils
+  dt.ge[stype=='BG1' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 9.030400, x0 = 6.895466, v = 5.5870309)]
+  dt.ge[stype=='BG2' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 5.269679, x0 = 8.321927, v = 4.4726794)]
+  dt.ge[stype=='BG3' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 4.616016, x0 = 9.324117, v = 4.1282965)]
+  dt.ge[stype=='BG4' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 1.713005, x0 = 15.406360, v = 0.4744978)]
+  dt.ge[stype=='BG5' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 1.595327, x0 = 15.460018, v = 0.1341047)]
+  dt.ge[stype=='BG6' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 1.662136, x0 = 15.228511, v = 0.4373691)]
+  
+  # select value and return
+  value <- dt[,value]
+  
+  # return value
+  return(value)
+}
+
+#' Calculate the potassium availability index in Estonia
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
+#' @param A_K_M3 (numeric) The exchangeable K-content of the soil measured via Mehlich 3 extracton (mg P/ kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_ee(A_K_M3 = 45,B_TEXTURE_USDA = 'clay')
+#' 
+#' @return 
+#' The potassium availability index in Estonia estimated from extractable phosphorus. A numeric value.
+#' 
+#' @export
+osi_c_potassium_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   B_TEXTURE_USDA=B_TEXTURE_USDA,
+                   A_K_M3 = A_K_M3,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # convert to the OSI score
+  dt[B_TEXTURE_USDA == 'Sand',value := osi_evaluate_logistic(x = A_K_M3, b= 0.111228,x0 = 4.8454716,v = 0.00894408)]
+  dt[B_TEXTURE_USDA %in% c('loamy sand'),value := osi_evaluate_logistic(x = A_K_M3, b= 0.0681246,x0 = 2.8658315,v = 0.01832195)]
+  dt[B_TEXTURE_USDA %in% c('sandy loam'),value := osi_evaluate_logistic(x = A_K_M3, b= 0.06901738,x0 = 3.22236569,v = 0.006392278)]
+  dt[B_TEXTURE_USDA %in% c('loam','sandy clay','sandy clay loam'),
+     value := osi_evaluate_logistic(x = A_K_M3, b= 0.04955406,x0 = 2.80768003,v = 0.01280431)]
+  dt[B_TEXTURE_USDA %in% c('clay','clay loam','silty clay','silty clay loam','silt loam','silt'),
+     value := osi_evaluate_logistic(x = A_K_M3, b= 0.0429129,x0 = 1.37161548,v = 0.001844779)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
 }
 
 #' Calculate the potassium availability index in France
@@ -355,129 +373,72 @@ osi_c_potassium_fr <- function(B_LU, A_K_AA, B_TEXTURE_GEPPA = NA_character_, B_
   
 }
 
-#' Calculate the potassium availability index in Germany
-#' 
-#' This function calculates the potassium availability. 
-#' 
-#' @param B_LU (numeric) The crop code
-#' @param A_C_OF (numeric) The carbon content of the soil layer (g/ kg)
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_K_AA (numeric) The potassium content extracted with AA (g / kg)
-#' 
-#' @import data.table
-#' 
-#' @return 
-#' The potassium availability index in Germany derived from extractable soil K fractions. A numeric value.
-#' 
-#' @export
-osi_c_potassium_ge <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AA) {
-  
-  # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
-                   B_LU = B_LU,
-                   A_C_OF= A_C_OF,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SILT_MI,
-                   A_K_AA = A_K_AA,
-                   value = NA_real_)
-  
-  # add soil type
-  dt.ge[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
-  dt.ge[A_SAND_MI >= 42 & A_SAND_MI <= 95 & A_SILT_MI <= 40 & A_CLAY_MI <= 17 & A_C_OF < 150,  stype :="BG2"]
-  dt.ge[A_SAND_MI >= 33 & A_SAND_MI <= 83 & A_SILT_MI <= 50 & A_CLAY_MI >= 8 & A_CLAY_MI <= 25 & A_C_OF < 150,  stype :="BG3"]
-  dt.ge[A_SAND_MI <= 75 & A_SILT_MI <= 100 & A_CLAY_MI <= 35 & A_C_OF < 150,  stype :="BG4"]
-  dt.ge[A_SAND_MI <= 65 & A_SILT_MI <= 75 & A_CLAY_MI >= 25 & A_CLAY_MI <= 100 & A_C_OF < 150, stype := "BG5"]
-  dt.ge[ A_C_OF >= 150,  stype := "BG6"]
-  
-  # evaluate A_K_AA for arable soils
-  dt.ge[stype=='BG1' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.4488277, x0 = 9.718321, v = 1.254134)]
-  dt.ge[stype=='BG2' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.4025205, x0 = 11.358496, v = 1.186427)]
-  dt.ge[stype=='BG3' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.3578666, x0 = 14.656902, v = 1.373431)]
-  dt.ge[stype=='BG4' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.3457865, x0 = 17.303152, v = 1.543785)]
-  dt.ge[stype=='BG5' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.2675499, x0 = 25.566018, v = 1.827952)]
-  dt.ge[stype=='BG6' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.3735224, x0 = 17.424734, v = 1.874988)]
-  
-  # evaluate A_K_AA for grassland soils
-  dt.ge[stype=='BG1' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 9.030400, x0 = 6.895466, v = 5.5870309)]
-  dt.ge[stype=='BG2' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 5.269679, x0 = 8.321927, v = 4.4726794)]
-  dt.ge[stype=='BG3' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 4.616016, x0 = 9.324117, v = 4.1282965)]
-  dt.ge[stype=='BG4' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 1.713005, x0 = 15.406360, v = 0.4744978)]
-  dt.ge[stype=='BG5' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 1.595327, x0 = 15.460018, v = 0.1341047)]
-  dt.ge[stype=='BG6' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 1.662136, x0 = 15.228511, v = 0.4373691)]
-  
-  # select value and return
-  value <- dt[,value]
-  
-  # return value
-  return(value)
-}
 
 
-#' Calculate the potassium availability index in Belgium
+#' Calculate the potassium availability index in Latvia
 #' 
 #' This function calculates the potassium availability. 
 #' 
 #' @param B_LU (character) The crop code
-#' @param B_TEXTURE_BE (character) The soil texture according to Belgium classification system
-#' @param A_K_AA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction
-#' 
+#' @param A_K_DL (numeric) The exchangeable K-content of the soil measured via Double Lactate extraction (mg K/ kg)
+#' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
+#'  
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium_be(B_LU = 'SOJ',B_TEXTURE_BE, A_K_AA = 45)
+#' osi_c_potassium_lv(A_K_DL = 45,B_TEXTURE_USDA='sand')
 #' 
 #' @return 
-#' The potassium availability index in Belgium estimated from extractable potassium. A numeric value.
+#' The potassium availability index in Latvia estimated from extractable potassium A numeric value.
 #' 
 #' @export
-osi_c_potassium_be <- function(B_LU, B_TEXTURE_BE, A_K_AA = NA_real_) {
+osi_c_potassium_lv <- function(A_K_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
-  crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   
   # crop data
-  dt.crops <- as.data.table(euosi::osi_crops)
-  dt.crops <- dt.crops[osi_country=='BE']
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
   
   # parameters
-  dt.parms <- as.data.table(euosi::osi_parms)
-
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
   # thresholds
-  dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  dt.thresholds <- dt.thresholds[osi_country == 'BE' & osi_indicator =='i_c_k']
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
-                   B_TEXTURE_BE = B_TEXTURE_BE,
-                   A_K_AA = A_K_AA,
+                   B_TEXTURE_USDA = B_TEXTURE_USDA,
+                   A_K_DL = A_K_DL,
                    value = NA_real_)
   
-  # set soil type to categories
-  dt[B_TEXTURE_BE %in% c('S','Z'),B_SOILTYPE_AGR := 'zand']
-  dt[B_TEXTURE_BE %in% c('P','L'),B_SOILTYPE_AGR := 'zandleem']
-  dt[B_TEXTURE_BE %in% c('A'),B_SOILTYPE_AGR := 'leem']
-  dt[is.na(B_SOILTYPE_AGR), B_SOILTYPE_AGR := 'polder']
-  
   # merge crop properties
-  dt <- merge(dt,
-              dt.crops[,.(crop_code,crop_cat1)],
-              by.x = 'B_LU', 
-              by.y = 'crop_code',
-              all.x=TRUE)
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
   
   # merge thresholds
-  dt <- merge(dt,
-              dt.thresholds,
-              by.x = c('B_SOILTYPE_AGR', 'crop_cat1'),
-              by.y = c('osi_threshold_soilcat','osi_threshold_cropcat'),
-              all.x = TRUE)
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
   
   # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = A_K_AA, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  dt[B_TEXTURE_USDA == 'sand',value := osi_evaluate_logistic(x = A_K_DL, b= 0.11109104,x0 = -11.43898675,v = 0.007796498)]
+  dt[B_TEXTURE_USDA %in% c('loamy sand',
+                           'sandy loam'),value := osi_evaluate_logistic(x = A_K_DL, b= 0.085102248,x0 = -17.31157273,v = 0.00616734)]
+  dt[B_TEXTURE_USDA %in% c('loam','sandy clay',
+                           'sandy clay loam'),value := osi_evaluate_logistic(x = A_K_DL, b= 0.0754598,x0 = 3.001728,v = 0.03331127)]
+  dt[B_TEXTURE_USDA %in% c('clay','clay loam',
+                           'silty clay','silty clay loam',
+                           'silt loam','silt'),value := osi_evaluate_logistic(x = A_K_DL, b= 0.0685035,x0 = 2.97672246,v = 0.03203499)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -488,6 +449,7 @@ osi_c_potassium_be <- function(B_LU, B_TEXTURE_BE, A_K_AA = NA_real_) {
   return(value)
   
 }
+
 
 #' Calculate the potassium availability index in Finland
 #' 
@@ -564,3 +526,193 @@ osi_c_potassium_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AA,A_C_OF = 0) {
   return(value)
   
 }
+
+#' Calculate the K availability index for the Netherlands 
+#' 
+#' This function calculates the K availability of a soil, using the agronomic index used in the Netherlands.
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param B_SOILTYPE_AGR (character) The agricultural type of soil
+#' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
+#' @param A_CEC_CO (numeric) The cation exchange capacity of the soil (mmol+ / kg), analyzed via Cobalt-hexamine extraction
+#' @param A_K_CO_PO (numeric) The occupation of the CEC with potassium (\%)
+#' @param A_K_CC (numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg / kg), 
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_nl(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',
+#' A_SOM_LOI = 4, A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
+#' A_K_CO_PO = 8.5, A_K_CC = 145)
+#' osi_c_potassium_nl(265, 'dekzand',4, 11,5.4,  125,8.5, 145)
+#' osi_c_potassium_nl(c(265,1019), rep('dekzand',2),c(4,6), c(11,14),
+#' c(5.4,5.6),  c(125,145),c(8.5,3.5), c(145,180))
+#' 
+#' @return
+#' The capacity of the soil to supply and buffer potassium, evaluated given an optimum threshold for yield. A numeric value.
+#' 
+#' @export
+osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC, 
+                               A_CEC_CO, A_K_CO_PO, A_K_CC) {
+  
+  # add visual bindings
+  id = crop_category = soiltype.n = crop_code = soiltype = NULL
+  b = cF = kindex1 = kindex2 = A_PH_KCL = A_K_CO = NULL
+  osi_country = osi_indicator = crop_cat1 = osi_soil_cat1 = osi_soil_cat2 = value = NULL
+  osi_threshold_cropcat = osi_threshold_soilcat = i_c_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
+  
+  # Load in the datasets
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'NL']
+  dt.crops[, crop_code := as.integer(crop_code)]
+  
+  dt.soils <- as.data.table(euosi::osi_soiltype)
+  dt.soils <- dt.soils[osi_country == 'NL']
+  
+  # Load in the thresholds
+  dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  dt.thresholds <- dt.thresholds[osi_country == 'NL' & osi_indicator == 'i_c_k']
+  
+  # convert B_LU to integer
+  B_LU <- as.integer(B_LU)
+  
+  # Check inputs
+  arg.length <- max(length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO), length(A_K_CO_PO), 
+                    length(A_K_CC), length(A_CLAY_MI), length(B_SOILTYPE_AGR), length(B_LU))
+  
+  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
+  checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(dt.soils$osi_soil_cat1), empty.ok = FALSE)
+  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_K_CC, lower = 0, upper = 800, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_K_CO_PO, lower = 0.1, upper = 50, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_CEC_CO, lower = 1, upper = 1000, any.missing = FALSE, len = arg.length)
+  checkmate::assert_data_table(dt.thresholds,max.rows = 6, min.rows = 6)
+  
+  # Collect the data
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_PH_CC = A_PH_CC,
+                   A_CEC_CO = A_CEC_CO,
+                   A_K_CO_PO = A_K_CO_PO,
+                   A_K_CC = A_K_CC,
+                   value = NA_real_
+  )
+  
+  # merge with crop and soil classification tables
+  dt <- merge(dt, dt.crops[, list(crop_code, crop_cat1)], 
+              by.x = "B_LU", by.y = "crop_code", all.x = TRUE)
+  dt <- merge(dt, dt.soils[, list(osi_soil_cat1, osi_soil_cat2)], 
+              by.x = "B_SOILTYPE_AGR", by.y = "osi_soil_cat1",all.x = TRUE)
+  
+  # Calculate the K availability for grassland (CBGV, 2019)
+  dt.grass <- dt[crop_cat1 == 'grassland']
+  
+  # add K-index where CEC is maximized at 400 mmol+ / kg
+  dt.grass[A_CEC_CO > 400, A_CEC_CO := 400]
+  dt.grass[,value := 4 - exp(-0.08551 * A_K_CC + 0.5264 * log(A_K_CC) - 0.001607 * A_CEC_CO + 
+                               0.1275 * log(A_CEC_CO) + 0.010836 * A_K_CC * log(A_CEC_CO))]
+  
+  # Calculate the K availability for maize (CBGV, 2019)
+  dt.maize <- dt[crop_cat1 == 'maize']
+  dt.maize[,value := (1 - (120 - A_K_CC) / 120) * 2.5]
+  
+  # Calculate the K availability for arable crops (Ros & Bussink, 2011)
+  dt.arable <- dt[crop_cat1 == 'arable']
+  
+  # derive b-factor, texture dependent correction
+  dt.arable[grepl('duin|rivier|maas|klei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10 & A_CLAY_MI <= 11, b := 1.513]
+  dt.arable[grepl('duin|rivier|maas|klei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10 & A_CLAY_MI > 11, b := 0.60226 + 1.27576 /(1 + 0.09891 * A_CLAY_MI)]
+  dt.arable[grepl('duin|rivier|maas|klei',B_SOILTYPE_AGR) & A_SOM_LOI > 10 & A_CLAY_MI <= 11, b := 1.513] # SHOULD BE CHANGED; UNKNOWN FROM FACTSHEETS
+  dt.arable[grepl('duin|rivier|maas|klei',B_SOILTYPE_AGR) & A_SOM_LOI > 10 & A_CLAY_MI > 11, b := 0.60226 + 1.27576 /(1 + 0.09891 * A_CLAY_MI)] # SHOULD BE CHANGED; UNKNOWN FROM FACTSHEETS
+  dt.arable[grepl('zeeklei',B_SOILTYPE_AGR) & A_SOM_LOI > 10 & A_CLAY_MI <= 5, b := 1.513]
+  dt.arable[grepl('zeeklei',B_SOILTYPE_AGR) & A_SOM_LOI > 10 & A_CLAY_MI > 5, b := 0.60226 + 1.27576 /(1 + 0.09891 * A_CLAY_MI)]
+  dt.arable[grepl('zeeklei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10 & A_CLAY_MI <= 5, b := 1.513]  # SHOULD BE CHANGED; UNKNOWN FROM FACTSHEETS
+  dt.arable[grepl('zeeklei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10 & A_CLAY_MI > 5, b := 0.60226 + 1.27576 /(1 + 0.09891 * A_CLAY_MI)]  # SHOULD BE CHANGED; UNKNOWN FROM FACTSHEETS
+  dt.arable[grepl('loess',B_SOILTYPE_AGR) & A_CLAY_MI <= 11, b := 1.513]
+  dt.arable[grepl('loess',B_SOILTYPE_AGR) & A_CLAY_MI > 11, b := 1.75 - 0.04 * 2 * A_CLAY_MI + 0.00068 * (2 * A_CLAY_MI)^2 - 0.0000041 * (2 * A_CLAY_MI)^3]
+  
+  # pH-KCl needed (not higher than pH is 7)
+  dt.arable[,A_PH_KCL := pmin(7,(A_PH_CC - 0.5262)/0.9288)]
+  
+  # correction factor for texture and OS (the so called F-factor)
+  dt.arable[grepl('zand|dal|veen',B_SOILTYPE_AGR), cF := 20 / (10 + A_SOM_LOI)]
+  dt.arable[grepl('duin|rivier|maas|klei|loess',B_SOILTYPE_AGR) & A_SOM_LOI <= 10, cF := b /(0.15 * A_PH_KCL-0.05)]
+  dt.arable[grepl('duin|rivier|maas|klei|loess',B_SOILTYPE_AGR) & A_SOM_LOI > 10, cF := b /(0.15 * A_PH_KCL-0.05)] # SHOULD BE CHANGED; UNKNOWN FROM FACTSHEETS
+  dt.arable[grepl('zeeklei',B_SOILTYPE_AGR) & A_SOM_LOI > 10, cF := b]
+  dt.arable[grepl('zeeklei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10, cF := b] # SHOULD BE CHANGED; UNKNOWN FROM FACTSHEETS
+  
+  # calculate K-COHEX as mg K per kg soil
+  dt.arable[,A_K_CO := A_K_CO_PO * A_CEC_CO * 0.01 * 39.098]
+  
+  # calculate K-index based on CaCl2-extracble K as wel ass K-CEC
+  dt.arable[grepl('zand|dal|veen',B_SOILTYPE_AGR),kindex1 := A_K_CC * cF * 0.12046]
+  dt.arable[grepl('zand|dal|veen',B_SOILTYPE_AGR),kindex2 := (A_K_CO - 0.17 * A_CEC_CO) * cF * 0.12046]
+  dt.arable[grepl('klei',B_SOILTYPE_AGR),kindex1 := (1.56 * A_K_CC - 17 + 0.29 * A_CEC_CO) * cF * 0.12046]
+  dt.arable[grepl('klei',B_SOILTYPE_AGR),kindex2 := A_K_CO * cF * 0.12046]
+  
+  # calculate K-HCL (mg K2O/ 100 g) for loess, assuming Cohex similar to HCl extraction
+  dt.arable[grepl('loess',B_SOILTYPE_AGR), c('kindex1','kindex2') := A_K_CO * 1.2047 * 0.1]
+  
+  # add check for K-CEC derived Kindex: should not below zero
+  dt.arable[kindex2 < 0, kindex2 := kindex1]
+  dt.arable[kindex1 < 0, kindex1 := kindex2]
+  dt.arable[,value := 0.5 * (kindex1 + kindex2)]
+  
+  # replace negative values by zero
+  dt.arable[value < 0, value := 0]
+  
+  # Calculate the K availability for nature
+  dt.nature <- dt[crop_cat1 == 'nature']
+  dt.nature[,value := 0]
+  
+  # score the K index given threshold for agronomic production / product quality
+  
+  # subset
+  dths <- dt.thresholds[osi_threshold_cropcat == 'grassland']
+  
+  # evaluate grassland
+  dt.grass[, i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+  
+  # subset and evaluate for maize
+  dths <- dt.thresholds[osi_threshold_cropcat == 'maize']
+  dt.grass[, i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+  
+  # subset and evaluate for arable sandy soils
+  dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'sand']
+  dt.arable[grepl('zand|dal',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+  
+  # subset and evaluate for arable peat soils
+  dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'peat']
+  dt.arable[grepl('peat',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+  
+  # subset and evaluate for arable clay soils
+  dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'clay']
+  dt.arable[grepl('klei',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+  
+  # subset and evaluate for arable loess soils
+  dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'loess']
+  dt.arable[grepl('loess',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+  
+  # evaluate nature soils
+  dt.nature[, i_c_k := 1]
+  
+  # Combine both tables and extract values
+  dt <- rbindlist(list(dt.arable,dt.grass, dt.maize,dt.nature), fill = TRUE)
+  setorder(dt, id)
+  
+  # select the output variable
+  out <- dt[,i_c_k]
+  
+  # return the OSI score
+  return(out)
+}
+
