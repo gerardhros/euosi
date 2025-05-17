@@ -196,17 +196,23 @@ osi_conv_npmn <- function(A_N_RT, A_CLAY_MI, med_PMN = 51.9, med_NRT = 1425, med
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen
 #' @param A_P_CAL (numeric) The P-content of the soil extracted with ammonium lactate(mg P2O5 / 100g)
 #' @param A_P_DL (numeric) The P-content of the soil extracted with double lactate (mg P / kg)
-#' @param A_P_AA (numeric) The exchangeable P-content of the soil measured via ammonium acetate extraction
+#' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction
+#' @param A_P_AAA_EDTA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate+EDTA extraction
 #' @param A_PH_CC (numeric) The pH measured in cacl2 
+#' 
+#' @references 
+#' Steinfurth et al., (2021) Conversion equations between Olsen-P and other methods used to assess plant available soil phosphorus in Europe – A review
 #' 
 #' @export 
 osi_conv_phosphor <- function(element, 
                               A_P_AL = NA_real_,A_P_CC = NA_real_, A_P_WA = NA_real_,
                               A_P_OL = NA_real_,A_P_CAL = NA_real_,A_P_DL = NA_real_,A_P_AA = NA_real_,
+                              A_P_AAA_EDTA = NA_real_,
                               A_PH_CC = NA_real_){
   
   # check inputs
-  checkmate::assert_subset(element,choices = c('A_P_AL','A_P_CAL','A_P_DL','A_P_AA'),empty.ok = FALSE)
+  checkmate::assert_subset(element,choices = c('A_P_AL','A_P_CAL','A_P_DL','A_P_AAA','A_P_AAA_EDTA',
+                                               'A_P_WA','A_P_M3'),empty.ok = FALSE)
   
   # make internal table with inputs
   dt <- data.table(A_P_AL = A_P_AL,
@@ -215,14 +221,20 @@ osi_conv_phosphor <- function(element,
                    A_P_OL = A_P_OL,
                    A_P_CAL = A_P_CAL,
                    A_P_DL = A_P_DL,
-                   A_P_AA = A_P_AA,
+                   A_P_AAA = A_P_AAA,
+                   A_P_AAA_EDTA = A_P_AAA_EDTA,
                    A_PH_CC = A_PH_CC)
   
-  # estimate P from other measurements
-  # https://doi.org/10.1016/j.geoderma.2021.115339, table 5
+  # estimate P from other measurements (all in mg P per kg soil)
+  # https://doi.org/10.1016/j.geoderma.2021.115339, tables 3 and 5
   dt[is.na(A_P_AL) & !is.na(A_P_OL), A_P_AL := (A_P_OL - 21.9 + 3.19 * A_PH_CC)/0.275]
-  dt[is.na(A_P_AA) & !is.na(A_P_OL), A_P_AA := 10^(log10((A_P_OL + 56.9)/54.9)/0.2824)]
-
+  dt[is.na(A_P_AAA) & !is.na(A_P_OL), A_P_AAA := 10^(log10((A_P_OL + 56.9)/54.9)/0.2824)]
+  dt[is.na(A_P_AAA_EDTA) & !is.na(A_P_OL), A_P_AAA_EDTA := A_P_OL/ mean(0.4,0.5,0.79,0.4,0.25)]
+  dt[is.na(A_P_CAL) & !is.na(A_P_OL), A_P_CAL := A_P_OL / 0.625]
+  dt[is.na(A_P_DL) & !is.na(A_P_OL), A_P_DL := A_P_OL / 0.53]
+  dt[is.na(A_P_WA) & !is.na(A_P_OL), A_P_WA := A_P_OL / mean(2.77,2.5,4,4,3,2.45)]
+  dt[is.na(A_P_M3) & !is.na(A_P_OL), A_P_M3 := A_P_OL / 0.39]
+  
   # select the reqestred pH
   value <- dt[,get(element)]
   
