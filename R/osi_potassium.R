@@ -69,6 +69,81 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_c
   
 }
 
+#' Calculate the potassium availability index in Austria
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#' @param A_K_CAL (numeric) The exchangeable K-content of the soil measured via Calcium Ammonium Lactate (mg P/ kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_at(A_K_CAL = 47,B_TEXTURE_HYPRES)
+#' 
+#' @return 
+#' The potassium availability index in Austria estimated from extractable potassium. A numeric value.
+#' 
+#' @export
+osi_c_potassium_at <- function(A_K_CAL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                   A_K_CAL = A_K_CAL,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # calculate the OSI score light textured soils
+  dt[B_TEXTURE_HYPRES %in% c('C'),
+     value := osi_evaluate_logistic(x = A_K_CAL, b= 0.07778603,x0 = 3.34792775,v = 0.01237349)]
+  # calculate the OSI score medium texture soils
+  dt[B_TEXTURE_HYPRES %in% c('MF','M'),
+     value := osi_evaluate_logistic(x = A_K_CAL, b= 0.063061856,x0 = 3.246009394,v = 0.008754153)]
+  # calculate the OSI score for heavy textured soils
+  dt[B_TEXTURE_HYPRES %in% c('F','VF'),
+     value := osi_evaluate_logistic(x = A_K_CAL, b= 0.05395119,x0 = 1.739323688,v = 0.005680624)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
 #' Calculate the potassium availability index in Belgium
 #' 
 #' This function calculates the potassium availability. 
@@ -132,6 +207,77 @@ osi_c_potassium_be <- function(B_LU, B_TEXTURE_BE, A_K_AA = NA_real_) {
   
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = A_K_AA, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
+#' Calculate the potassium availability index in Czech Republic
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_K_M3 (numeric) The exchangeable K-content of the soil measured via Mehlich 3 extracton (mg K/ kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_cz(A_K_M3 = 81)
+#' 
+#' @return 
+#' The potassium availability index in Czech Republic estimated from extractable potassium. A numeric value.
+#' 
+#' @export
+osi_c_potassium_cz <- function(A_K_M3,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_K_M3 = A_K_M3,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # convert to the OSI score
+  dt[B_TEXTURE_HYPRES %in% c('C'),
+     value := osi_evaluate_logistic(x = A_K_M3, b= 0.04721530,x0 = 0.86394309,v = 0.00416517)]
+  dt[B_TEXTURE_HYPRES %in% c('MF','M'),
+     value := osi_evaluate_logistic(x = A_K_M3, b= 0.044200350,x0 = 3.073835166,v = 0.004912691)]
+  dt[B_TEXTURE_HYPRES %in% c('F','VF'),
+     value := osi_evaluate_logistic(x = A_K_M3, b= 0.03095766,x0 = 91.95343771,v = 0.03970912)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -374,6 +520,93 @@ osi_c_potassium_fr <- function(B_LU, A_K_AA, B_TEXTURE_GEPPA = NA_character_, B_
 }
 
 
+#' Calculate the potassium availability index in Hungary
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_CACO3_IF (numeric) the percentage of CaCO3 (\%)
+#' @param A_K_AL (numeric) The exchangeable K-content of the soil measured via Ammonium Lactate extracton (mg K/ kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_hu(A_K_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
+#' 
+#' @return 
+#' The potassium availability index in Hungary estimated from extractable potassium. A numeric value.
+#' 
+#' @export
+osi_c_potassium_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_K_AL,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_K_AL = A_K_AL,
+                   A_CACO3_IF = A_CACO3_IF,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # derive the OSI score for chernozem (proxied by SOM)
+  dt[A_SOM_LOI > 4 & A_CACO3_IF <= 1,
+     value := osi_evaluate_logistic(x = A_K_AL, b= 0.054768759 ,x0 = 3.135654568 ,v = 0.006806117 )]
+  dt[A_SOM_LOI > 4 & A_CACO3_IF > 1,
+     value := osi_evaluate_logistic(x = A_K_AL, b= 0.046479554 ,x0 = 2.791118699 ,v = 0.005011318 )]
+  
+  # derive the OSI score for brown forest soil (proxied by clay)
+  dt[A_CLAY_MI > 20 & A_SOM_LOI <= 4 & A_CACO3_IF <= 1,
+     value := osi_evaluate_logistic(x = A_K_AL, b= 0.068578055,x0 = 2.128475547,v = 0.008613139)]
+  dt[A_CLAY_MI > 20 & A_SOM_LOI <= 4 & A_CACO3_IF > 1,
+     value := osi_evaluate_logistic(x = A_K_AL, b= 0.054626825,x0 = 2.745261676,v = 0.003915165)]
+  
+  # derive the OSI score for sandy soil (proxied by clay)
+  dt[A_CLAY_MI <= 20 & A_SOM_LOI <= 4 & A_CACO3_IF <= 1,
+     value := osi_evaluate_logistic(x = A_K_AL, b= 0.089604257,x0 = 3.920048277,v = 0.007403738)]
+  dt[A_CLAY_MI <= 20 & A_SOM_LOI <= 4 & A_CACO3_IF > 1,
+     value := osi_evaluate_logistic(x = A_K_AL, b= 0.0890913887,x0 = 2.2516305413,v = 0.0001867756)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
 
 #' Calculate the potassium availability index in Latvia
 #' 
@@ -450,6 +683,74 @@ osi_c_potassium_lv <- function(A_K_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
   
 }
 
+#' Calculate the potassium availability index in Lithuania
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_K_AL (numeric) The exchangeable K-content of the soil measured via Ammonium Lactate extraction (mg P/ kg)
+#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_lt(A_K_AL = 45,A_SOM_LOI= 1.5)
+#' 
+#' @return 
+#' The potassium availability index in Lithuania estimated from extractable phosphorus. A numeric value.
+#' 
+#' @export
+osi_c_potassium_lt <- function(A_K_AL,A_SOM_LOI,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_K_AL = A_K_AL,
+                   A_SOM_LOI = A_SOM_LOI,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # estimate the OSI score for mineral and peat soils
+  dt[A_SOM_LOI <= 20,value := osi_evaluate_logistic(x = A_P_AL, b= 0.06542787,x0 = -23.62084916,v = 0.006326486)]
+  dt[A_SOM_LOI > 20,value := osi_evaluate_logistic(x = A_P_AL, b= 0.04211846,x0 = 3.19983935,v = 0.007473128)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
 
 #' Calculate the potassium availability index in Finland
 #' 
@@ -716,3 +1017,224 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   return(out)
 }
 
+#' Calculate the potassium availability index in Poland
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#' @param A_K_DL (numeric) The exchangeable K-content of the soil measured via ammonium double lactate extracton (mg P/ kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_pl(A_K_DL = 45,B_TEXTURE_HYPRES='C')
+#' 
+#' @return 
+#' The potassium availability index in Poland estimated from extractable potassium. A numeric value.
+#' 
+#' @export
+osi_c_potassium_pl <- function(A_K_DL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                   A_K_DL = A_K_DL,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # calculate the OSI score very light textured soils
+  dt[B_TEXTURE_HYPRES %in% c('C'),
+     value := osi_evaluate_logistic(x = A_K_CAL, b= 0.07752183,x0 = 3.04311052,v = 0.09679474)]
+  # calculate the OSI score light textured soils
+  dt[B_TEXTURE_HYPRES %in% c('MF'),
+     value := osi_evaluate_logistic(x = A_K_CAL, b= 0.07134238,x0 = 3.07588403,v = 0.02805476)]
+  # calculate the OSI score medium texture soils
+  dt[B_TEXTURE_HYPRES %in% c('M'),
+     value := osi_evaluate_logistic(x = A_K_CAL, b= 0.070369841,x0 = 4.237044272,v = 0.007390134)]
+  # calculate the OSI score for heavy textured soils
+  dt[B_TEXTURE_HYPRES %in% c('F','VF'),
+     value := osi_evaluate_logistic(x = A_K_CAL, b= 0.070110090,x0 = 0.702553221,v = 0.001352746)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
+#' Calculate the potassium availability index in  Slovak Republic
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#' @param A_K_M3 (numeric) The exchangeable K-content of the soil measured via Mehlich 3 extracton (mg K/ kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_sk(A_K_M3 = 45,B_TEXTURE_HYPRES='C')
+#' 
+#' @return 
+#' The potassium availability index in Slovak Republic estimated from extractable potassium. A numeric value.
+#' 
+#' @export
+osi_c_potassium_sk <- function(B_TEXTURE_HYPRES,A_K_M3,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                   A_K_M3 = A_K_M3,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # convert to the OSI score
+  dt[B_TEXTURE_HYPRES %in% c('C'),
+     value := osi_evaluate_logistic(x = A_K_M3, b= 0.04569915,x0 = 2.78099169 ,v = 0.00851402 )]
+  dt[B_TEXTURE_HYPRES %in% c('MF','M'),
+     value := osi_evaluate_logistic(x = A_K_M3, b= 0.039305100,x0 = 2.045554487 ,v = 0.003009242 )]
+  dt[B_TEXTURE_HYPRES %in% c('F','VF'),
+     value := osi_evaluate_logistic(x = A_K_M3, b= 0.03070035,x0 = 65.84134127,v = 0.01856598)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
+#' Calculate the potassium availability index in Slovenia
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#' @param A_K_AL (numeric) The exchangeable K-content of the soil measured via ammoniuml lactate extracton (mg K/ kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_sl(A_K_AL = 45)
+#' 
+#' @return 
+#' The potassium availability index in Slovenia estimated from extractable potassium. A numeric value.
+#' 
+#' @export
+osi_c_potassium_sl <- function(A_K_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                   A_K_AL = A_K_AL,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # evaluate the OSI score
+  dt[B_TEXTURE_HYPRES %in% c('C','MF','M'),
+     value := osi_evaluate_logistic(x = A_K_AL, b= 0.03689968,x0 = 2.80510928,v = 0.02341685)]
+  dt[B_TEXTURE_HYPRES %in% c('F','VF'),
+     value := osi_evaluate_logistic(x = A_K_AL, b= 0.03432105,x0 = 2.90565094,v = 0.01630095)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
