@@ -186,3 +186,87 @@ osi_conv_npmn <- function(A_N_RT, A_CLAY_MI, med_PMN = 51.9, med_NRT = 1425, med
   # return value
   return(value)
 }
+
+#' Estimate soil extractable phosphorus (-)
+#' 
+#' @param element (character) the method requested to be calculated
+#' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate
+#' @param A_P_CC (numeric) The P-content of the soil extracted with CaCl2
+#' @param A_P_WA (numeric) The P-content of the soil extracted with water
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen
+#' @param A_P_CAL (numeric) The P-content of the soil extracted with ammonium lactate(mg P2O5 / 100g)
+#' @param A_P_DL (numeric) The P-content of the soil extracted with double lactate (mg P / kg)
+#' @param A_P_AA (numeric) The exchangeable P-content of the soil measured via ammonium acetate extraction
+#' @param A_PH_CC (numeric) The pH measured in cacl2 
+#' 
+#' @export 
+osi_conv_phosphor <- function(element, 
+                              A_P_AL = NA_real_,A_P_CC = NA_real_, A_P_WA = NA_real_,
+                              A_P_OL = NA_real_,A_P_CAL = NA_real_,A_P_DL = NA_real_,A_P_AA = NA_real_,
+                              A_PH_CC = NA_real_){
+  
+  # check inputs
+  checkmate::assert_subset(element,choices = c('A_P_AL','A_P_CAL','A_P_DL','A_P_AA'),empty.ok = FALSE)
+  
+  # make internal table with inputs
+  dt <- data.table(A_P_AL = A_P_AL,
+                   A_P_CC = A_P_CC,
+                   A_P_WA = A_P_WA,
+                   A_P_OL = A_P_OL,
+                   A_P_CAL = A_P_CAL,
+                   A_P_DL = A_P_DL,
+                   A_P_AA = A_P_AA,
+                   A_PH_CC = A_PH_CC)
+  
+  # estimate P from other measurements
+  # https://doi.org/10.1016/j.geoderma.2021.115339, table 5
+  dt[is.na(A_P_AL) & !is.na(A_P_OL), A_P_AL := (A_P_OL - 21.9 + 3.19 * A_PH_CC)/0.275]
+  dt[is.na(A_P_AA) & !is.na(A_P_OL), A_P_AA := 10^(log10((A_P_OL + 56.9)/54.9)/0.2824)]
+
+  # select the reqestred pH
+  value <- dt[,get(element)]
+  
+  # return value
+  return(value)
+  
+}
+
+#' Estimate soil extractable potassium (-)
+#' 
+#' @param element (character) the method requested to be calculated
+#' @param A_K_AL (numeric) The K-content of the soil extracted with ammonium lactate
+#' @param A_K_CC (numeric) The K-content of the soil extracted with CaCl2
+#' @param A_K_WA (numeric) The K-content of the soil extracted with water
+#' @param A_K_CAL (numeric) The K-content of the soil extracted with ammonium lactate(mg K / kg)
+#' @param A_K_DL (numeric) The K-content of the soil extracted with double lactate (mg K / kg)
+#' @param A_K_AA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction
+#' @param A_PH_CC (numeric) The pH measured in cacl2 
+#' 
+#' @export 
+osi_conv_phosphor <- function(element, 
+                              A_K_AL = NA_real_,A_K_CC = NA_real_, A_K_WA = NA_real_,
+                              A_K_CAL = NA_real_,A_K_DL = NA_real_,A_K_AA = NA_real_,
+                              A_PH_CC = NA_real_){
+  
+  # check inputs
+  checkmate::assert_subset(element,choices = c('A_K_AL','A_K_CAL','A_K_DL','A_K_AA'),empty.ok = FALSE)
+  
+  # make internal table with inputs
+  dt <- data.table(A_K_AL = A_K_AL,
+                   A_K_CC = A_K_CC,
+                   A_K_WA = A_K_WA,
+                   A_K_CAL = A_K_CAL,
+                   A_K_DL = A_K_DL,
+                   A_K_AA = A_K_AA,
+                   A_PH_CC = A_PH_CC)
+  
+  # estimate K from other measurements
+  dt[is.na(A_K_AL) & !is.na(A_K_AA), A_K_AL := A_K_AA]
+  
+  # select the reqestred pH
+  value <- dt[,get(element)]
+  
+  # return value
+  return(value)
+  
+}
