@@ -373,9 +373,6 @@ osi_get_TEXTURE_USDA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type = 'code')
   # get soil texture USDA classification code
   if(type=='code'){
     
-     dt[grepl('^$|^$|^$|^$|^$|^$|^SaClLo$',B_TEXTURE_USDA), B_SOILTYPE_AGR := 'loam']
-    
-    
     if (cl>40   & sa <=45  & si<=40) {
       value="Cl"
     } else if (cl>40   & sa <=20  & si<=60    & si>40) {
