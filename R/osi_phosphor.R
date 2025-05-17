@@ -1265,7 +1265,7 @@ osi_c_posphor_sk <- function(B_TEXTURE_HYPRES,A_P_M3,B_LU = NA_character_) {
 #' This function calculates the phosphorus availability. 
 #' 
 #' @param B_LU (character) The crop code
-#' @param A_P_AL (numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)
+#' @param A_P_AL (numeric) The exchangeable P-content of the soil measured via ammoniuml lactate extracton (mg P/ kg)
 #' 
 #' @import data.table
 #' 
