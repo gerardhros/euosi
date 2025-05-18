@@ -326,91 +326,39 @@ osi_get_TEXTURE_USDA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type = 'code')
   checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
   
   # set internal copies
-  cl <- A_CLAY_MI
-  sa <- A_SAND_MI
-  si <- A_SILT_MI
+  dt <- data.table(cl = A_CLAY_MI,
+                   sa = A_SAND_MI,
+                   si = A_SILT_MI,
+                   tname = NA_character_,
+                   tcode = NA_character_)
   
-  # get soil texture USA classfication full names  
-  if(type=='name'){
+  # derive soil texture USDA classfication
+  cols <- c('tcode','tname')
   
-    if (cl>40   & sa <=45  & si<=40) {
-      value="clay"
-    } else if (cl>40   & sa <=20  & si<=60    & si>40) {
-      value="silty clay"
-    } else if (cl>35   & cl <=55  & sa<=65    & sa>45  & si<20) {
-      value="sandy clay"
-    } else if (cl>20   & cl <=35  & sa>45     & sa<80  & si <=27.5) {
-      value="sandy clay loam"
-    } else if (cl>27.5 & cl<=40   & sa>20     & sa<=45 & si>15 & si<=52.5) {
-      value="clay loam"
-    } else if (cl>27.5 & cl<=40   & sa<=20    & si>40  & si<=72.5){
-      value="silty clay loam"
-    } else if (cl<=27.5& sa<=50   & si>50     & si<=80){
-      value="silty loam"
-    } else if (cl<=20  & cl>12.5  & sa<=7.5   & si>80  & si<=87.5){
-      value="silty loam"
-    } else if (cl<=12.5& sa <=20  & si>80){
-      value="silt"
-    } else if (cl<=27.5& cl>7.5   & sa <=52.5 & sa>22.5& si<=50 & si>27.5){
-      value="loam"
-    } else if (cl<=7.5 & sa<=52.5 & sa>42.5   & si>40  & si<=50){
-      value="sandy loam"
-    } else if (cl<=20  & sa>52.5  & sa<=70    & si>10  & si<=47.5){
-      value="sandy loam"
-    } else if (cl>10   & cl<=20   & sa<=80    & sa>70  & si<=20){
-      value="sandy loam"
-    } else if (cl<=10  & si<=15   & sa>85     & cl<=10-si*10/15){
-      value="sand"
-    } else if (cl<=15  & si<=30   & sa>70     & cl> 10-si*10/15 & cl<=15-si*15/30){
-      value="loamy sand"
-    } else if (cl<=20  & si<=50   & sa>70     & cl>15-si*15/30){
-      value="sandy loam"
-    } else {
-      value="sandy loam"
-    }  
-  }
+   dt[cl>40 & sa <=45 & si<=40, c(cols) := list('Cl','clay')]
+   dt[is.na(tcode) & cl>40 & sa <=20 & si<=60 & si>40 , c(cols) := list('SiCL','silty clay') ]
+   dt[is.na(tcode) & cl>35 & cl <=55 & sa<=65 & sa>45 & si<20, c(cols) := list('SaCl','sandy clay') ]
+   dt[is.na(tcode) & cl>20 & cl <=35 & sa>45 & sa<80 & si <=27.5, c(cols) := list('SaCL','sandy clay loam') ]
+   dt[is.na(tcode) & cl>27.5 & cl<=40 & sa>20 & sa<=45 & si>15 & si<=52.5, c(cols) := list('ClLo','clay loam') ]
+   dt[is.na(tcode) & cl>27.5 & cl<=40 & sa<=20 & si>40 & si<=72.5, c(cols) := list('SiClLo','silty clay loam') ]
+   dt[is.na(tcode) & cl<=27.5& sa<=50 & si>50 & si<=80, c(cols) := list('SiLo','silty loam') ]
+   dt[is.na(tcode) & cl<=20 & cl>12.5 & sa<=7.5 & si>80 & si<=87.5, c(cols) := list('SiLo','silty loam') ]
+   dt[is.na(tcode) & cl<=12.5& sa <=20 & si>80, c(cols) := list('Si','silt') ]
+   dt[is.na(tcode) & cl<=27.5& cl>7.5 & sa <=52.5 & sa>22.5& si<=50 & si>27.5, c(cols) := list('Lo','loam') ]
+   dt[is.na(tcode) & cl<=7.5 & sa<=52.5 & sa>42.5 & si>40 & si<=50, c(cols) := list('SaLo','sandy loam') ]
+   dt[is.na(tcode) & cl<=20 & sa>52.5 & sa<=70 & si>10 & si<=47.5, c(cols) := list('SaLo','sandy loam') ]
+   dt[is.na(tcode) & cl>10 & cl<=20 & sa<=80 & sa>70 & si<=20, c(cols) := list('SaLo','sandy loam') ]
+   dt[is.na(tcode) & cl<=10 & si<=15 & sa>85 & cl<=10-si*10/15, c(cols) := list('Sa','sand') ]
+   dt[is.na(tcode) & cl<=15 & si<=30 & sa>70 & cl> 10-si*10/15 & cl<=15-si*15/30, c(cols) := list('LoSa','loamy sand') ]
+   dt[is.na(tcode) & cl<=20 & si<=50 & sa>70 & cl>15-si*15/30, c(cols) := list('SaLo','sandy loam') ]
+   dt[is.na(tcode), c(cols) := list('SaLo','sandy loam') ]
   
-  # get soil texture USDA classification code
-  if(type=='code'){
-    
-    if (cl>40   & sa <=45  & si<=40) {
-      value="Cl"
-    } else if (cl>40   & sa <=20  & si<=60    & si>40) {
-      value="SiCL"
-    } else if (cl>35   & cl <=55  & sa<=65    & sa>45  & si<20) {
-      value="SaCl"
-    } else if (cl>20   & cl <=35  & sa>45     & sa<80  & si <=27.5) {
-      value="SaCL"
-    } else if (cl>27.5 & cl<=40   & sa>20     & sa<=45 & si>15 & si<=52.5) {
-      value="ClLo"
-    } else if (cl>27.5 & cl<=40   & sa<=20    & si>40  & si<=72.5){
-      value="SiClLo"
-    } else if (cl<=27.5& sa<=50   & si>50     & si<=80){
-      value="SiLo"
-    } else if (cl<=20  & cl>12.5  & sa<=7.5   & si>80  & si<=87.5){
-      value="SiLo"
-    } else if (cl<=12.5& sa <=20  & si>80){
-      value="Si"
-    } else if (cl<=27.5& cl>7.5   & sa <=52.5 & sa>22.5& si<=50 & si>27.5){
-      value="Lo"
-    } else if (cl<=7.5 & sa<=52.5 & sa>42.5   & si>40  & si<=50){
-      value="SaLo"
-    } else if (cl<=20  & sa>52.5  & sa<=70    & si>10  & si<=47.5){
-      value="SaLo"
-    } else if (cl>10   & cl<=20   & sa<=80    & sa>70  & si<=20){
-      value="SaLo"
-    } else if (cl<=10  & si<=15   & sa>85     & cl<=10-si*10/15){
-      value="Sa"
-    } else if (cl<=15  & si<=30   & sa>70     & cl> 10-si*10/15 & cl<=15-si*15/30){
-      value="LoSa"
-    } else if (cl<=20  & si<=50   & sa>70     & cl>15-si*15/30){
-      value="SaLo"
-    } else {
-      value="SaLo"
-    }  
-  }
-  
-  return(value)
+ # select soil texture HYPRES classification code or name
+ if(type=='code'){value <- dt[,tcode]}
+ if(type=='name'){value <- dt[,tname]}
+ 
+ # return value
+ return(value)
   
 }
 
@@ -529,6 +477,50 @@ osi_get_TEXTURE_GEPPA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
   dt[cl <= cr1  & si <= cr3 & sa > 71, c(cols) := list('SS','sable')]
   
   # select soil texture HYPRES classification code or name
+  if(type=='code'){value <- dt[,tcode]}
+  if(type=='name'){value <- dt[,tname]}
+  
+  # return value
+  return(value)
+  
+}
+
+#' Estimate soil texture according to Belgium classification
+#' 
+#' @param A_CLAY_MI (numeric) Clay content (\%)
+#' @param A_SILT_MI (numeric) Silt content (\%)
+#' @param A_SAND_MI (numeric) Silt content (\%)
+#' @param type (character) return Belgium classification names or codes (options: 'name' or 'code')
+#' 
+#' @return Texture class according to the Belgium classification system
+#' 
+#'
+#' @export 
+osi_get_TEXTURE_BE <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
+  
+  # check inputs
+  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  
+  # set internal copies
+  dt <- data.table(cl = A_CLAY_MI,
+                   sa = A_SAND_MI,
+                   si = A_SILT_MI,
+                   tname = NA_character_,
+                   tcode = NA_character_)
+  
+  # derive soil texture Belgium classfication
+  cols <- c('tcode','tname')
+  dt[cl > 65 & si <= 55, c(cols) := list('U','zware klei')]
+  dt[cl <= 65 & cl > pmax(17.5, (30 - sa * (30 - 20)/20)) & si <= 70 & is.na(tcode), c(cols) := list('E','klei')]
+  dt[sa <= 15 & cl <= (30 - sa * (30 - 20)/20) & si > 60, c(cols) := list('A','leem')]
+  dt[cl <= 9 & sa > 82.5, c(cols) := list ('Z', 'zand')]
+  dt[cl <= 17.5 & sa > 67.5 & is.na(tcode), c(cols) := list ('S','lemig zand')]
+  dt[cl <= 11 & sa > 50 & sa <= 67.5, c(cols) := list('P','licht zandleem')]
+  dt[si > 15 & si <= 85 & cl <= 25 & sa >15 & sa <= 67.5 & is.na(tcode), c(cols) := list('L','zandleem')]
+  
+  # select soil texture Belgium classification code or name
   if(type=='code'){value <- dt[,tcode]}
   if(type=='name'){value <- dt[,tname]}
   
