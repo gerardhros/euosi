@@ -9,9 +9,15 @@
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
 #' @param A_CEC_CO (numeric) The cation exchange capacity of the soil (mmol+ / kg), analyzed via Cobalt-hexamine extraction
-#' @param A_K_CO_PO (numeric) The occupation of the CEC with potassium (\%)
-#' @param A_K_CC (numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg / kg), 
 #' @param A_K_AA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction 
+#' @param A_K_AL (numeric) The exchangeable K-content of the soil measured via Ammonium Lactate extracton (mg K/ kg)
+#' @param A_K_AN (numeric) The K-content of the soil extracted with ammonium nitrate (mg K /kg)
+#' @param A_K_CAL (numeric) The exchangeable K-content of the soil measured via Calcium Ammonium Lactate (mg K/ kg)
+#' @param A_K_CC (numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg / kg), 
+#' @param A_K_CO_PO (numeric) The occupation of the CEC with potassium (\%)
+#' @param A_K_DL (numeric) The exchangeable K-content of the soil measured via Double Lactate extraction (mg K/ kg)
+#' @param A_K_M3 (numeric) The exchangeable K-content of the soil measured via Mehlich 3 extracton (mg K/ kg)
+#' @param A_K_NaAAA (numeric) The K-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)
 #' @param B_COUNTRY (character) The country code
 #' 
 #' @import data.table
@@ -25,41 +31,94 @@
 #' The capacity of the soil to supply and buffer potassium, evaluated given an optimum threshold for yield. A numeric value.
 #' 
 #' @export
-osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_character_,
-                            A_SOM_LOI = NA, A_CLAY_MI = NA,A_PH_CC = NA, A_CEC_CO = NA, A_K_CO_PO = NA, A_K_CC = NA,A_K_AA = NA,
+osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
+                            A_SOM_LOI = NA, A_C_OF = NA, A_CLAY_MI = NA,A_PH_CC = NA, A_PH_WA = NA,
+                            A_CEC_CO = NA, 
+                            A_K_AA = NA,A_K_AL = NA,A_K_AN = NA,A_K_CAL = NA,A_K_CC = NA,
+                            A_K_CO_PO = NA,A_K_DL = NA,A_K_M3 = NA,A_K_NaAAA = NA,
                             B_COUNTRY) {
   
   # add visual bindings
   i_c_k = NULL
   
   # desired length of inputs
-  arg.length <- max(length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO), length(A_K_CO_PO), length(A_K_AA),
-                    length(A_K_CC), length(A_CLAY_MI), length(B_SOILTYPE_AGR), length(B_LU),
+  arg.length <- max(length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO),length(A_CLAY_MI), length(B_SOILTYPE_AGR),
+                    length(B_LU),
                     length(B_COUNTRY))
   
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
-                   B_AER_FR = B_AER_FR,
                    B_COUNTRY = B_COUNTRY,
                    A_SOM_LOI = A_SOM_LOI,
+                   A_C_OF = A_C_OF,
                    A_CLAY_MI = A_CLAY_MI,
                    A_PH_CC = A_PH_CC,
+                   A_PH_WA = A_PH_WA,
                    A_CEC_CO = A_CEC_CO,
-                   A_K_CO_PO = A_K_CO_PO,
-                   A_K_CC = A_K_CC,
                    A_K_AA = A_K_AA,
+                   A_K_AL = A_K_AL,
+                   A_K_AN = A_K_AN,
+                   A_K_CAL = A_K_CAL,
+                   A_K_CC = A_K_CC,
+                   A_K_CO_PO = A_K_CO_PO,
+                   A_K_DL = A_K_DL,
+                   A_K_M3 = A_K_M3,
+                   A_K_NaAAA = A_K_NaAAA,
                    value = NA_real_
                    )
   
-  # calculate the open soil index score for potassium availability per country
+  # estimate texture information
+  dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_BE := osi_get_TEXTURE_BE(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_GEPPA := osi_get_TEXTURE_GEPPA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  
+  # estimate missing soil properties (from defaults in LUCAS)
+  dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
+  dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
+  dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
+  dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
+  
+  # calculate the OSI score per country
+  
+  # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
+  dt[B_COUNTRY == 'AT', value := osi_c_potassium_at(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_K_CAL = A_K_CAL)]
+  dt[B_COUNTRY == 'BE', value := osi_c_potassium_be(B_LU = B_LU, B_TEXTURE_BE = B_TEXTURE_BE,A_K_AA  = A_K_AA )]
+  dt[B_COUNTRY == 'CH', value := osi_c_potassium_ch(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_K_AAA = A_K_AAA)]
+  dt[B_COUNTRY == 'CZ', value := osi_c_potassium_cz(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_K_M3 = A_K_M3)]
+  dt[B_COUNTRY == 'DE', value := osi_c_potassium_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_K_AA = A_K_AA)]
+  
+  # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
+  dt[B_COUNTRY == 'DK', value := NA_real_]
+  dt[B_COUNTRY == 'EE', value := osi_c_potassium_ee(B_LU = B_LU,B_TEXTURE_USDA = B_TEXTURE_USDA,A_K_M3 = A_K_M3)]
+  dt[B_COUNTRY == 'ES', value := osi_c_potassium_es(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_K_AA = A_K_AA)]
+  dt[B_COUNTRY == 'FR', value := osi_c_potassium_fr(B_LU = B_LU, B_TEXTURE_GEPPA  = B_TEXTURE_GEPPA, A_PH_WA = A_PH_WA,
+                                                    B_AER_FR = NA_character_, A_K_AA = A_K_AA)]
+  dt[B_COUNTRY == 'FI', value := osi_c_potassium_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_K_AA = A_K_AA, A_C_OF = A_C_OF)]
+  
+  # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
+  dt[B_COUNTRY == 'HU', value := osi_c_potassium_hu(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI, A_CACO3_IF = A_CACO3_IF,A_K_AL = A_K_AL)]
+  dt[B_COUNTRY == 'IE', value := osi_c_potassium_ie(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI,A_K_NaAAA = A_K_NaAAA)]
+  dt[B_COUNTRY == 'IT', value := osi_c_potassium_it(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_K_AA = A_K_AA)]
+  dt[B_COUNTRY == 'LV', value := osi_c_potassium_lv(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_K_DL = A_K_DL)]
+  dt[B_COUNTRY == 'LT', value := osi_c_potassium_lt(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_K_AL = A_K_AL)]
+  
+  # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
   dt[B_COUNTRY == 'NL', value := osi_c_potassium_nl(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                                                     A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI,
                                                     A_PH_CC = A_PH_CC, A_CEC_CO = A_CEC_CO, 
                                                     A_K_CO_PO = A_K_CO_PO, A_K_CC = A_K_CC)]
-  dt[B_COUNTRY == 'FR', value := osi_c_potassium_fr(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
-                                                    B_AER_FR = B_AER_FR, A_K_AA = A_K_AA)]
+  
+  dt[B_COUNTRY == 'NO', value := osi_c_potassium_no(B_LU = B_LU, A_K_AL = A_K_AL,A_CLAY_MI = A_CLAY_MI)]
+  dt[B_COUNTRY == 'SE', value := osi_c_potassium_se(B_LU = B_LU, A_K_AL = A_K_AL)]
+  dt[B_COUNTRY == 'SK', value := osi_c_potassium_sk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_K_M3 = A_K_M3)]
+  dt[B_COUNTRY == 'SL', value := osi_c_potassium_sl(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_K_AL = A_K_AL)]
+  
+  # Poland (PL), United Kingdom (UK)
+  dt[B_COUNTRY == 'PL', value := osi_c_potassium_pl(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_K_DL = A_K_DL)]
+  dt[B_COUNTRY == 'IE', value := osi_c_posphor_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_K_AN = A_K_AN)]
   
   # select the output variable
   value <- dt[,value]
@@ -218,6 +277,81 @@ osi_c_potassium_be <- function(B_LU, B_TEXTURE_BE, A_K_AA = NA_real_) {
   
 }
 
+#' Calculate the potassium availability index in Switzerland
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_K_AAA (numeric) The exchangeable K-content of the soil measured via acid ammonium acetate extraction (mg K/ kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_ch(A_K_AAA = 50)
+#' 
+#' @return 
+#' The potassium availability index in Switzerland estimated from extractable potassium. A numeric value.
+#' 
+#' @export
+osi_c_potassium_ch <- function(A_K_AAA,A_CLAY_MI,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_K_AAA = A_K_AAA,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # convert to the OSI score (Tabelle 17)
+  
+  # arable crops, maize and grassland / vegetables are mainly different at higher level (class H to VH)
+  # so no need to differentiate
+  dt[A_CLAY_MI <= 10, value := osi_evaluate_logistic(x = A_K_AAA, b= 0.02920275,x0 = 5.86503285,v = 0.14855417)]
+  dt[A_CLAY_MI > 10 & A_CLAY_MI <= 20, value := osi_evaluate_logistic(x = A_K_AAA, b= 0.03016788,x0 = 0.47412598,v = 0.21149593)]
+  dt[A_CLAY_MI > 20 & A_CLAY_MI <= 30, value := osi_evaluate_logistic(x = A_K_AAA, b= 0.03615689,x0 = 0.62427132 ,v = 0.26501704)]
+  dt[A_CLAY_MI > 30 & A_CLAY_MI <= 40, value := osi_evaluate_logistic(x = A_K_AAA, b= 0.03888415,x0 = -62.31854852 ,v = 0.03100743)]
+  dt[A_CLAY_MI > 40, value := osi_evaluate_logistic(x = A_K_AAA, b= 0.08417474 ,x0 = -22.01125870 ,v = 0.04457961)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
 #' Calculate the potassium availability index in Czech Republic
 #' 
 #' This function calculates the potassium availability. 
@@ -320,28 +454,28 @@ osi_c_potassium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AA) {
                    value = NA_real_)
   
   # add soil type
-  dt.ge[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
-  dt.ge[A_SAND_MI >= 42 & A_SAND_MI <= 95 & A_SILT_MI <= 40 & A_CLAY_MI <= 17 & A_C_OF < 150,  stype :="BG2"]
-  dt.ge[A_SAND_MI >= 33 & A_SAND_MI <= 83 & A_SILT_MI <= 50 & A_CLAY_MI >= 8 & A_CLAY_MI <= 25 & A_C_OF < 150,  stype :="BG3"]
-  dt.ge[A_SAND_MI <= 75 & A_SILT_MI <= 100 & A_CLAY_MI <= 35 & A_C_OF < 150,  stype :="BG4"]
-  dt.ge[A_SAND_MI <= 65 & A_SILT_MI <= 75 & A_CLAY_MI >= 25 & A_CLAY_MI <= 100 & A_C_OF < 150, stype := "BG5"]
-  dt.ge[ A_C_OF >= 150,  stype := "BG6"]
+  dt[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
+  dt[A_SAND_MI >= 42 & A_SAND_MI <= 95 & A_SILT_MI <= 40 & A_CLAY_MI <= 17 & A_C_OF < 150,  stype :="BG2"]
+  dt[A_SAND_MI >= 33 & A_SAND_MI <= 83 & A_SILT_MI <= 50 & A_CLAY_MI >= 8 & A_CLAY_MI <= 25 & A_C_OF < 150,  stype :="BG3"]
+  dt[A_SAND_MI <= 75 & A_SILT_MI <= 100 & A_CLAY_MI <= 35 & A_C_OF < 150,  stype :="BG4"]
+  dt[A_SAND_MI <= 65 & A_SILT_MI <= 75 & A_CLAY_MI >= 25 & A_CLAY_MI <= 100 & A_C_OF < 150, stype := "BG5"]
+  dt[ A_C_OF >= 150,  stype := "BG6"]
   
   # evaluate A_K_AA for arable soils
-  dt.ge[stype=='BG1' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.4488277, x0 = 9.718321, v = 1.254134)]
-  dt.ge[stype=='BG2' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.4025205, x0 = 11.358496, v = 1.186427)]
-  dt.ge[stype=='BG3' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.3578666, x0 = 14.656902, v = 1.373431)]
-  dt.ge[stype=='BG4' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.3457865, x0 = 17.303152, v = 1.543785)]
-  dt.ge[stype=='BG5' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.2675499, x0 = 25.566018, v = 1.827952)]
-  dt.ge[stype=='BG6' & B_LU_CAT=='arable', value := OBIC::evaluate_logistic(A_K_AA, b = 0.3735224, x0 = 17.424734, v = 1.874988)]
+  dt[stype=='BG1' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AA, b = 0.4488277, x0 = 9.718321, v = 1.254134)]
+  dt[stype=='BG2' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AA, b = 0.4025205, x0 = 11.358496, v = 1.186427)]
+  dt[stype=='BG3' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AA, b = 0.3578666, x0 = 14.656902, v = 1.373431)]
+  dt[stype=='BG4' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AA, b = 0.3457865, x0 = 17.303152, v = 1.543785)]
+  dt[stype=='BG5' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AA, b = 0.2675499, x0 = 25.566018, v = 1.827952)]
+  dt[stype=='BG6' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AA, b = 0.3735224, x0 = 17.424734, v = 1.874988)]
   
   # evaluate A_K_AA for grassland soils
-  dt.ge[stype=='BG1' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 9.030400, x0 = 6.895466, v = 5.5870309)]
-  dt.ge[stype=='BG2' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 5.269679, x0 = 8.321927, v = 4.4726794)]
-  dt.ge[stype=='BG3' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 4.616016, x0 = 9.324117, v = 4.1282965)]
-  dt.ge[stype=='BG4' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 1.713005, x0 = 15.406360, v = 0.4744978)]
-  dt.ge[stype=='BG5' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 1.595327, x0 = 15.460018, v = 0.1341047)]
-  dt.ge[stype=='BG6' & B_LU_CAT=='grassland', value := OBIC::evaluate_logistic(A_K_AA, b = 1.662136, x0 = 15.228511, v = 0.4373691)]
+  dt[stype=='BG1' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AA, b = 9.030400, x0 = 6.895466, v = 5.5870309)]
+  dt[stype=='BG2' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AA, b = 5.269679, x0 = 8.321927, v = 4.4726794)]
+  dt[stype=='BG3' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AA, b = 4.616016, x0 = 9.324117, v = 4.1282965)]
+  dt[stype=='BG4' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AA, b = 1.713005, x0 = 15.406360, v = 0.4744978)]
+  dt[stype=='BG5' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AA, b = 1.595327, x0 = 15.460018, v = 0.1341047)]
+  dt[stype=='BG6' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AA, b = 1.662136, x0 = 15.228511, v = 0.4373691)]
   
   # select value and return
   value <- dt[,value]
@@ -364,7 +498,7 @@ osi_c_potassium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AA) {
 #' osi_c_potassium_ee(A_K_M3 = 45,B_TEXTURE_USDA = 'clay')
 #' 
 #' @return 
-#' The potassium availability index in Estonia estimated from extractable phosphorus. A numeric value.
+#' The potassium availability index in Estonia estimated from extractable potassium. A numeric value.
 #' 
 #' @export
 osi_c_potassium_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
@@ -406,12 +540,12 @@ osi_c_potassium_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
   #             all.x = TRUE)
   
   # convert to the OSI score
-  dt[B_TEXTURE_USDA == 'sand',value := osi_evaluate_logistic(x = A_K_M3, b= 0.111228,x0 = 4.8454716,v = 0.00894408)]
-  dt[B_TEXTURE_USDA %in% c('loamy sand'),value := osi_evaluate_logistic(x = A_K_M3, b= 0.0681246,x0 = 2.8658315,v = 0.01832195)]
-  dt[B_TEXTURE_USDA %in% c('sandy loam'),value := osi_evaluate_logistic(x = A_K_M3, b= 0.06901738,x0 = 3.22236569,v = 0.006392278)]
-  dt[B_TEXTURE_USDA %in% c('loam','sandy clay','sandy clay loam'),
+  dt[B_TEXTURE_USDA == 'Sa',value := osi_evaluate_logistic(x = A_K_M3, b= 0.111228,x0 = 4.8454716,v = 0.00894408)]
+  dt[B_TEXTURE_USDA %in% c('LoSa'),value := osi_evaluate_logistic(x = A_K_M3, b= 0.0681246,x0 = 2.8658315,v = 0.01832195)]
+  dt[B_TEXTURE_USDA %in% c('SaLo'),value := osi_evaluate_logistic(x = A_K_M3, b= 0.06901738,x0 = 3.22236569,v = 0.006392278)]
+  dt[B_TEXTURE_USDA %in% c('Lo','SaCl','SaCL'),
      value := osi_evaluate_logistic(x = A_K_M3, b= 0.04955406,x0 = 2.80768003,v = 0.01280431)]
-  dt[B_TEXTURE_USDA %in% c('clay','clay loam','silty clay','silty clay loam','silt loam','silt'),
+  dt[B_TEXTURE_USDA %in% c('Cl','ClLo','SiCL','SiClLo','SiLo','Si'),
      value := osi_evaluate_logistic(x = A_K_M3, b= 0.0429129,x0 = 1.37161548,v = 0.001844779)]
   
   # set the order to the original inputs
@@ -689,8 +823,8 @@ osi_c_potassium_ie <- function(B_LU, A_SOM_LOI,A_K_NaAAA) {
   dt[,A_K_NaAAA := A_K_NaAAA * BDS]
  
   # evaluation soil K status
-  dt[A_SOM_LOI <= 20, value := OBIC::evaluate_logistic(A_K_NaAAA, b = 0.04081745, x0 = 53.86819280, v = 0.66253526)]
-  dt[A_SOM_LOI > 20, value := OBIC::evaluate_logistic(A_K_NaAAA, b = 0.02000395 , x0 = 10.63516808  , v = 0.15763251 )]
+  dt[A_SOM_LOI <= 20, value := osi_evaluate_logistic(A_K_NaAAA, b = 0.04081745, x0 = 53.86819280, v = 0.66253526)]
+  dt[A_SOM_LOI > 20, value := osi_evaluate_logistic(A_K_NaAAA, b = 0.02000395 , x0 = 10.63516808  , v = 0.15763251 )]
   
   # select value
   value <- dt[,value]
@@ -801,14 +935,14 @@ osi_c_potassium_lv <- function(A_K_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
   #             all.x = TRUE)
   
   # convert to the OSI score
-  dt[B_TEXTURE_USDA == 'sand',value := osi_evaluate_logistic(x = A_K_DL, b= 0.11109104,x0 = -11.43898675,v = 0.007796498)]
-  dt[B_TEXTURE_USDA %in% c('loamy sand',
-                           'sandy loam'),value := osi_evaluate_logistic(x = A_K_DL, b= 0.085102248,x0 = -17.31157273,v = 0.00616734)]
-  dt[B_TEXTURE_USDA %in% c('loam','sandy clay',
-                           'sandy clay loam'),value := osi_evaluate_logistic(x = A_K_DL, b= 0.0754598,x0 = 3.001728,v = 0.03331127)]
-  dt[B_TEXTURE_USDA %in% c('clay','clay loam',
-                           'silty clay','silty clay loam',
-                           'silt loam','silt'),value := osi_evaluate_logistic(x = A_K_DL, b= 0.0685035,x0 = 2.97672246,v = 0.03203499)]
+  dt[B_TEXTURE_USDA == 'S',value := osi_evaluate_logistic(x = A_K_DL, b= 0.11109104,x0 = -11.43898675,v = 0.007796498)]
+  dt[B_TEXTURE_USDA %in% c('LoSa',
+                           'SaLo'),value := osi_evaluate_logistic(x = A_K_DL, b= 0.085102248,x0 = -17.31157273,v = 0.00616734)]
+  dt[B_TEXTURE_USDA %in% c('Lo','SaCl',
+                           'SaCL'),value := osi_evaluate_logistic(x = A_K_DL, b= 0.0754598,x0 = 3.001728,v = 0.03331127)]
+  dt[B_TEXTURE_USDA %in% c('Cl','ClLo',
+                           'SiCL','SiClLo',
+                           'SiLo','Si'),value := osi_evaluate_logistic(x = A_K_DL, b= 0.0685035,x0 = 2.97672246,v = 0.03203499)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -965,6 +1099,44 @@ osi_c_potassium_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AA,A_C_OF = 0) {
   
 }
 
+#' Calculate the potassium availability index in Norway
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_K_AL (numeric) The K-content of the soil extracted with ammonium lactate (mg K / kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_no(B_LU = 265,A_K_AL = 5,A_CLAY_MI=5)
+#' osi_c_potassium_no(B_LU = c(265,1019),A_K_AL = c(3.5,5.5),A_CLAY_MI=c(3,5))
+#' 
+#' @return 
+#' The potassium availability index in Norway derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_c_potassium_no <- function(B_LU, A_K_AL,A_CLAY_MI) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_K_AL = A_K_AL,
+                   value = NA_real_)
+  
+  # evaluation soil K status
+  # https://www.nibio.no/tema/jord/gjodslingshandbok/korreksjonstabeller/kaliumkorreksjon-til-eng
+  # https://www.nibio.no/tema/jord/gjodslingshandbok/korreksjonstabeller/kalium--korn-oljevekster-potet-og-gronnsaker
+  dt[, value := OBIC::evaluate_logistic(A_K_AL, b = 0.05548162  , x0 = 0.66920970  , v = 0.01696135 )]
+  
+  # select value 
+  value <- dt[,value]
+  
+  # return value
+  return(value)
+}
 #' Calculate the K availability index for the Netherlands 
 #' 
 #' This function calculates the K availability of a soil, using the agronomic index used in the Netherlands.
@@ -1232,6 +1404,39 @@ osi_c_potassium_pl <- function(A_K_DL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
 }
 
+#' Calculate the potassium availability index in Sweden
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_K_AL (numeric) The K-content of the soil extracted with ammonium lactate (mg K / kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_se(B_LU = 265,A_K_AL = 5)
+#' osi_c_potassium_se(B_LU = c(265,1019),A_K_AL = c(3.5,5.5))
+#' 
+#' @return 
+#' The potassium availability index in Sweden derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_c_potassium_se <- function(B_LU, A_K_AL) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_K_AL = A_K_AL,
+                   value = NA_real_)
+  
+  # evaluation soil K status
+  dt[, value := OBIC::evaluate_logistic(A_K_AL, b = 0.07362818 , x0 = 0.51818429 , v = 0.02380852)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
+}
+
 #' Calculate the potassium availability index in  Slovak Republic
 #' 
 #' This function calculates the potassium availability. 
@@ -1374,4 +1579,56 @@ osi_c_potassium_sl <- function(A_K_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
   return(value)
   
+}
+
+#' Calculate the potassium availability index in United Kingdom
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
+#' @param A_K_AN (numeric) The K-content of the soil extracted with ammonium nitrate (mg K /kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_uk(B_LU = 265,A_SOM_LOI=3,A_K_AN = 50)
+#' osi_c_potassium_uk(B_LU = c(265,1019),A_SOM_LOI = c(3,5),A_K_AN = c(35,55))
+#' 
+#' @return 
+#' The potassium availability index in United Kingdom derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_c_potassium_uk <- function(B_LU, A_SOM_LOI,A_K_AN) {
+  
+  # crop properties
+  dt.crops <- as.data.table(euosi::osi_crops)
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_K_AN = A_K_AN,
+                   value = NA_real_)
+  
+  # merge with crop
+  dt <- merge(dt,
+              dt.crops[,.(B_LU, crop_name, crop_cat1)],
+              by = 'B_LU',
+              all.x = TRUE)
+  
+  # convert from mg / kg to mg / liter sample volume
+  dt[, BDS := (1/(0.02525 * A_SOM_LOI + 0.6541))]
+  dt[, A_K_AN := A_K_AN * BDS]
+  
+  # optimum value is index 2 for all land uses
+  dt[, value := osi_evaluate_logistic(A_K_AN, b = 0.03399723, x0 = 64.381726, v = 0.65964038)]
+  
+  # optimum value for vegatables
+  dt[grepl('vegetab|cabbag|leek|carrot|sprout|celery|onion|potato|lettu',tolower(crop_name)), 
+     value := osi_evaluate_logistic(A_K_AN, b = 0.03023062, x0 = 46.87684513, v = 0.45288470)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
 }
