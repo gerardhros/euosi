@@ -3,7 +3,10 @@
 #' This function calculates the pH index for all European countries (if available). 
 #' 
 #' @param B_LU (numeric) The crop code
-#' @param B_TEXTURE_USDA (character) The USDA textural class
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
+#' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_PH_WA (numeric) The pH measured in h2o
 #' @param A_PH_CC (numeric) The pH measured in cacl2 
 #' @param A_PH_KCL (numeric) The pH measured in KCl
@@ -15,7 +18,10 @@
 #' The index to evaluate the soil pH 
 #' 
 #' @export
-osi_c_ph <- function(B_LU, B_TEXTURE_USDA= NA_real_, A_PH_WA = NA_real_, A_PH_CC= NA_real_, A_PH_KCL= NA_real_,B_COUNTRY) {
+osi_c_ph <- function(B_LU, A_CLAY_MI= NA_real_, A_SAND_MI = NA_real_,
+                     A_SOM_LOI = NA_real_, A_C_OF = NA_real_,
+                     A_PH_WA = NA_real_, A_PH_CC= NA_real_, A_PH_KCL= NA_real_,
+                     B_COUNTRY) {
   
   # add visual bindings
   value = NULL
@@ -27,17 +33,62 @@ osi_c_ph <- function(B_LU, B_TEXTURE_USDA= NA_real_, A_PH_WA = NA_real_, A_PH_CC
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
-                   B_TEXTURE_USDA=B_TEXTURE_USDA,
+                   A_CLAY_MI=A_CLAY_MI,
+                   A_SAND_MI = A_SAND_MI,
+                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_C_OF = A_C_OF,
                    A_PH_CC = A_PH_CC,
                    A_PH_WA = A_PH_WA,
                    A_PH_KCL = A_PH_KCL,
                    value = NA_real_  
                    )
   
-  # calculate the open soil index score for pH per country
-  dt[B_COUNTRY == 'FR', value := osi_c_ph_fr(B_LU = B_LU,
-                                             B_TEXTURE_USDA = B_TEXTURE_USDA,
-                                             A_PH_WA = A_PH_WA)]
+  # estimate texture information
+  dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_BE := osi_get_TEXTURE_BE(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_GEPPA := osi_get_TEXTURE_GEPPA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  
+  # estimate missing soil properties (from defaults in LUCAS)
+  dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
+  dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
+  dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
+  dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
+  
+  # evaluate OSI index for pH
+  
+  # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
+  dt[B_COUNTRY == 'AT', value := NA_real_]
+  dt[B_COUNTRY == 'BE', value := NA_real_]
+  dt[B_COUNTRY == 'CH', value := NA_real_]
+  dt[B_COUNTRY == 'CZ', value := NA_real_]
+  dt[B_COUNTRY == 'DE', value := NA_real_]
+  
+  # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
+  dt[B_COUNTRY == 'DK', value := NA_real_]
+  dt[B_COUNTRY == 'EE', value := NA_real_]
+  dt[B_COUNTRY == 'ES', value := NA_real_]
+  dt[B_COUNTRY == 'FR', value := osi_c_ph_fr(B_LU = B_LU,B_TEXTURE_USDA = B_TEXTURE_USDA,A_PH_WA = A_PH_WA)]
+  dt[B_COUNTRY == 'FI', value := NA_real_]
+  
+  # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
+  dt[B_COUNTRY == 'HU', value := NA_real_]
+  dt[B_COUNTRY == 'IE', value := NA_real_]
+  dt[B_COUNTRY == 'IT', value := NA_real_]
+  dt[B_COUNTRY == 'LV', value := NA_real_]
+  dt[B_COUNTRY == 'LT', value := NA_real_]
+  
+  # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
+  dt[B_COUNTRY == 'NL', value := NA_real_]
+  dt[B_COUNTRY == 'NO', value := NA_real_]
+  dt[B_COUNTRY == 'SE', value := NA_real_]
+  dt[B_COUNTRY == 'SK', value := NA_real_]
+  dt[B_COUNTRY == 'SL', value := NA_real_]
+  
+  # Poland (PL), United Kingdom (UK)
+  dt[B_COUNTRY == 'PL', value := NA_real_]
+  dt[B_COUNTRY == 'UK', value := NA_real_]
   
   # select the output variable
   value <- dt[,value]

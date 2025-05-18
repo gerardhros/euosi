@@ -6,7 +6,9 @@
 #' @param B_SOILTYPE_AGR (character) The agricultural type of soil
 #' @param B_AER_FR (character) An agroeconomic region in France
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
 #' @param A_CEC_CO (numeric) The cation exchange capacity of the soil (mmol+ / kg), analyzed via Cobalt-hexamine extraction
 #' @param A_K_AA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction 
@@ -32,7 +34,9 @@
 #' 
 #' @export
 osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
-                            A_SOM_LOI = NA, A_C_OF = NA, A_CLAY_MI = NA,A_PH_CC = NA, A_PH_WA = NA,
+                            A_SOM_LOI = NA, A_C_OF = NA, 
+                            A_CLAY_MI = NA,A_SAND_MI = NA,
+                            A_PH_CC = NA, A_PH_WA = NA,
                             A_CEC_CO = NA, 
                             A_K_AA = NA,A_K_AL = NA,A_K_AN = NA,A_K_CAL = NA,A_K_CC = NA,
                             A_K_CO_PO = NA,A_K_DL = NA,A_K_M3 = NA,A_K_NaAAA = NA,
@@ -54,6 +58,8 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                    A_SOM_LOI = A_SOM_LOI,
                    A_C_OF = A_C_OF,
                    A_CLAY_MI = A_CLAY_MI,
+                   A_SAND_MI = A_SAND_MI,
+                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
                    A_PH_CC = A_PH_CC,
                    A_PH_WA = A_PH_WA,
                    A_CEC_CO = A_CEC_CO,
@@ -118,7 +124,7 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   
   # Poland (PL), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_c_potassium_pl(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_K_DL = A_K_DL)]
-  dt[B_COUNTRY == 'IE', value := osi_c_posphor_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_K_AN = A_K_AN)]
+  dt[B_COUNTRY == 'UK', value := osi_c_posphor_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_K_AN = A_K_AN)]
   
   # select the output variable
   value <- dt[,value]

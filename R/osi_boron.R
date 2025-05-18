@@ -29,8 +29,39 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_B_HW, B_COUNTRY) {
                    value = NA_real_
                    )
   
-  # calculate the open soil index score for magnesium availability per country
-  dt[B_COUNTRY == 'FR', value := osi_c_boron_fr(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_B_HW = A_B_HW)]
+  # calculate the OSI score for boron
+  
+  # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
+  dt[B_COUNTRY == 'AT', value := NA_real_]
+  dt[B_COUNTRY == 'BE', value := NA_real_]
+  dt[B_COUNTRY == 'CH', value := NA_real_]
+  dt[B_COUNTRY == 'CZ', value := NA_real_]
+  dt[B_COUNTRY == 'DE', value := NA_real_]
+  
+  # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
+  dt[B_COUNTRY == 'DK', value := NA_real_]
+  dt[B_COUNTRY == 'EE', value := NA_real_]
+  dt[B_COUNTRY == 'ES', value := NA_real_]
+  dt[B_COUNTRY == 'FR', value :=  osi_c_boron_fr(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_B_HW = A_B_HW)]
+  dt[B_COUNTRY == 'FI', value := NA_real_]
+  
+  # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
+  dt[B_COUNTRY == 'HU', value := NA_real_]
+  dt[B_COUNTRY == 'IE', value := NA_real_]
+  dt[B_COUNTRY == 'IT', value := NA_real_]
+  dt[B_COUNTRY == 'LV', value := NA_real_]
+  dt[B_COUNTRY == 'LT', value := NA_real_]
+  
+  # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
+  dt[B_COUNTRY == 'NL', value := NA_real_]
+  dt[B_COUNTRY == 'NO', value := NA_real_]
+  dt[B_COUNTRY == 'SE', value := NA_real_]
+  dt[B_COUNTRY == 'SK', value := NA_real_]
+  dt[B_COUNTRY == 'SL', value := NA_real_]
+  
+  # Poland (PL), United Kingdom (UK)
+  dt[B_COUNTRY == 'PL', value := NA_real_]
+  dt[B_COUNTRY == 'UK', value := NA_real_]
   
   # select the output variable
   value <- dt[,value]
