@@ -148,6 +148,85 @@ osi_c_magnesium_at <- function(A_MG_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
 }
 
+#' Calculate the magnesium availability index in Switzerland
+#' 
+#' This function calculates the magnesium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_MG_AAA (numeric) The exchangeable Mg-content of the soil measured via acid ammonium acetate extraction (mg Mg/ kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_magnesium_ch(A_MG_AAA = 50)
+#' 
+#' @return 
+#' The potassium availability index in Switzerland estimated from extractable potassium. A numeric value.
+#' 
+#' @export
+osi_c_magnesium_ch <- function(A_MG_AAA,A_CLAY_MI,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_MG_AAA = A_MG_AAA,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # convert to the OSI score (Tabelle 18)
+  
+  # arable crops, maize and grassland / vegetables are mainly different at higher level (class H to VH)
+  # so no need to differentiate
+  dt[A_CLAY_MI <= 10, 
+     value := osi_evaluate_logistic(x = A_MG_AAA, b= 0.04288244,x0 = -38.22495053,v = 0.06959847 )]
+  dt[A_CLAY_MI > 10 & A_CLAY_MI <= 20, 
+     value := osi_evaluate_logistic(x = A_MG_AAA, b= 0.03679377 ,x0 = 0.44180683 ,v = 0.27821994 )]
+  dt[A_CLAY_MI > 20 & A_CLAY_MI <= 30, 
+     value := osi_evaluate_logistic(x = A_MG_AAA, b= 0.04034187 ,x0 = 51.16252893,v = 0.84481562 )]
+  dt[A_CLAY_MI > 30 & A_CLAY_MI <= 40, 
+     value := osi_evaluate_logistic(x = A_MG_AAA, b= 0.02440062 ,x0 = 0.54966486  ,v = 0.20908778 )]
+  dt[A_CLAY_MI > 40, 
+     value := osi_evaluate_logistic(x = A_MG_AAA, b= 0.01940137  ,x0 = 0.50465157  ,v = 0.15617097 )]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
 #' Calculate the magnesium availability index in Czech Republic
 #' 
 #' This function calculates the magnesium availability. 
@@ -1064,4 +1143,52 @@ osi_c_magnesium_sl <- function(A_MG_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
   return(value)
   
+}
+
+#' Calculate the magnesium availability index in United Kingdom
+#' 
+#' This function calculates the magnesium availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
+#' @param A_MG_AN (numeric) The Mg-content of the soil extracted with ammonium nitrate (mg Mg /kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_magnesium_uk(B_LU = 265,A_SOM_LOI=3,A_MG_AN = 50)
+#' osi_c_magnesium_uk(B_LU = c(265,1019),A_SOM_LOI = c(3,5),A_MG_AN = c(35,55))
+#' 
+#' @return 
+#' The magnesium availability index in United Kingdom derived from extractable soil Mg fractions. A numeric value.
+#' 
+#' @export
+osi_c_magnesium_uk <- function(B_LU, A_SOM_LOI,A_MG_AN) {
+  
+  # crop properties
+  dt.crops <- as.data.table(euosi::osi_crops)
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_MG_AN = A_MG_AN,
+                   value = NA_real_)
+  
+  # merge with crop
+  dt <- merge(dt,
+              dt.crops[,.(B_LU, crop_name, crop_cat1)],
+              by = 'B_LU',
+              all.x = TRUE)
+  
+  # convert from mg / kg to mg / liter sample volume
+  dt[, BDS := (1/(0.02525 * A_SOM_LOI + 0.6541))]
+  dt[, A_MG_AN := A_MG_AN * BDS]
+  
+  # optimum value is index 2 for all land uses
+  dt[, value := osi_evaluate_logistic(A_MG_AN, b = 0.05557028 , x0 = -18.14423092, v = 0.07984178)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
 }
