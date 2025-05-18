@@ -856,3 +856,313 @@ spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
 p0 <- list(b = 0.09371117, x0 = 5, v = 0.07407514)
 findoptvalue(spool,spoolopt,p0)
 
+
+# UK, boron
+spool <- c(0.1,0.3,0.6,0.7,0.8,1.2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# UK, K, all crops
+spool <- c(1,30,(61+120)/2,(121+180)/2,181,250)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# UK, K, vegatables
+spool <- c(1,30,(61+120)/2,(121+180)/2,241,300)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# UK, P, all crops
+spool <- c(1,4.5,(10+15)/2,(16+25)/2,26,45)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# UK, P, vegetable
+spool <- c(1,12.5,(16+25)/2,(26+45)/2,46,71)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# UK, Mg, all crops
+spool <- c(1,12.5,(26+50)/2,(51+100)/2,101,175)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 10, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# UK, pH peat, arable
+spool <- c(4.5,5,5.2,5.4,5.5,5.8)*5.8/5.5
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 10, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# UK, pH peat, grassland
+spool <- c(4.5,5,5.2,5.4,5.5,5.8)*5.3/5.5
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# UK, pH arable, mineral
+spool <- c(4.5,5,5.2,5.4,5.5,5.8)*6.5/5.5
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# UK, pH grass and clover, mineral
+spool <- c(4.5,5,5.2,5.4,5.5,5.8)*6.0/5.5
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# UK, zinc, mineral
+spool <- c(0.1,0.3,0.5,1,.5,2.5)
+spoolopt <- c(0.05,0.15,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 3.5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# germany BG1 bohr
+a = c(0.14,0.15,0.25,0.26)
+spool <- c(0.02,a[1]*0.5,a[1],(a[2]+a[3])/2,a[3]+0.01,a[3]+.5,2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1,1)
+p0 <- list(b = 0.09371117, x0 = 0.1135, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# germany BG2 bohr
+a = c(0.19,0.2,0.3,0.3)
+spool <- c(0.02,a[1]*.5,a[1],(a[2]+a[3])/2,a[3]+0.01,a[3]+.5,2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1,1)
+p0 <- list(b = 0.09371117, x0 = 0.135, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# germany BG3 bohr
+a = c(.24,0.25,0.4,0.41)
+spool <- c(0.02,a[1]*.5,a[1],(a[2]+a[3])/2,a[3]+0.01,a[3]+.5,2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1,1)
+p0 <- list(b = 0.09371117, x0 = 1.2135, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# germany BG4 bohr
+a = c(0.34,0.35,0.6,0.61)
+spool <- c(0.02,a[1]*.5,a[1],(a[2]+a[3])/2,a[3]+0.01,a[3]+.5,2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1,1)
+p0 <- list(b = 0.09371117, x0 = 1.2135, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# germany BG5 bohr
+a = c(0.34,0.35,0.6,0.61)
+spool <- c(0.02,a[1]*.5,a[1],(a[2]+a[3])/2,a[3]+0.01,a[3]+.5,2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1,1)
+p0 <- list(b = 0.09371117, x0 = 1.2135, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# germany BG6 bohr
+a = c(0.14,0.15,0.25,0.26)
+spool <- c(0.02,a[1]*.5,a[1],(a[2]+a[3])/2,a[3]+0.01,a[3]+.5,2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1,1)
+p0 <- list(b = 0.09371117, x0 = 1.2135, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# germany BG1-BG2 zinc
+a = c(0.9,1,2.5,2.6)
+spool <- c(0.02,a[1]*0.5,a[1],(a[2]+a[3])/2,a[3]+0.01,a[3]+.5,2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1,1)
+p0 <- list(b = 0.09371117, x0 = 0.1135, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# germany BG3-4-5 zinc
+a = c(1.4,1.5,3,3.1)
+spool <- c(0.02,a[1]*0.5,a[1],(a[2]+a[3])/2,a[3]+0.01,a[3]+.5,2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1,1)
+p0 <- list(b = 0.09371117, x0 = 0.1135, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# germany BG6 zinc
+a = c(0.5,0.6,1.5,1.6)
+spool <- c(0.02,a[1]*0.5,a[1],(a[2]+a[3])/2,a[3]+0.01,a[3]+.5,2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1,1)
+p0 <- list(b = 0.09371117, x0 = 0.1135, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+
+# Ireland, boron
+spool <- c(0.1,0.25,(0.5+1)/2,(1.1+1.5)/2,1.5,2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Switseralnd, klei <=10, , arable/grass, K
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,40,(40+140)/2,(140+220)/2,230,340)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 100, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Switseralnd, klei 10-20, , arable/grass, K
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,20,(20+120)/2,(120+200)/2,210,360)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Switseralnd, klei 20-30, , arable/grass, K
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,5,(5+100)/2,(100+180)/2,190,340)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+
+# Switseralnd, klei 30-40, arable/grass, K
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,5,(5+40)/2,(40+160)/2,170,320)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Switseralnd, klei <=10, , vegetable, K
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,40,(40+140)/2,(140+220)/2,230,400)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 100, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Switseralnd, klei 10-20, vegetable, K
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,20,(20+120)/2,(120+200)/2,210,380)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Switseralnd, klei 20-30, vegetable, K
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,5,(5+100)/2,(100+180)/2,190,360)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+
+# Switseralnd, klei 30-40,vegetable, K
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,5,(5+80)/2,(80+160)/2,170,320)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Switseralnd, klei >40,arable, K
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,5,(5+40)/2,(40+120)/2,130,280)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+
+# Switseralnd, klei <=10, , arable/grass, Mg
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,1,75/2,(75+125)/2,135,250)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 100, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Switseralnd, klei 10-20, , arable/grass, Mg
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,1,(100)/2,(100+175)/2,185,300)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Switseralnd, klei 20-30, , arable/grass, Mg
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,5,(5+125)/2,(125+200)/2,215,350)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Switseralnd, klei 30-40, arable/grass, Mg
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,25,(25+150)/2,(150+300)/2,315,400)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Switseralnd, klei >40, arable/grass, Mg
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,50,(50+200)/2,(200+300)/2,315,425)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Switseralnd, CEC arable and grassland
+# A > 1.4 (arm), B 1.2-1.4, C 0.9-1.1 (optimim), D 0.4-0.8 and E < 0.4
+# H2O10 = water AAE10 = AA+EDTA
+spool <- c(0.1,50,50,70,80,110)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# pH switzerland
+glogparm(parm=c(5.3,5.8,6.2,6.3,6.8))
+glogparm(parm=c(5.3,5.8,6.7,6.8,7.2))
+
+
+
+# switzerland, boron
+spool <- c(0.1,0.6,(0.6+1.5)/2,(1.6+2)/2,2.1,5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = .5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# sweden, kalium
+spool <- c(0.1,40,(40+80)/2,(81+160)/2,161,320)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 =0.50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# norway, kalium
+# https://www.nibio.no/tema/jord/gjodslingshandbok/korreksjonstabeller/kalium--korn-oljevekster-potet-og-gronnsaker
+spool <- c(0.1,60,(70+100)/2,(110+150)/2,160,300)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 =0.50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
