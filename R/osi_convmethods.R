@@ -119,7 +119,9 @@ osi_conv_ph <- function(element, A_PH_KCL = NA_real_,A_PH_CC = NA_real_, A_PH_WA
   
   # estimate pH from other measurements
   dt[is.na(A_PH_CC), A_PH_CC := A_PH_KCL * 0.9288 + 0.5262]
+  dt[is.na(A_PH_CC), A_PH_CC := ((A_PH_WA - 2.23) / 0.777) * 0.9288 + 0.5262]
   dt[is.na(A_PH_WA), A_PH_WA := 2.23 + 0.777 * A_PH_KCL]
+  dt[is.na(A_PH_WA), A_PH_WA := 2.23 + 0.777 * ((A_PH_CC - 0.5262) / 0.9288)]
   dt[is.na(A_PH_KCL), A_PH_KCL := (A_PH_WA - 2.23) / 0.777]
   dt[is.na(A_PH_KCL), A_PH_KCL := (A_PH_CC - 0.5262) / 0.9288]
   
@@ -206,8 +208,8 @@ osi_conv_npmn <- function(A_N_RT, A_CLAY_MI, med_PMN = 51.9, med_NRT = 1425, med
 #' @export 
 osi_conv_phosphor <- function(element, 
                               A_P_AL = NA_real_,A_P_CC = NA_real_, A_P_WA = NA_real_,
-                              A_P_OL = NA_real_,A_P_CAL = NA_real_,A_P_DL = NA_real_,A_P_AA = NA_real_,
-                              A_P_AAA_EDTA = NA_real_,
+                              A_P_OL = NA_real_,A_P_CAL = NA_real_,A_P_DL = NA_real_,A_P_AAA = NA_real_,
+                              A_P_AAA_EDTA = NA_real_,A_P_M3 = NA_real_,
                               A_PH_CC = NA_real_){
   
   # check inputs
@@ -221,6 +223,7 @@ osi_conv_phosphor <- function(element,
                    A_P_OL = A_P_OL,
                    A_P_CAL = A_P_CAL,
                    A_P_DL = A_P_DL,
+                   A_P_M3 = A_P_M3,
                    A_P_AAA = A_P_AAA,
                    A_P_AAA_EDTA = A_P_AAA_EDTA,
                    A_PH_CC = A_PH_CC)
@@ -255,7 +258,7 @@ osi_conv_phosphor <- function(element,
 #' @param A_PH_CC (numeric) The pH measured in cacl2 
 #' 
 #' @export 
-osi_conv_phosphor <- function(element, 
+osi_conv_potassium <- function(element, 
                               A_K_AL = NA_real_,A_K_CC = NA_real_, A_K_WA = NA_real_,
                               A_K_CAL = NA_real_,A_K_DL = NA_real_,A_K_AA = NA_real_,
                               A_PH_CC = NA_real_){
