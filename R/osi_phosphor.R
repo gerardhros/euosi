@@ -4,12 +4,21 @@
 #' 
 #' @param B_LU (character) The crop code
 #' @param B_SOILTYPE_AGR (character) The soil type in a particular region
-#' @param B_AER_FR (character) An agroeconomic region in France
-#' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate
-#' @param A_P_CC (numeric) The P-content of the soil extracted with CaCl2
-#' @param A_P_WA (numeric) The P-content of the soil extracted with water
-#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
-#' @param B_SOILTYPE_AGR (character) The agricultural type of soil
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
+#' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
+#' @param A_PH_WA (numeric) The pH measured in water.
+#' @param A_PH_CC (numeric) The pH measured in CaCl2 extraction.
+#' @param A_CACO3_IF (numeric) the percentage of CaCO3 (\%)
+#' @param A_P_CAL (numeric) The exchangeable P-content of the soil measured via Calcium Ammonium Lactate (mg P/ kg)
+#' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate (mg P / kg)
+#' @param A_P_DL (numeric) The P-content of the soil extracted with double lactate (mg P / kg)
+#' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction (mg P / kg)
+#' @param A_P_CC (numeric) The P-content of the soil extracted with CaCl2 (mg P / kg)
+#' @param A_P_WA (numeric) The P-content of the soil extracted with water (mg P / kg)
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P / kg)
+#' @param A_P_M3 (numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)
 #' @param B_COUNTRY (character) The country code
 #' 
 #' @import data.table
@@ -19,11 +28,15 @@
 #' osi_c_posphor(B_LU = 1019,A_P_AL = 54,A_P_CC = 4.5, A_P_WA = 65,B_COUNTRY ='NL')
 #' 
 #' @return 
-#' The phosphate availability index in the Netherlands estimated from extractable soil P fractions. A numeric value.
+#' The phosphate availability index in European countries estimated from extractable soil P fractions. A numeric value.
 #' 
 #' @export
 osi_c_posphor <- function(B_LU, 
-                          B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_character_, A_P_OL = NA_real_,
+                          B_SOILTYPE_AGR = NA_character_, 
+                          A_CLAY_MI = NA_real_, A_SAND_MI = NA_real_,A_C_OF = NA_real_,
+                          A_SOM_LOI = NA_real_, A_PH_WA = NA_real_,A_PH_CC = NA_real_, A_CACO3_IF = NA_real_,
+                          A_P_OL = NA_real_, A_P_M3 = NA_real_, A_P_CAL = NA_real_,
+                          A_P_AAA = NA_real_,A_P_DL = NA_real_,
                           A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY) {
   
   # add visual bindings
@@ -39,11 +52,14 @@ osi_c_posphor <- function(B_LU,
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
-                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
-                   B_AER_FR = B_AER_FR,
                    A_SOM_LOI = A_SOM_LOI,
+                   A_C_OF = A_C_OF,
                    A_CLAY_MI = A_CLAY_MI,
+                   A_SAND_MI = A_SAND_MI,
+                   A_SILT_MI = pmax(0,100 - A_CLAY_MI - A_SAND_MI),
                    A_CACO3_IF = A_CACO3_IF,
+                   A_PH_WA = A_PH_WA,
+                   A_PH_CC = A_PH_CC,
                    A_P_AL = A_P_AL,
                    A_P_CAL = A_P_CAL,
                    A_P_AAA = A_P_AAA,
@@ -56,73 +72,52 @@ osi_c_posphor <- function(B_LU,
                    value = NA_real_
                    )
   
+  # estimate texture information
+  dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  
+  # estimate missing soil properties from P-Olsen (default in LUCAS)
+  dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
+  dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
+  dt[is.na(A_P_AL) & is.na(A_P_OL), A_P_AL := osi_conv_phosphor(element='A_P_AL',A_P_OL = A_P_OL,A_PH_CC = A_PH_CC)]
+  dt[is.na(A_P_CAL) & is.na(A_P_OL), A_P_CAL := osi_conv_phosphor(element='A_P_CAL',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_DL) & is.na(A_P_OL), A_P_DL := osi_conv_phosphor(element='A_P_DL',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_AAA) & is.na(A_P_OL), A_P_AAA := osi_conv_phosphor(element='A_P_AAA',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_M3) & is.na(A_P_OL), A_P_M3 := osi_conv_phosphor(element='A_P_M3',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_WA) & is.na(A_P_OL), A_P_WA := osi_conv_phosphor(element='A_P_WA',A_P_OL = A_P_OL)]
   
   # calculate the OSI score per country
   
-  # Austria (AT)
+  # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
   dt[B_COUNTRY == 'AT', value := osi_c_posphor_at(B_LU = B_LU, A_P_CAL = A_P_CAL)]
-  
-  # Belgium (BE)
   dt[B_COUNTRY == 'BE', value := osi_c_posphor_be(B_LU = B_LU, A_P_AL = A_P_AL)]
-  
-  # Switzerland (CH)
   dt[B_COUNTRY == 'CH', value := osi_c_posphor_ch(B_LU = B_LU, A_P_AAA = A_P_AAA)]
-  
-  # Czech Republic (CZ)
   dt[B_COUNTRY == 'CZ', value := osi_c_posphor_cz(B_LU = B_LU, A_P_M3 = A_P_M3)]
-  
-  # Germany (DE)
   dt[B_COUNTRY == 'DE', value := osi_c_posphor_de(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_CAL = A_P_CAL, A_P_DL = A_P_DL)]
   
-  # Denmark (DK)
+  # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := osi_c_posphor_dk(B_LU = B_LU, A_P_OL = A_P_OL)]
-  
-  # Estonia (EE)
   dt[B_COUNTRY == 'EE', value := osi_c_posphor_ee(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_M3 = A_P_M3)]
-  
-  # Spain (ES)
   dt[B_COUNTRY == 'ES', value := osi_c_posphor_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_P_OL = A_P_OL)]
-  
-  # France (FR)
-  dt[B_COUNTRY == 'FR', value := osi_c_posphor_fr(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, B_AER_FR = B_AER_FR, A_P_OL= A_P_OL)]
-  
-  # Finland (FI)
+  dt[B_COUNTRY == 'FR', value := osi_c_posphor_fr(B_LU = B_LU, B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_P_OL= A_P_OL)]
   dt[B_COUNTRY == 'FI', value := osi_c_posphor_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_AAA = A_P_AAA, A_C_OF = A_C_OF )]
   
-  # Hungary (HU)
+  # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
   dt[B_COUNTRY == 'HU', value := osi_c_posphor_hu(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI, A_CACO3_IF = A_CACO3_IF,A_P_AL = A_P_AL )]
-  
-  # Ireland (IE)
   dt[B_COUNTRY == 'IE', value := osi_c_posphor_ie(B_LU = B_LU, A_P_OL = A_P_OL)]
-  
-  # Italy (IT)
   dt[B_COUNTRY == 'IT', value := osi_c_posphor_it(B_LU = B_LU, A_P_OL = A_P_OL)]
-  
-  # Latvia (LV)
   dt[B_COUNTRY == 'LV', value := osi_c_posphor_lv(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_DL = A_P_DL)]
-  
-  # Lithuania (LT)
   dt[B_COUNTRY == 'LT', value := osi_c_posphor_lt(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_AL = A_P_AL)]
   
-  # the Netherlands (NL)
+  # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
   dt[B_COUNTRY == 'NL', value := osi_c_posphor_nl(B_LU = B_LU, A_P_AL = A_P_AL, A_P_CC = A_P_CC, A_P_WA = A_P_WA)]
-  
-  # Norway (NO)
   dt[B_COUNTRY == 'NO', value := osi_c_posphor_no(B_LU = B_LU, A_P_AL = A_P_AL)]
-  
-  # Sweden (SE)
   dt[B_COUNTRY == 'SE', value := osi_c_posphor_se(B_LU = B_LU, A_P_AL = A_P_AL)]
-  
-  # Slovak Republic (SK)
-  dt[B_COUNTRY == 'SK', value := osi_c_posphor_lv(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_P_M3 = A_P_M3)]
-  
-  # Slovenia (SL)
+  dt[B_COUNTRY == 'SK', value := osi_c_posphor_sk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_P_M3 = A_P_M3)]
   dt[B_COUNTRY == 'SL', value := osi_c_posphor_sl(B_LU = B_LU, A_P_AL = A_P_AL)]
   
-  # Poland (PL)
+  # Poland (PL), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_c_posphor_pl(B_LU = B_LU, A_P_DL = A_P_DL)]
-  
-  # United Kingdom (UK)
   dt[B_COUNTRY == 'IE', value := osi_c_posphor_uk(B_LU = B_LU, A_P_OL = A_P_OL)]
   
   # sort data.table
@@ -273,7 +268,7 @@ osi_c_posphor_be <- function(B_LU, A_P_AL) {
 #' This function calculates the phosphorus availability. 
 #' 
 #' @param B_LU (character) The crop code
-#' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via Ammonium Lactate (mg P/ kg)
+#' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction (mg P/ kg)
 #' 
 #' @import data.table
 #' 
@@ -405,7 +400,7 @@ osi_c_posphor_cz <- function(A_P_M3,B_LU = NA_character_) {
 #' This function calculates the phosphate availability. 
 #' 
 #' @param B_LU (numeric) The crop code
-#' @param A_P_CAL (numeric) The P-content of the soil extracted with ammonium lactate(mg P2O5 / 100g)
+#' @param A_P_CAL (numeric) The P-content of the soil extracted with ammonium lactate(mg P / kg)
 #' @param A_P_DL (numeric) The P-content of the soil extracted with double lactate (mg P / kg)
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
 #' 
@@ -425,20 +420,20 @@ osi_c_posphor_de <- function(B_LU, A_SOM_LOI,A_P_CAL = NA_real_, A_P_DL = NA_rea
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
                    A_SOM_LOI= A_SOM_LOI,
-                   A_P_CAL = A_P_CAL,
+                   A_P_CAL = A_P_CAL * 2.29 * 0.1,
                    A_P_DL = A_P_DL,
                    value1 = NA_real_,
                    value2 = NA_real_,
                    value = NA_real_)
   
   # evaluation conform VDLUFA for cropland and soil types
-  dt[!is.na(A_P_CAL), value1 := OBIC::evaluate_logistic(A_P_CAL, b = 0.2711, x0 = -5.9449, v = 0.0239)]
+  dt[!is.na(A_P_CAL), value1 := osi_evaluate_logistic(A_P_CAL, b = 0.2711, x0 = -5.9449, v = 0.0239)]
   
   # adjust for peat soils
-  dt[!is.na(A_P_CAL) & A_SOM_LOI > 20, value1 := OBIC::evaluate_logistic(A_P_CAL, b = 0.1743, x0 = 2.92395, v = 0.096079)]
+  dt[!is.na(A_P_CAL) & A_SOM_LOI > 20, value1 := osi_evaluate_logistic(A_P_CAL, b = 0.1743, x0 = 2.92395, v = 0.096079)]
   
   # evaluation conform VDLUFA for cropland and soil types
-  dt[!is.na(A_P_DL), value2 := OBIC::evaluate_logistic(A_P_DL, b = 0.5357, x0 = -4.03796, v = 0.01856)]
+  dt[!is.na(A_P_DL), value2 := osi_evaluate_logistic(A_P_DL, b = 0.5357, x0 = -4.03796, v = 0.01856)]
   
   # set value
   dt[,value := fifelse(!is.na(A_P_CAL),value1,value2)]
@@ -474,7 +469,7 @@ osi_c_posphor_dk <- function(B_LU, A_P_OL) {
                    value = NA_real_)
   
   # evaluation P-Olsen for cropland and soil types
-  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.226612, x0 = 30.137321,v = 1.247315)]
+  dt[, value := osi_evaluate_logistic(A_P_OL, b = 0.226612, x0 = 30.137321,v = 1.247315)]
   
   # select value and return
   value <- dt[,value]
@@ -578,13 +573,13 @@ osi_c_posphor_es <- function(B_LU, A_CLAY_MI,A_P_OL) {
                    value = NA_real_)
   
   # assess P availability for sandy soils (Arenoso)
-  dt[A_CLAY_MI < 15 & A_SAND_MI > 50, value := OBIC::evaluate_logistic(A_P_OL, b = 0.47947, x0 = -1.94363, v = 0.074075)]
+  dt[A_CLAY_MI < 15 & A_SAND_MI > 50, value := osi_evaluate_logistic(A_P_OL, b = 0.47947, x0 = -1.94363, v = 0.074075)]
   
   # assess P availability for loamy? soils (Franco)
-  dt[A_CLAY_MI < 15 & A_SAND_MI <=50 , value := OBIC::evaluate_logistic(A_P_OL, b = 0.27155, x0 = 2.81733, v = 0.154671)]
+  dt[A_CLAY_MI < 15 & A_SAND_MI <=50 , value := osi_evaluate_logistic(A_P_OL, b = 0.27155, x0 = 2.81733, v = 0.154671)]
   
   # assess P availability for clayey soils (Arcilloso)
-  dt[A_CLAY_MI > 15, value := OBIC::evaluate_logistic(A_P_OL, b = 0.20196, x0 = 2.87602, v = 0.133171)]
+  dt[A_CLAY_MI > 15, value := osi_evaluate_logistic(A_P_OL, b = 0.20196, x0 = 2.87602, v = 0.133171)]
   
   # select value and return
   value <- dt[,value]
@@ -701,7 +696,7 @@ osi_c_posphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER_
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via ammonium acetate extraction
+#' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction
 #' 
 #' @import data.table
 #' 
@@ -933,7 +928,7 @@ osi_c_posphor_it <- function(B_LU, A_P_OL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_lv(A_P_DL = 45,B_TEXTURE_USDA='sand')
+#' osi_c_phosphorus_lv(A_P_DL = 45,B_TEXTURE_USDA = 'S')
 #' 
 #' @return 
 #' The phosphorus availability index in Latvia estimated from extractable phosphorus. A numeric value.
@@ -978,14 +973,13 @@ osi_c_posphor_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
   #             all.x = TRUE)
   
   # convert to the OSI score
-  dt[B_TEXTURE_USDA == 'sand',value := osi_evaluate_logistic(x = A_P_DL, b= 0.249934,x0 = 2.907279,v = 0.070707)]
-  dt[B_TEXTURE_USDA %in% c('loamy sand',
-                           'sandy loam'),value := osi_evaluate_logistic(x = A_P_DL, b= 0.211789,x0 = 2.937473,v = 0.050529)]
-  dt[B_TEXTURE_USDA %in% c('loam','sandy clay',
-                           'sandy clay loam'),value := osi_evaluate_logistic(x = A_P_DL, b= 0.17789728,x0 = -7.742856,v = 0.007900254)]
-  dt[B_TEXTURE_USDA %in% c('clay','clay loam',
-                           'silty clay','silty clay loam',
-                           'silt loam','silt'),value := osi_evaluate_logistic(x = A_P_DL, b= 0.1513621,x0 = -9.9252899,v = 0.00760908)]
+  dt[B_TEXTURE_USDA == 'Sa',value := osi_evaluate_logistic(x = A_P_DL, b= 0.249934,x0 = 2.907279,v = 0.070707)]
+  dt[B_TEXTURE_USDA %in% c('LoSa','SaLo'),
+     value := osi_evaluate_logistic(x = A_P_DL, b= 0.211789,x0 = 2.937473,v = 0.050529)]
+  dt[B_TEXTURE_USDA %in% c('Lo','SaCl','SaCL'),
+     value := osi_evaluate_logistic(x = A_P_DL, b= 0.17789728,x0 = -7.742856,v = 0.007900254)]
+  dt[B_TEXTURE_USDA %in% c('Cl','ClLo','SiCl','SiCL', 'SiLo','Si'),
+     value := osi_evaluate_logistic(x = A_P_DL, b= 0.1513621,x0 = -9.9252899,v = 0.00760908)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -1117,9 +1111,9 @@ osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA 
   # check that there is only 1 scoring function for P
   checkmate::assert_data_table(dt.thresholds,max.rows = 1)
   
-  # Collect the data into a table
+  # Collect the data into a table, convert to Dutch units
   dt <- data.table(id = 1:arg.length,
-                   A_P_AL = A_P_AL,
+                   A_P_AL = A_P_AL * 2.29 * 0.1,
                    A_P_CC = A_P_CC,
                    A_P_WA = A_P_WA,
                    B_LU = B_LU,
@@ -1469,33 +1463,51 @@ osi_c_posphor_pl <- function(A_P_DL,B_LU = NA_character_) {
 #' This function calculates the phosphate availability. 
 #' 
 #' @param B_LU (numeric) The crop code
-#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
+#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P /kg)
 #'  
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor_uk(B_LU = 265,A_P_OL = 5)
-#' osi_c_posphor_uk(B_LU = c(265,1019),A_P_OL = c(3.5,5.5))
+#' osi_c_posphor_uk(B_LU = 265,A_SOM_LOI = 3,A_P_OL = 5)
+#' osi_c_posphor_uk(B_LU = c(265,1019),A_SOM_LOI = c(3,4),A_P_OL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in United Kingdom derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_posphor_uk <- function(B_LU, A_P_OL) {
+osi_c_posphor_uk <- function(B_LU, A_SOM_LOI,A_P_OL) {
+  
+  # crop properties
+  dt.crops <- as.data.table(euosi::osi_crops)
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
+                   A_SOM_LOI = A_SOM_LOI,
                    A_P_OL = A_P_OL,
                    value = NA_real_)
   
+  # merge with crop
+  dt <- merge(dt,
+              dt.crops[,.(B_LU, crop_name, crop_cat1)],
+              by = 'B_LU',
+              all.x = TRUE)
+  
   # P index derived following P-Olsen.
+  
+  # convert from mg / kg to mg / liter sample volume
+  dt[, BDS := (1/(0.02525 * A_SOM_LOI + 0.6541))]
+  dt[, A_P_OL := A_P_OL * BDS]
+  
   # optimum value is index 2 for all land uses except vegetables (index 3)
+  
   # evaluation P-Olsen for cropland and soil types
-  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.3111, x0 = 2.77424, v = 0.043408)]
+  dt[, value := osi_evaluate_logistic(A_P_OL, b = 0.2417380 , x0 = 7.8550060 , v = 0.5393981 )]
   
   # assess soil P status for vegetables
-  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.2864, x0 = 2.78737, v = 0.055188)]
+  dt[grepl('vegetab|cabbag|leek|carrot|sprout|celery|onion|potato|lettu',tolower(crop_name)), 
+     value := osi_evaluate_logistic(A_P_OL, b = 0.17689431 , x0 = 0.45050382 , v = 0.05213803 )]
   
   # select value and return
   value <- dt[,value]
