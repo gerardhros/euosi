@@ -4,13 +4,22 @@
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param B_SOILTYPE_AGR (character) The agricultural type of soil
-#' @param A_CLAY_MI (numeric) is the Clay content (\%)
+#' @param A_CLAY_MI (numeric) is the clay content (\%)
+#' @param A_SAND_MI (numeric) is the sand content (\%)
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
+#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_CEC_CO (numeric) is the Cation exhange capacity in mmol+/kg 
-#' @param A_CACO3_IF (numeric) the percentage of CaCO3 (\%)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
+#' @param A_CACO3_IF (numeric) the percentage of CaCO3 (\%)
+#' @param A_MG_AAA (numeric) is the exchangeable Mg concentration (mg/kg)
+#' @param A_MG_AL (numeric) The exchangeable Mg-content of the soil measured via Ammonium Lactate extraction (mg Mg/ kg)
+#' @param A_MG_AN (numeric) The Mg-content of the soil extracted with ammonium nitrate (mg Mg /kg)
 #' @param A_MG_CC (numeric) The plant available content of Mg in the soil (mg  Mg per kg) extracted by 0.01M CaCl2
-#' @param A_MG_AA (numeric) is the exchangeable Mg concentration (mg/kg)
+#' @param A_MG_CO_PO (numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+#' @param A_MG_DL (numeric) The exchangeable Mg-content of the soil measured via Double Lactate extraction (mg Mg/ kg)
+#' @param A_MG_KCL (numeric) The plant available potassium, extracted with KCL (mg per kg)
+#' @param A_MG_M3 (numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)
+#' @param A_MG_NaAAA (numeric) The Mg-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)
 #' @param A_K_CO_PO (numeric) The occupation of the CEC with potassium (\%)
 #' @param A_K_CC (numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg per kg)
 #' @param B_COUNTRY (character) The country code
@@ -18,63 +27,106 @@
 #' @import data.table
 #' 
 #' @return
-#' The capacity of the soil to supply and buffer potassium, evaluated given an optimum threshold for yield. A numeric value.
+#' The capacity of the soil to supply and buffer magnesium, evaluated given an optimum threshold for yield. A numeric value.
 #' 
 #' @export
-osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_SOM_LOI = NA_real_, 
-                            A_CLAY_MI = NA_real_,A_PH_CC = NA_real_, A_CACO3_IF = NA_real_,
-                            A_CEC_CO = NA_real_, A_K_CO_PO = NA_real_, A_K_CC = NA_real_,A_MG_AA = NA_real_,
-                            A_MG_CC = NA_real_,
+osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
+                            A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
+                            A_SOM_LOI = NA_real_, A_C_OF = NA_real_, A_CEC_CO = NA_real_,
+                            A_PH_CC = NA_real_, A_CACO3_IF = NA_real_,
+                            A_MG_AAA = NA_real_,A_MG_AL = NA_real_, A_MG_AN = NA_real_,A_MG_CC = NA_real_,
+                            A_MG_CO_PO = NA_real_, A_MG_DL = NA_real_,A_MG_KCL = NA_real_,A_MG_M3 = NA_real_,
+                            A_MG_NaAAA = NA_real_,
+                            A_K_CO_PO = NA_real_,A_K_CC = NA_real_,
                             B_COUNTRY) {
   
   # add visual bindings
   
   # desired length of inputs
-  arg.length <- max(length(B_LU),length(B_SOILTYPE_AGR), 
-                    length(A_MG_CC), length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO), 
-                    length(A_CLAY_MI),length(A_CACO3_IF),length(A_K_CO_PO),
-                    length(A_MG_AA), length(A_K_CC),length(B_COUNTRY))
+  arg.length <- max(length(B_LU),length(B_SOILTYPE_AGR), length(A_CLAY_MI),length(A_SAND_MI),
+                    length(A_SOM_LOI),length(A_C_OF),length(A_CEC_CO), 
+                    length(A_PH_CC), length(A_CACO3_IF),
+                    length(A_MG_AAA),length(A_MG_AL),length(A_MG_AN),length(A_MG_CC),
+                    length(A_MG_CO_PO),length(A_MG_DL),length(A_MG_KCL),length(A_MG_M3),
+                    length(A_MG_NaAAA),
+                    length(A_K_CO_PO),length(A_K_CC),
+                    length(B_COUNTRY))
   
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_SAND_MI = A_SAND_MI,
+                   A_SILT_MI = pmax(0,100 - A_CLAY_MI - A_SAND_MI),
                    B_COUNTRY = B_COUNTRY,
                    A_SOM_LOI = A_SOM_LOI,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_PH_CC = A_PH_CC,
+                   A_C_OF = A_C_OF,
                    A_CEC_CO = A_CEC_CO,
-                   A_K_CO_PO = A_K_CO_PO,
-                   A_MG_AA = A_MG_AA,
-                   A_K_CC = A_K_CC,
-                   A_MG_CC = A_MG_CC,
+                   A_PH_CC = A_PH_CC,
                    A_CACO3_IF = A_CACO3_IF,
+                   A_MG_AAA = A_MG_AAA,
+                   A_MG_AL = A_MG_AL,
+                   A_MG_AN = A_MG_AN,
+                   A_MG_CC = A_MG_CC,
+                   A_MG_CO_PO = A_MG_CO_PO,
+                   A_MG_DL = A_MG_DL,
+                   A_MG_KCL = A_MG_KCL,
+                   A_MG_M3 = A_MG_M3,
+                   A_MG_NaAAA = A_MG_NaAAA,
+                   A_K_CO_PO = A_K_CO_PO,
+                   A_K_CC = A_K_CC,
                    value = NA_real_
   )
+  
+  # estimate texture information
+  dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_BE := osi_get_TEXTURE_BE(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_GEPPA := osi_get_TEXTURE_GEPPA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  
+  # estimate missing soil properties (from defaults in LUCAS), and use 
+  dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
+  dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
+  dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
+  dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
+  
+  # pedotransfer of Helling (1964) when CEC is missing
+  dt[is.na(A_CEC_CO), A_CEC_CO := (0.44 * A_PH_WA + 3)* A_CLAY_MI + (5.1 * A_PH_WA - 5.9) * A_C_OF * 0.1]
+  
+  # estimate extrable soil Mg pools when not available
+  dt[,A_MG_AL := osi_conv_magnesium(element='A_MG_AL',A_MG_AAA = A_MG_AAA)]
+  dt[,A_MG_AN := osi_conv_magnesium(element='A_MG_AN',A_MG_AAA = A_MG_AAA)]
+  dt[,A_MG_CC := osi_conv_magnesium(element='A_MG_CC',A_MG_AAA = A_MG_AAA)]
+  dt[,A_MG_CO_PO := osi_conv_magnesium(element='A_MG_CO_PO',A_MG_AAA = A_MG_AAA, A_CEC_CO = A_CEC_CO)]
+  dt[,A_MG_DL := osi_conv_magnesium(element='A_MG_DL',A_MG_AAA = A_MG_AAA)]
+  dt[,A_MG_KCL := osi_conv_magnesium(element='A_MG_KCL',A_MG_AAA = A_MG_AAA)]
+  dt[,A_MG_M3 := osi_conv_magnesium(element='A_MG_M3',A_MG_AAA = A_MG_AAA)]
+  dt[,A_MG_NaAAA := osi_conv_magnesium(element='A_MG_NaAAA',A_MG_AAA = A_MG_AAA)]
   
   # calculate the open soil index score for magnesium availability
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
-  dt[B_COUNTRY == 'AT', value := NA_real_]
+  dt[B_COUNTRY == 'AT', value := osi_c_magnesium_at(B_LU=B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_MG_CC = A_MG_CC)]
   dt[B_COUNTRY == 'BE', value := NA_real_]
-  dt[B_COUNTRY == 'CH', value := NA_real_]
-  dt[B_COUNTRY == 'CZ', value := NA_real_]
-  dt[B_COUNTRY == 'DE', value := NA_real_]
+  dt[B_COUNTRY == 'CH', value := osi_c_magnesium_ch(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI, A_MG_AAA = A_MG_AAA)]
+  dt[B_COUNTRY == 'CZ', value := oci_c_magnesium_cz(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_M3 = A_MG_M3)]
+  dt[B_COUNTRY == 'DE', value := oci_c_magnesium_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_MG_CC = A_MG_CC)]
   
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
-  dt[B_COUNTRY == 'DK', value := NA_real_]
-  dt[B_COUNTRY == 'EE', value := NA_real_]
-  dt[B_COUNTRY == 'ES', value := NA_real_]
+  dt[B_COUNTRY == 'DK', value := osi_c_magnesium_dk(B_LU = B_LU, A_MG_AL = A_MG_AL)]
+  dt[B_COUNTRY == 'EE', value := oci_c_magnesium_ee(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA,A_MG_M3 = A_MG_M3)]
+  dt[B_COUNTRY == 'ES', value := oci_c_magnesium_es(B_LU = B_LU,A_MG_CO_PO = A_MG_CO_PO)]
   dt[B_COUNTRY == 'FR', value := osi_c_magnesium_fr(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI,A_CEC_CO = A_CEC_CO, 
-                                                    A_MG_AA = A_MG_AA,A_CACO3_IF = A_CACO3_IF)]
-  dt[B_COUNTRY == 'FI', value := NA_real_]
+                                                    A_MG_AAA = A_MG_AAA,A_CACO3_IF = A_CACO3_IF)]
+  dt[B_COUNTRY == 'FI', value := osi_c_magnesium_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_MG_AAA = A_MG_AAA,A_C_OF = A_C_OF)]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
-  dt[B_COUNTRY == 'HU', value := NA_real_]
-  dt[B_COUNTRY == 'IE', value := NA_real_]
-  dt[B_COUNTRY == 'IT', value := NA_real_]
-  dt[B_COUNTRY == 'LV', value := NA_real_]
-  dt[B_COUNTRY == 'LT', value := NA_real_]
+  dt[B_COUNTRY == 'HU', value := osi_c_magnesium_hu(B_LU = B_U, B_TEXTURE_USDA = B_TEXTURE_USDA, A_MG_KCL = A_MG_KCL)]
+  dt[B_COUNTRY == 'IE', value := osi_c_magnesium_ie(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_MG_NaAAA = A_MG_NaAAA)]
+  dt[B_COUNTRY == 'IT', value := osi_c_magnesium_it(B_LU = B_LU, A_MG_CO_PO = A_MG_CO_PO, A_K_CO_PO = A_K_CO_PO)]
+  dt[B_COUNTRY == 'LV', value := osi_c_magnesium_lv(B_LU = B_LU,B_TEXTURE_USDA = B_TEXTURE_USDA, A_MG_DL = A_MG_DL)]
+  dt[B_COUNTRY == 'LT', value := osi_c_magnesium_lt(B_LU = B_LU,A_PH_KCL = A_PH_KCL, A_MG_AL = A_MG_AL)]
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
   dt[B_COUNTRY == 'NL', value := osi_c_magnesium_nl(B_LU = B_LU,B_SOILTYPE_AGR = B_SOILTYPE_AGR,
@@ -82,13 +134,13 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_SOM_LOI = NA_
                                                     A_PH_CC = A_PH_CC, A_CEC_CO = A_CEC_CO,
                                                     A_K_CO_PO = A_K_CO_PO,A_MG_CC = A_MG_CC,A_K_CC = A_K_CC)]
   dt[B_COUNTRY == 'NO', value := NA_real_]
-  dt[B_COUNTRY == 'SE', value := NA_real_]
-  dt[B_COUNTRY == 'SK', value := NA_real_]
-  dt[B_COUNTRY == 'SL', value := NA_real_]
+  dt[B_COUNTRY == 'SE', value := osi_c_magnesium_se(B_LU = B_LU, A_MG_AL = A_MG_AL)]
+  dt[B_COUNTRY == 'SK', value := osi_c_magnesium_sk(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_M3 = A_MG_M3)]
+  dt[B_COUNTRY == 'SL', value := osi_c_magnesium_sk(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_AL = A_MG_AL)]
   
   # Poland (PL), United Kingdom (UK)
-  dt[B_COUNTRY == 'PL', value := NA_real_]
-  dt[B_COUNTRY == 'UK', value := NA_real_]
+  dt[B_COUNTRY == 'PL', value := osi_c_magnesium_pl(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_CC = A_MG_CC)]
+  dt[B_COUNTRY == 'UK', value := osi_c_magnesium_uk(B_LU = B_LU,A_SOM_LOI = A_SOM_LOI,A_MG_AN = A_MG_AN)]
   
   # select the output variable
   value <- dt[,value]
@@ -376,6 +428,40 @@ osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC) {
   return(value)
 }
 
+#' Calculate the magnesium availability index in Denmark
+#' 
+#' This function calculates the magnesium availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_MG_AL (numeric) The K-content of the soil extracted with ammonium lactate (mg Mg / kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_magnesium_dk(B_LU = 265,A_MG_AL = 5)
+#' osi_c_magnesium_dk(B_LU = c(265,1019),A_MG_AL = c(3.5,5.5)))
+#' 
+#' @return 
+#' The magnesium availability index in Denmark derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_c_magnesium_dk <- function(B_LU, A_MG_AL) {
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_MG_AL = A_MG_AL,
+                   value = NA_real_)
+  
+  # evaluation soil Mg status, only threshold at optimum level is given (IFS, Ristimaki et al. (2007))
+  dt[, value := OBIC::evaluate_logistic(A_K_AL, b = 0.07792559   , x0 = 0.53507550    , v = 0.08751223  )]
+  
+  # select value 
+  value <- dt[,value]
+  
+  # return value
+  return(value)
+}
 #' Calculate the magnesium availability index in Estonia
 #' 
 #' This function calculates the magnesium availability. 
@@ -452,6 +538,151 @@ osi_c_magnesium_ee <- function(A_MG_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
   return(value)
   
 }
+
+#' Calculate the magnesium availability index in Spain
+#' 
+#' This function calculates the magnesium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_MG_CO_PO (numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_magnesium_es(A_MG_CO_PO = 4.5)
+#' 
+#' @return 
+#' The magnesium availability index in Spain estimated from the magnesium occupation at CEC. A numeric value.
+#' 
+#' @export
+osi_c_magnesium_es <- function(A_MG_CO_PO,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_MG_CO_PO = A_MG_CO_PO,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # convert to the OSI score
+  dt[,value := osi_evaluate_logistic(x = A_MG_CO_PO, b= 0.25752413 ,x0 = -8.39867874,v = 0.03108629)]
+ 
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
+#' Calculate the magnesium availability index in Finland
+#' 
+#' This function calculates the magnesium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
+#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
+#' @param A_MG_AAA (numeric) The exchangeable Mg-content of the soil measured via ammonium acetate extraction (mg Mg / kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_magnesium_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_MG_AAA = 45)
+#' 
+#' @return 
+#' The magnesium availability index in Finland estimated from extractable magnesium. A numeric value.
+#' 
+#' @export
+osi_c_magnesium_fi <- function(B_LU, B_TEXTURE_USDA, A_MG_AAA,A_C_OF = 0) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='FI']
+  
+  # parameters
+  dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_k']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   B_TEXTURE_USDA = B_TEXTURE_USDA,
+                   B_SOILTYPE_AGR = NA_character_,
+                   A_MG_AAA = A_MG_AAA,
+                   value = NA_real_)
+  
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU', 
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
+  # set agricultural soiltype
+  dt[A_C_OF > 200, B_SOILTYPE_AGR := 'organic']
+  dt[grepl('^Cl$|^SiCL$|^SaCL$',B_TEXTURE_USDA), B_SOILTYPE_AGR := 'clay']  
+  dt[grepl('^ClLo$|^SiClLo$|^Lo$|^SiLo$|^LoSa$|^Si$|^SaClLo$',B_TEXTURE_USDA), B_SOILTYPE_AGR := 'loam']
+  dt[is.na(B_SOILTYPE_AGR),B_SOILTYPE_AGR := 'sand']
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # evaluate the OSI score for Mg status, only threshold at optimum level is given (IFS, Ristimaki et al. (2007))
+  dt[B_SOILTYPE_AGR %in% c('sand','organic'), value := osi_evaluate_logistic(x = A_MG_AAA, b= 0.04239632 ,x0 = 0.53855312 ,v = 0.14653214 )]
+  dt[B_SOILTYPE_AGR == 'loam', value := osi_evaluate_logistic(x = A_MG_AAA, b= 0.04239632 ,x0 = 0.53855312 ,v = 0.14653214 )]
+  dt[B_SOILTYPE_AGR == 'clay', value := osi_evaluate_logistic(x = A_MG_AAA, b= 0.02578294  ,x0 = 0.55427721  ,v = 0.14196990  )]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
 
 #' Calculate the Mg availability index for France 
 #' 
@@ -591,6 +822,84 @@ osi_c_magnesium_hu <- function(B_TEXTURE_USDA,A_MG_KCL,B_LU = NA_character_) {
      value := osi_evaluate_logistic(x = A_MG_KCL,b= 0.05181633 ,x0 = 2.39759172 ,v = 2.39759172 )]
   dt[B_TEXTURE_USDA %in% c('clay','clay loam','silty clay','silty clay loam','silt loam','silt'),
      value := osi_evaluate_logistic(x = A_MG_KCL, b= 0.05181633 ,x0 = 2.39759172 ,v = 2.39759172 )]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
+#' Calculate the magnesium availability index in Italy
+#' 
+#' This function calculates the magnesium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_MG_CO_PO (numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+#' @param A_K_CO_PO (numeric) The exchangeable K-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_magnesium_it(A_MG_CO_PO = 4.5,A_K_CO_PO = 3)
+#' 
+#' @return 
+#' The magnesium availability index in Italy estimated from the Mg extracted soil pool, expressed as occupation of the CEC. A numeric value.
+#' 
+#' @export
+osi_c_magnesium_it <- function(A_MG_CO_PO,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_MG_CO_PO = A_MG_CO_PO,
+                   v1 = NA_real_,
+                   v2 = NA_real_,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # add ratio Mg over K (molar or mass??)
+  dt[, fr_mg_k := A_MG_CO_PO / A_K_CO_PO]
+  
+  # calculate the OSI score for Mg occupation
+  dt[,v1 := osi_evaluate_logistic(x = A_MG_CO_PO, b= 1.329855 ,x0 = 1.796094 ,v = 0.629399)]
+  
+  # calculate the OSI score for Mg K ratio
+  dt[,v2 := osi_evaluate_logistic(x = fr_mg_k, b= 1.34913097 ,x0 = -2.11085890 ,v = 0.01403961 )]
+  
+  # get lowest score
+  dt[, value := pmin(v1,v2,na.rm=T)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -1014,6 +1323,72 @@ osi_c_magnesium_pl <- function(A_MG_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   # calculate the OSI score for heavy textured soils
   dt[B_TEXTURE_HYPRES %in% c('F','VF'),
      value := osi_evaluate_logistic(x = A_MG_CC, b= 0.125275181,x0 = 2.612899607,v = 0.004850648)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
+#' Calculate the magnesium availability index in Sweden
+#' 
+#' This function calculates the magnesium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_MG_AL (numeric) The exchangeable Mg-content of the soil measured via ammonium lactate (mg K/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_magnesium_se(A_MG_AL = 45)
+#' 
+#' @return 
+#' The magnesium availability index in Sweden estimated from the Mg extracted soil pool. A numeric value.
+#' 
+#' @export
+osi_c_magnesium_se <- function(A_MG_AL,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_MG_AL = A_MG_AL,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # convert to the OSI score
+  dt[,value := osi_evaluate_logistic(x = A_MG_M3, b= 0.923539575,x0 = -2.901659957,v = 0.004982924)]
   
   # set the order to the original inputs
   setorder(dt, id)
