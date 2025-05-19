@@ -57,6 +57,9 @@ osi_erosion <- function(B_LU, B_TEXTURE_USDA, A_SOM_LOI,A_CLAY_MI,A_SAND_MI) {
   #             by.y = 'osi_threshold_cropcat',
   #             all.x = TRUE)
   
+  # estimate texture class
+  dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  
   # calculate soil permeability class based on soil texture
   dt[B_TEXTURE_USDA=='Sa', perm := 1]
   dt[B_TEXTURE_USDA=='SaL', perm := 2]
