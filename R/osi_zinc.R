@@ -3,6 +3,8 @@
 #' This function calculates the zinc availability for all European countries (if available). 
 #' 
 #' @param B_LU (numeric) The crop code
+#' @param A_CLAY_MI (numeric) The clay content (\%)
+#' @param A_SAND_MI (numeric) The sand content (\%)
 #' @param A_PH_WA (numeric) The acidity of the soil, measured in water (-)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-) 
 #' @param A_ZN_EDTA (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by EDTA 
@@ -19,17 +21,24 @@
 #' The capacity of the soil to supply and buffer zinc, evaluated given an optimum threshold for yield. A numeric value.
 #' 
 #' @export
-osi_c_zinc <- function(B_LU, A_PH_WA = NA_real_,A_PH_CC = NA_real_,A_ZN_EDTA = NA_real_,A_ZN_CC = NA_real_, B_COUNTRY) {
+osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
+                       A_PH_WA = NA_real_,A_PH_CC = NA_real_,
+                       A_ZN_EDTA = NA_real_,A_ZN_CC = NA_real_, B_COUNTRY) {
   
   # add visual bindings
   value = NULL
   
   # desired length of inputs
-  arg.length <- max(length(B_LU), length(A_PH_WA), length(A_ZN_EDTA), length(A_PH_CC),length(A_PH_CC))
+  arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),
+                    length(A_PH_WA), length(A_PH_CC), 
+                    length(A_ZN_EDTA), length(A_ZN_CC))
   
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_SAND_MI = A_SAND_MI,
+                   A_SILT_MI = pmax(0,100 - A_CLAY_MI - A_SAND_MI),
                    B_COUNTRY = B_COUNTRY,
                    A_PH_WA = A_PH_WA,
                    A_PH_CC = A_PH_CC,
@@ -38,6 +47,11 @@ osi_c_zinc <- function(B_LU, A_PH_WA = NA_real_,A_PH_CC = NA_real_,A_ZN_EDTA = N
                    value = NA_real_
   )
   
+  # estimate missing soil properties
+  dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
+  dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
+  
+  
   # calculate the open soil index score for Zinc availability 
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
@@ -45,7 +59,7 @@ osi_c_zinc <- function(B_LU, A_PH_WA = NA_real_,A_PH_CC = NA_real_,A_ZN_EDTA = N
   dt[B_COUNTRY == 'BE', value := NA_real_]
   dt[B_COUNTRY == 'CH', value := NA_real_]
   dt[B_COUNTRY == 'CZ', value := NA_real_]
-  dt[B_COUNTRY == 'DE', value := NA_real_]
+  dt[B_COUNTRY == 'DE', value := osi_c_zinc_de(B_LU = B_LU,A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_ZN_EDTA = A_ZN_EDTA)]
   
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
@@ -56,7 +70,7 @@ osi_c_zinc <- function(B_LU, A_PH_WA = NA_real_,A_PH_CC = NA_real_,A_ZN_EDTA = N
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
   dt[B_COUNTRY == 'HU', value := NA_real_]
-  dt[B_COUNTRY == 'IE', value := NA_real_]
+  dt[B_COUNTRY == 'IE', value := osi_c_zinc_ie(B_LU = B_LU,A_SOM_LOI = A_SOM_LOI, A_PH_WA = A_PH_WA, A_ZN_EDTA = A_ZN_EDTA)]
   dt[B_COUNTRY == 'IT', value := NA_real_]
   dt[B_COUNTRY == 'LV', value := NA_real_]
   dt[B_COUNTRY == 'LT', value := NA_real_]
@@ -70,7 +84,7 @@ osi_c_zinc <- function(B_LU, A_PH_WA = NA_real_,A_PH_CC = NA_real_,A_ZN_EDTA = N
   
   # Poland (PL), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
-  dt[B_COUNTRY == 'UK', value := NA_real_]
+  dt[B_COUNTRY == 'UK', value := osi_c_zinc_uk(B_LU = B_LU,A_PH_WA = A_PH_WA, A_ZN_EDTA = A_ZN_EDTA)]
   
   # select the output variable
   out <- dt[,value]
