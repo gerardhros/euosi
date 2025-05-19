@@ -910,7 +910,7 @@ osi_c_posphor_it <- function(B_LU, A_P_OL) {
                    value = NA_real_)
   
   # evaluation P-Olsen for cropland and soil types
-  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.43987, x0 = -5.7314, v = 0.011909)]
+  dt[, value := osi_evaluate_logistic(A_P_OL, b = 0.43987, x0 = -5.7314, v = 0.011909)]
   
   # select value and return
   value <- dt[,value]
