@@ -4,6 +4,8 @@
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param B_SOILTYPE_AGR (character) The agricultural type of soil
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
 #' @param A_N_PMN (numeric) The potentially mineralizable N pool (mg N / kg soil) 
 #' @param B_COUNTRY (character) The country code
 #'  
@@ -18,33 +20,40 @@
 #' the normalized potentially mineralizable Nitrogen pool (mg N / kg), a numeric value, converted to an OSI score.
 #' 
 #' @export
-osi_b_pmn <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN, B_COUNTRY) {
+osi_b_pmn <- function(B_LU, B_SOILTYPE_AGR,A_CLAY_MI = NA_real_, A_N_PMN = NA_real_, A_N_RT = NA_real_, B_COUNTRY) {
   
   # add visual bindings
-  i_b_pmn = NULL
-  
+
   # note that qualitative checks on the inputs are done by the country specific functions
   
   # Check length of desired input
-  arg.length <- max(length(A_N_PMN), length(B_LU), length(B_SOILTYPE_AGR),length(B_COUNTRY))
+  arg.length <- max(length(A_N_PMN), length(B_LU), length(B_SOILTYPE_AGR),length(B_COUNTRY),length(A_N_RT))
   
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
-                   A_N_PMN = A_N_PMN,
                    B_LU = B_LU,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_N_RT = A_N_RT,
+                   A_N_PMN = A_N_PMN,
                    B_COUNTRY = B_COUNTRY,
                    value = NA_real_
                   )
   
+  # estimate A_N_PMN (mg N / kg) when missing
+  dt[is.na(A_N_PMN) & !is.na(A_N_RT), A_N_PMN := exp(-3.440931 + 1.1012449 * log(A_N_RT) - 0.055858 * log(A_CLAY_MI))]
+  
   # calculate the open soil index score for phosphor availability
-  dt[B_COUNTRY == 'NL', i_b_pmn := osi_b_pmn_nl(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, A_N_PMN = A_N_PMN)]
+  dt[B_COUNTRY == 'NL', value := osi_b_pmn_nl(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, A_N_PMN = A_N_PMN)]
+  
+  # calculate PMN for other countries
+  dt[B_COUNTRY != 'NL', value := osi_b_pmn_eu(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_N_RT = A_N_RT)]
   
   # select the output variable
-  out <- dt[,i_b_pmn]
+  value <- dt[,value]
   
   # return the OSI score
-  return(out)
+  return(value)
   
 }
 
@@ -98,6 +107,62 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
                                  b = dt.thresholds$osi_st_c1, 
                                  x0 = dt.thresholds$osi_st_c2,
                                  v = dt.thresholds$osi_st_c3)
+  # return value
+  return(value)
+}
+
+#' Calculate the index for the microbial biological activity across the EU
+#' 
+#' This function assesses the microbial biological activity (of microbes and fungi) via the Potentially Mineralizable N pool, also called PMN (or SoilLife by Eurofins in the past).
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_CLAY_MI (numeric) The aclay content of the soil (\%)
+#' @param A_N_RT (numeric) The total N content of the soil(mg N / kg soil) 
+#' 
+#' @import data.table
+#' @import OBIC
+#' 
+#' @examples 
+#' osi_b_pmn_eu(B_LU = 256, A_CLAY_MI = 4.5, A_N_RT = 1250)
+#' osi_b_pmn_eu(c(256,1027),c(4,48), c(3125,1450))
+#'
+#' @return 
+#' the normalized potentially mineralizable Nitrogen pool (mg N / kg), a numeric value, converted to an OSI score.
+#' 
+#' @export
+osi_b_pmn_eu <- function(B_LU, A_N_RT, A_CLAY_MI) {
+  
+  # add visual bindings
+  
+  # Load in the crops data set and the parms dataset
+  dt.crops <- as.data.table(euosi::osi_crops)
+  
+  # load and subset thresholds to Dutch situation for PMN
+  dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  dt.thresholds <- dt.thresholds[osi_country=='NL' & osi_indicator=='i_b_pmn']
+  
+  # check length and of arguments
+  arg.length <- max(length(A_N_RT), length(B_LU))
+
+  # make internal table
+  arg.length <- max(length(B_LU), length(A_N_RT), length(A_CLAY_MI))
+  
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_N_RT = A_N_RT
+                   )
+  
+  # predict PMN (based on Dutch emperical relationship)
+  # built on the large dataset of Dutch soils (R2 = 0.79, N=109.146 samples)
+  dt[, PMN := exp(-3.440931 + 1.1012449 * log(A_N_RT) - 0.055858 * log(A_CLAY_MI))]
+
+  # convert to OSI score
+  dt[, value := osi_evaluate_logistic(x = value,b = 0.2, x0 = 20,v = 1.2)]
+  
+  # select value
+  value <- dt[,value]
+  
   # return value
   return(value)
 }
