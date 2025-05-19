@@ -7,6 +7,10 @@
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
+#' @param A_CA_CO_PO (numeric) The calcium occupation of the CEC (\%)
+#' @param A_MG_CO_PO (numeric) The magnesium occupation of the CEC (\%)
+#' @param A_K_CO_PO (numeric) The potassium occupation of the CEC (\%)
+#' @param A_NA_CO_PO (numeric) The sodium occupation of the CEC (\%)
 #' @param A_PH_WA (numeric) The pH measured in h2o
 #' @param A_PH_CC (numeric) The pH measured in cacl2 
 #' @param A_PH_KCL (numeric) The pH measured in KCl
@@ -20,6 +24,7 @@
 #' @export
 osi_c_ph <- function(B_LU, A_CLAY_MI= NA_real_, A_SAND_MI = NA_real_,
                      A_SOM_LOI = NA_real_, A_C_OF = NA_real_,
+                     A_CA_CO_PO = NA_real_, A_MG_CO_PO = NA_real_,A_K_CO_PO = NA_real_, A_NA_CO_PO = NA_real_,
                      A_PH_WA = NA_real_, A_PH_CC= NA_real_, A_PH_KCL= NA_real_,
                      B_COUNTRY) {
   
@@ -27,8 +32,11 @@ osi_c_ph <- function(B_LU, A_CLAY_MI= NA_real_, A_SAND_MI = NA_real_,
   value = NULL
   
   # desired length of inputs
-  arg.length <- max(length(A_PH_CC), length(A_PH_KCL),length(A_PH_WA), length(B_LU),
-                    length(B_TEXTURE_USDA),length(B_LU),length(B_COUNTRY))
+  arg.length <- max(length(B_LU), length(A_CLAY_MI),length(A_SAND_MI),
+                    length(A_SOM_LOI),length(A_C_OF),
+                    length(A_PH_CC), length(A_MG_CO_PO),length(A_K_CO_PO), length(A_NA_CO_PO), 
+                    length(A_CA_CO_PO), length(A_PH_KCL),length(A_PH_WA), 
+                    length(B_COUNTRY))
   
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
@@ -38,6 +46,10 @@ osi_c_ph <- function(B_LU, A_CLAY_MI= NA_real_, A_SAND_MI = NA_real_,
                    A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
                    A_SOM_LOI = A_SOM_LOI,
                    A_C_OF = A_C_OF,
+                   A_CA_CO_PO = A_CA_CO_PO,
+                   A_MG_CO_PO = A_MG_CO_PO,
+                   A_K_CO_PO = A_K_CO_PO,
+                   A_NA_CO_PO = A_NA_CO_PO,
                    A_PH_CC = A_PH_CC,
                    A_PH_WA = A_PH_WA,
                    A_PH_KCL = A_PH_KCL,
@@ -53,42 +65,47 @@ osi_c_ph <- function(B_LU, A_CLAY_MI= NA_real_, A_SAND_MI = NA_real_,
   # estimate missing soil properties (from defaults in LUCAS)
   dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
   dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
+  dt[is.na(A_PH_KCL), A_PH_KCL := osi_conv_ph(element='A_PH_KCL',A_PH_CC = A_PH_CC,A_PH_WA = A_PH_WA)]
   dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
   dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
   
   # evaluate OSI index for pH
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
-  dt[B_COUNTRY == 'AT', value := NA_real_]
-  dt[B_COUNTRY == 'BE', value := NA_real_]
-  dt[B_COUNTRY == 'CH', value := NA_real_]
+  dt[B_COUNTRY == 'AT', value := osi_c_ph_at(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_PH_CC = A_PH_CC)]
+  dt[B_COUNTRY == 'BE', value := osi_c_ph_be(B_LU = B_LU, B_TEXTURE_BE = B_TEXTURE_BE, A_PH_KCL = A_PH_KCL)]
+  dt[B_COUNTRY == 'CH', value := oci_c_ph_ch(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_PH_WA = A_PH_WA, 
+                                             A_CA_CO_PO = A_CA_CO_PO, A_MG_CO_PO = A_MG_CO_PO, 
+                                             A_K_CO_PO = A_K_CO_PO, A_NA_CO_PO = A_NA_CO_PO)]
   dt[B_COUNTRY == 'CZ', value := NA_real_]
-  dt[B_COUNTRY == 'DE', value := NA_real_]
+  dt[B_COUNTRY == 'DE', value := osi_c_ph_de(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_C_OF = A_C_OF, 
+                                             A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_PH_CC = A_PH_CC)]
   
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
   dt[B_COUNTRY == 'EE', value := NA_real_]
   dt[B_COUNTRY == 'ES', value := NA_real_]
-  dt[B_COUNTRY == 'FR', value := osi_c_ph_fr(B_LU = B_LU,B_TEXTURE_USDA = B_TEXTURE_USDA,A_PH_WA = A_PH_WA)]
-  dt[B_COUNTRY == 'FI', value := NA_real_]
+  dt[B_COUNTRY == 'FR', value := osi_c_ph_fr(B_LU = B_LU,B_TEXTURE_GEPPA = B_TEXTURE_GEPPA,A_PH_WA = A_PH_WA)]
+  dt[B_COUNTRY == 'FI', value := osi_c_ph_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_PH_WA = A_PH_WA, A_C_OF = A_C_OF)]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
   dt[B_COUNTRY == 'HU', value := NA_real_]
-  dt[B_COUNTRY == 'IE', value := NA_real_]
+  dt[B_COUNTRY == 'IE', value := osi_c_ph_ie(B_LU = B_LU, A_PH_WA = A_PH_WA, A_SOM_LOI = A_SOM_LOI)]
   dt[B_COUNTRY == 'IT', value := NA_real_]
   dt[B_COUNTRY == 'LV', value := NA_real_]
   dt[B_COUNTRY == 'LT', value := NA_real_]
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
-  dt[B_COUNTRY == 'NL', value := NA_real_]
+  dt[B_COUNTRY == 'NL', value := osi_c_ph_nl(ID = id, B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
+                                             A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI, A_PH_CC = A_PH_CC)]
   dt[B_COUNTRY == 'NO', value := NA_real_]
-  dt[B_COUNTRY == 'SE', value := NA_real_]
+  dt[B_COUNTRY == 'SE', value := osi_c_ph_se(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI,A_PH_WA = A_PH_WA)]
   dt[B_COUNTRY == 'SK', value := NA_real_]
   dt[B_COUNTRY == 'SL', value := NA_real_]
   
   # Poland (PL), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
-  dt[B_COUNTRY == 'UK', value := NA_real_]
+  dt[B_COUNTRY == 'UK', value := osi_c_ph_uk(B_LU = B_LU, A_PH_WA = A_PH_WA, A_SOM_LOI = A_SOM_LOI)]
   
   # select the output variable
   value <- dt[,value]
@@ -98,6 +115,82 @@ osi_c_ph <- function(B_LU, A_CLAY_MI= NA_real_, A_SAND_MI = NA_real_,
   
 }
 
+#' Calculate the pH index in Austria
+#' 
+#' This function calculates the soil acidity
+#' 
+#' @param B_LU (character) The crop code
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#' @param A_PH_CC (numeric) The pH measured in cacl2
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_ph_at(A_PH_CC = 47,B_TEXTURE_HYPRES = 'C',B_LU='grass')
+#' 
+#' @return 
+#' The pH index in Austria, depending on land use and soil type. A numeric value.
+#' 
+#' @export
+osi_c_ph_at <- function(A_PH_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='PO']
+  
+  # parameters
+  # dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # thresholds
+  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
+  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                   A_PH_CC = A_PH_CC,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # merge thresholds
+  # dt <- merge(dt,
+  #             dt.thresholds,
+  #             by.x = 'B_SOILTYPE_AGR',
+  #             by.y = 'osi_threshold_soilcat',
+  #             all.x = TRUE)
+  
+  # https://ooe.lko.at/das-abc-der-d%C3%BCngung-teil-3-kalk+2400+3417995
+  
+  # calculate the OSI score light textured soils
+  dt[B_TEXTURE_HYPRES %in% c('C'),
+     value := osi_evaluate_logistic(x = A_PH_CC, b= 10.6100040,x0 = 4.5990197,v = 0.4430063)]
+  # calculate the OSI score medium texture soils
+  dt[B_TEXTURE_HYPRES %in% c('MF','M'),
+     value := osi_evaluate_logistic(x = A_PH_CC, b= 9.3631126,x0 = 5.0327400,v = 0.3688407)]
+  # calculate the OSI score for heavy textured soils
+  dt[B_TEXTURE_HYPRES %in% c('F','VF'),
+     value := osi_evaluate_logistic(x = A_PH_CC, b= 8.8363357,x0 = 5.5183950,v = 0.4419161)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
 #' Calculate the pH index for Belgium 
 #' 
 #' This function evaluates the pH index in Belgium
@@ -380,7 +473,7 @@ osi_c_ph_de <- function(B_LU,A_SOM_LOI, A_C_OF, A_CLAY_MI,A_SAND_MI, A_PH_CC) {
 #' This function evaluates the pH index in France
 #' 
 #' @param B_LU (character) The crop type
-#' @param B_TEXTURE_USDA (numeric) The soil textural class
+#' @param B_TEXTURE_GEPPA (character) The soil texture class in a particular region. 
 #' @param A_PH_WA (numeric) The pH measured in H2O
 #' 
 #' @import data.table
@@ -389,7 +482,7 @@ osi_c_ph_de <- function(B_LU,A_SOM_LOI, A_C_OF, A_CLAY_MI,A_SAND_MI, A_PH_CC) {
 #' The pH index in France estimated from pH in water, the textural class and the crop type
 #' 
 #' @export
-osi_c_ph_fr <- function(B_LU,B_TEXTURE_USDA, A_PH_WA) {
+osi_c_ph_fr <- function(B_LU,B_TEXTURE_GEPPA, A_PH_WA) {
   
   # set visual bindings
   osi_c_ph_fr = osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -412,15 +505,21 @@ osi_c_ph_fr <- function(B_LU,B_TEXTURE_USDA, A_PH_WA) {
   # check the values (update the limits later via dt.parms)
   checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
+  checkmate::assert_subset(B_TEXTURE_GEPPA, choices =c("L","LL","Ls","Lsa","La","LAS","AA","A","As","Als","Al","Sa","Sal","S","SS","Sl"), empty.ok = FALSE)
   checkmate::assert_numeric(A_PH_WA, lower = 0, upper = 14, any.missing = TRUE, len = arg.length)
   checkmate::assert_data_table(dt.thresholds,max.rows = 1)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
-                   B_TEXTURE_USDA = B_TEXTURE_USDA,
+                   B_TEXTURE_GEPPA = B_TEXTURE_GEPPA,
                    A_PH_WA = A_PH_WA,
                    value = NA_real_)
+  
+  # recategorise soil type to allow merging with internal table
+  dt[grepl('^L$|^Lsa$|^LAS$|^La$|^LL$|^Ls$',B_TEXTURE_GEPPA),B_SOILTYPE_AGR := 'loam']
+  dt[grepl('^SS$|^Sl$|^S$|^Sal$|^Sa$',B_TEXTURE_GEPPA),B_SOILTYPE_AGR := 'sand']
+  dt[is.na(B_SOILTYPE_AGR),B_SOILTYPE_AGR := 'other']
   
   # merge subset on crop class
   dt.sb <- dt[B_LU %in% c('BTN','BVF')][,cat_crop_ph := 'sugar beet']
@@ -430,11 +529,12 @@ osi_c_ph_fr <- function(B_LU,B_TEXTURE_USDA, A_PH_WA) {
                  by.y = 'osi_threshold_cropcat',
                  all.x = TRUE)
   
+  
   # merge subset on soil texture class
-  dt.other <- dt[B_LU %in% c('BTN','BVF')]
+  dt.other <- dt[!B_LU %in% c('BTN','BVF')]
   dt.other <- merge(dt.other,
                     dt.thresholds,
-                    by.x = 'B_TEXTURE_USDA',
+                    by.x = 'B_SOILTYPE_AGR',
                     by.y = 'osi_threshold_soilcat',
                     all.x = TRUE)
   
@@ -673,6 +773,73 @@ osi_c_ph_nl <- function(ID,B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC) 
   # return value
   return(value)
   
+}
+
+#' Calculate the pH index in Sweden
+#' 
+#' This function calculates the pH index 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_SOM_LOI (numeric) The organic matter content of soil in percentage
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_PH_WA (numeric) The pH measured in water
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_ph_ie(B_LU = 265,A_PH_WA = 5)
+#' osi_c_ph_ie(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5))
+#' 
+#' @return 
+#' The pH index in Sweden. A numeric value.
+#' 
+#' @export
+osi_c_ph_se <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_PH_WA) {
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_CLAY_MI=A_CLAY_MI,
+                   A_P_WA = A_P_WA,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1,crop_name)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # pH evaluation for peat soils
+  dt[A_SOM_LOI > 20, value := osi_evaluate_logistic(A_P_WA, b = 4.538515 , x0 = 1.518938 , v = 1.412605e-07)]
+  
+  # evaluation for SOM <6%
+  dt[A_SOM_LOI <= 6 & A_CLAY <= 5, value := osi_evaluate_logistic(A_P_WA, b = 8.8363357, x0 = 5.5183950, v = 0.4419161)]
+  dt[A_SOM_LOI <= 6 & A_CLAY_MI > 5 & A_CLAY_MI <= 25, value := osi_evaluate_logistic(A_P_WA, b = 7.052878824, x0 = 5.108970970, v = 0.007202975)]
+  dt[A_SOM_LOI <= 6 & A_CLAY_MI > 25, value := osi_evaluate_logistic(A_P_WA, b = 7.8120295, x0 = 5.9273987, v = 0.3275014)]
+  
+  # evaluaton for SOM 6-12%
+  dt[A_SOM_LOI > 6 & A_SOM_LOI <= 12 & A_CLAY <= 5, value := osi_evaluate_logistic(A_P_WA, b = 6.929731, x0 = 3.054091, v = 9.544093e-08)]
+  dt[A_SOM_LOI > 6 & A_SOM_LOI <= 12 & A_CLAY_MI > 5 & A_CLAY_MI <= 25, value := osi_evaluate_logistic(A_P_WA, b = 8.8363357, x0 = 5.5183950, v = 0.4419161)]
+  dt[A_SOM_LOI > 6 & A_SOM_LOI <= 12 & A_CLAY_MI > 25, value := osi_evaluate_logistic(A_P_WA, b = 4.122796, x0 = 1.719736, v = 4.590169e-07)]
+  
+  # evaluaton for SOM 12-20%
+  dt[A_SOM_LOI > 6 & A_SOM_LOI <= 12 & A_CLAY <= 5, value := osi_evaluate_logistic(A_P_WA, b = 9.3631126 , x0 = 5.0327400 , v = 0.3688407)]
+  dt[A_SOM_LOI > 6 & A_SOM_LOI <= 12 & A_CLAY_MI > 5 & A_CLAY_MI <= 25, value := osi_evaluate_logistic(A_P_WA, b = 8.2118736723 , x0 = 4.1043449126 , v = 0.0008085829 )]
+  dt[A_SOM_LOI > 6 & A_SOM_LOI <= 12 & A_CLAY_MI > 25, value := osi_evaluate_logistic(A_P_WA, b = 9.4672526, x0 = 5.1501833 , v = 0.4411129 )]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # select value
+  value <- dt[, value]
+  
+  # return
+  return(value)
 }
 
 #' Calculate the pH index in United Kingdom
