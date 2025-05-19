@@ -3,18 +3,18 @@
 #' This function calculates the biodiversity index bsed on soil organic matter and pH.
 #' 
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
-#' @param A_PH_WA (numeric) The pH measured in h2o
+#' @param A_PH_CC (numeric) The pH measured in CaCl2 solution
 #' 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_biodiversity(A_SOM_LOI = 3,A_PH_WA = 4.5)
+#' osi_biodiversity(A_SOM_LOI = 3,A_PH_CC = 4.5)
 #' 
 #' @return 
 #' The biodiversity index. A numeric value.
 #' 
 #' @export
-osi_biodiversity <- function(A_SOM_LOI, A_PH_WA) {
+osi_biodiversity <- function(A_SOM_LOI, A_PH_CC) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -30,8 +30,11 @@ osi_biodiversity <- function(A_SOM_LOI, A_PH_WA) {
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    A_SOM_LOI = A_SOM_LOI,
-                   A_PH_WA = A_PH_WA,
+                   A_PH_CC = A_PH_CC,
                    value = NA_real_)
+  
+  # estimate pH water from pH CaCl2
+  dt[, A_PH_WA := osi_conv_ph('A_PH_WA', A_PH_CC = A_PH_CC)]
   
   # evaluate OSI score for pH condition supporting biodiversity
   dtt.ph <- dt.thresholds[osi_indicator == 'i_b_ph']
