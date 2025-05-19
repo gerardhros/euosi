@@ -4,19 +4,20 @@
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param B_BGZ (factor) an European region-id used for carbon analyses 
-#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #'  
 #' @import data.table
 #' 
 #' @examples 
-#' osi_carbon(B_LU,A_C_OF, B_BGZ,B_TEXTURE_HYPRES)
+#' osi_carbon(B_LU,A_C_OF, B_BGZ,A_CLAY_MI=5,A_SAND_MI=25)
 #' 
 #' @return 
 #' The carbon index. A numeric value.
 #' 
 #' @export
-osi_carbon <- function(B_LU,A_C_OF, B_BGZ,B_TEXTURE_HYPRES) {
+osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -36,9 +37,14 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,B_TEXTURE_HYPRES) {
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    B_BGZ = B_BGZ,
-                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_SAND_MI = A_SAND_MI,
+                   A_SILT_MI = pmax(0,100 - A_CLAY_MI - A_SAND_MI),
                    A_C_OF = A_C_OF,
                    value = NA_real_)
+  
+  # estimate texture HYPRES
+  dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI,type=='code')]
   
   # merge with crop code
   dt <- merge(dt,
