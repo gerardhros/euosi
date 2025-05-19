@@ -3,8 +3,10 @@
 #' This function calculates the boron availability for all European countries (if available). 
 #' 
 #' @param B_LU (numeric) The crop code
-#' @param A_B_HW (numeric) The plant available content of B in the soil (mg  Cu per kg) extracted by hot water
 #' @param A_CLAY_MI (numeric) The clay content (\%)
+#' @param A_SAND_MI (numeric) The sand content (\%)
+#' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+#' @param A_B_HW (numeric) The plant available content of B in the soil (mg  Cu per kg) extracted by hot water
 #' @param B_COUNTRY (character) The country code
 #' 
 #' @import data.table
@@ -13,55 +15,72 @@
 #' The capacity of the soil to supply and buffer boron, evaluated given an optimum threshold for yield. A numeric value.
 #' 
 #' @export
-osi_c_boron <- function(B_LU,A_CLAY_MI,A_B_HW, B_COUNTRY) {
+osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_COUNTRY) {
   
   # add visual bindings
   i_c_bo = NULL
   
   # desired length of inputs
-  arg.length <- max(length(A_CLAY_MI), length(A_B_HW), length(B_LU))
+  arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),
+                    length(A_SOM_LOI), length(A_PH_CC), 
+                    length(A_B_HW), length(B_COUNTRY))
   
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_B_HW = A_B_HW,
                    B_LU = B_LU,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_SAND_MI = A_SAND_MI,
+                   A_SILT_MI = pmax(0,100 - A_CLAY_MI - A_SAND_MI),
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_PH_CC = A_PH_CC,
+                   A_B_HW = A_B_HW,
+                   B_COUNTRY = B_COUNTRY,
                    value = NA_real_
                    )
+  
+  # estimate texture information
+  dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_BE := osi_get_TEXTURE_BE(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[,B_TEXTURE_GEPPA := osi_get_TEXTURE_GEPPA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  
+  # estimate missing soil properties
+  dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
+  dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
   
   # calculate the OSI score for boron
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
   dt[B_COUNTRY == 'AT', value := NA_real_]
   dt[B_COUNTRY == 'BE', value := NA_real_]
-  dt[B_COUNTRY == 'CH', value := NA_real_]
+  dt[B_COUNTRY == 'CH', value := osi_c_boron_ch(B_LU = B_LU, A_B_HW = A_B_HW)]
   dt[B_COUNTRY == 'CZ', value := NA_real_]
-  dt[B_COUNTRY == 'DE', value := NA_real_]
+  dt[B_COUNTRY == 'DE', value := osi_c_boron(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_PH_CC = A_PH_CC, A_B_HW = A_B_HW)]
   
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
   dt[B_COUNTRY == 'EE', value := NA_real_]
   dt[B_COUNTRY == 'ES', value := NA_real_]
-  dt[B_COUNTRY == 'FR', value :=  osi_c_boron_fr(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_B_HW = A_B_HW)]
+  dt[B_COUNTRY == 'FR', value := osi_c_boron_fr(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_B_HW = A_B_HW)]
   dt[B_COUNTRY == 'FI', value := NA_real_]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
   dt[B_COUNTRY == 'HU', value := NA_real_]
-  dt[B_COUNTRY == 'IE', value := NA_real_]
+  dt[B_COUNTRY == 'IE', value := osi_c_boron_ie(B_LU = B_LU, A_B_HW = A_B_HW)]
   dt[B_COUNTRY == 'IT', value := NA_real_]
   dt[B_COUNTRY == 'LV', value := NA_real_]
   dt[B_COUNTRY == 'LT', value := NA_real_]
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
-  dt[B_COUNTRY == 'NL', value := NA_real_]
+  dt[B_COUNTRY == 'NL', value := osi_c_boron_nl(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_SOM_LOI = A_SOM_LOI, A_B_HW = A_B_HW)]
   dt[B_COUNTRY == 'NO', value := NA_real_]
-  dt[B_COUNTRY == 'SE', value := NA_real_]
+  dt[B_COUNTRY == 'SE', value := osi_c_boron_se(B_LU = B_LU, A_PH_WA = A_PH_WA)]
   dt[B_COUNTRY == 'SK', value := NA_real_]
   dt[B_COUNTRY == 'SL', value := NA_real_]
   
   # Poland (PL), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
-  dt[B_COUNTRY == 'UK', value := NA_real_]
+  dt[B_COUNTRY == 'UK', value := osi_c_boron_nl(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,A_B_HW = A_B_HW)]
   
   # select the output variable
   value <- dt[,value]
@@ -406,6 +425,50 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
   
   return(value)
   
+}
+
+#' Calculate the boron availability index in Sweden
+#' 
+#' This function calculates the boron availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_PH_WA (numeric) The pH measured in water
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_boron_ie(B_LU = 265,A_PH_WA = 5.0)
+#' osi_c_boron_ie(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5))
+#' 
+#' @return 
+#' The boron availability index in Sweden depends primarily on pH. A numeric value.
+#' 
+#' @export
+osi_c_boron_sw <- function(B_LU, A_PH_WA) {
+  
+  # crop properties
+  dt.crops <- as.data.table(euosi::osi_crops)
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_PH_WA = A_PH_WA,
+                   value = NA_real_)
+  
+  # merge with crop
+  # dt <- merge(dt,
+  #             dt.crops[,.(B_LU, crop_name, crop_cat1)],
+  #             by = 'B_LU',
+  #             all.x = TRUE)
+  
+  # evaluate risk based OSI
+  dt[,value := osi_evaluate_logistic(x = A_PH_WA, b = 3.675897945, x0 = 3.750990339, v = 0.001025269)]
+  
+  # select value
+  value <- dt[,value]
+  
+  # return value
+  return(value)
 }
 
 #' Calculate the boron availability index in United Kingdom
