@@ -1166,3 +1166,109 @@ spool <- c(0.1,60,(70+100)/2,(110+150)/2,160,300)
 spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
 p0 <- list(b = 0.09371117, x0 =0.50, v = 0.07407514)
 findoptvalue(spool,spoolopt,p0)
+
+# spain, magnesium, CEC occupation
+spool <- c(0.1,2,7.5,(10+20)/2,21,25)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 =0.50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# sweden, magnesium, A_MG_AL
+spool <- c(0.1,2,3.5,(4+10)/2,11,15)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 =0.50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# italy, magnesium, CEC occupation
+spool <- c(0.1,1,2.5,(3+5)/2,5,10)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 =0.50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# italy, Mg-K ratio
+spool <- c(0.1,0.5,1.5,(2+6)/2,6.5,10)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 =0.50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# denmark potassium, IFS
+spool <- c(0.1,0.2*200,.4*200,(200+250)/2,251,350)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 =0.50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# denmark magnesiu, IFS
+spool <- c(0.1,0.2*100,.4*100,(100+125)/2,126,150)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 =0.50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# finland, sand and peat magnesiu, IFS
+spool <- c(0.1,0.2*120,.5*120,(120+200)/2,205,150)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 =0.50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# finland, loam magnesiu, IFS
+spool <- c(0.1,0.2*200,.5*200,(200+400)/2,410,500)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 =0.50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Austria, pH arable, mineral, light
+spool <- c(4.5,5,5.2,5.4,5.5,5.8)*5/5.5
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 4.5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Austria, pH arable, mineral, mittel
+spool <- c(4.5,5,5.2,5.4,5.5,5.8)*5.5/5.5
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 4.5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Austria, pH arable, mineral, schwer
+spool <- c(4.5,5,5.2,5.4,5.5,5.8)*6/5.5
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 4.5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Sweden, only target is known, OS <6%, clay <5
+spool <- c(4.5,5,5.2,5.4,5.5,5.8)*6/5.5
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 4.5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Sweden, only target is known, OS <6%, clay 5-25
+spool <- c(4.5,5,5.2,5.4,5.5,5.8)*6.25/5.5
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 4.5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Sweden, only target is known, OS <6%, clay >25
+spool <- c(4.5,5,5.2,5.4,5.5,5.8)*6.5/5.5
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 4.5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Sweden, trial for others
+spool <- c(4.5,5,5.2,5.4,5.5,5.8)*7.5/5.5
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 4.5, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# generic, 150 kg NLV
+spool <- c(5,15,45,85,150,250)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 45, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
