@@ -94,7 +94,6 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   dt[is.na(A_CEC_CO), A_CEC_CO := (0.44 * A_PH_WA + 3)* A_CLAY_MI + (5.1 * A_PH_WA - 5.9) * A_C_OF * 0.1]
   
   # estimate extrable soil K pools when not available
-  dt[,A_K_AAA := osi_conv_potassium(element='A_K_AAA',A_K_AAA = A_K_AAA)]
   dt[,A_K_AL := osi_conv_potassium(element='A_K_AL',A_K_AAA = A_K_AAA)]
   dt[,A_K_AN := osi_conv_potassium(element='A_K_AN',A_K_AAA = A_K_AAA)]
   dt[,A_K_CAL:= osi_conv_potassium(element='A_K_CAL',A_K_AAA = A_K_AAA)]
@@ -260,6 +259,9 @@ osi_c_potassium_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_) {
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'BE' & osi_indicator =='i_c_k']
+
+  # get max length of all input data
+  arg.length <- max(length(B_LU), length(B_TEXTURE_BE),length(A_K_AAA))
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -697,6 +699,9 @@ osi_c_potassium_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0) {
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_k']
+  
+  # get max length of all input data
+  arg.length <- max(length(B_LU), length(B_TEXTURE_USDA),length(A_K_AAA))
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1257,12 +1262,12 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(dt.soils$osi_soil_cat1), empty.ok = FALSE)
-  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_K_CC, lower = 0, upper = 800, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_K_CO_PO, lower = 0.1, upper = 50, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_CEC_CO, lower = 1, upper = 1000, any.missing = FALSE, len = arg.length)
+  # checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  # checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  # checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = FALSE, len = arg.length)
+  # checkmate::assert_numeric(A_K_CC, lower = 0, upper = 800, any.missing = FALSE, len = arg.length)
+  # checkmate::assert_numeric(A_K_CO_PO, lower = 0.1, upper = 50, any.missing = FALSE, len = arg.length)
+  # checkmate::assert_numeric(A_CEC_CO, lower = 1, upper = 1000, any.missing = FALSE, len = arg.length)
   checkmate::assert_data_table(dt.thresholds,max.rows = 6, min.rows = 6)
   
   # Collect the data

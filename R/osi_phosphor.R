@@ -83,13 +83,14 @@ osi_c_posphor <- function(B_LU,
   
   # estimate missing soil properties from P-Olsen (default in LUCAS)
   dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
-  dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
-  dt[is.na(A_P_AL) & is.na(A_P_OL), A_P_AL := osi_conv_phosphor(element='A_P_AL',A_P_OL = A_P_OL,A_PH_CC = A_PH_CC)]
-  dt[is.na(A_P_CAL) & is.na(A_P_OL), A_P_CAL := osi_conv_phosphor(element='A_P_CAL',A_P_OL = A_P_OL)]
-  dt[is.na(A_P_DL) & is.na(A_P_OL), A_P_DL := osi_conv_phosphor(element='A_P_DL',A_P_OL = A_P_OL)]
-  dt[is.na(A_P_AAA) & is.na(A_P_OL), A_P_AAA := osi_conv_phosphor(element='A_P_AAA',A_P_OL = A_P_OL)]
-  dt[is.na(A_P_M3) & is.na(A_P_OL), A_P_M3 := osi_conv_phosphor(element='A_P_M3',A_P_OL = A_P_OL)]
-  dt[is.na(A_P_WA) & is.na(A_P_OL), A_P_WA := osi_conv_phosphor(element='A_P_WA',A_P_OL = A_P_OL)]
+  dt[!is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
+  dt[is.na(A_P_AL) & !is.na(A_P_OL), A_P_AL := osi_conv_phosphor(element='A_P_AL',A_P_OL = A_P_OL,A_PH_CC = A_PH_CC)]
+  dt[is.na(A_P_CAL) & !is.na(A_P_OL), A_P_CAL := osi_conv_phosphor(element='A_P_CAL',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_DL) & !is.na(A_P_OL), A_P_DL := osi_conv_phosphor(element='A_P_DL',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_AAA) & !is.na(A_P_OL), A_P_AAA := osi_conv_phosphor(element='A_P_AAA',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_M3) & !is.na(A_P_OL), A_P_M3 := osi_conv_phosphor(element='A_P_M3',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_WA) & !is.na(A_P_OL), A_P_WA := osi_conv_phosphor(element='A_P_WA',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_CC) & !is.na(A_P_OL), A_P_CC := osi_conv_phosphor(element='A_P_CC',A_P_OL = A_P_OL)]
   
   # calculate the OSI score per country
   
@@ -234,6 +235,9 @@ osi_c_posphor_be <- function(B_LU, A_P_AL) {
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'BE' & osi_indicator =='i_c_p']
+  
+  # get length of input arguments
+  arg.length <- max(length(B_LU),length(A_P_AL))
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -625,6 +629,9 @@ osi_c_posphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0) {
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # get length of input arguments
+  arg.length <- max(length(B_LU),length(B_TEXTURE_USDA),length(A_P_AAA))
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,

@@ -340,9 +340,9 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
   osi_country = osi_indicator = NULL
   
   # Load in the datasets
-  crops.obic <- as.data.table(OBIC::crops.obic)
-  setkey(crops.obic, crop_code)
-
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'NL']
+  
   # load and subset thresholds for situation in NL
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country=='NL' & osi_indicator=='i_c_zn']
@@ -351,8 +351,8 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
   arg.length <- max(length(B_LU), length(A_ZN_CC), length(A_PH_CC))
   checkmate::assert_numeric(A_ZN_CC, lower = 5, upper = 50000, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(crops.obic$crop_code), empty.ok = FALSE)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
 
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
@@ -364,13 +364,15 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
                   )
   
   # merge properties form crop category and soil type
-  dt <- merge(dt, crops.obic[, list(crop_code, crop_category)], by.x = "B_LU", by.y = "crop_code")
+  dt <- merge(dt, 
+              dt.crops[, list(crop_code, crop_cat1)],
+              by.x = "B_LU", by.y = "crop_code")
 
   # Calculate Zn-availability
-  dt[crop_category =='akkerbouw', D_ZN := 10^(0.88 + 0.56 * log10(A_ZN_CC*0.001) + 0.13 * A_PH_CC)]
-  dt[crop_category =='mais', D_ZN := 10^(0.88 + 0.56 * log10(A_ZN_CC*0.001) + 0.13 * A_PH_CC)]
-  dt[crop_category =='natuur', D_ZN := 0]
-  dt[crop_category =='grasland', D_ZN := 10^(-1.04 + 0.67 * log10(A_ZN_CC*0.001) + 0.5 * A_PH_CC)]
+  dt[crop_cat1 =='arable', D_ZN := 10^(0.88 + 0.56 * log10(A_ZN_CC*0.001) + 0.13 * A_PH_CC)]
+  dt[crop_cat1 =='maize', D_ZN := 10^(0.88 + 0.56 * log10(A_ZN_CC*0.001) + 0.13 * A_PH_CC)]
+  dt[crop_cat1 =='nature', D_ZN := 0]
+  dt[crop_cat1 =='grassland', D_ZN := 10^(-1.04 + 0.67 * log10(A_ZN_CC*0.001) + 0.5 * A_PH_CC)]
   
   # Too high values for Zn-availability are prevented
   dt[D_ZN > 250, D_ZN := 250]

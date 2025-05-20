@@ -23,7 +23,8 @@
 #' the capacity of soils to supply  nitorgen, converted to an OSI score.
 #' 
 #' @export
-osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_SOM_LOI = NA_real_,A_C_OF = NA_real_,
+osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_real_,
+                           A_SAND_MI = NA_real_,A_SOM_LOI = NA_real_,A_C_OF = NA_real_,
                            A_N_RT, A_CACO3_IF = NA_real_, B_COUNTRY) {
   
   # add visual bindings
@@ -38,10 +39,13 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
-                   B_COUNTRY = B_COUNTRY,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_SAND_MI = A_SAND_MI,
+                   A_CACO3_IF = A_CACO3_IF,
                    A_SOM_LOI = A_SOM_LOI,
                    A_C_OF = A_C_OF,
                    A_N_RT = A_N_RT, 
+                   B_COUNTRY = B_COUNTRY,
                    value = NA_real_  
                    )
   
@@ -135,6 +139,10 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'FR' & osi_indicator =='i_c_n']
   
+  # max length of input parameters
+  arg.length <- max(length(B_LU), length(A_N_RT), length(A_C_OF), 
+                    length(A_CLAY_MI), length(A_SAND_MI),length(A_CACO3_IF))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -142,7 +150,7 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
                    A_CLAY_MI = A_CLAY_MI,
                    A_C_OF = A_C_OF,
                    A_N_RT = A_N_RT,
-                   A_CACO_IF = A_CACO_IF,
+                   A_CACO3_IF = A_CACO3_IF,
                    value = NA_real_)
   
   # estimate bulk density
@@ -150,7 +158,7 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
   
   # estimate helper variables
   dt[,D_NHA := A_N_RT * 0.2 * D_BDS * 10000 * 1000 * 10^-6]
-  dt[,D_NSC := (22/((12+A_CLAY_MI)*(545+A_CACO_IF))) * D_NHA * 21.35 * 0.33]
+  dt[,D_NSC := (22/((12+A_CLAY_MI)*(545+A_CACO3_IF))) * D_NHA * 21.35 * 0.33]
   
   # merge crop properties
   dt <- merge(dt,
@@ -203,6 +211,11 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
                               A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
                               A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
   
+  # max length of input parameters
+  arg.length <- max(length(B_LU), 
+                    length(A_CLAY_MI), length(A_SAND_MI),
+                    length(A_SOM_LOI), length(A_C_OF),length(A_N_RT)) 
+                    
   # Collect data in an internal table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -293,7 +306,8 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
   dt.thresholds <- dt.thresholds[osi_country=='FR' & osi_indicator=='i_c_n']
   
   # check length and of arguments
-  arg.length <- max(length(A_N_RT), length(A_C_OF),length(B_LU), length(A_CACO3_IF),length(A_SAND_MI))
+  arg.length <- max(length(A_N_RT), length(A_C_OF),length(B_LU), 
+                    length(A_CACO3_IF),length(A_SAND_MI),length(A_CLAY_MI))
   checkmate::assert_numeric(A_N_RT, lower = 0.1, upper = 30000, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_C_OF, lower = 0, upper = 3000, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_SAND_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
@@ -461,7 +475,8 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_nitrogen_tmp
+#' osi_c_nitrogen_eu(B_LU = 'T1',A_CLAY_MI = 2.5, A_SAND_MI = 45, A_SOM_LOI = 4.5, A_C_OF = 22, A_N_RT=1240)
+#' osi_c_nitrogen_eu(B_LU = c('T1','T2'),A_CLAY_MI = c(2.5,5.5), A_SAND_MI = c(45,45), A_SOM_LOI = c(4.5,7.5), A_C_OF = c(22,18), A_N_RT=c(1240,800))
 #' 
 #' @return 
 #' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
@@ -479,13 +494,17 @@ osi_c_nitrogen_eu <- function(B_LU = NA_character_,
   # load and subset thresholds 
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   
-  # check length and of arguments
-  arg.length <- max(length(B_LU),length(A_CLAY_MI),length(A_SAND_MI),length(A_SOM_LOI),length(A_C_OF),length(A_N_RT))
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_SAND_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_N_RT, lower = 0.1, upper = 30000, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_C_OF, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  # get length of function arguments
+  arg.length <- max(length(B_LU),
+                    length(A_CLAY_MI),length(A_SAND_MI),
+                    length(A_SOM_LOI),length(A_C_OF),length(A_N_RT))
+  
+  # check the inputs
+  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE)
+  checkmate::assert_numeric(A_SAND_MI, lower = 0, upper = 100, any.missing = FALSE)
+  checkmate::assert_numeric(A_N_RT, lower = 0.1, upper = 30000, any.missing = FALSE)
+  checkmate::assert_numeric(dt$A_SOM_LOI, lower = 0, upper = 100, any.missing = TRUE)
+  checkmate::assert_numeric(dt$A_C_OF, lower = 0, upper = 100, any.missing = TRUE)
   
   # Collect data in an internal table
   dt <- data.table(id = 1:arg.length,
@@ -497,7 +516,8 @@ osi_c_nitrogen_eu <- function(B_LU = NA_character_,
                    A_C_OF = A_C_OF,
                    A_N_RT = A_N_RT,
                    value = NA_real_
-  )
+                   )
+ 
   
   # estimate texture information
   # dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
@@ -508,10 +528,10 @@ osi_c_nitrogen_eu <- function(B_LU = NA_character_,
   # estimate missing soil properties (from defaults in LUCAS)
   dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
   dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
-  dt[,A_CN_FR : A_C_OF * 1000 / A_N_RT ]
+  dt[,A_CN_FR := A_C_OF * 1000 / A_N_RT ]
   
   # estimate bulk density via pedotransfer function
-  dt[, BDS := (1/(0.02525 * A_SOM_LOI + 0.6541)) * 1000]
+  dt[, B_DS := (1/(0.02525 * A_SOM_LOI + 0.6541)) * 1000]
   
   # set annual decomposition rate of 2%
   dt[, arate := 0.02]

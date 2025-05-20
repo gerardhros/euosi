@@ -3,6 +3,7 @@
 #' This function calculates the pH index for all European countries (if available). 
 #' 
 #' @param B_LU (numeric) The crop code
+#' @param B_SOILTYPE_AGR (character) The agricultural type of soil
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
@@ -22,7 +23,8 @@
 #' The index to evaluate the soil pH 
 #' 
 #' @export
-osi_c_ph <- function(B_LU, A_CLAY_MI= NA_real_, A_SAND_MI = NA_real_,
+osi_c_ph <- function(B_LU, 
+                     B_SOILTYPE_AGR = NA_character_, A_CLAY_MI= NA_real_, A_SAND_MI = NA_real_,
                      A_SOM_LOI = NA_real_, A_C_OF = NA_real_,
                      A_CA_CO_PO = NA_real_, A_MG_CO_PO = NA_real_,A_K_CO_PO = NA_real_, A_NA_CO_PO = NA_real_,
                      A_PH_WA = NA_real_, A_PH_CC= NA_real_, A_PH_KCL= NA_real_,
@@ -32,7 +34,8 @@ osi_c_ph <- function(B_LU, A_CLAY_MI= NA_real_, A_SAND_MI = NA_real_,
   value = NULL
   
   # desired length of inputs
-  arg.length <- max(length(B_LU), length(A_CLAY_MI),length(A_SAND_MI),
+  arg.length <- max(length(B_LU), 
+                    length (B_SOILTYPE_AGR), length(A_CLAY_MI),length(A_SAND_MI),
                     length(A_SOM_LOI),length(A_C_OF),
                     length(A_PH_CC), length(A_MG_CO_PO),length(A_K_CO_PO), length(A_NA_CO_PO), 
                     length(A_CA_CO_PO), length(A_PH_KCL),length(A_PH_WA), 
@@ -41,6 +44,7 @@ osi_c_ph <- function(B_LU, A_CLAY_MI= NA_real_, A_SAND_MI = NA_real_,
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
+                   B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    A_CLAY_MI=A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
                    A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
@@ -221,6 +225,9 @@ osi_c_ph_be <- function(B_LU, B_TEXTURE_BE, A_PH_KCL) {
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'BE' & osi_indicator =='i_c_ph']
+  
+  # get the max length of inputs
+  arg.length <- max(length(B_LU),length(B_TEXTURE_BE), length(A_PH_KCL))
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -592,6 +599,9 @@ osi_c_ph_fi <- function(B_LU, B_TEXTURE_USDA, A_PH_WA,A_C_OF = 0) {
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_ph']
   
+  # get the max length of inputs
+  arg.length <- max(length(B_LU),length(B_TEXTURE_USDA), length(A_PH_WA),length(A_C_OF))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -725,18 +735,18 @@ osi_c_ph_nl <- function(ID,B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC) 
   checkmate::assert_subset(B_SOILTYPE_AGR, choices =euosi::osi_soiltype[osi_country=='NL',osi_soil_cat1])
   checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(euosi::osi_crops[osi_country=='NL',crop_code]), empty.ok = FALSE)
   
   # Collect information in table
   dt <- data.table(FIELD_ID = ID,
                    oid = 1:arg.length,
-                   B_LU_BRP = B_LU_BRP,
+                   B_LU_BRP = as.numeric(B_LU),
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    A_SOM_LOI = A_SOM_LOI,
                    A_CLAY_MI = A_CLAY_MI,
                    A_PH_CC = A_PH_CC
-  )
+                   )
   
   # Calculate the crop rotation fraction
   dt[, D_CP_STARCH := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "starch")]
