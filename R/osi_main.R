@@ -181,7 +181,24 @@ osi_main_lucas <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                                      B_TEMP_SUM = B_TEMP_SUM,B_TEMP_WIN = B_TEMP_WIN,
                                      B_COUNTRY)]
     
+    # phosphorus excess risk indicator
+    dt[,i_e_pexcess := osi_nut_p(B_LU, 
+                                 B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
+                                 A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF,
+                                 A_SOM_LOI = A_SOM_LOI, A_PH_WA = NA_real_,A_PH_CC = A_PH_CC, A_CACO3_IF = A_CACO3_IF,
+                                 A_P_OL = A_P_OL, A_P_M3 = NA_real_, A_P_CAL = NA_real_,
+                                 A_P_AAA = NA_real_,A_P_DL = NA_real_,
+                                 A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY)]
     
+    # potassium excess risk indicator
+    dt[,i_e_kexcess := osi_nut_k(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                                 A_SOM_LOI = A_SOM_LOI, A_C_OF = A_C_OF, 
+                                 A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
+                                 A_PH_CC = A_PH_CC, A_PH_WA = NA_real_,
+                                 A_CEC_CO = A_CEC_CO, 
+                                 A_K_AAA = A_K_AAA,A_K_AL = NA_real_,A_K_AN = NA_real_,A_K_CAL = NA_real_,A_K_CC = NA_real_,
+                                 A_K_CO_PO = NA_real_,A_K_DL = NA_real_,A_K_M3 = NA_real_,A_K_NaAAA = NA_real_,
+                                 B_COUNTRY)]
     
  # --- aggregate indicators before scoring ----
   
