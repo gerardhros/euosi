@@ -44,16 +44,17 @@
 #' The output is always a data.table.
 #' 
 #' @export
-osi_main_lucas <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
-                           B_PREC_SUM = NA_real_,B_PREC_WIN = NA_real_, 
-                           B_PET_SUM = NA_real_,B_PET_WIN = NA_real_,
-                           B_TEMP_SUM = NA_real_,B_TEMP_WIN = NA_real_,
-                           A_SOM_LOI, A_SAND_MI, A_CLAY_MI,A_PH_CC,
-                           A_CEC_CO,
-                           A_N_RT,A_CN_FR, A_N_PMN,
-                           A_P_AL, A_P_CC, A_P_WA,
-                           A_CA_CO_PO, A_MG_CO_PO, A_K_CO_PO,A_K_CC,
-                           ID = 1, output = 'all') {
+osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
+                      B_PREC_SUM = NA_real_,B_PREC_WIN = NA_real_, 
+                      B_PET_SUM = NA_real_,B_PET_WIN = NA_real_,
+                      B_TEMP_SUM = NA_real_,B_TEMP_WIN = NA_real_,
+                      A_SOM_LOI, A_SAND_MI, A_CLAY_MI,A_PH_CC,
+                      A_CEC_CO = NA_real_,
+                      A_N_RT,A_N_PMN= NA_real_,
+                      A_P_OL,
+                      A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_,
+                      A_CA_CO_PO, A_MG_CO_PO, A_K_CO_PO,A_K_CC,
+                      ID = 1, output = 'all') {
   
   # add visual bindings
   i_c_p = i_p_whc = i_p_dens = i_p_wef = i_p_paw = i_p_ksat = i_b_pmn = NULL
@@ -87,9 +88,10 @@ osi_main_lucas <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.soils <- as.data.table(euosi::osi_soiltype)
   
-  # merge relevant properties from package tables
+  # add year, assuming that first year is the most recent ones
+  dt[,year := 1:.N,by=ID]
   
-  # estimate relevant properties
+  # merge relevant properties from package tables
   
   # --- soil chemical functions ----
   
@@ -122,17 +124,19 @@ osi_main_lucas <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                              B_COUNTRY = B_COUNTRY)]
     
     # calculate OSI indicator for Zn supply
-    dt[,i_c_b := osi_c_zinc(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
+    dt[,i_c_zn := osi_c_zinc(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
                              A_PH_WA = NA_real_, A_PH_CC = A_PH_CC,
                              A_ZN_EDTA = NA_real_,A_ZN_CC = A_ZN_CC, 
                              B_COUNTRY = B_COUNTRY)]
     
     # calculate OSI indicator for soil pH
-    dt[,i_c_ph := osi_c_ph(B_LU= B_LU, A_CLAY_MI= A_CLAY_MI, A_SAND_MI = A_SAND_MI,
+    dt[,i_c_ph := osi_c_ph(B_LU= B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
+                           A_CLAY_MI= A_CLAY_MI, A_SAND_MI = A_SAND_MI,
                            A_SOM_LOI = A_SOM_LOI, A_C_OF = A_C_OF,
-                           A_CA_CO_PO = NA_real_, A_MG_CO_PO = NA_real_,A_K_CO_PO = NA_real_, A_NA_CO_PO = NA_real_,
+                           A_CA_CO_PO = NA_real_, A_MG_CO_PO = NA_real_,A_K_CO_PO = NA_real_, 
+                           A_NA_CO_PO = NA_real_,
                            A_PH_WA = NA_real_, A_PH_CC= A_PH_CC, A_PH_KCL= NA_real_,
-                           B_COUNTRY)]
+                           B_COUNTRY = B_COUNTRY)]
   
   # --- soil physical functions ----  
     
@@ -151,6 +155,9 @@ osi_main_lucas <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
     # soil structure: crumbleability
     dt[, i_p_cr := osi_p_crumbleability(A_CLAY_MI = A_CLAY_MI,A_SOM_LOI = A_SOM_LOI,A_PH_CC = A_PH_CC)]
     
+    # risk for wind erodibility (equal for all countries)
+    dt[,i_p_wef := osi_p_wef(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI)]
+    
  # --- soil biological functions ----  
     
     # potentially mineralable N / microbial activity
@@ -162,9 +169,6 @@ osi_main_lucas <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
     
     
  # --- soil environmental function ---
-    
-    # risk for wind erodibility (equal for all countries)
-    dt[,i_p_wef := osi_p_wef(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI)]
     
     # risk for water erosion
     dt[,i_e_watererosie := osi_erosion(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI,A_CLAY_MI = A_CLAY_MI, A_SAND_MI=A_SAND_MI)]
@@ -202,22 +206,146 @@ osi_main_lucas <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
     
  # --- aggregate indicators before scoring ----
   
+    # add crop category to allow exclusion of certain crops (e.g. nature) in aggregation
+    dt <- merge(dt,
+                euosi::osi_crops[,.(crop_code,crop_cat1)],
+                by.x='B_LU',by.y='crop_code',all.x=TRUE)
     
-    # aggregate per year per indicator
-  
-    # aggregate per indicator
-  
-  
-  # add scores
-  
-    # add score per function
-  
-    # add score per aggregated soil category and ecosystem function
-  
-    # add total score
-  
-  
-  #  Step 6 Combine all outputs into one ------------------
+    # set default to cropland (temporary solution since crop database is not complete yet)
+    dt[is.na(crop_cat1), cropt_cat1 := 'arable']
+    
+    # make a data.table for indicators that are not relevant for aggregation for a given crop
+    # in this example: wind erosion has no impact on soil loss when grassland is there
+    # a negative weight value excludes this indicator from the aggregation process
+    w <- data.table(crop_cat1 = c('grasland'),
+                    indicator = c('i_p_wef'),
+                    weight = c(-1))
+    
+    # select all indicators used for scoring, only for I_C, I_P, I_B and I_B
+    cols <- colnames(dt)[grepl('^ID$|^i_c|^i_p|^i_b|^i_e|year',colnames(dt))]
+    
+    # melt dt and assign main categories for OBI
+    dt.melt <- melt(dt[,mget(cols)],
+                    id.vars = c('year', 'ID'),
+                    variable.name = 'indicator')
+    
+    # remove the indicators that have a NA value
+    dt.melt <- dt.melt[!is.na(value)]
+    
+    # add main categories relevant for aggregating
+    dt.melt[grepl('^i_c|^i_p|^i_b',indicator), cat1 := 'ess_prod']
+    dt.melt[grepl('excess',indicator), cat1 := 'ess_nutcycle']
+    dt.melt[grepl('nleac|water',indicator), cat1 := 'ess_water']
+    dt.melt[grepl('carbon',indicator), cat1 := 'ess_climate']
+    
+    # add sub categories relevant for aggregating
+    dt.melt[grepl('^i_c',indicator), cat2 := 'chemistry']
+    dt.melt[grepl('^i_p',indicator), cat2 := 'physics']
+    dt.melt[grepl('^i_b',indicator), cat2 := 'biology']
+    
+    # Determine amount of indicators per (sub)category
+    dt.melt.ncat <- dt.melt[year==1][,list(ncat = .N),by = .(ID, cat1,cat2)]
+    
+    # add weighing factor to indicator values
+    dt.melt <- merge(dt.melt,
+                     w[,list(crop_cat1,indicator,weight)],
+                     by = c('crop_cat1','indicator'), all.x = TRUE)
+    
+    # calculate correction factor for indicator values (low values have more impact than high values, a factor 5)
+    dt.melt[,cf := euosi::cf_ind_importance(value)]
+    
+    # calculate weighted value for crop category
+    dt.melt[,value.w := value]
+    dt.melt[weight < 0 | is.na(value),value.w := -999]
+    
+    # subset dt.melt for relevant columns only
+    out.score <-  dt.melt[,list(ID, cat1,cat2, year, cf, value = value.w)]
+    
+    # calculate weighted average per indicator category per year
+    out.score <- out.score[,list(value = sum(cf * pmax(0,value) / sum(cf[value >= 0]))),by = list(ID, cat2,year)]
+    
+    # for case that a cat has one indicator or one year and has NA
+    out.score[is.na(value), value := -999]
+    
+    # calculate correction factor per year; recent years are more important
+    out.score[,cf := log(12 - pmin(10,year))]
+    
+    # calculate weighted average per indicator category per year
+    out.score <- out.score[,list(value = sum(cf * pmax(0,value)/ sum(cf[value >= 0]))), by = list(ID, cat2)]
+    
+    # merge out with number per category
+    out.score <- merge(out.score,dt.melt.ncat, by=c("ID","cat2"),all.x=TRUE)
+    
+    # subscores for OSI subgroups
+    out.score.cat2 <- dcast(out.score,ID~cat2,value.var = 'value')
+    
+    # overwrite names
+    setnames(out.score.cat2,
+             old = c('biology', 'chemistry', 'climate', 'gw_quality', 'gw_quantity', 'macronutrient', 'physics'),
+             new = c('s_euosi_prod_b','s_euosi_prod_c','s_euosi_clim','s_euosi_water','s_euosi_nut','s_euosi_prod_p'),
+             skip_absent = TRUE)
+    
+    # calculate weighing factor depending on number of indicators
+    out.score[,cf := log(ncat + 1)]
+    
+    # estimate mean BLN score per ESD
+    out.score <- out.score[,list(value = sum(value * cf / sum(cf[value >= 0]))),by= c('ID','cat1')]
+    
+    # count number of indicators per cat1
+    dt.melt.ncat <- dt.melt[year==1][,list(ncat = .N),by = .(ID, cat1)]
+    
+    # merge out with number per category
+    out.score <- merge(out.score,dt.melt.ncat, by=c("ID","cat1"),all.x=TRUE)
+    
+    # OSI scores
+    out.score.cat1 <-  dcast(out.score,ID~cat1,value.var = 'value')
+    
+    # overwrite names
+    setnames(out.score.cat1,
+             old = c('ess_climate', 'ess_nutcycle', 'ess_prod','ess_water'),
+             new = c('s_euosi_esd_clim','s_euosi_esd_nut','s_euosi_esd_prod','s_euosi_esd_water'))
+    
+    # calculate weighing factor depending on number of indicators
+    out.score[,cf := log(ncat + 1)]
+    
+    # calculate total score over all categories
+    out.score.total <- out.score[,list(s_bln_total = round(sum(value * cf / sum(cf[value >= 0])),3)),by= c('ID')]
+    
+    # combine OSI subscores, BLN scores and BLN total score
+    out.score.osi <- merge(out.score.cat1,
+                           out.score.cat2,by='ID',all.x=TRUE)
+    out.score.osi <- merge(out.score.bln,out.score.total,by='ID',all.x = TRUE)
+    
+    # round all scores to two numbers
+    cols <- colnames(out.score.bln)[grepl('^s_euosi',colnames(out.score.bln))]
+    out.score.osi[, c(cols) := lapply(.SD,function(x) round(x,2)),.SDcols = cols]
+    
+    # remove temporary files
+    rm(out.score, out.score.cat1,out.score.cat2,out.score.total)
+    
+    # subset dt.melt for relevant columns only
+    out.ind <-  dt.melt[,list(ID, indicator,year,cf,value = value.w)]
+    
+    # add cf factor for the year; recent years are more important
+    out.ind[,cf_yr := log(12 - pmin(10,year))]
+    
+    # calculate weighted average per indicator category per year
+    out.ind <- out.ind[,list(value = sum(cf * cf_yr * pmax(0,value) /sum(cf[value >= 0] * cf_yr[value >= 0]))),by = list(ID, indicator)]
+    
+    # round at two numbers
+    out.ind[, value := round(value,3)]
+    
+    # reformat to one line per field
+    out.ind[value== -999, value := NA_real_]
+    out.ind[!is.finite(value), value := NA_real_]
+    out.ind <- dcast(out.ind,ID~indicator,value.var='value')
+    
+    # prepare output, with default
+    if(output == 'all') {out <- merge(out.ind,out.score.bln,by='ID',all.x=TRUE)}
+    if(output == 'scores'){out <- copy(out.score.osi)}
+    if(output == 'indicators'){out <- copy(out.ind)}
+    
+  # ---  Step 6 Combine all outputs into one ------------------
   
   # combine both outputs
   if(output == 'all'){out <- NULL}
