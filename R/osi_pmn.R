@@ -84,7 +84,6 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
   # Load in the crops data set and the parms dataset
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country =='NL']
-  dt.crops[, crop_code := as.integer(crop_code)]
   
   # load and subset thresholds to Dutch situation for PMN
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
@@ -93,14 +92,14 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
   # check length and of arguments
   arg.length <- max(length(A_N_PMN), length(B_LU), length(B_SOILTYPE_AGR))
   checkmate::assert_numeric(A_N_PMN, lower = 0, upper = 1000, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(euosi::osi_soiltype$osi_soil_cat1), empty.ok = FALSE)
   checkmate::assert_data_table(dt.thresholds,max.rows = 1)
   
   # calculate the PMN value for the Netherlands using the Dutch OBIC
-  value <- OBIC::calc_pmn(B_LU_BRP = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, A_N_PMN = A_N_PMN)
+  value <- OBIC::calc_pmn(B_LU_BRP = as.integer(B_LU), B_SOILTYPE_AGR = B_SOILTYPE_AGR, A_N_PMN = A_N_PMN)
 
   # convert to OSI score
   value <- osi_evaluate_logistic(x = value,
@@ -158,7 +157,7 @@ osi_b_pmn_eu <- function(B_LU, A_N_RT, A_CLAY_MI) {
   dt[, PMN := exp(-3.440931 + 1.1012449 * log(A_N_RT) - 0.055858 * log(A_CLAY_MI))]
 
   # convert to OSI score
-  dt[, value := osi_evaluate_logistic(x = value,b = 0.2, x0 = 20,v = 1.2)]
+  dt[, value := osi_evaluate_logistic(x = PMN,b = 0.2, x0 = 20,v = 1.2)]
   
   # select value
   value <- dt[,value]

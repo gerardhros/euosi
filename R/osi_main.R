@@ -185,7 +185,9 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
  # --- soil environmental function ---
     
     # risk for water erosion
-    dt[,i_e_watererosie := osi_erosion(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI,A_CLAY_MI = A_CLAY_MI, A_SAND_MI=A_SAND_MI)]
+    dt[,i_e_watererosie := osi_erosion(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI,
+                                       A_CLAY_MI = A_CLAY_MI, A_SAND_MI=A_SAND_MI, 
+                                       B_COUNTRY = B_COUNTRY)]
     
     # carbon sequestration
     dt[,i_e_carbon := osi_carbon(B_LU = B_LU,A_C_OF = A_C_OF, B_BGZ = B_BG, A_CLAY_MI = A_CLAY_MI, A_SAND_MI=A_SAND_MI)]

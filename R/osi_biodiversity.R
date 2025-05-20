@@ -27,6 +27,9 @@ osi_biodiversity <- function(A_SOM_LOI, A_PH_CC) {
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_indicator %in% c('i_b_ph','i_b_som')]
   
+  # get max length of inputs
+  arg.length <- max(length(A_SOM_LOI),length(A_PH_CC))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    A_SOM_LOI = A_SOM_LOI,
