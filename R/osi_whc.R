@@ -5,7 +5,6 @@
 #' 
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SILT_MI (numeric) The silt content of the soil (\%)
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
 #' @param type (character) The type of water retention index. Options include c('water holding capacity', 'whc','plant available water','paw','Ksat' or 'ksat')
 #' @param ptf (character) Pedotransfer functions to calculate van Genuchten parameters. Options include c('Wosten1999', 'Wosten2001', 'Klasse')
@@ -16,9 +15,9 @@
 #' @import OBIC
 #'
 #' @examples 
-#' osi_p_whc(A_CLAY_MI = 20.5,A_SAND_MI = 65,A_SILT_MI = 14.5,A_SOM_LOI = 3.5)
-#' osi_p_whc(A_CLAY_MI = 5,A_SAND_MI = 15,A_SILT_MI = 80,A_SOM_LOI = 6.5)
-#' osi_p_whc(A_CLAY_MI = 5,A_SAND_MI = 15,A_SILT_MI = 80,A_SOM_LOI = 6.5, 
+#' osi_p_whc(A_CLAY_MI = 20.5,A_SAND_MI = 65,A_SOM_LOI = 3.5)
+#' osi_p_whc(A_CLAY_MI = 5,A_SAND_MI = 15,A_SOM_LOI = 6.5)
+#' osi_p_whc(A_CLAY_MI = 5,A_SAND_MI = 15,A_SOM_LOI = 6.5, 
 #' type = 'water holding capacity')
 #' 
 #' @return 
@@ -27,7 +26,7 @@
 #' Soil functions are evaluated given a threshold value and expressed as a distance to target.
 #' 
 #' @export
-osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_SOM_LOI,type = 'whc', ptf = 'Wosten1999') {
+osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SOM_LOI,type = 'whc', ptf = 'Wosten1999') {
   
   # Add visual bindings
   id = thetaS = thetaR = alfa = n = fc = wp = whc = paw = ksat = density = Pleem = mineral = NULL
@@ -38,10 +37,9 @@ osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_SOM_LOI,type = 'whc', ptf 
   dt.thresholds <- dt.thresholds[osi_country == 'EU' & osi_indicator %in%  c('i_p_whc','i_p_paw','i_p_ksat')]
   
   # Check inputs
-  arg.length <- max(length(A_CLAY_MI), length(A_SAND_MI),length(A_SILT_MI), length(A_SOM_LOI))
+  arg.length <- max(length(A_CLAY_MI), length(A_SAND_MI),length(A_SOM_LOI))
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE)
   checkmate::assert_numeric(A_SAND_MI, lower = 0, upper = 100, any.missing = FALSE)
-  checkmate::assert_numeric(A_SILT_MI, lower = 0, upper = 100, any.missing = FALSE)
   checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE)
   checkmate::assert_character(type, any.missing = FALSE, min.len = 1, len = 1)
   checkmate::assert_subset(type, choices = c('water holding capacity','plant available water','Ksat','whc','paw','ksat'), empty.ok = FALSE)
@@ -53,11 +51,14 @@ osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_SOM_LOI,type = 'whc', ptf 
   dt <- data.table(id = 1:arg.length,
                    A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
-                   A_SILT_MI = A_SILT_MI,
-                   A_LOAM_MI = (A_CLAY_MI + A_SILT_MI),
+                   A_SILT_MI = pmax(0,100-A_CLAY_MI-A_SAND_MI),
                    A_SOM_LOI = A_SOM_LOI,
                    value = NA_real_
                   )
+  
+  # add LOAM
+  dt[,A_LOAM_MI := A_CLAY_MI + A_SILT_MI]
+  
   # settings
   p.topsoil = 1
   p.fieldcapacity = 2

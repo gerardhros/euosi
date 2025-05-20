@@ -2,9 +2,11 @@
 #'
 #' This function calculates the crumbleability index
 #' 
+#' @param B_LU (numeric) The crop code
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
 #' @param A_PH_CC (numeric) The pH measured in CaCl2
+#' @param B_COUNTRY (character) The country code
 #'
 #' @import data.table  
 #' @import OBIC
@@ -15,22 +17,36 @@
 #' The function returns the crumbleability index
 #' 
 #' @export
-osi_p_crumbleability <- function(A_CLAY_MI,A_SOM_LOI,A_PH_CC) {
+osi_p_crumbleability <- function(B_LU,A_CLAY_MI,A_SOM_LOI,A_PH_CC,B_COUNTRY) {
   
   # Add visual bindings
   id = NULL
   
+  # load internal table
+  dt.crops <- as.data.table(euosi::osi_crops)
+  
   # Check inputs
-  arg.length <- max(length(A_CLAY_MI), length(A_SOM_LOI))
+  arg.length <- max(length(B_LU),length(A_CLAY_MI), length(A_SOM_LOI),length(A_PH_CC),
+                    length(B_COUNTRY))
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE)
   checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE)
- 
+  checkmate::assert_numeric(A_SOM_LOI, lower = 2, upper = 12, any.missing = FALSE)
+  
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
                    A_CLAY_MI = A_CLAY_MI,
                    A_SOM_LOI = A_SOM_LOI,
                    A_PH_CC = A_PH_CC,
+                   B_COUNTRY = B_COUNTRY,
                    value = NA_real_)
+  
+  # merge with crop table
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,osi_country,crop_crumbleability)],
+              by.x =c('B_LU','B_COUNTRY'),
+              by.y = c('crop_code','osi_country'),
+              all.x=TRUE)
   
   # make lookup table
   df.lookup <- data.table(A_CLAY_MI = c(4, 10, 17, 24, 30, 40, 100),
@@ -59,7 +75,9 @@ osi_p_crumbleability <- function(A_CLAY_MI,A_SOM_LOI,A_PH_CC) {
   # merge with evaluation crumbleability table from OBIC
   dt <- merge(dt, 
               OBIC::eval.crumbleability, 
-              by=c("crop_crumbleability" = "crop_group" )
+              by.x = 'crop_crumbleability',
+              by.y = 'crop_group',
+              all.x=TRUE
               )
   
   # evaluate 

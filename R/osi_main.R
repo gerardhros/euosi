@@ -117,6 +117,18 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                                  A_K_AAA = A_K_AAA,A_K_AL = NA_real_,A_K_AN = NA_real_,A_K_CAL = NA_real_,A_K_CC = NA_real_,
                                  A_K_CO_PO = NA_real_,A_K_DL = NA_real_,A_K_M3 = NA_real_,A_K_NaAAA = NA_real_,
                                  B_COUNTRY)]
+    
+    # calculate OSI indicator for Mg supply
+    dt[, i_c_mg := osi_c_magnesium(B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                                   A_SOM_LOI = A_SOM_LOI, A_C_OF = A_C_OF, 
+                                   A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
+                                   A_PH_CC = A_PH_CC, A_CACO3_IF = A_CACO3_IF,
+                                   A_CEC_CO = A_CEC_CO, 
+                                   A_MG_AAA = A_MG_AAA,A_MG_AL = NA_real_, A_MG_AN = NA_real_,A_MG_CC = NA_real_,
+                                   A_MG_CO_PO = NA_real_, A_MG_DL = NA_real_,A_MG_KCL = NA_real_,A_MG_M3 = NA_real_,
+                                   A_MG_NaAAA = NA_real_,
+                                   A_K_CO_PO = NA_real_,A_K_CC = NA_real_,
+                                   B_COUNTRY)]
      
     # calculate OSI indicator for B supply
     dt[,i_c_b := osi_c_boron(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI, 
@@ -141,22 +153,23 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
   # --- soil physical functions ----  
     
     # water holding capacity (equal for all countries)
-    dt[,i_p_whc := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SILT_MI = A_SILT_MI,A_SOM_LOI = A_SOM_LOI,type = 'whc')]
+    dt[,i_p_whc := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI,type = 'whc')]
   
     # plant available water (equal for all countries)
-    dt[,i_p_paw := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SILT_MI = A_SILT_MI,A_SOM_LOI = A_SOM_LOI,type = 'paw')]
+    dt[,i_p_paw := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI,type = 'paw')]
   
     # permeabilty of the soil (equal for all countries)
-    dt[,i_p_ksat := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SILT_MI = A_SILT_MI,A_SOM_LOI = A_SOM_LOI,type = 'ksat')]
+    dt[,i_p_ksat := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI,type = 'ksat')]
   
     # bulk density (equal for all countries)
     dt[,i_p_dens := osi_p_density(A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI)]
   
     # soil structure: crumbleability
-    dt[, i_p_cr := osi_p_crumbleability(A_CLAY_MI = A_CLAY_MI,A_SOM_LOI = A_SOM_LOI,A_PH_CC = A_PH_CC)]
+    dt[, i_p_cr := osi_p_crumbleability(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI,A_SOM_LOI = A_SOM_LOI,
+                                        A_PH_CC = A_PH_CC, B_COUNTRY = B_COUNTRY)]
     
     # risk for wind erodibility (equal for all countries)
-    dt[,i_p_wef := osi_p_wef(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI)]
+    dt[,i_p_wef := osi_p_wef(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, B_COUNTRY = B_COUNTRY)]
     
  # --- soil biological functions ----  
     
