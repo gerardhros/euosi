@@ -33,6 +33,7 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
                    A_SILT_MI = pmax(0,100 - A_CLAY_MI - A_SAND_MI),
                    A_SOM_LOI = A_SOM_LOI,
                    A_PH_CC = A_PH_CC,
+                   A_PH_WA = NA_real_,
                    A_B_HW = A_B_HW,
                    B_COUNTRY = B_COUNTRY,
                    value = NA_real_
@@ -72,7 +73,8 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   dt[B_COUNTRY == 'LT', value := NA_real_]
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
-  dt[B_COUNTRY == 'NL', value := osi_c_boron_nl(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_SOM_LOI = A_SOM_LOI, A_B_HW = A_B_HW)]
+  dt[B_COUNTRY == 'NL', value := osi_c_boron_nl(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_SOM_LOI = A_SOM_LOI, 
+                                                A_B_HW = A_B_HW)]
   dt[B_COUNTRY == 'NO', value := NA_real_]
   dt[B_COUNTRY == 'SE', value := osi_c_boron_se(B_LU = B_LU, A_PH_WA = A_PH_WA)]
   dt[B_COUNTRY == 'SK', value := NA_real_]
@@ -132,6 +134,9 @@ osi_c_boron_ch <- function(B_LU, A_B_HW) {
   
   # OSI score only for bron sensitive crops, others no issue
   dt[senscrop=='no',value := pmin(1,2 * value)]
+  
+  # setorder
+  setorder(dt,id)
   
   # select value
   value <- dt[,value]
@@ -201,6 +206,9 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
   # evalute A_B_HW for grassland (no richtwerte existieren)
   dt[crop_cat1 != 'arable', value := 1]
   
+  # setorder
+  setorder(dt,id)
+  
   # select value
   value <- dt[,value]
   
@@ -250,6 +258,9 @@ osi_c_boron_ie <- function(B_LU, A_B_HW) {
   
   # OSI score only for bron sensitive crops, others no issue
   dt[senscrop=='no',value := 1]
+  
+  # setorder
+  setorder(dt,id)
   
   # select value
   value <- dt[,value]
@@ -385,11 +396,9 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
   
   # merge with crop
   dt <- merge(dt,
-              dt.crop[,.(B_LU, crop_cat1)],
+              dt.crops[,.(B_LU = crop_code, crop_cat1)],
               by = 'B_LU',
               all.x = TRUE)
-  
-  
   
   # set soil class for merging with threshold
   dt[, soil_cat_bo := fifelse(A_CLAY_MI > 50,'clay','other')]
@@ -400,22 +409,9 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
               by.x = 'soil_cat_bo',
               by.y = 'osi_threshold_soilcat',
               all.x = TRUE)
-
-  #add B recommendation
-  dt <- data.table(A_B_HWA = seq(0,1,0.05))
-  dt[,value := 0]
-  dt[A_B_HWA < 0.2,value := 0.4]
-  dt[A_B_HWA >= 0.2 & A_B_HWA < 0.3, value := 0.3]
-  dt[A_B_HWA >= 0.3 & A_B_HWA < 0.35, value := 0.2]
-  plot(I(0.4-value)~A_B_HWA,data=dt,type='l')
-  a = seq(0,1,0.05)
-  lines(a, OBIC::evaluate_logistic(a, b = 4.2, x0 = 1.2, v = 1.2),col='blue')
     
   # convert to the OSI score
-  dt[, value := evaluate_logistic(x = A_B_HW, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
-  
-  # exlcude other crops that a subset
-  dt[!B_LU %in% c('DFV','TRN','FVL'), value := 1]
+  dt[, value := evaluate_logistic(x = A_B_HW, b= 16,x0 = 0.22,v = 0.978)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -507,7 +503,7 @@ osi_c_boron_uk <- function(B_LU, B_TEXTURE_HYPRES,A_SOM_LOI,A_PH_CC,A_B_HW) {
   
   # merge with crop
   dt <- merge(dt,
-              dt.crops[,.(B_LU, crop_name, crop_cat1)],
+              dt.crops[,.(B_LU = crop_code, crop_name, crop_cat1)],
               by = 'B_LU',
               all.x = TRUE)
   

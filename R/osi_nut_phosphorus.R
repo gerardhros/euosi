@@ -176,7 +176,7 @@ osi_nut_p_at <- function(A_P_CAL,B_LU = NA_character_) {
   #             all.x = TRUE)
   
   # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = A_P_CAL, b= -0.02002226 x0=199.66245188  v= 0.35544312)]
+  dt[,value := osi_evaluate_logistic(x = A_P_CAL, b= -0.02002226, x0=199.66245188,  v= 0.35544312)]
   
   # set the order to the original inputs
   setorder(dt, id)

@@ -214,7 +214,7 @@ osi_conv_phosphor <- function(element,
   
   # check inputs
   checkmate::assert_subset(element,choices = c('A_P_AL','A_P_CAL','A_P_DL','A_P_AAA','A_P_AAA_EDTA',
-                                               'A_P_WA','A_P_M3'),empty.ok = FALSE)
+                                               'A_P_WA','A_P_M3','A_P_CC'),empty.ok = FALSE)
   
   # make internal table with inputs
   dt <- data.table(A_P_AL = A_P_AL,
@@ -237,6 +237,9 @@ osi_conv_phosphor <- function(element,
   dt[is.na(A_P_DL) & !is.na(A_P_OL), A_P_DL := A_P_OL / 0.53]
   dt[is.na(A_P_WA) & !is.na(A_P_OL), A_P_WA := A_P_OL / mean(2.77,2.5,4,4,3,2.45)]
   dt[is.na(A_P_M3) & !is.na(A_P_OL), A_P_M3 := A_P_OL / 0.39]
+  
+  # to do: add relationship
+  dt[is.na(A_P_CC) & !is.na(A_P_OL), A_P_CC := A_P_OL/10]
   
   # select the reqestred pH
   value <- dt[,get(element)]
@@ -298,11 +301,11 @@ osi_conv_potassium <- function(element,
   dt[is.na(A_K_AN) & !is.na(A_K_AAA), A_K_AN := A_K_AAA]
   dt[is.na(A_K_CAL) & !is.na(A_K_AAA), A_K_CAL := A_K_AL]
   
-  # derived from Zebect et al. (2017) assuming linearity
-  dt[is.na(A_K_CC) & !is.na(A_K_AAA), A_K_CC := (A_K_AAA + 50 * 0.8301) * 55 / 13]
+  # derived from Zebect et al. (2017) assuming linearity (divided by 10 by GR since valus are far to high)
+  dt[is.na(A_K_CC) & !is.na(A_K_AAA), A_K_CC := 0.1 * (A_K_AAA + 50 * 0.8301) * 55 / 13]
   
   # correction function developed by Gerard for OCP
-  dt[is.na(A_K_CO_PO) & !is.na(A_K_AAA), A_K_CO_PO := (A_K_AAA * 39.0983 / fifelse(A_PH_WA <7, 1.184,1.175))*100/A_CEC_CO]
+  dt[is.na(A_K_CO_PO) & !is.na(A_K_AAA), A_K_CO_PO := (A_K_AAA / 39.0983 / fifelse(A_PH_WA <7, 1.184,1.175))*100/A_CEC_CO]
   
   # pedotransfer function from Breure et al. (2022)
   dt[is.na(A_K_M3) & !is.na(A_K_AAA), A_K_M3 := (A_K_AAA - 15.21 + 2.12 * A_PH_WA)/1.01]

@@ -1272,3 +1272,228 @@ spool <- c(5,15,45,85,150,250)
 spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
 p0 <- list(b = 0.09371117, x0 = 45, v = 0.07407514)
 findoptvalue(spool,spoolopt,p0)
+
+# the P evaluation
+get_p_nut<- function(pb,px0,pv,nb = -0.14,nx0 = 200,nv = 1){
+  
+  x = seq(0,300)
+  y = osi_evaluate_logistic(x = x, b= pb,x0 = px0,v = pv)
+  xmax <- (x[which(y>=0.99)][1])*3.5 # => 0.1
+  xvmax <- (x[which(y>=0.99)][1])*5 # => 0.02
+  xmid <- (x[which(y>=0.99)][1])*2 # => 0.5
+  xlow <- (x[which(y>=0.9)][1]) # => 0.9
+  xvlow <- x[1] # <- 1
+  
+  spool <- c(xvlow,xlow,xmid,xmax,xvmax)
+  spoolopt <- c(1,0.9,0.5,0.1,0.02)
+  spool <- c(spool,spool * 1.01,spool * 0.99)
+  spoolopt <- c(spoolopt,spoolopt * 1.01,spoolopt * 0.99)
+  p0 <- list(b = nb, x0 = nx0, v = nv)
+  findoptvalue(spool,spoolopt,p0)
+  
+}
+# Austria, Pnut
+get_p_nut(pb= 0.138491,px0 = 2.81405015,pv = 0.01965865)
+# Switzeraland
+get_p_nut(pb= 0.113193,px0 = -21.4503795,pv = 0.01430497)
+# CZ
+get_p_nut(pb= 0.0890545,px0 = 4.429710417,pv = 0.007972486,nx0=150)
+# germany, part 1
+get_p_nut(pb = 0.2711, px0 = -5.9449, pv = 0.0239)
+get_p_nut(pb = 0.1743, px0 = 2.92395, pv = 0.096079,nx0=150)
+# denmark
+get_p_nut(pb = 0.226612, px0 = 30.137321,pv = 1.247315)
+# ee
+get_p_nut(pb= 0.1078429,px0 = -17.16723,pv = 0.0153443)
+# spain
+get_p_nut(pb = 0.47947, px0 = -1.94363, pv = 0.074075,nx0=40)
+get_p_nut(pb = 0.27155, px0 = 2.81733, pv = 0.154671,nx0=40)
+get_p_nut(pb = 0.20196, px0 = 2.87602, pv = 0.133171,nx0=40)
+# hungary
+rbind(
+get_p_nut(pb= 0.068946,px0 = 3.064834,pv = 0.0349155,nx0=275),
+get_p_nut(pb= 0.07114313,px0 = 3.6741042,pv = 0.016646,nx0=275),
+get_p_nut(pb= 0.08938405,px0 = -17.8025024,pv = 0.006430696,nx0=75),
+get_p_nut(pb= 0.0919443,px0 = 1.95992725,pv = 0.01361575,nx0=75),
+get_p_nut(pb= 0.08938405,px0 = -17.80250244,pv = 0.006430696),
+get_p_nut(pb= 0.09148938,px0 = 5.716193495,pv = 0.007882485))
+# ireland
+get_p_nut(pb = 0.6560111, px0 = 3.44709, pv = 0.588379,nx0=40)
+get_p_nut(pb = 0.50194, px0 = 3.91821, pv = 0.5799892,nx0=40)
+# italy
+get_p_nut(pb = 0.43987, px0 = -5.7314, pv = 0.011909,nx0=40)
+# latvia
+get_p_nut(pb= 0.249934,px0 = 2.907279,pv = 0.070707)
+get_p_nut(pb= 0.211789,px0 = 2.937473,pv = 0.050529)
+get_p_nut(pb= 0.17789728,px0 = -7.742856,pv = 0.007900254)
+get_p_nut(pb= 0.1513621,px0 = -9.9252899,pv = 0.00760908)
+
+get_p_nut(pb= 0.115141,px0 = -13.66102,pv = 0.0084859,nx0 = 55)
+get_p_nut(pb= 0.1014425,px0 = -10.704884,pv = 0.00674754)
+#NL
+get_p_nut(pb = 1.3,px0=1.3,pv=0.35,nx0=2.5)
+#norway
+get_p_nut(pb= 0.09801777,px0 = -20.28710038,pv = 0.0218218)
+#sweden
+rbind(
+get_p_nut(pb = 0.126197, px0 = 14.6487, pv = 0.46202),
+get_p_nut(pb = 0.60458, px0 = 2.8517965, pv = 0.0256494),
+get_p_nut( pb = 0.126197, px0 = 14.6487, pv = 0.46202),
+get_p_nut( pb = 0.0695783, px0 = -27.867195, pv = 0.0163328))
+
+#SK
+get_p_nut(pb= 0.07743388,px0 = -1.23994065,pv = 0.00401143,nx0=150)
+get_p_nut(pb= 0.07683386,px0 = -7.05760285,pv = 0.00574734,nx0=150)
+get_p_nut(pb= 0.089515,px0 = 3.0679272,pv = 0.01673862,nx0=350)
+
+# slovena
+get_p_nut(pb= 0.1080206,px0 = -11.5603261,pv = 0.00766528)
+# poland
+get_p_nut(pb= 0.1199736,px0 = -12.565624,pv = 0.0072809,nx0 = 150)
+#UK
+get_p_nut(pb = 0.2417380 , px0 = 7.8550060 , pv = 0.5393981 )
+get_p_nut(pb = 0.17689431 , px0 = 0.45050382 , pv = 0.05213803)
+
+# the K evaluation
+get_k_nut<- function(pb,px0,pv,nb = -0.14,nx0 = 300,nv = 1){
+  
+  x = seq(0,500)
+  y = osi_evaluate_logistic(x = x, b= pb,x0 = px0,v = pv)
+  xmax <- (x[which(y>=0.99)][1])*3.5 # => 0.1
+  xvmax <- (x[which(y>=0.99)][1])*5 # => 0.02
+  xmid <- (x[which(y>=0.99)][1])*2 # => 0.5
+  xlow <- (x[which(y>=0.9)][1]) # => 0.9
+  xvlow <- x[1] # <- 1
+  
+  spool <- c(xvlow,xlow,xmid,xmax,xvmax)
+  spoolopt <- c(1,0.9,0.5,0.1,0.02)
+  spool <- c(spool,spool * 1.01,spool * 0.99)
+  spoolopt <- c(spoolopt,spoolopt * 1.01,spoolopt * 0.99)
+  p0 <- list(b = nb, x0 = nx0, v = nv)
+  a = findoptvalue(spool,spoolopt,p0)
+  paste0('b = ',round(a[1],5),', x0 = ',round(a[2],2),', v = ',round(a[3],4))
+}
+# Potassium_AT
+get_k_nut(pb= 0.07778603,px0 = 3.34792775,pv = 0.01237349)
+get_k_nut(pb= 0.063061856,px0 = 3.246009394,pv = 0.008754153)
+get_k_nut(pb= 0.05395119,px0 = 1.739323688,pv = 0.005680624,nx0=400)
+#Belgium
+get_k_nut(pb = 0.05, px0 = 100, pv=1,nx0=150)
+# Finland
+get_k_nut(pb= 0.02920275,px0 = 5.86503285,pv = 0.14855417,nx0=150)
+get_k_nut( pb= 0.03016788,px0 = 0.47412598,pv = 0.21149593,nx0=150)
+get_k_nut(pb= 0.03615689,px0 = 0.62427132 ,pv = 0.26501704,nx0=150)
+get_k_nut(pb= 0.03888415,px0 = -62.31854852 ,pv = 0.03100743,nx0=150)
+get_k_nut(pb= 0.08417474 ,px0 = -22.01125870 ,pv = 0.04457961,nx0=150)
+# CZ
+get_k_nut(pb= 0.04721530,px0 = 0.86394309,pv = 0.00416517,nx0=150)
+get_k_nut(pb= 0.044200350,px0 = 3.073835166,pv = 0.004912691,nx0=150)
+get_k_nut(pb= 0.03095766,px0 = 91.95343771,pv = 0.03970912,nx0=150)
+
+get_k_nut(pb = 0.4488277, px0 = 9.718321, pv = 1.254134,nx0=50)
+get_k_nut(pb = 0.4025205, px0 = 11.358496, pv = 1.186427,nx0=50)
+get_k_nut(pb = 0.3578666, px0 = 14.656902, pv = 1.373431,nx0=50)
+get_k_nut(pb = 0.3457865, px0 = 17.303152, pv = 1.543785,nx0=50)
+get_k_nut(pb = 0.2675499, px0 = 25.566018, pv = 1.827952,nx0=50)
+get_k_nut(pb = 0.3735224, px0 = 17.424734, pv = 1.874988,nx0=100)
+
+get_k_nut(pb = 9.030400, px0 = 6.895466, pv = 5.5870309,nx0=50)
+get_k_nut(pb = 5.269679, px0 = 8.321927, pv = 4.4726794,nx0=50)
+get_k_nut(pb = 4.616016, px0 = 9.324117, pv = 4.1282965,nx0=50)
+get_k_nut( pb = 1.713005, px0 = 15.406360, pv = 0.4744978,nx0=50)
+get_k_nut(pb = 1.595327, px0 = 15.460018, pv = 0.1341047,nx0=50)
+get_k_nut(pb = 1.662136, px0 = 15.228511, pv = 0.4373691,nx0=50)
+
+# estonia
+get_k_nut(pb= 0.111228,px0 = 4.8454716,pv = 0.00894408,nx0=100)
+get_k_nut(pb= 0.0681246,px0 = 2.8658315,pv = 0.01832195)
+get_k_nut(pb= 0.06901738,px0 = 3.22236569,pv = 0.006392278)
+get_k_nut(pb= 0.04955406,px0 = 2.80768003,pv = 0.01280431,nx0=150)
+get_k_nut(pb= 0.0429129,px0 = 1.37161548,pv = 0.001844779,nx0=150)
+
+#denmark
+get_k_nut(pb = 0.03892854   , px0 = 0.55628171   , pv = 0.08602831,nx0=150)
+
+# spain
+get_k_nut(pb= 0.02948845,px0 = 23.21207454,pv = 0.25785455,nx0=100)
+get_k_nut(pb= 0.02108017,px0 = 5.43747198,pv = 0.17298447)
+get_k_nut(pb= 0.01665276,px0 = 5.18031011,pv = 0.17195884)
+
+# finland
+get_k_nut(pb= 0.022,px0=135,pv=1,nx0=150)
+get_k_nut(pb= 0.032,px0=90,pv=1,nx0=150)
+get_k_nut(pb= 0.044,px0=68,pv=1,nx0=150)
+
+# France
+get_k_nut(pb = 0.02719,px0 = 206,pv = 206)
+get_k_nut(pb = 0.4224, px0 = 96,pv = 96,nx0=100)
+get_k_nut(pb = 0.1295, px0 = 57,pv=57)
+
+# hungary
+get_k_nut(pb= 0.054768759 ,px0 = 3.135654568 ,pv = 0.006806117,nx0=150)
+get_k_nut(pb= 0.046479554 ,px0 = 2.791118699 ,pv = 0.005011318,nx0=150 )
+get_k_nut(pb= 0.068578055,px0 = 2.128475547,pv = 0.008613139)
+get_k_nut( pb= 0.054626825,px0 = 2.745261676,pv = 0.003915165,nx0=150)
+get_k_nut(pb=0.089604257,px0 = 3.920048277,pv = 0.007403738)
+get_k_nut(pb= 0.0890913887,px0 = 2.2516305413,pv = 0.0001867756)
+
+#ireland
+get_k_nut(pb = 0.04081745, px0 = 53.86819280, pv = 0.66253526,nx0=150)
+get_k_nut(pb = 0.02000395 , px0 = 10.63516808  , pv = 0.15763251 )
+
+# italy
+get_k_nut(pb= 0.07914907 ,px0 = 33.82005169  ,pv = 0.05062077)
+get_k_nut(pb= 0.075840953 ,px0 = 5.349772330 ,pv = 0.001498863)
+get_k_nut(pb= 0.04242224 ,px0 = 5.62056414 ,pv = 0.01662994,nx0=75)
+
+# latvia
+get_k_nut(pb= 0.11109104,px0 = -11.43898675,pv = 0.007796498)
+get_k_nut(pb= 0.085102248,px0 = -17.31157273,pv = 0.00616734,nx0=100)
+get_k_nut(pb= 0.0754598,px0 = 3.001728,pv = 0.03331127)
+get_k_nut(pb= 0.0685035,px0 = 2.97672246,pv = 0.03203499)
+
+# lithuani
+get_k_nut(pb= 0.06542787,px0 = -23.62084916,pv = 0.006326486,nx0=150)
+get_k_nut(pb= 0.04211846,px0 = 3.19983935,pv = 0.007473128,nx0=150)
+
+# norway
+get_k_nut( pb = 0.05548162  , px0 = 0.66920970  , pv = 0.01696135,nx0=100)
+
+# the netherlands
+get_k_nut(pb=8,px0=2.5,pv=8,nx0=4.5)
+get_k_nut(pb=0.3,px0=9,pv=1.1,nx0=4.5)
+get_k_nut(pb=0.5,px0=11.5,pv=1.1,nx0=4.5)
+
+# poland
+get_k_nut(pb= 0.07752183,px0 = 3.04311052,pv = 0.09679474,nx0=75)
+get_k_nut(pb= 0.07134238,px0 = 3.07588403,pv = 0.02805476)
+get_k_nut(pb= 0.070369841,px0 = 4.237044272,pv = 0.007390134)
+get_k_nut(pb= 0.070110090,px0 = 0.702553221,pv = 0.001352746)
+#sweden
+get_k_nut( pb = 0.07362818 , px0 = 0.51818429 , pv = 0.02380852)
+
+#SK
+get_k_nut(pb= 0.04569915,px0 = 2.78099169 ,pv = 0.00851402,nx0=100)
+get_k_nut( pb= 0.039305100,px0 = 2.045554487 ,pv = 0.003009242,nx0=100)
+get_k_nut(pb= 0.03070035,px0 = 65.84134127,pv = 0.01856598,nx0=200)
+
+# slowakij
+get_k_nut(pb= 0.03689968,px0 = 2.80510928,pv = 0.02341685,nx0=100)
+get_k_nut(pb= 0.03432105,px0 = 2.90565094,pv = 0.01630095,nx0=100)
+
+#UK
+get_k_nut( pb = 0.03399723, px0 = 64.381726, pv = 0.65964038,nx0=100)
+get_k_nut(pb = 0.03023062, px0 = 46.87684513, pv = 0.45288470,nx0=100)
+
+
+# NL, boron
+spool <- c(0.01,0.1,0.25,0.4,0.42,0.6)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 1.5, v = 0.007407514)
+findoptvalue(spool,spoolopt,p0)
+
+dt[,value := 0]
+dt[A_B_HWA < 0.2,value := 0.4]
+dt[A_B_HWA >= 0.2 & A_B_HWA < 0.3, value := 0.3]
+dt[A_B_HWA >= 0.3 & A_B_HWA < 0.35, value := 0.2]
+
