@@ -105,6 +105,9 @@
   osi_clim <- merge(osi_prec,osi_pet,by ='osi_country',all.x = TRUE)
   osi_clim <- merge(osi_clim,osi_temp,by ='osi_country',all.x = TRUE)
   
+  # set to lower case
+  setnames(osi_clim,tolower(colnames(osi_clim)))
+  
   # save updated weather data table
   usethis::use_data(osi_clim,overwrite = TRUE)
   
