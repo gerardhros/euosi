@@ -51,38 +51,41 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
   dt[, A_CN_FR := A_C_OF * 1000/ A_N_RT]
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
-  dt[B_COUNTRY == 'AT', value := osi_c_nitrogen_at(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
+  dt[B_COUNTRY == 'AT', value := NA_real_]
   dt[B_COUNTRY == 'BE', value := osi_c_nitrogen_be(B_LU = B_LU, A_N_RT = A_N_RT, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_CACO3_IF = A_CACO3_IF)]
-  dt[B_COUNTRY == 'CH', value := osi_c_nitrogen_ch(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
-  dt[B_COUNTRY == 'CZ', value := osi_c_nitrogen_cz(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
+  dt[B_COUNTRY == 'CH', value := NA_real_]
+  dt[B_COUNTRY == 'CZ', value := NA_real_]
   dt[B_COUNTRY == 'DE', value := osi_c_nitrogen_de(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
   
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
-  dt[B_COUNTRY == 'DK', value := osi_c_nitrogen_dk(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
-  dt[B_COUNTRY == 'EE', value := osi_c_nitrogen_ee(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
-  dt[B_COUNTRY == 'ES', value := osi_c_nitrogen_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
+  dt[B_COUNTRY == 'DK', value := NA_real_]
+  dt[B_COUNTRY == 'EE', value := NA_real_]
+  dt[B_COUNTRY == 'ES', value := NA_real_]
   dt[B_COUNTRY == 'FR', value := osi_c_nitrogen_fr(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
                                                    A_C_OF = A_C_OF,A_N_RT = A_N_RT, A_CACO3_IF = A_CACO3_IF)]
-  dt[B_COUNTRY == 'FI', value := osi_c_nitrogen_fi(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
+  dt[B_COUNTRY == 'FI', value := NA_real_]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
-  dt[B_COUNTRY == 'HU', value := osi_c_nitrogen_hu(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
-  dt[B_COUNTRY == 'IE', value := osi_c_nitrogen_ie(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
-  dt[B_COUNTRY == 'IT', value := osi_c_nitrogen_it(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
-  dt[B_COUNTRY == 'LV', value := osi_c_nitrogen_lv(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
-  dt[B_COUNTRY == 'LT', value := osi_c_nitrogen_lt(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
+  dt[B_COUNTRY == 'HU', value := NA_real_]
+  dt[B_COUNTRY == 'IE', value := NA_real_]
+  dt[B_COUNTRY == 'IT', value := NA_real_]
+  dt[B_COUNTRY == 'LV', value := NA_real_]
+  dt[B_COUNTRY == 'LT', value := NA_real_]
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
   dt[B_COUNTRY == 'NL', value := osi_c_nitrogen_nl(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
                                                    A_SOM_LOI = A_SOM_LOI,A_N_RT = A_N_RT)]
-  dt[B_COUNTRY == 'NO', value := osi_c_nitrogen_no(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
-  dt[B_COUNTRY == 'SE', value := osi_c_nitrogen_se(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
-  dt[B_COUNTRY == 'SK', value := osi_c_nitrogen_sk(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
-  dt[B_COUNTRY == 'SL', value := osi_c_nitrogen_sl(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
+  dt[B_COUNTRY == 'NO', value := NA_real_]
+  dt[B_COUNTRY == 'SE', value := NA_real_]
+  dt[B_COUNTRY == 'SK', value := NA_real_]
+  dt[B_COUNTRY == 'SL', value := NA_real_]
   
   # Poland (PL), United Kingdom (UK)
-  dt[B_COUNTRY == 'PL', value := osi_c_nitrogen_pl(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
-  dt[B_COUNTRY == 'UK', value := osi_c_nitrogen_uk(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
+  dt[B_COUNTRY == 'PL', value := NA_real_]
+  dt[B_COUNTRY == 'UK', value := NA_real_]
+  
+  # estimate N supply capacity for all soils without specific evaluation yet
+  dt[is.na(value), value := osi_c_nitrogen_eu(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_N_RT = A_N_RT)]
   
   # sort the internal table on id
   setorder(dt,id)
@@ -93,53 +96,6 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
   # return the OSI score
   return(out)
   
-}
-
-#' Calculate the soil nitrogen supplying capacity in Austria
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_at(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_at <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
 }
 
 #' Calculate the soil nitrogen supplying capacity in Belgium
@@ -222,99 +178,6 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
   return(value)
   
 }
-#' Calculate the soil nitrogen supplying capacity in Switzerland
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_ch(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_ch <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-#' Calculate the soil nitrogen supplying capacity in Czech Republic
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_cz(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_cz <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
 
 #' Calculate the soil nitrogen supplying capacity in Germany
 #' 
@@ -352,9 +215,39 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
                    value = NA_real_
   )
   
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
+  # add soil type
+  dt[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
+  dt[A_SAND_MI >= 42 & A_SAND_MI <= 95 & A_SILT_MI <= 40 & A_CLAY_MI <= 17 & A_C_OF < 150,  stype :="BG2"]
+  dt[A_SAND_MI >= 33 & A_SAND_MI <= 83 & A_SILT_MI <= 50 & A_CLAY_MI >= 8 & A_CLAY_MI <= 25 & A_C_OF < 150,  stype :="BG3"]
+  dt[A_SAND_MI <= 75 & A_SILT_MI <= 100 & A_CLAY_MI <= 35 & A_C_OF < 150,  stype :="BG4"]
+  dt[A_SAND_MI <= 65 & A_SILT_MI <= 75 & A_CLAY_MI >= 25 & A_CLAY_MI <= 100 & A_C_OF < 150, stype := "BG5"]
+  dt[A_C_OF >= 150,  stype := "BG6"]
+  
+  # source: "Düngung in Thüringen 2007 nach ”Guter fachlicher Praxis"
+  
+  # add soil type based deduction factor
+  dt[stype %in% c('BG1','BG2'), cf1 := 0.25]
+  dt[stype %in% c('BG3','BG4'), cf1 := 0.50]
+  dt[stype %in% c('BG5'), cf1 := 0.25]
+  dt[stype == 'BG6', cf1 := 0]
+  
+  # estimate bulk density via pedotransfer function
+  dt[, BDS := (1/(0.02525 * A_SOM_LOI + 0.6541)) * 1000]
+  
+  # set annual decomposition rate of 2%
+  dt[, arate := 0.02]
+  
+  # estimate N supply for top 30 cm soil layer
+  dt[, NSC := (100 * 100 * 0.3 * B_DS) * A_N_RT * arate * 0.001 * 0.001]
+  
+  # assume that 25% is mineralized in winter, and available in pre-season
+  dt[, NSCPS := 0.25 * NSC]
+  
+  # correction per soil type (being related to losses)
+  dt[,NSCPS := (1- cf1) * NSCPS]
+  
+  # run default NSC calculation (optimum around 100 kg N/ ha)
+  dt[, value := osi_evaluate_logistic(x = NSCPS, b = 0.05, x0 = -18, v = 0.859)]
   
   # select calculated NSC
   value <- dt[,value]
@@ -363,194 +256,6 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
   return(value)
 }
 
-#' Calculate the soil nitrogen supplying capacity in Denmark
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_dk(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_dk <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-#' Calculate the soil nitrogen supplying capacity in Estonia
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_ee(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_ee <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-#' Calculate the soil nitrogen supplying capacity in Spain
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_es(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_es <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-
-#' Calculate the soil nitrogen supplying capacity in Finland
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_fi(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_fi <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
 
 #' Calculate the soil nitrogen supplying capacity in France
 #' 
@@ -647,242 +352,6 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
   return(out)
 }
 
-#' Calculate the soil nitrogen supplying capacity in Hungary
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_hu(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_hu <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-
-#' Calculate the soil nitrogen supplying capacity in Ireland
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_ie(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_ie <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-#' Calculate the soil nitrogen supplying capacity in Italy
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_it(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_it <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-#' Calculate the soil nitrogen supplying capacity in Latvia
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_lv(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_lv <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-
-#' Calculate the soil nitrogen supplying capacity in Lithuania
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_lt(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_lt <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
 
 #' Calculate the soil nitrogen supplying capacity in the Netherlands
 #' 
@@ -978,294 +447,7 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
   return(out)
 }
 
-#' Calculate the soil nitrogen supplying capacity in Norway
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_no(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_no <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-#' Calculate the soil nitrogen supplying capacity in Poland
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_pl(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_pl <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-#' Calculate the soil nitrogen supplying capacity in Sweden
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_se(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_se <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-
-#' Calculate the soil nitrogen supplying capacity in Slovak Republic
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_sk(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_sk <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-
-#' Calculate the soil nitrogen supplying capacity in Slovena
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_sl(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_sl <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-
-#' Calculate the soil nitrogen supplying capacity in United Kingdom
-#' 
-#' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_c_nitrogen_uk(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
-#' 
-#' @return 
-#' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
-#' 
-#' @export
-osi_c_nitrogen_uk <- function(B_LU = NA_character_, 
-                              A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
-  
-  # Collect data in an internal table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SAND_MI = A_SAND_MI,
-                   A_C_OF = A_C_OF,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_SOM_LOI = A_SOM_LOI,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_
-  )
-  
-  # run default NSC calculation
-  dt[, value := os_c_nitrogen_default(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, S_SAND_MI = A_SAND_MI,
-                                      A_SOM_LOI = A_SOM_LOI, A_N_RT = A_N_RT)]
-  
-  # select calculated NSC
-  value <- dt[,value]
-  
-  # return
-  return(value)
-}
-
-
-
-#' Calculate the soil nitrogen supplying capacity in X
+#' Calculate the soil nitrogen supplying capacity template in Europe
 #' 
 #' This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
 #' 
