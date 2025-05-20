@@ -20,6 +20,7 @@
 #' @param A_MG_KCL (numeric) The plant available potassium, extracted with KCL (mg per kg)
 #' @param A_MG_M3 (numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)
 #' @param A_MG_NaAAA (numeric) The Mg-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)
+#' @param A_K_AAA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction 
 #' @param A_K_CO_PO (numeric) The occupation of the CEC with potassium (\%)
 #' @param A_K_CC (numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg per kg)
 #' @param B_COUNTRY (character) The country code
@@ -37,7 +38,7 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                             A_MG_AAA = NA_real_,A_MG_AL = NA_real_, A_MG_AN = NA_real_,A_MG_CC = NA_real_,
                             A_MG_CO_PO = NA_real_, A_MG_DL = NA_real_,A_MG_KCL = NA_real_,A_MG_M3 = NA_real_,
                             A_MG_NaAAA = NA_real_,
-                            A_K_CO_PO = NA_real_,A_K_CC = NA_real_,
+                            A_K_AAA = NA_real_,A_K_CO_PO = NA_real_,A_K_CC = NA_real_,
                             B_COUNTRY) {
   
   # add visual bindings
@@ -49,7 +50,7 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                     length(A_MG_AAA),length(A_MG_AL),length(A_MG_AN),length(A_MG_CC),
                     length(A_MG_CO_PO),length(A_MG_DL),length(A_MG_KCL),length(A_MG_M3),
                     length(A_MG_NaAAA),
-                    length(A_K_CO_PO),length(A_K_CC),
+                    length(A_K_CO_PO),length(A_K_CC),length(A_K_AAA),
                     length(B_COUNTRY))
   
   # Collect the data in an internal data.table
@@ -64,6 +65,7 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                    A_C_OF = A_C_OF,
                    A_CEC_CO = A_CEC_CO,
                    A_PH_CC = A_PH_CC,
+                   A_PH_WA = NA_real_,
                    A_CACO3_IF = A_CACO3_IF,
                    A_MG_AAA = A_MG_AAA,
                    A_MG_AL = A_MG_AL,
@@ -74,8 +76,10 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                    A_MG_KCL = A_MG_KCL,
                    A_MG_M3 = A_MG_M3,
                    A_MG_NaAAA = A_MG_NaAAA,
+                   A_K_AAA = A_K_AAA,
                    A_K_CO_PO = A_K_CO_PO,
                    A_K_CC = A_K_CC,
+                   B_COUNTRY = B_COUNTRY,
                    value = NA_real_
   )
   
@@ -93,6 +97,10 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   
   # pedotransfer of Helling (1964) when CEC is missing
   dt[is.na(A_CEC_CO), A_CEC_CO := (0.44 * A_PH_WA + 3)* A_CLAY_MI + (5.1 * A_PH_WA - 5.9) * A_C_OF * 0.1]
+  
+  # estimate K paramters needed for Dutch advice
+  dt[,A_K_CC := osi_conv_potassium(element='A_K_CC',A_K_AAA = A_K_AAA)]
+  dt[,A_K_CO_PO := osi_conv_potassium(element='A_K_CO_PO',A_K_AAA = A_K_AAA,A_CEC_CO=A_CEC_CO,A_PH_CC = A_PH_CC)]
   
   # estimate extrable soil Mg pools when not available
   dt[,A_MG_AL := osi_conv_magnesium(element='A_MG_AL',A_MG_AAA = A_MG_AAA)]
@@ -640,6 +648,9 @@ osi_c_magnesium_fi <- function(B_LU, B_TEXTURE_USDA, A_MG_AAA,A_C_OF = 0) {
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_k']
   
+  # get max length of input data
+  arg.length <- max(length(B_LU),length(B_TEXTURE_USDA), length(A_MG_AAA),length(A_C_OF))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -1136,23 +1147,24 @@ osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
   id = crop_code = soiltype = soiltype.n = crop_category = NULL
   
   # Load in the datasets for soil and crop types
-  crops.obic <- as.data.table(OBIC::crops.obic)
-  setkey(crops.obic, crop_code)
-  soils.obic <- as.data.table(OBIC::soils.obic)
-  setkey(soils.obic, soiltype)
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'NL']
+
+  dt.soils <- as.data.table(euosi::osi_soiltype)
+  dt.soils <- dt.soils[osi_country == 'NL']
   
   # Check inputs
   arg.length <- max(length(A_MG_CC), length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO), 
                     length(A_K_CO_PO), length(A_CLAY_MI), length(B_SOILTYPE_AGR), length(B_LU_BRP))
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(crops.obic$crop_code), empty.ok = FALSE)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(soils.obic$soiltype), empty.ok = FALSE)
+  checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(dt.soils$osi_soil_cat1), empty.ok = FALSE)
   checkmate::assert_numeric(A_MG_CC, lower = 1, upper = 1100, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_CEC_CO, lower = 1, upper = 1000, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_K_CC, lower = 1, upper = 600, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_K_CO_PO, lower = 0.1, upper = 50, any.missing = FALSE, len = arg.length)
+  checkmate::assert_numeric(A_K_CC, lower = 1, upper = 600)
+  checkmate::assert_numeric(A_K_CO_PO, lower = 0.1, upper = 50)
   checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
   
@@ -1175,23 +1187,25 @@ osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
                   )
   
   # add crop names and soiltypes
-  dt <- merge(dt, crops.obic[, list(crop_code, crop_category)], by.x = "B_LU_BRP", by.y = "crop_code")
-  dt <- merge(dt, soils.obic[, list(soiltype, soiltype.n)], by.x = "B_SOILTYPE_AGR", by.y = "soiltype")
+  dt <- merge(dt, dt.crops[, list(crop_code, crop_cat1)], 
+              by.x = "B_LU_BRP", by.y = "crop_code", all.x = TRUE)
+  dt <- merge(dt, dt.soils[, list(osi_soil_cat1, osi_soil_cat2)], 
+              by.x = "B_SOILTYPE_AGR", by.y = "osi_soil_cat1",all.x = TRUE)
   
   # Calculate the Mg availability for arable land
-  dt.arable <- dt[crop_category == "akkerbouw"]
+  dt.arable <- dt[crop_cat1 == "arable"]
   dt.arable[,D_MG := A_MG_CC]
   
   # Calculate the Mg availability for maize land
-  dt.maize <- dt[crop_category == "mais"]
+  dt.maize <- dt[crop_cat1 == "maize"]
   dt.maize[,D_MG := A_MG_CC]
   
   # Calculate Mg availability for grassland on sandy and loamy soils
-  dt.grass.sand <- dt[crop_category == "grasland" & grepl('zand|loess|dalgrond',B_SOILTYPE_AGR)]
+  dt.grass.sand <- dt[crop_cat1 == "grassland" & grepl('zand|loess|dalgrond',B_SOILTYPE_AGR)]
   dt.grass.sand[,D_MG := A_MG_CC]
   
   # Calculate Mg availability for grassland on clay and peat soils
-  dt.grass.other <- dt[crop_category == "grasland" & grepl('klei|veen',B_SOILTYPE_AGR)]
+  dt.grass.other <- dt[crop_cat1 == "grassland" & grepl('klei|veen',B_SOILTYPE_AGR)]
   
   # convert CaCl2 method for Mg to former NaCl method
   dt.grass.other[,A_MG_NC := A_MG_CC * 1.987 - 6.8]
@@ -1232,7 +1246,7 @@ osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
   dt.grass.other[,D_MG := pmin(100 * (mg_pred /2.0), 100)] 
   
   # nature parcels
-  dt.nature <- dt[crop_category == "natuur"]
+  dt.nature <- dt[crop_cat1 == "nature"]
   dt.nature[,D_MG := 0]
   
   # Combine both tables and extract values
@@ -1245,10 +1259,10 @@ osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
   setorder(dt, id)
   
   # convert to indicator score
-  dt[crop_category == "akkerbouw",value := evaluate_logistic(D_MG, b = 0.206, x0 = 45, v = 2.39)]
-  dt[crop_category == "grasland" & grepl('zand|loess|dalgrond',B_SOILTYPE_AGR),value := evaluate_logistic(D_MG, b = 0.075, x0 = 80, v = 2)]
-  dt[crop_category == "grasland" & grepl('klei|veen',B_SOILTYPE_AGR), value := evaluate_logistic(D_MG, b = 0.15, x0 = 75, v = 1)]
-  dt[crop_category == "natuur", value := 1]
+  dt[crop_cat1 == "arable",value := evaluate_logistic(D_MG, b = 0.206, x0 = 45, v = 2.39)]
+  dt[crop_cat1 == "grassland" & grepl('zand|loess|dalgrond',B_SOILTYPE_AGR),value := evaluate_logistic(D_MG, b = 0.075, x0 = 80, v = 2)]
+  dt[crop_cat1 == "grassland" & grepl('klei|veen',B_SOILTYPE_AGR), value := evaluate_logistic(D_MG, b = 0.15, x0 = 75, v = 1)]
+  dt[crop_cat1 == "nature", value := 1]
  
   # select and return OSI indicator
   value <- dt[, value]

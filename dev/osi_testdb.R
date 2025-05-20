@@ -23,8 +23,7 @@
   # add field-ID
   dt[osi_country == 'NL', fieldid := paste0('F',year)]
   dt[osi_country != 'NL', fieldid := paste0('F',id)]
-  
-  
+
   # the Dutch case requires B_SOILTYPE_AGR as input (to be adjusted like soil type internally for others)
   dt[,B_SOILTYPE_AGR := 'dekzand']
 
@@ -54,6 +53,7 @@
   dt[, A_K_AAA := rnorm(.N, mean =75, sd = 12)]
   dt[, A_B_HW := rnorm(.N,mean = 0.4, sd = 0.05)]
   dt[, A_ZN_CC := rnorm(.N, mean = 14.5, sd = 1.5)]
+  dt[,A_MG_AAA := rnorm(.N,mean = 30,sd=7.5)]
   dt[,ID := fieldid]  
 
   
@@ -68,7 +68,8 @@
   A_N_RT = dt$A_N_RT
   A_CACO3_IF = dt$A_CACO3_IF
   B_COUNTRY = dt$B_COUNTRY
-  
+  A_MG_AAA = dt$A_MG_AAA
+  A_CEC_CO = NA_real_
   A_PH_WA = NA_real_ 
   A_PH_CC = dt$A_PH_CC 
   A_P_OL = dt$A_P_OL
@@ -80,4 +81,9 @@
   A_P_AL = NA_real_; A_P_CAL = NA_real_
   A_P_CC = NA_real_; A_P_DL = NA_real_; A_P_M3 = NA_real_
   A_P_WA = NA_real_
+  
+  A_MG_AL = NA_real_; A_MG_AN = NA_real_;A_MG_CC = NA_real_;
+  A_MG_CO_PO = NA_real_; A_MG_DL = NA_real_;A_MG_KCL = NA_real_;A_MG_M3 = NA_real_;
+  A_MG_NaAAA = NA_real_;
+  A_K_CO_PO = NA_real_;A_K_CC = NA_real_
   

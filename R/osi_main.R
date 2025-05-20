@@ -119,7 +119,8 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                                  B_COUNTRY)]
     
     # calculate OSI indicator for Mg supply
-    dt[, i_c_mg := osi_c_magnesium(B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+    dt[, i_c_mg := osi_c_magnesium(B_LU = B_LU,
+                                   B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                                    A_SOM_LOI = A_SOM_LOI, A_C_OF = A_C_OF, 
                                    A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
                                    A_PH_CC = A_PH_CC, A_CACO3_IF = A_CACO3_IF,
@@ -128,7 +129,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                                    A_MG_CO_PO = NA_real_, A_MG_DL = NA_real_,A_MG_KCL = NA_real_,A_MG_M3 = NA_real_,
                                    A_MG_NaAAA = NA_real_,
                                    A_K_CO_PO = NA_real_,A_K_CC = NA_real_,
-                                   B_COUNTRY)]
+                                   B_COUNTRY = B_COUNTRY)]
      
     # calculate OSI indicator for B supply
     dt[,i_c_b := osi_c_boron(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI, 

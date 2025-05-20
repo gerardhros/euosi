@@ -370,14 +370,14 @@ osi_conv_magnesium <- function(element,
   dt[is.na(A_MG_AL) & !is.na(A_MG_AAA) & A_MG_AAA <= 400, A_MG_AL := 1.291 * A_MG_AAA + 65.18]
   dt[is.na(A_MG_AL) & !is.na(A_MG_AAA) & A_MG_AAA > 400, A_MG_AL := 4.49 * A_MG_AAA + 386.95]
   dt[is.na(A_MG_CC) & !is.na(A_MG_AAA), A_MG_CC := (A_MG_AAA + 30.49)/1.287] 
-  dt[is.na(A_MG_KCL) & !is.na(A_MG_AAA), A_MG_KCL := (A_MG_AA + 12.35)/1.03]
-  dt[is.na(A_MG_M3) & !is.na(A_MG_AAA), A_MG_M3 := (A_MG_AA + 3.74)/0.887]
+  dt[is.na(A_MG_KCL) & !is.na(A_MG_AAA), A_MG_KCL := (A_MG_AAA + 12.35)/1.03]
+  dt[is.na(A_MG_M3) & !is.na(A_MG_AAA), A_MG_M3 := (A_MG_AAA + 3.74)/0.887]
   
   # unknown, estimate from comparable methodologies
   dt[is.na(A_MG_AN) & !is.na(A_MG_AAA), A_MG_AN := A_MG_AAA]
   dt[is.na(A_MG_CO_PO) & !is.na(A_MG_AAA), A_MG_CO_PO := A_MG_AAA * (2 / 24.305) * 100 / A_CEC_CO]
   dt[is.na(A_MG_AL) & !is.na(A_MG_AAA), A_MG_DL := A_MG_AL]
-  dt[is.na(A_MG_NaAAA) & !is.na(A_MG_AAA), A_MG_NaAAA := A_MG_AA]
+  dt[is.na(A_MG_NaAAA) & !is.na(A_MG_AAA), A_MG_NaAAA := A_MG_AAA]
   
   # select the requested element
   value <- dt[,get(element)]
