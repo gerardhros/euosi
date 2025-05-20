@@ -7,6 +7,12 @@
 #' @param B_SOILTYPE_AGR (character) The agricultural type of soil
 #' @param B_BGZ (factor) an European region-id used for carbon analyses 
 #' @param B_COUNTRY (character) The country code
+#' @param B_PREC_SUM (numeric) Total potential precipitation in summer (mm)
+#' @param B_PREC_WIN (numeric) Total potential precipitation in winter (mm)
+#' @param B_PET_SUM (numeric) Total potential evapotranspiration in summer (mm)
+#' @param B_PET_WIN (numeric) Total potential evapotranspiration in winter (mm)
+#' @param B_TEMP_SUM (numeric) Mean winter temperature (degrees Celcius)
+#' @param B_TEMP_WIN (numeric) Mean winter temperature (degrees Celcius)
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
@@ -39,6 +45,9 @@
 #' 
 #' @export
 osi_main_lucas <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
+                           B_PREC_SUM = NA_real_,B_PREC_WIN = NA_real_, 
+                           B_PET_SUM = NA_real_,B_PET_WIN = NA_real_,
+                           B_TEMP_SUM = NA_real_,B_TEMP_WIN = NA_real_,
                            A_SOM_LOI, A_SAND_MI, A_CLAY_MI,A_PH_CC,
                            A_CEC_CO,
                            A_N_RT,A_CN_FR, A_N_PMN,
@@ -163,12 +172,20 @@ osi_main_lucas <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
     # carbon sequestration
     dt[,i_e_carbon := osi_carbon(B_LU = B_LU,A_C_OF = A_C_OF, B_BGZ = B_BG, A_CLAY_MI = A_CLAY_MI, A_SAND_MI=A_SAND_MI)]
     
+    # nitrate loss risks from soil organic nitrogen
+    dt[, i_e_nleach := osi_gw_nleach(B_LU = B_LU, 
+                                     A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_CACO3_IF = A_CACO3_IF,
+                                     A_N_RT = A_N_RT, A_C_OF = A_C_OF, 
+                                     B_PREC_SUM = B_PREC_SUM,B_PREC_WIN = B_PREC_WIN, 
+                                     B_PET_SUM = B_PET_SUM,B_PET_WIN = B_PET_WIN,
+                                     B_TEMP_SUM = B_TEMP_SUM,B_TEMP_WIN = B_TEMP_WIN,
+                                     B_COUNTRY)]
     
-  # calculate all soil biological indicators
+    
+    
+ # --- aggregate indicators before scoring ----
   
-  
-  # aggregate indicators before scoring
-  
+    
     # aggregate per year per indicator
   
     # aggregate per indicator
