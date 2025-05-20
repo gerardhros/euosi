@@ -65,7 +65,8 @@
   osi_crops <-  fread('dev/osi_crops.csv',encoding = 'UTF-8',na.strings = c(NA_character_, "","NA"))
   
   # select only selected categories
-  osi_crops <- osi_crops[,.(osi_country,crop_code,crop_name,crop_cat1,crop_cat2,crop_n,crop_p,crop_k,crop_c)]
+  osi_crops <- osi_crops[,.(osi_country,crop_code,crop_name,crop_cat1,crop_cat2,
+                            crop_n,crop_p,crop_k,crop_c,crop_crumbleability)]
   
   # save updated crop table
   usethis::use_data(osi_crops,overwrite = TRUE)
