@@ -59,7 +59,7 @@
   # save updated threshold table
   usethis::use_data(osi_thresholds,overwrite = TRUE)
 
-# make crop table with crop data for France and the Netherlands
+# make crop table with crop data for France, Belgium, Finland and the Netherlands
   
   # load crop datat
   osi_crops <-  fread('dev/osi_crops.csv',encoding = 'UTF-8',na.strings = c(NA_character_, "","NA"))
@@ -69,4 +69,42 @@
   
   # save updated crop table
   usethis::use_data(osi_crops,overwrite = TRUE)
+
+# make weather data table per country
+  
+  # load datasets
+  prec <- as.data.table(readxl::read_xlsx('dev/osi_eu_weather.xlsx',sheet='b_prec_m'))
+  pet <- as.data.table(readxl::read_xlsx('dev/osi_eu_weather.xlsx',sheet='b_pet_m'))
+  temp <- as.data.table(readxl::read_xlsx('dev/osi_eu_weather.xlsx',sheet='b_temp_m'))
+
+  # get country
+  prec[, osi_country := substr(NUTS2,1,2)]
+  pet[, osi_country := substr(NUTS2,1,2)]
+  temp[, osi_country := substr(NUTS2,1,2)]
+  
+  # reformat to input in OSI functions
+  osi_prec <- prec[,.(osi_country,
+                      B_PREC_Y = round(Total),
+                      B_PREC_SUM = round(M3 + M4 + M5 + M6 + M7 + M8),
+                      B_PREC_WIN = round(M1 + M2 + M9 + M10 + M11 + M12))]
+  osi_pet <- pet[,.(osi_country,
+                      B_PET_Y = round(Total),
+                      B_PET_SUM = round(M3 + M4 + M5 + M6 + M7 + M8),
+                      B_PET_WIN = round(M1 + M2 + M9 + M10 + M11 + M12))]
+  osi_temp <- temp[,.(osi_country,
+                     B_TEMP_Y = round(average,2),
+                     B_TEMP_SUM = round((M3 + M4 + M5 + M6 + M7 + M8)/6,2),
+                     B_TEMP_WIN = round((M1 + M2 + M9 + M10 + M11 + M12)/6,2))]
+  
+  # calculate man per country
+  osi_prec <- osi_prec[,lapply(.SD,mean),.SDcols = c('B_PREC_Y', 'B_PREC_SUM', 'B_PREC_WIN'),by='osi_country']
+  osi_pet <- osi_pet[,lapply(.SD,mean),.SDcols = c('B_PET_Y', 'B_PET_SUM', 'B_PET_WIN'),by='osi_country']
+  osi_temp <- osi_temp[,lapply(.SD,mean),.SDcols = c('B_TEMP_Y', 'B_TEMP_SUM', 'B_TEMP_WIN'),by='osi_country']
+  
+  # combine weather file
+  osi_clim <- merge(osi_prec,osi_pet,by ='osi_country',all.x = TRUE)
+  osi_clim <- merge(osi_clim,osi_temp,by ='osi_country',all.x = TRUE)
+  
+  # save updated weather data table
+  usethis::use_data(osi_clim,overwrite = TRUE)
   

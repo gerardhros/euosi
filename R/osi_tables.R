@@ -77,3 +77,20 @@
 #'   \item{osi_country}{the country name where the crop codes are applicable}
 #' }
 "osi_crops"
+
+#' Averaged climatic conditions per country
+#' 
+#' @format A data.frame with 37 rows and 10 columns:
+#' \describe{
+#'   \item{osi_country}{the country name}
+#'   \item{B_PREC_Y}{the total annual precipitation, ERA5 (mm)}
+#'   \item{B_PREC_SUM}{the total summer precipitation, ERA5 (mm)}
+#'   \item{B_PREC_WIN}{the total winter precipitation, ERA5 (mm)}
+#'   \item{B_PET_Y}{the total annual evaporation, ERA5 (mm)}
+#'   \item{B_PET_SUM}{the total summer evaporation, ERA5 (mm)}
+#'   \item{B_PET_WIN}{the total winter evaporation, ERA5 (mm)} 
+#'   \item{B_TEMP_Y}{the mean annual temperature, ERA5 (degrees C)}
+#'   \item{B_TEMP_SUM}{the mean summer temperature, ERA5 (degrees C)}
+#'   \item{B_TEMP_WIN}{the mean winter temperature, ERA5 (degrees C)} 
+#' }
+"osi_clim"
