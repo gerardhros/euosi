@@ -94,7 +94,6 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   dt[is.na(A_CEC_CO), A_CEC_CO := (0.44 * A_PH_WA + 3)* A_CLAY_MI + (5.1 * A_PH_WA - 5.9) * A_C_OF * 0.1]
   
   # estimate extrable soil K pools when not available
-  dt[,A_K_AAA := osi_conv_potassium(element='A_K_AAA',A_K_AAA = A_K_AAA)]
   dt[,A_K_AL := osi_conv_potassium(element='A_K_AL',A_K_AAA = A_K_AAA)]
   dt[,A_K_AN := osi_conv_potassium(element='A_K_AN',A_K_AAA = A_K_AAA)]
   dt[,A_K_CAL:= osi_conv_potassium(element='A_K_CAL',A_K_AAA = A_K_AAA)]
@@ -260,6 +259,9 @@ osi_nut_k_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_) {
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'BE' & osi_indicator =='i_c_k']
+  
+  # get max length of input arguments
+  arg.length <- max(length(B_LU),length(B_TEXTURE_BE),length(A_K_AAA))
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -698,6 +700,9 @@ osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0) {
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_k']
   
+  # get max length of input
+  arg.length <- max(length(B_LU),length(B_TEXTURE_USDA),length(A_K_AAA),length(A_C_OF))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -727,9 +732,9 @@ osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0) {
               all.x = TRUE)
   
   # convert to the OSI score
-  dt[B_SOILTYPE_AGR=='clay',osi_evaluate_logistic(x = A_K_AAA,b = -0.00573, x0 = 552.32, v = 1.6538)]
-  dt[B_SOILTYPE_AGR=='loam',osi_evaluate_logistic(x = A_K_AAA,b = -0.01811, x0 = 159.28, v = 6.5885)]
-  dt[B_SOILTYPE_AGR=='sand',osi_evaluate_logistic(x = A_K_AAA,b = -0.01139, x0 = 277.91, v = 1.6516)]
+  dt[B_SOILTYPE_AGR=='clay',value := osi_evaluate_logistic(x = A_K_AAA,b = -0.00573, x0 = 552.32, v = 1.6538)]
+  dt[B_SOILTYPE_AGR=='loam',value := osi_evaluate_logistic(x = A_K_AAA,b = -0.01811, x0 = 159.28, v = 6.5885)]
+  dt[B_SOILTYPE_AGR=='sand',value := osi_evaluate_logistic(x = A_K_AAA,b = -0.01139, x0 = 277.91, v = 1.6516)]
   
   # set the order to the original inputs
   setorder(dt, id)

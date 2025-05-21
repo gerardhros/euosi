@@ -66,7 +66,7 @@
   
   # select only selected categories
   osi_crops <- osi_crops[,.(osi_country,crop_code,crop_name,crop_cat1,crop_cat2,
-                            crop_n,crop_p,crop_k,crop_c,crop_crumbleability)]
+                            crop_n,crop_p,crop_k,crop_c,crop_s,crop_crumbleability)]
   
   # save updated crop table
   usethis::use_data(osi_crops,overwrite = TRUE)

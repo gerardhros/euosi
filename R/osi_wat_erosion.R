@@ -3,21 +3,21 @@
 #' This function calculates the water erosion index 
 #' 
 #' @param B_LU (character) The crop code
-#' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
-#' 
+#' @param B_COUNTRY (character) The country code
+#'  
 #' @import data.table
 #' 
 #' @examples 
-#' osi_erosion(B_LU = 'SOJ',B_TEXTURE_USDA = 'Cl', A_SOM_LOI = 3.5,A_CLAY_MI = 5,A_SAND_MI = 15)
+#' osi_erosion(B_LU = 'SOJ',A_SOM_LOI = 3.5,A_CLAY_MI = 5,A_SAND_MI = 15,B_COUNTRY='NL')
 #' 
 #' @return 
 #' The water erosion index. A numeric value.
 #' 
 #' @export
-osi_erosion <- function(B_LU, B_TEXTURE_USDA, A_SOM_LOI,A_CLAY_MI,A_SAND_MI) {
+osi_erosion <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -34,6 +34,10 @@ osi_erosion <- function(B_LU, B_TEXTURE_USDA, A_SOM_LOI,A_CLAY_MI,A_SAND_MI) {
   #dt.thresholds <- as.data.table(euosi::osi_thresholds)
   #dt.thresholds <- dt.thresholds[osi_country == 'BE' & osi_indicator =='i_e_p']
   
+  # get max lengthof inputs
+  arg.length <- max(length(B_LU), length(A_SOM_LOI),length(A_CLAY_MI),length(A_SAND_MI),
+                    length(B_COUNTRY))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -41,13 +45,14 @@ osi_erosion <- function(B_LU, B_TEXTURE_USDA, A_SOM_LOI,A_CLAY_MI,A_SAND_MI) {
                    A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
                    A_SILT_MI= 100 - A_CLAY_MI - A_SAND_MI,
+                   B_COUNTRY =B_COUNTRY,
                    value = NA_real_)
   
   # merge crop properties
   dt <- merge(dt,
-              dt.crops[,.(crop_code,crop_cat1,crop_c)],
-              by.x = 'B_LU', 
-              by.y = 'crop_code',
+              dt.crops[,.(osi_country, crop_code,crop_cat1,crop_c)],
+              by.x = c('B_LU','B_COUNTRY') ,
+              by.y = c('crop_code','osi_country'),
               all.x=TRUE)
   
   # merge thresholds
@@ -62,11 +67,11 @@ osi_erosion <- function(B_LU, B_TEXTURE_USDA, A_SOM_LOI,A_CLAY_MI,A_SAND_MI) {
   
   # calculate soil permeability class based on soil texture
   dt[B_TEXTURE_USDA=='Sa', perm := 1]
-  dt[B_TEXTURE_USDA=='SaL', perm := 2]
-  dt[B_TEXTURE_USDA %in% c('L','SiL'), perm := 3]
-  dt[B_TEXTURE_USDA %in% c('SaCL','CL'), perm := 3]
-  dt[B_TEXTURE_USDA=='SaC', perm := 5]
-  dt[B_TEXTURE_USDA=='C', perm := 6]
+  dt[B_TEXTURE_USDA %in% c('SaL','SaLo'), perm := 2]
+  dt[B_TEXTURE_USDA %in% c('L','SiL','SiLo','Lo'), perm := 3]
+  dt[B_TEXTURE_USDA %in% c('SaCL','CL','ClLo','SiClLo','SiCL','Si'), perm := 3]
+  dt[B_TEXTURE_USDA %in% c('SaC'), perm := 5]
+  dt[B_TEXTURE_USDA %in% c('C','Cl'), perm := 6]
   
   # calculate the textural factor m
   dt[, m :=(A_SILT_MI+0.2 * A_SAND_MI) * (100 - A_CLAY_MI)]

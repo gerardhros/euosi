@@ -57,13 +57,17 @@ osi_gw_nleach <- function(B_LU = NA_character_,
                    A_CLAY_MI = A_CLAY_MI,
                    A_SILT_MI = pmax(0,100-A_CLAY_MI - A_SAND_MI),
                    A_C_OF = A_C_OF,
+                   A_SOM_LOI = NA_real_,
                    A_N_RT = A_N_RT,
-                   A_CACO_IF = A_CACO_IF,
+                   A_CACO3_IF = A_CACO3_IF,
                    B_COUNTRY = B_COUNTRY,
                    value = NA_real_)
   
   # merge with climatic data, and adapt when missing
-  dt <- merge(dt,dt.clim,by = 'osi_country', all.x = TRUE)
+  dt <- merge(dt,dt.clim,
+              by.x = 'B_COUNTRY',
+              by.y = 'osi_country', 
+              all.x = TRUE)
   dt[is.na(B_PREC_SUM),B_PREC_SUM := b_prec_sum]
   dt[is.na(B_PREC_WIN),B_PREC_WIN := b_prec_win]
   dt[is.na(B_PET_SUM),B_PET_SUM := b_pet_sum]
@@ -86,7 +90,7 @@ osi_gw_nleach <- function(B_LU = NA_character_,
     # for unknown countries, start with annual weather data
     dt[,B_PREC_Y := B_PREC_SUM + B_PREC_WIN ]
     dt[,B_PET_Y := B_PET_SUM  + B_PET_WIN]
-    dt[,B_TEMP_Y := mean(B_TEMP_SUM,B_TEMP_WIN)]
+    dt[,B_TEMP_Y := (B_TEMP_SUM + B_TEMP_WIN)/2]
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
   dt[B_COUNTRY == 'AT', value := NA_real_]
@@ -125,8 +129,10 @@ osi_gw_nleach <- function(B_LU = NA_character_,
   dt[B_COUNTRY == 'UK', value := NA_real_]
   
   # when country specific data is missing,use then the EU template
-  dt[is.na(value), value := osi_gw_nleach_eu(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
-                                             B_PREC_Y, B_PET_Y, B_TEMP_Y, A_C_OF, A_N_RT)]
+  dt[is.na(value), value := osi_gw_nleach_eu(B_LU = B_LU, A_N_RT = A_N_RT, A_C_OF = A_C_OF, 
+                                             A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,
+                                             B_PREC_Y = B_PREC_Y, B_PET_Y = B_PET_Y, 
+                                             B_TEMP_Y = B_TEMP_Y)]
   
   # setorderid
   setorder(dt,id)
@@ -135,7 +141,7 @@ osi_gw_nleach <- function(B_LU = NA_character_,
   value <- dt[,value]
   
   # return the OSI score
-  return(out)
+  return(value)
   
 }
 
@@ -184,6 +190,12 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   #dt.thresholds <- as.data.table(euosi::osi_thresholds)
   #dt.thresholds <- dt.thresholds[osi_country == 'FR' & osi_indicator =='i_c_k']
   
+  # get maximum length of input data
+  arg.length <- max(length(B_LU), length(A_N_RT), length(A_C_OF), length(A_CLAY_MI), 
+                    length(A_SAND_MI),length(A_CACO3_IF),
+                    length(B_PREC_SUM),length(B_PREC_WIN), length(B_PET_SUM),length(B_PET_WIN),
+                    length(B_TEMP_SUM),length(B_TEMP_WIN))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -195,9 +207,10 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
                    B_TEMP_WIN = B_TEMP_WIN,
                    A_SAND_MI = A_SAND_MI,
                    A_CLAY_MI = A_CLAY_MI,
+                   A_SILT_MI = pmax(0,100-A_CLAY_MI - A_SAND_MI),
                    A_C_OF = A_C_OF,
                    A_N_RT = A_N_RT,
-                   A_CACO_IF = A_CACO_IF,
+                   A_CACO3_IF = A_CACO3_IF,
                    value = NA_real_)
   
   # estimate bulk density
@@ -205,11 +218,14 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   
   # estimate helper variables
   dt[,D_NHA := A_N_RT * 0.2 * D_BDS * 10000 * 1000 * 10^-6]
-  dt[,D_NSC := (22/((12+A_CLAY_MI)*(545+A_CACO_IF))) * D_NHA * 21.35 * 0.33]
+  dt[,D_NSC := (22/((12+A_CLAY_MI)*(545+A_CACO3_IF))) * D_NHA * 21.35 * 0.33]
+  
+  # add texture class
+  dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
   
   # merge crop properties
   dt <- merge(dt,
-              dt.crops[,.(crop_code,crop_cat1)],
+              dt.crops[,.(crop_code,crop_cat1,crop_s)],
               by.x = 'B_LU', 
               by.y = 'crop_code',
               all.x=TRUE)
@@ -221,15 +237,17 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   #             by.y = c('osi_threshold_cropcat'),
   #             all.x = TRUE)
   
-  # calculate N surplus
-  dt[crop_cat1 == 'grassland', NS := pmax(0,D_NSC - 140)]
-  dt[!crop_cat1 == 'grassland', NS := pmax(0,D_NSC - 100)]
+  # calculate N surplus that potentially can leach
+  #dt[crop_cat1 == 'grassland', NS := pmax(0,D_NSC - 140)]
+  #dt[!crop_cat1 == 'grassland', NS := pmax(0,D_NSC - 100)]
+  dt[crop_cat1 == 'grassland', NS := D_NSC * 4/12 ]
+  dt[!crop_cat1 == 'grassland', NS := D_NSC * 6/12]
   
   # calculate fle max
   dt[A_C_OF/10 > 20, flemax := 0.20]
-  dt[grepl('^Sa$|^SaL$',B_TEXTURE_USDA), flemax := 1.0]
-  dt[grepl('^CL$|^L$|^SiL$|^SaCL$',B_TEXTURE_USDA),flexmax := 0.75]
-  dt[grepl('^C$|^SaC$',B_TEXTURE_USDA),flexmax := 0.5]
+  dt[grepl('^Sa$|^SaL$|^SaLo$',B_TEXTURE_USDA), flemax := 1.0]
+  dt[grepl('^CL$|^ClLo$|^L$|^SiL$|^SaCL$|^SiCL$|^SiLo$|^Lo$|^SiClLo$|^Si$',B_TEXTURE_USDA),flemax := 0.75]
+  dt[grepl('^C$|^SaC$|^SaCl$|^Cl$',B_TEXTURE_USDA),flemax := 0.5]
   
   # calculate flu
   dt[crop_cat1 %in% c('grassland','forest'), flu := 0.85]
@@ -338,6 +356,12 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FR' & osi_indicator =='i_c_n']
   
+  # get maximum length of input data
+  arg.length <- max(length(B_LU), length(A_N_RT), length(A_C_OF), length(A_CLAY_MI), 
+                    length(A_SAND_MI),length(A_CACO3_IF),
+                    length(B_PREC_SUM),length(B_PREC_WIN), length(B_PET_SUM),length(B_PET_WIN),
+                    length(B_TEMP_SUM),length(B_TEMP_WIN))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -349,9 +373,10 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
                    B_TEMP_WIN = B_TEMP_WIN,
                    A_SAND_MI = A_SAND_MI,
                    A_CLAY_MI = A_CLAY_MI,
+                   A_SILT_MI = pmax(0,100-A_CLAY_MI - A_SAND_MI),
                    A_C_OF = A_C_OF,
                    A_N_RT = A_N_RT,
-                   A_CACO_IF = A_CACO_IF,
+                   A_CACO3_IF = A_CACO3_IF,
                    value = NA_real_)
   
   # estimate bulk density
@@ -359,11 +384,14 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   
   # estimate helper variables
   dt[,D_NHA := A_N_RT * 0.2 * D_BDS * 10000 * 1000 * 10^-6]
-  dt[,D_NSC := (22/((12+A_CLAY_MI)*(545+A_CACO_IF))) * D_NHA * 21.35 * 0.33]
+  dt[,D_NSC := (22/((12+A_CLAY_MI)*(545+A_CACO3_IF))) * D_NHA * 21.35 * 0.33]
+  
+  # add texture class
+  dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
   
   # merge crop properties
   dt <- merge(dt,
-              dt.crops[,.(crop_code,crop_cat1)],
+              dt.crops[,.(crop_code,crop_cat1,crop_s)],
               by.x = 'B_LU', 
               by.y = 'crop_code',
               all.x=TRUE)
@@ -376,14 +404,19 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   #             all.x = TRUE)
 
   # calculate N surplus
-  dt[crop_cat1 == 'grassland', NS := pmax(0,D_NSC - 140)]
-  dt[!crop_cat1 == 'grassland', NS := pmax(0,D_NSC - 100)]
+  # dt[crop_cat1 == 'grassland', NS := pmax(0,D_NSC - 140)]
+  # dt[!crop_cat1 == 'grassland', NS := pmax(0,D_NSC - 100)]
+  dt[crop_cat1 == 'grassland', NS := D_NSC * 4/12 ]
+  dt[!crop_cat1 == 'grassland', NS := D_NSC * 6/12]
   
   # calculate fle max
   dt[A_C_OF/10 > 20, flemax := 0.20]
-  dt[grepl('^Sa$|^SaL$',B_TEXTURE_USDA), flemax := 1.0]
-  dt[grepl('^CL$|^L$|^SiL$|^SaCL$',B_TEXTURE_USDA),flexmax := 0.75]
-  dt[grepl('^C$|^SaC$',B_TEXTURE_USDA),flexmax := 0.5]
+  #dt[grepl('^Sa$|^SaL$',B_TEXTURE_USDA), flemax := 1.0]
+  #dt[grepl('^CL$|^L$|^SiL$|^SaCL$',B_TEXTURE_USDA),flemax := 0.75]
+  #dt[grepl('^C$|^SaC$',B_TEXTURE_USDA),flemax := 0.5]
+  dt[grepl('^Sa$|^SaL$|^SaLo$',B_TEXTURE_USDA), flemax := 1.0]
+  dt[grepl('^CL$|^ClLo$|^L$|^SiL$|^SaCL$|^SiCL$|^SiLo$|^Lo$|^SiClLo$|^Si$',B_TEXTURE_USDA),flemax := 0.75]
+  dt[grepl('^C$|^SaC$|^SaCl$|^Cl$',B_TEXTURE_USDA),flemax := 0.5]
   
   # calculate flu
   dt[crop_cat1 %in% c('grassland','forest'), flu := 0.85]
@@ -482,11 +515,16 @@ osi_gw_nleach_fi <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI) {
   #dt.thresholds <- as.data.table(euosi::osi_thresholds)
   #dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_e_n']
   
+  # get maximum length of input data
+  arg.length <- max(length(B_LU), length(A_N_RT), length(A_C_OF), length(A_CLAY_MI), 
+                    length(A_SAND_MI))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    A_SAND_MI = A_SAND_MI,
                    A_CLAY_MI = A_CLAY_MI,
+                   A_SILT_MI = pmax(0,100-A_CLAY_MI - A_SAND_MI),
                    A_C_OF = A_C_OF,
                    A_N_RT = A_N_RT,
                    value = NA_real_)
@@ -494,7 +532,7 @@ osi_gw_nleach_fi <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI) {
 
   # merge crop properties
   dt <- merge(dt,
-              dt.crops[,.(crop_code,crop_cat1)],
+              dt.crops[,.(crop_code,crop_cat1,crop_s)],
               by.x = 'B_LU', 
               by.y = 'crop_code',
               all.x=TRUE)
@@ -556,7 +594,12 @@ osi_gw_nleach_eu <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
   
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  
+
+  # get maximum length of input data
+  arg.length <- max(length(B_LU), length(A_N_RT), length(A_C_OF), length(A_CLAY_MI), 
+                    length(A_SAND_MI),
+                    length(B_PREC_Y), length(B_PET_Y),length(B_TEMP_Y))
+ 
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -574,26 +617,33 @@ osi_gw_nleach_eu <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
   
   # estimate bulk density
-  dt[, D_BDS := 0.80806 + 0.823844*exp(0.0578*0.1*A_C_OF) + 0.0014065 * A_SAND_MI - (0.0010299 * A_CLAY_MI)]
+  dt[, D_BS := 0.80806 + 0.823844*exp(0.0578*0.1*A_C_OF) + 0.0014065 * A_SAND_MI - (0.0010299 * A_CLAY_MI)]
   
   # set annual decomposition rate of 2%
   dt[, arate := 0.02]
   
   # estimate N supply for top 30 cm soil layer, set at max at 400 kg / yr
-  dt[, NSC := pmin(400,(100 * 100 * 0.3 * B_DS) * A_N_RT * arate * 0.001 * 0.001)]
+  dt[, NSC := pmin(400,(100 * 100 * 0.3 * D_BS) * A_N_RT * arate * 0.001 * 0.001)]
   
   # assume all sites are cropland, most vulnerably for leaching
   dt[, crop_cat1 := 'cropland']
   
+  # set N surplus equal to N supply during winter
+  dt[,NS := NSC * 6 /12]
+  
   # calculate fle max
   dt[A_C_OF/10 > 20, flemax := 0.20]
-  dt[grepl('^Sa$|^SaL$',B_TEXTURE_USDA), flemax := 1.0]
-  dt[grepl('^CL$|^L$|^SiL$|^SaCL$',B_TEXTURE_USDA),flexmax := 0.75]
-  dt[grepl('^C$|^SaC$',B_TEXTURE_USDA),flexmax := 0.5]
+  #dt[grepl('^Sa$|^SaL$',B_TEXTURE_USDA), flemax := 1.0]
+  #dt[grepl('^CL$|^L$|^SiL$|^SaCL$',B_TEXTURE_USDA),flemax := 0.75]
+  #dt[grepl('^C$|^SaC$',B_TEXTURE_USDA),flemax := 0.5]
+  dt[grepl('^Sa$|^SaL$|^SaLo$',B_TEXTURE_USDA), flemax := 1.0]
+  dt[grepl('^CL$|^ClLo$|^L$|^SiL$|^SaCL$|^SiCL$|^SiLo$|^Lo$|^SiClLo$|^Si$',B_TEXTURE_USDA),flemax := 0.75]
+  dt[grepl('^C$|^SaC$|^SaCl$|^Cl$',B_TEXTURE_USDA),flemax := 0.5]
   
   # calculate flu
-  dt[crop_cat1 %in% c('grassland','forest'), flu := 0.85]
-  dt[crop_cat1 %in% c('arable'), flu := 1.0]
+  dt[crop_cat1 %in% c('grassland','forest','other'), flu := 0.85]
+  dt[crop_cat1 %in% c('arable','cropland','maize'), flu := 1.0]
+  dt[crop_cat1 %in% c('Permanent','other','nature')|is.na(crop_cat1), flu := 0.5]
   
   # calculate PS
   dt[,B_PS := max(0,B_PREC_Y - abs(B_PET_Y))]

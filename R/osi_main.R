@@ -190,25 +190,29 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                                        B_COUNTRY = B_COUNTRY)]
     
     # carbon sequestration
-    dt[,i_e_carbon := osi_carbon(B_LU = B_LU,A_C_OF = A_C_OF, B_BGZ = B_BG, A_CLAY_MI = A_CLAY_MI, A_SAND_MI=A_SAND_MI)]
+    dt[,i_e_carbon := osi_carbon(B_LU = B_LU,A_C_OF = A_C_OF, 
+                                 B_BGZ = '4', A_CLAY_MI = A_CLAY_MI, 
+                                 A_SAND_MI=A_SAND_MI, B_COUNTRY = B_COUNTRY)]
     
     # nitrate loss risks from soil organic nitrogen
     dt[, i_e_nleach := osi_gw_nleach(B_LU = B_LU, 
-                                     A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_CACO3_IF = A_CACO3_IF,
+                                     A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,
+                                     A_CACO3_IF = A_CACO3_IF,
                                      A_N_RT = A_N_RT, A_C_OF = A_C_OF, 
                                      B_PREC_SUM = B_PREC_SUM,B_PREC_WIN = B_PREC_WIN, 
                                      B_PET_SUM = B_PET_SUM,B_PET_WIN = B_PET_WIN,
                                      B_TEMP_SUM = B_TEMP_SUM,B_TEMP_WIN = B_TEMP_WIN,
-                                     B_COUNTRY)]
+                                     B_COUNTRY = B_COUNTRY)]
     
     # phosphorus excess risk indicator
     dt[,i_e_pexcess := osi_nut_p(B_LU, 
                                  B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
-                                 A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF,
-                                 A_SOM_LOI = A_SOM_LOI, A_PH_WA = NA_real_,A_PH_CC = A_PH_CC, A_CACO3_IF = A_CACO3_IF,
+                                 A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,
+                                 A_C_OF = A_C_OF, A_SOM_LOI = A_SOM_LOI, 
+                                 A_PH_WA = NA_real_,A_PH_CC = A_PH_CC, A_CACO3_IF = A_CACO3_IF,
                                  A_P_OL = A_P_OL, A_P_M3 = NA_real_, A_P_CAL = NA_real_,
                                  A_P_AAA = NA_real_,A_P_DL = NA_real_,
-                                 A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY)]
+                                 A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY = B_COUNTRY)]
     
     # potassium excess risk indicator
     dt[,i_e_kexcess := osi_nut_k(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR,
@@ -224,8 +228,10 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
   
     # add crop category to allow exclusion of certain crops (e.g. nature) in aggregation
     dt <- merge(dt,
-                euosi::osi_crops[,.(crop_code,crop_cat1)],
-                by.x='B_LU',by.y='crop_code',all.x=TRUE)
+                euosi::osi_crops[,.(crop_code,crop_cat1,osi_country)],
+                by.x= c('B_LU','B_COUNTRY'),
+                by.y=c('crop_code','osi_country'),
+                all.x=TRUE)
     
     # set default to cropland (temporary solution since crop database is not complete yet)
     dt[is.na(crop_cat1), cropt_cat1 := 'arable']
@@ -238,11 +244,11 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                     weight = c(-1))
     
     # select all indicators used for scoring, only for I_C, I_P, I_B and I_B
-    cols <- colnames(dt)[grepl('^ID$|^i_c|^i_p|^i_b|^i_e|year',colnames(dt))]
+    cols <- colnames(dt)[grepl('^ID$|^i_c|^i_p|^i_b|^i_e|year|crop_cat1',colnames(dt))]
     
     # melt dt and assign main categories for OBI
     dt.melt <- melt(dt[,mget(cols)],
-                    id.vars = c('year', 'ID'),
+                    id.vars = c('year', 'ID','crop_cat1'),
                     variable.name = 'indicator')
     
     # remove the indicators that have a NA value
@@ -250,14 +256,17 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
     
     # add main categories relevant for aggregating
     dt.melt[grepl('^i_c|^i_p|^i_b',indicator), cat1 := 'ess_prod']
-    dt.melt[grepl('excess',indicator), cat1 := 'ess_nutcycle']
-    dt.melt[grepl('nleac|water',indicator), cat1 := 'ess_water']
-    dt.melt[grepl('carbon',indicator), cat1 := 'ess_climate']
+    dt.melt[grepl('excess',indicator), cat1 := 'ess_env']
+    dt.melt[grepl('nleac|water',indicator), cat1 := 'ess_env']
+    dt.melt[grepl('carbon',indicator), cat1 := 'ess_env']
     
     # add sub categories relevant for aggregating
     dt.melt[grepl('^i_c',indicator), cat2 := 'chemistry']
     dt.melt[grepl('^i_p',indicator), cat2 := 'physics']
     dt.melt[grepl('^i_b',indicator), cat2 := 'biology']
+    dt.melt[grepl('excess',indicator), cat2 := 'nutcycle']
+    dt.melt[grepl('nleac|water',indicator), cat2 := 'water']
+    dt.melt[grepl('carbon',indicator), cat2 := 'climate']
     
     # Determine amount of indicators per (sub)category
     dt.melt.ncat <- dt.melt[year==1][,list(ncat = .N),by = .(ID, cat1,cat2)]
@@ -297,8 +306,8 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
     
     # overwrite names
     setnames(out.score.cat2,
-             old = c('biology', 'chemistry', 'climate', 'gw_quality', 'gw_quantity', 'macronutrient', 'physics'),
-             new = c('s_euosi_prod_b','s_euosi_prod_c','s_euosi_clim','s_euosi_water','s_euosi_nut','s_euosi_prod_p'),
+             old = c('biology', 'chemistry', 'climate', 'nutcycle', 'physics', 'water'),
+             new = c('s_euosi_prod_b','s_euosi_prod_c','s_euosi_clim','s_euosi_nutcycle','s_euosi_prod_p','s_eusi_water'),
              skip_absent = TRUE)
     
     # calculate weighing factor depending on number of indicators
@@ -318,8 +327,9 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
     
     # overwrite names
     setnames(out.score.cat1,
-             old = c('ess_climate', 'ess_nutcycle', 'ess_prod','ess_water'),
-             new = c('s_euosi_esd_clim','s_euosi_esd_nut','s_euosi_esd_prod','s_euosi_esd_water'))
+             old = c('ess_prod','ess_env','ess_climate', 'ess_nutcycle', 'ess_water'),
+             new = c('s_euosi_ess_prod','s_euosi_ess_env','s_euosi_ess_clim','s_euosi_ess_nut','s_euosi_ess_water'),
+             skip_absent = TRUE)
     
     # calculate weighing factor depending on number of indicators
     out.score[,cf := log(ncat + 1)]
@@ -330,10 +340,10 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
     # combine OSI subscores, BLN scores and BLN total score
     out.score.osi <- merge(out.score.cat1,
                            out.score.cat2,by='ID',all.x=TRUE)
-    out.score.osi <- merge(out.score.bln,out.score.total,by='ID',all.x = TRUE)
+    out.score.osi <- merge(out.score.osi,out.score.total,by='ID',all.x = TRUE)
     
     # round all scores to two numbers
-    cols <- colnames(out.score.bln)[grepl('^s_euosi',colnames(out.score.bln))]
+    cols <- colnames(out.score.osi)[grepl('^s_euosi',colnames(out.score.osi))]
     out.score.osi[, c(cols) := lapply(.SD,function(x) round(x,2)),.SDcols = cols]
     
     # remove temporary files
@@ -357,20 +367,9 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
     out.ind <- dcast(out.ind,ID~indicator,value.var='value')
     
     # prepare output, with default
-    if(output == 'all') {out <- merge(out.ind,out.score.bln,by='ID',all.x=TRUE)}
+    if(output == 'all') {out <- merge(out.ind,out.score.osi,by='ID',all.x=TRUE)}
     if(output == 'scores'){out <- copy(out.score.osi)}
     if(output == 'indicators'){out <- copy(out.ind)}
-    
-  # ---  Step 6 Combine all outputs into one ------------------
-  
-  # combine both outputs
-  if(output == 'all'){out <- NULL}
-  if(output == 'indicators'){out <- NULL}
-  if(output == 'recommendations'){out <- NULL}
-  if(output == 'scores'){out <- NULL}
-  if(output == 'obic_score'){out <- NULL}
-  if(output == 'unaggregated'){out <- NULL}
-  
   
   # return output
   return(out)

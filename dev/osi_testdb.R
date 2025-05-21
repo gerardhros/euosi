@@ -64,7 +64,7 @@
   A_CLAY_MI = dt$A_CLAY_MI
   A_SAND_MI = dt$A_SAND_MI
   A_SOM_LOI = dt$A_SOM_LOI
-  A_C_OF= NA_real_
+  A_C_OF= dt$A_C_OF
   A_N_RT = dt$A_N_RT
   A_CACO3_IF = dt$A_CACO3_IF
   B_COUNTRY = dt$B_COUNTRY
@@ -87,3 +87,12 @@
   A_MG_NaAAA = NA_real_;
   A_K_CO_PO = NA_real_;A_K_CC = NA_real_
   
+  B_PREC_SUM = dt$B_PREC_SUM;B_PREC_WIN = dt$B_PREC_WIN 
+  B_PET_SUM = dt$B_PET_SUM;B_PET_WIN = dt$B_PET_WIN
+  B_TEMP_SUM = dt$B_TEMP_SUM;B_TEMP_WIN = dt$B_TEMP_WIN
+  
+  B_PREC_Y = dt$B_PREC_Y; B_PET_Y = dt$B_PET_Y; B_TEMP_Y = dt$B_TEMP_Y
+  
+  B_PREC_SUM = NA_real_;B_PREC_WIN = NA_real_ 
+  B_PET_SUM = NA_real_;B_PET_WIN = NA_real_
+  B_TEMP_SUM = NA_real_;B_TEMP_WIN = NA_real_

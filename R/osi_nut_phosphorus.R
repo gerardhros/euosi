@@ -78,6 +78,13 @@ osi_nut_p <- function(B_LU,
   # estimate missing soil properties
   dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
   dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
+  dt[is.na(A_P_AL) & !is.na(A_P_OL), A_P_AL := osi_conv_phosphor(element='A_P_AL',A_P_OL = A_P_OL,A_PH_CC = A_PH_CC)]
+  dt[is.na(A_P_CAL) & !is.na(A_P_OL), A_P_CAL := osi_conv_phosphor(element='A_P_CAL',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_DL) & !is.na(A_P_OL), A_P_DL := osi_conv_phosphor(element='A_P_DL',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_AAA) & !is.na(A_P_OL), A_P_AAA := osi_conv_phosphor(element='A_P_AAA',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_M3) & !is.na(A_P_OL), A_P_M3 := osi_conv_phosphor(element='A_P_M3',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_WA) & !is.na(A_P_OL), A_P_WA := osi_conv_phosphor(element='A_P_WA',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_CC) & !is.na(A_P_OL), A_P_CC := osi_conv_phosphor(element='A_P_CC',A_P_OL = A_P_OL)]
   
   
   # calculate the OSI score for P excess
@@ -220,6 +227,9 @@ osi_nut_p_be <- function(B_LU, A_P_AL) {
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'BE' & osi_indicator =='i_e_p']
+  
+  # get the max length of input variables
+  arg.length <- max(length(B_LU),length(A_P_AL))
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -584,18 +594,18 @@ osi_nut_p_es <- function(B_LU, A_CLAY_MI,A_P_OL) {
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_P_AA (numeric) The exchangeable P-content of the soil measured via ammonium acetate extraction
+#' @param A_P_AAA(numeric) The exchangeable P-content of the soil measured via ammonium acetate extraction
 #' 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_posphor_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_P_AA = 45)
+#' osi_nut_posphor_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_P_AAA= 45)
 #' 
 #' @return 
 #' The phosphorus excess index in Finland estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_nut_p_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AA,A_C_OF = 0) {
+osi_nut_p_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -612,12 +622,15 @@ osi_nut_p_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AA,A_C_OF = 0) {
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_e_p']
   
+  # get the max length of input variables
+  arg.length <- max(length(B_LU),length(B_TEXTURE_USDA),length(A_P_AAA),length(A_C_OF))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    B_TEXTURE_USDA = B_TEXTURE_USDA,
                    B_SOILTYPE_AGR = NA_character_,
-                   A_P_AA = A_P_AA,
+                   A_P_AAA = A_P_AAA,
                    value = NA_real_)
   
   # merge crop properties
@@ -641,7 +654,7 @@ osi_nut_p_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AA,A_C_OF = 0) {
               all.x = TRUE)
   
   # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = A_P_AA, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  dt[,value := osi_evaluate_logistic(x = A_P_AAA, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -698,7 +711,7 @@ osi_nut_p_fr <- function(B_LU, A_P_OL,A_PH_WA = NA_real_) {
   dt.soiltype <- as.data.table(euosi::osi_soiltype)
   
   # Check length of desired input
-  arg.length <- max(length(B_LU),length(A_P_OL))
+  arg.length <- max(length(B_LU),length(A_P_OL),length(A_PH_WA))
   
   # check the values (update the limits later via dt.parms)
   checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
@@ -1080,9 +1093,9 @@ osi_nut_p_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA
   arg.length <- max(length(B_LU),length(A_P_AL),length(A_P_CC),length(A_P_WA))
   
   # check the values (update the limits later via dt.parms)
-  checkmate::assert_numeric(A_P_AL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(A_P_CC, lower = 0.1, upper = 100, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(A_P_WA, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
+  #checkmate::assert_numeric(A_P_AL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
+  #checkmate::assert_numeric(A_P_CC, lower = 0.1, upper = 100, any.missing = TRUE, len = arg.length)
+  #checkmate::assert_numeric(A_P_WA, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
   checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   
