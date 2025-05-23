@@ -4,16 +4,27 @@
 \alias{osi_c_potassium_fr}
 \title{Calculate the potassium availability index in France}
 \usage{
-osi_c_potassium_fr(B_LU, B_SOILTYPE_AGR, B_AER_FR, A_K_AA = NA_real_)
+osi_c_potassium_fr(
+  B_LU,
+  A_K_AAA,
+  B_TEXTURE_GEPPA = NA_character_,
+  B_SOILTYPE_AGR = NA_character_,
+  B_AER_FR = NA_character_,
+  A_PH_WA = NA_real_
+)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
 
-\item{B_SOILTYPE_AGR}{(character) The soil type in a particular region}
+\item{A_K_AAA}{(numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction}
 
-\item{B_AER_FR}{(character) An agroeconomic region in France}
+\item{B_TEXTURE_GEPPA}{(character) The soil texture class in a particular region.}
 
-\item{A_K_AA}{(numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction}
+\item{B_SOILTYPE_AGR}{(character) The agricultural type of soil}
+
+\item{B_AER_FR}{(character) An agroeconomic region in France. Optional argument.}
+
+\item{A_PH_WA}{(numeric) The pH measured in water.}
 }
 \value{
 The potassium availability index in France estimated from extractable potassium. A numeric value.
@@ -21,8 +32,11 @@ The potassium availability index in France estimated from extractable potassium.
 \description{
 This function calculates the potassium availability.
 }
+\details{
+The function has two optional arguments soil type (B_SOILTYPE_AGR) and agricultural region (B_AER_FR). When these are unknown, then the soil type is estimated based on the pH value. Threshold values are then generalized for calcareous and non-calcareous soils.
+}
 \examples{
-osi_c_potassium_fr(B_LU = 'SOJ', A_K_AA = 45,
+osi_c_potassium_fr(B_LU = 'SOJ', A_K_AAA = 45,
 B_SOILTYPE_AGR = 'limons battants', B_AER_FR = 'nord picardie')
 
 }
