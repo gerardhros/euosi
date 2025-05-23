@@ -4,7 +4,7 @@
 \alias{osi_c_magnesium_fr}
 \title{Calculate the Mg availability index for France}
 \usage{
-osi_c_magnesium_fr(B_LU, A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AA)
+osi_c_magnesium_fr(B_LU, A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AAA)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -15,7 +15,7 @@ osi_c_magnesium_fr(B_LU, A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AA)
 
 \item{A_CACO3_IF}{(numeric) The CaCO3 content in the soil (\%)}
 
-\item{A_MG_AA}{(numeric) The extractable Mg content in the soil (mg/kg)}
+\item{A_MG_AAA}{(numeric) The extractable Mg content in the soil (mg/kg)}
 }
 \value{
 The magnesium availability index in France estimated from extractable magnesium. A numeric value.

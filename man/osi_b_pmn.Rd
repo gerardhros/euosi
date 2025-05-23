@@ -4,14 +4,25 @@
 \alias{osi_b_pmn}
 \title{Calculate the index for the microbial biological activity (wrapper function)}
 \usage{
-osi_b_pmn(B_LU, B_SOILTYPE_AGR, A_N_PMN, B_COUNTRY)
+osi_b_pmn(
+  B_LU,
+  B_SOILTYPE_AGR,
+  A_CLAY_MI = NA_real_,
+  A_N_PMN = NA_real_,
+  A_N_RT = NA_real_,
+  B_COUNTRY
+)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{B_SOILTYPE_AGR}{(character) The agricultural type of soil}
 
+\item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
+
 \item{A_N_PMN}{(numeric) The potentially mineralizable N pool (mg N / kg soil)}
+
+\item{A_N_RT}{(numeric) The organic nitrogen content of the soil in mg N / kg}
 
 \item{B_COUNTRY}{(character) The country code}
 }

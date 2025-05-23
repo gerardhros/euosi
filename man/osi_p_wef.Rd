@@ -4,14 +4,16 @@
 \alias{osi_p_wef}
 \title{Calculate indicator for wind erodibility}
 \usage{
-osi_p_wef(B_LU, A_CLAY_MI, A_SILT_MI)
+osi_p_wef(B_LU, A_CLAY_MI, A_SAND_MI, B_COUNTRY)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
 
-\item{A_SILT_MI}{(numeric) The silt content of the soil (\%)}
+\item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
+
+\item{B_COUNTRY}{(character) The country code}
 }
 \value{
 The vulnerability of the soil for wind erosion. A numeric value.
@@ -20,7 +22,7 @@ The vulnerability of the soil for wind erosion. A numeric value.
 This function calculates the risk for wind erodibility of soils, derived from Van Kerckhoven et al. (2009) and Ros & Bussink (2013)
 }
 \examples{
-osi_p_wef(B_LU = 265, A_CLAY_MI = 4, A_SILT_MI = 15)
-osi_p_wef(B_LU = c(265,1019), A_CLAY_MI = c(4,18), A_SILT_MI = c(15,65))
+osi_p_wef(B_LU = 265, A_CLAY_MI = 4, A_SAND_MI = 15, B_COUNTRY='NL')
+osi_p_wef(B_LU = c(265,1019), A_CLAY_MI = c(4,18), A_SAND_MI = c(15,65), B_COUNTRY=c('NL','NL'))
 
 }

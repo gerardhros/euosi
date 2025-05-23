@@ -7,10 +7,20 @@
 osi_c_posphor(
   B_LU,
   B_SOILTYPE_AGR = NA_character_,
-  B_AER_FR = NA_character_,
-  A_P_OL = NA_real_,
+  A_CLAY_MI = NA_real_,
+  A_SAND_MI = NA_real_,
+  A_SOM_LOI = NA_real_,
+  A_C_OF = NA_real_,
+  A_PH_WA = NA_real_,
+  A_PH_CC = NA_real_,
+  A_CACO3_IF = NA_real_,
+  A_P_AAA = NA_real_,
   A_P_AL = NA_real_,
+  A_P_CAL = NA_real_,
   A_P_CC = NA_real_,
+  A_P_DL = NA_real_,
+  A_P_M3 = NA_real_,
+  A_P_OL = NA_real_,
   A_P_WA = NA_real_,
   B_COUNTRY
 )
@@ -18,22 +28,42 @@ osi_c_posphor(
 \arguments{
 \item{B_LU}{(character) The crop code}
 
-\item{B_SOILTYPE_AGR}{(character) The agricultural type of soil}
+\item{B_SOILTYPE_AGR}{(character) The soil type in a particular region}
 
-\item{B_AER_FR}{(character) An agroeconomic region in France}
+\item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
 
-\item{A_P_OL}{(numeric) The P-content of the soil extracted with Olsen (mg/kg)}
+\item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
 
-\item{A_P_AL}{(numeric) The P-content of the soil extracted with ammonium lactate}
+\item{A_SOM_LOI}{(numeric) The organic matter content of the soil (\%)}
 
-\item{A_P_CC}{(numeric) The P-content of the soil extracted with CaCl2}
+\item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
 
-\item{A_P_WA}{(numeric) The P-content of the soil extracted with water}
+\item{A_PH_WA}{(numeric) The pH measured in water.}
+
+\item{A_PH_CC}{(numeric) The pH measured in CaCl2 extraction.}
+
+\item{A_CACO3_IF}{(numeric) the percentage of CaCO3 (\%)}
+
+\item{A_P_AAA}{(numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction (mg P / kg)}
+
+\item{A_P_AL}{(numeric) The P-content of the soil extracted with ammonium lactate (mg P / kg)}
+
+\item{A_P_CAL}{(numeric) The exchangeable P-content of the soil measured via Calcium Ammonium Lactate (mg P/ kg)}
+
+\item{A_P_CC}{(numeric) The P-content of the soil extracted with CaCl2 (mg P / kg)}
+
+\item{A_P_DL}{(numeric) The P-content of the soil extracted with double lactate (mg P / kg)}
+
+\item{A_P_M3}{(numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)}
+
+\item{A_P_OL}{(numeric) The P-content of the soil extracted with Olsen (mg P / kg)}
+
+\item{A_P_WA}{(numeric) The P-content of the soil extracted with water (mg P / kg)}
 
 \item{B_COUNTRY}{(character) The country code}
 }
 \value{
-The phosphate availability index in the Netherlands estimated from extractable soil P fractions. A numeric value.
+The phosphate availability index in European countries estimated from extractable soil P fractions. A numeric value.
 }
 \description{
 This function calculates the phosphate availability for all European countries (if available).
