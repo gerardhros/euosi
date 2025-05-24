@@ -272,6 +272,9 @@ osi_conv_potassium <- function(element,
                               A_K_M3 = NA_real_,A_K_NaAAA = NA_real_,A_K_WA = NA_real_,
                               A_CEC_CO = NA_real_,A_PH_CC = NA_real_){
   
+  # add visual bindings
+  A_PH_WA = NULL
+  
   # check inputs
   checkmate::assert_subset(element,choices = c('A_K_AL','A_K_AN','A_K_CAL','A_K_CC',
                                                'A_K_CO_PO','A_K_DL','A_K_M3',
@@ -289,7 +292,9 @@ osi_conv_potassium <- function(element,
                    A_K_NaAAA = A_K_NaAAA,
                    A_K_WA = A_K_WA,
                    A_CEC_CO = A_CEC_CO,
-                   A_PH_CC = A_PH_CC)
+                   A_PH_CC = A_PH_CC,
+                   A_PH_WA = NA_real_
+                   )
   
   # estimate pH water from pH-CaCl2
   dt[,A_PH_WA := osi_conv_ph('A_PH_WA',A_PH_CC = A_PH_CC)]

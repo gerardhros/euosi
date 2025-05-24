@@ -13,22 +13,21 @@
 #' @param B_PET_WIN (numeric) Total potential evapotranspiration in winter (mm)
 #' @param B_TEMP_SUM (numeric) Mean winter temperature (degrees Celcius)
 #' @param B_TEMP_WIN (numeric) Mean winter temperature (degrees Celcius)
-#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
+#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
+#' @param A_C_OF (numeric) The carbon content of the soil layer (g/ kg)
 #' @param A_CEC_CO (numeric) The cation exchange capacity of the soil (mmol+ / kg), analyzed via Cobalt-hexamine extraction
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
+#' @param A_CACO3_IF (numeric) the percentage of CaCO3 (\%)
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
-#' @param A_CN_FR (numeric) The carbon to nitrogen ratio (-)
 #' @param A_N_PMN (numeric) The potentially mineralizable N pool (mg N / kg soil) 
-#' @param A_P_AL (numeric) The P-AL content of the soil
-#' @param A_P_CC (numeric) The plant available P content, extracted with 0.01M CaCl2 (mg / kg)
-#' @param A_P_WA (numeric) The P-content of the soil extracted with water (mg P2O5 / 100 ml soil)
-#' @param A_K_CO_PO (numeric) The occupation of the CEC with K (\%)
-#' @param A_K_CC (numeric) The plant available K content, extracted with 0.01M CaCl2 (mg / kg)
-#' @param A_CA_CO_PO (numeric) The The occupation of the CEC with Ca (\%)
-#' @param A_MG_CO_PO (numeric) The The occupation of the CEC with Mg (\%)
-#' @param B_COUNTRY (character) The country code
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P / kg)
+#' @param A_K_AAA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction 
+#' @param A_MG_AAA (numeric) is the exchangeable Mg concentration (mg/kg)
+#' @param A_B_HW (numeric) The plant available content of B in the soil (mg  B per kg) extracted by hot water
+#' @param A_ZN_CC (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by CaCl2 
+#' @param A_ZN_EDTA (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by EDTA 
 #' @param output (character) An optional argument to select output: obic_score, scores, indicators, recommendations, or all. (default = all)
 #' 
 #' @details 
@@ -44,21 +43,24 @@
 #' The output is always a data.table.
 #' 
 #' @export
-osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
+osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                       B_PREC_SUM = NA_real_,B_PREC_WIN = NA_real_, 
                       B_PET_SUM = NA_real_,B_PET_WIN = NA_real_,
                       B_TEMP_SUM = NA_real_,B_TEMP_WIN = NA_real_,
-                      A_SOM_LOI, A_SAND_MI, A_CLAY_MI,A_PH_CC,
-                      A_CEC_CO = NA_real_,
-                      A_N_RT,A_N_PMN= NA_real_,
-                      A_P_OL,
-                      A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_,
-                      A_CA_CO_PO, A_MG_CO_PO, A_K_CO_PO,A_K_CC,
+                      A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
+                      A_SOM_LOI = NA_real_, A_C_OF= NA_real_,A_CEC_CO = NA_real_,
+                      A_PH_CC = NA_real_, A_CACO3_IF = NA_real_,
+                      A_N_RT = NA_real_,A_N_PMN = NA_real_,
+                      A_P_OL = NA_real_,A_K_AAA = NA_real_,A_MG_AAA = NA_real_, A_B_HW = NA_real_, 
+                      A_ZN_CC = NA_real_, A_ZN_EDTA = NA_real_,
                       ID = 1, output = 'all') {
   
   # add visual bindings
-  i_c_p = i_p_whc = i_p_dens = i_p_wef = i_p_paw = i_p_ksat = i_b_pmn = NULL
-  i_c_n = i_c_k = NULL
+  i_c_p = i_p_whc = i_p_dens = i_p_wef = i_p_paw = i_p_cr = i_p_ksat = i_b_pmn = NULL
+  i_c_n = i_c_k = i_c_mg = i_c_b = i_c_zn = i_c_ph = i_c_pr =i_b_biodiv = i_e_watererosie = NULL
+  i_e_carbon = i_e_nleach = i_e_pexcess = i_e_kexcess = . = NULL
+  crop_code = crop_cat1 = osi_country = value = indicator = cat1 = cat2 = weight = cf = NULL
+  A_CN_FR = value.w = ncat = cf_yr = NULL
   
   # define variables used within the function
   
@@ -68,21 +70,23 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                    B_LU = B_LU,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    B_COUNTRY = B_COUNTRY,
-                   A_SOM_LOI = A_SOM_LOI, 
+                   A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI, 
                    A_SILT_MI = pmax(0,100-A_CLAY_MI - A_SAND_MI), 
-                   A_CLAY_MI = A_CLAY_MI,
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_C_OF = A_C_OF,
                    A_CEC_CO = A_CEC_CO,
                    A_PH_CC = A_PH_CC,
+                   A_CACO3_IF = A_CACO3_IF,
                    A_N_RT = A_N_RT,
-                   A_CN_FR = A_CN_FR,
-                   A_P_AL = A_P_AL,
-                   A_P_CC = A_P_CC, 
-                   A_P_WA = A_P_WA,
-                   A_CA_CO_PO = A_CA_CO_PO, 
-                   A_MG_CO_PO = A_MG_CO_PO, 
-                   A_K_CO_PO = A_K_CO_PO,
-                   A_K_CC = A_K_CC)
+                   A_N_PMN = A_N_PMN,
+                   A_CN_FR = NA_real_,
+                   A_P_OL = A_P_OL,
+                   A_K_AAA = A_K_AAA,
+                   A_MG_AAA = A_MG_AAA,
+                   A_B_HW = A_B_HW,
+                   A_ZN_CC = A_ZN_CC,
+                   A_ZN_EDTA = A_ZN_EDTA)
   
   # Load in the crops data set
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -91,7 +95,10 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
   # add year, assuming that first year is the most recent ones
   dt[,year := 1:.N,by=ID]
   
-  # merge relevant properties from package tables
+  # calculate relevant properties from package tables
+  dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
+  dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
+  dt[is.na(A_CN_FR) & !is.na(A_C_OF) & !is.na(A_N_RT), A_CN_FR := A_C_OF * 1000 / A_N_RT]
   
   # --- soil chemical functions ----
   
@@ -112,10 +119,11 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
     dt[,i_c_k := osi_c_potassium(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                                  A_SOM_LOI = A_SOM_LOI, A_C_OF = A_C_OF, 
                                  A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
-                                 A_PH_CC = A_PH_CC, A_PH_WA = NA_real_,
+                                 A_PH_CC = A_PH_CC, A_PH_WA = NA_real_, A_CACO3_IF = A_CACO3_IF,
                                  A_CEC_CO = A_CEC_CO, 
                                  A_K_AAA = A_K_AAA,A_K_AL = NA_real_,A_K_AN = NA_real_,A_K_CAL = NA_real_,A_K_CC = NA_real_,
                                  A_K_CO_PO = NA_real_,A_K_DL = NA_real_,A_K_M3 = NA_real_,A_K_NaAAA = NA_real_,
+                                 A_K_WA = NA_real_,
                                  B_COUNTRY)]
     
     # calculate OSI indicator for Mg supply
@@ -138,6 +146,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
     
     # calculate OSI indicator for Zn supply
     dt[,i_c_zn := osi_c_zinc(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
+                             A_SOM_LOI = A_SOM_LOI, A_C_OF = A_C_OF,
                              A_PH_WA = NA_real_, A_PH_CC = A_PH_CC,
                              A_ZN_EDTA = NA_real_,A_ZN_CC = A_ZN_CC, 
                              B_COUNTRY = B_COUNTRY)]
@@ -234,7 +243,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY,
                 all.x=TRUE)
     
     # set default to cropland (temporary solution since crop database is not complete yet)
-    dt[is.na(crop_cat1), cropt_cat1 := 'arable']
+    dt[is.na(crop_cat1), crop_cat1 := 'arable']
     
     # make a data.table for indicators that are not relevant for aggregation for a given crop
     # in this example: wind erosion has no impact on soil loss when grassland is there

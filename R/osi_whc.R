@@ -31,6 +31,7 @@ osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SOM_LOI,type = 'whc', ptf = 'Wosten1
   # Add visual bindings
   id = thetaS = thetaR = alfa = n = fc = wp = whc = paw = ksat = density = Pleem = mineral = NULL
   osi_country = osi_indicator = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
+  A_SILT_MI = A_LOAM_MI = NULL
   
   # Load in the thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)

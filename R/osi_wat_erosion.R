@@ -22,6 +22,8 @@ osi_erosion <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
   crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  B_TEXTURE_USDA = A_SILT_MI = perm = m = B_S = A_SOM_LOI2 = NULL
+  k = B_RE = B_LS = ero = crop_c = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)

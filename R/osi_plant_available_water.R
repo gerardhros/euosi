@@ -11,9 +11,14 @@
 #' @import OBIC
 #'
 #' @examples 
+#' osi_p_paw(A_CLAY_MI = 4.5, A_SAND_MI = 23, A_SILT_MI = 72.5,A_C_OF = 23)
 #' 
 #' @export
 osi_p_paw <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_C_OF) {
+  
+  # add visual bindings
+  osi_country = osi_indicator = NULL
+  mc_fc = mc_wp = mc_paw = NULL
   
   # Load in the thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
@@ -24,7 +29,6 @@ osi_p_paw <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_C_OF) {
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE)
   checkmate::assert_numeric(A_SAND_MI, lower = 0, upper = 100, any.missing = FALSE)
   checkmate::assert_numeric(A_SILT_MI, lower = 0, upper = 100, any.missing = FALSE)
-  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE)
   checkmate::assert_data_table(dt.thresholds,max.rows = 1, min.rows = 1)
   
   # Collect data in a table
@@ -46,7 +50,7 @@ osi_p_paw <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_C_OF) {
   # estimate moisture content af Wilting Point
   dt[,mc_wp := 0.09878 + 0.002127* A_CLAY_MI - 
                0.0008366 * A_SILT_MI - 0.07670 *(1/((A_C_OF*10^-3*100)+1)) + 
-               0.00003853 * A_SILT_MI * befl2009_wa$A_CLAY_MI + 
+               0.00003853 * A_SILT_MI * A_CLAY_MI + 
                0.002330 * A_CLAY_MI * (1/((A_C_OF*10^-3*100)+1)) + 
                0.0009498 * A_SILT_MI * (1/((A_C_OF*10^-3*100)+1))]
   

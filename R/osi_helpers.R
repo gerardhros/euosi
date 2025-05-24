@@ -339,6 +339,9 @@ pFpara_class <- function(Pklei, Pleem, Psom, M50){
 #' @export 
 osi_get_TEXTURE_USDA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type = 'code'){
   
+  # add visual bindings
+  cl = si = sa = tcode = tname = NULL
+  
   # check inputs
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
   checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
@@ -394,6 +397,9 @@ osi_get_TEXTURE_USDA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type = 'code')
 #' @export 
 osi_get_TEXTURE_HYPRES <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
   
+  # add visual bindings
+  cl = si = sa = tcode = tname = NULL
+  
   # check inputs
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
   checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
@@ -435,6 +441,9 @@ osi_get_TEXTURE_HYPRES <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code')
 #'
 #' @export 
 osi_get_TEXTURE_GEPPA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
+  
+  # add visual bindings
+  cl = si = sa = tcode = tname = cr1 = cr2 = cr3 = cr4 = cr5 = NULL
   
   # check inputs
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
@@ -516,6 +525,9 @@ osi_get_TEXTURE_GEPPA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
 #'
 #' @export 
 osi_get_TEXTURE_BE <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
+  
+  # add visual bindings
+  cl = si = sa = tcode = tname = NULL
   
   # check inputs
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)

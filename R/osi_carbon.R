@@ -23,6 +23,7 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
   crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  B_TEXTURE_HYPRES = A_SILT_MI = otratio = osi_other = NULL
   
   # parameters
   dt.parms <- as.data.table(euosi::osi_parms)

@@ -5,6 +5,8 @@
 #' @param B_LU (numeric) The crop code
 #' @param A_CLAY_MI (numeric) The clay content (\%)
 #' @param A_SAND_MI (numeric) The sand content (\%)
+#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
+#' @param A_C_OF (numeric) The carbon content of the soil layer (g/ kg)
 #' @param A_PH_WA (numeric) The acidity of the soil, measured in water (-)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-) 
 #' @param A_ZN_EDTA (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by EDTA 
@@ -22,14 +24,16 @@
 #' 
 #' @export
 osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
+                       A_SOM_LOI = NA_real_,A_C_OF = NA_real_,
                        A_PH_WA = NA_real_,A_PH_CC = NA_real_,
                        A_ZN_EDTA = NA_real_,A_ZN_CC = NA_real_, B_COUNTRY) {
   
   # add visual bindings
-  value = NULL
+  value = A_SILT_MI = NULL
   
   # desired length of inputs
   arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),
+                    length(A_SOM_LOI), length(A_C_OF),
                     length(A_PH_WA), length(A_PH_CC), 
                     length(A_ZN_EDTA), length(A_ZN_CC))
   
@@ -39,6 +43,8 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
                    A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
                    A_SILT_MI = pmax(0,100 - A_CLAY_MI - A_SAND_MI),
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_C_OF = A_C_OF,
                    B_COUNTRY = B_COUNTRY,
                    A_PH_WA = A_PH_WA,
                    A_PH_CC = A_PH_CC,
@@ -50,7 +56,8 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
   # estimate missing soil properties
   dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
   dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
-  
+  dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
+  dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
   
   # calculate the open soil index score for Zinc availability 
   
@@ -114,6 +121,9 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
 #' 
 #' @export
 osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA) {
+
+  # add visual bindings
+  stype = . = crop_name = crop_cat1 = A_SILT_MI = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -129,12 +139,12 @@ osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA) {
                    value = NA_real_)
   
   # add soil type
-  dt.ge[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
-  dt.ge[A_SAND_MI >= 42 & A_SAND_MI <= 95 & A_SILT_MI <= 40 & A_CLAY_MI <= 17 & A_C_OF < 150,  stype :="BG2"]
-  dt.ge[A_SAND_MI >= 33 & A_SAND_MI <= 83 & A_SILT_MI <= 50 & A_CLAY_MI >= 8 & A_CLAY_MI <= 25 & A_C_OF < 150,  stype :="BG3"]
-  dt.ge[A_SAND_MI <= 75 & A_SILT_MI <= 100 & A_CLAY_MI <= 35 & A_C_OF < 150,  stype :="BG4"]
-  dt.ge[A_SAND_MI <= 65 & A_SILT_MI <= 75 & A_CLAY_MI >= 25 & A_CLAY_MI <= 100 & A_C_OF < 150, stype := "BG5"]
-  dt.ge[ A_C_OF >= 150,  stype := "BG6"]
+  dt[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
+  dt[A_SAND_MI >= 42 & A_SAND_MI <= 95 & A_SILT_MI <= 40 & A_CLAY_MI <= 17 & A_C_OF < 150,  stype :="BG2"]
+  dt[A_SAND_MI >= 33 & A_SAND_MI <= 83 & A_SILT_MI <= 50 & A_CLAY_MI >= 8 & A_CLAY_MI <= 25 & A_C_OF < 150,  stype :="BG3"]
+  dt[A_SAND_MI <= 75 & A_SILT_MI <= 100 & A_CLAY_MI <= 35 & A_C_OF < 150,  stype :="BG4"]
+  dt[A_SAND_MI <= 65 & A_SILT_MI <= 75 & A_CLAY_MI >= 25 & A_CLAY_MI <= 100 & A_C_OF < 150, stype := "BG5"]
+  dt[ A_C_OF >= 150,  stype := "BG6"]
   
   # merge with crop
   dt <- merge(dt,
@@ -257,7 +267,7 @@ osi_c_zinc_ie <- function(B_LU,A_SOM_LOI, A_PH_WA, A_ZN_EDTA) {
   
   # set visual bindings
   value = osi_country = osi_indicator = id = crop_cat1 = NULL
-  osi_crops = cat_zn = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
+  BD = osi_crops = cat_zn = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -298,14 +308,14 @@ osi_c_zinc_ie <- function(B_LU,A_SOM_LOI, A_PH_WA, A_ZN_EDTA) {
   #             all.x = TRUE)
   
   # convert from mg / kg to mg / liter sample volume
-  dt[, BDS := (1/(0.02525 * A_SOM_LOI + 0.6541))]
-  dt[,A_ZN_EDTA := A_ZN_EDTA * BDS]
+  dt[, BD := (1/(0.02525 * A_SOM_LOI + 0.6541))]
+  dt[,A_ZN_EDTA := A_ZN_EDTA * BD]
   
   # set OSI score
   dt[, value := osi_evaluate_logistic(A_ZN_EDTA,b = 8.719122,x0 = -0.9514568,v =  1.134101e-05)]
   
   # increase risk at high pH
-  dt[A_H_WA > 7, value := value * 0.8]
+  dt[A_PH_WA > 7, value := value * 0.8]
   
   # Sort the input in correct order
   setorder(dt, id)
@@ -337,7 +347,7 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
   
   # set visual bindings
   id = crop_code = soiltype = soiltype.n = crop_n = crop_category = D_ZN = NULL
-  osi_country = osi_indicator = NULL
+  osi_country = osi_indicator = crop_cat1 = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -453,7 +463,7 @@ osi_c_zinc_uk <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
   dt[, value := osi_evaluate_logistic(A_ZN_EDTA,b = 8.719122,x0 = -0.9514568,v =  1.134101e-05)]
 
   # increase risk at high pH
-  dt[A_H_WA > 6.2, value := value * 0.8]
+  dt[A_PH_WA > 6.2, value := value * 0.8]
   
   # Sort the input in correct order
   setorder(dt, id)

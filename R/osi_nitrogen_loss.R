@@ -31,7 +31,11 @@ osi_gw_nleach <- function(B_LU = NA_character_,
                           B_COUNTRY) {
   
   # add visual bindings
-
+  b_prec_sum = b_prec_win = b_pet_sum = b_pet_win = b_temp_sum = b_temp_win = NULL
+  B_TEXTURE_HYPRES = B_TEXTURE_USDA = B_TEXTURE_BE = B_TEXTURE_GEPPA = A_SILT_MI = NULL
+  B_PREC_Y = B_PET_Y = B_TEMP_Y = NULL
+  A_SOM_LOI = id = NULL
+  
   # load internal database with climatic data
   dt.clim <- as.data.table(euosi::osi_clim)
   
@@ -165,7 +169,8 @@ osi_gw_nleach <- function(B_LU = NA_character_,
 #' @import data.table
 #' 
 #' @examples 
-#' osi_gw_nleach_be(B_LU = '772',A_N_RT = 1200, A_C_OF = 25, A_CLAY_MI = 3.5, A_SAND_MI = 15,A_CACO3_IF = 0.8)
+#' osi_gw_nleach_be(B_LU = '772',A_N_RT = 1200, A_C_OF = 25, 
+#' A_CLAY_MI = 3.5, A_SAND_MI = 15,A_CACO3_IF = 0.8)
 #' 
 #' @return 
 #' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
@@ -178,6 +183,8 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
   crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  D_BDS = D_NHA = D_NSC = B_TEXTURE_USDA = A_SILT_MI = crop_s = NS = NULL
+  flemax = flu = B_PS = fp = B_TEMP = ft = fc = nloss = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -330,7 +337,8 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
 #' @import data.table
 #' 
 #' @examples 
-#' osi_gw_nleach_fr(B_LU = '772',A_N_RT = 1200, A_C_OF = 25, A_CLAY_MI = 3.5, A_SAND_MI = 15,A_CACO3_IF = 0.8)
+#' osi_gw_nleach_fr(B_LU = '772',A_N_RT = 1200, A_C_OF = 25, 
+#' A_CLAY_MI = 3.5, A_SAND_MI = 15,A_CACO3_IF = 0.8)
 #' 
 #' @return 
 #' The risk of nitrogen leaching. A numeric value, converted to a OSI score.
@@ -344,6 +352,8 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
   crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  D_BDS = D_NHA = D_NSC = B_TEXTURE_USDA = A_SILT_MI = crop_s = NULL
+  flemax = flu = B_PS = fp = B_TEMP = ft = fc = nloss = NS = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -503,7 +513,8 @@ osi_gw_nleach_fi <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI) {
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
   crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
-  
+  crop_s = nloss = NULL
+    
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='FI']
@@ -576,6 +587,7 @@ osi_gw_nleach_fi <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI) {
 #' @import data.table
 #' 
 #' @examples 
+#' osi_gw_nleach_eu(B_LU ='265',A_N_RT = 4100, A_C_OF = 22, A_CLAY_MI = 4.5, A_SAND_MI = 15, B_PREC_Y = 900, B_PET_Y = 650,B_TEMP_Y = 4.5)
 #' 
 #' @return 
 #' The risk for N leaching
@@ -585,6 +597,8 @@ osi_gw_nleach_eu <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
                              B_PREC_Y, B_PET_Y, B_TEMP_Y) {
   
   # set visual bindings
+  D_BS = B_TEXTURE_USDA = A_SILT_MI =arate = NSC = crop_cat1 = NS = NULL
+  flemax = flu = B_PS = fp = id = ft = fc = nloss = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)

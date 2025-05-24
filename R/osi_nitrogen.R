@@ -116,7 +116,8 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_nitrogen_be(B_LU = '772',A_N_RT = 1200, A_C_OF = 25, A_CLAY_MI = 3.5, A_SAND_MI = 15,A_CACO3_IF = 0.8)
+#' osi_c_nitrogen_be(B_LU = '772',A_N_RT = 1200, A_C_OF = 25, 
+#' A_CLAY_MI = 3.5, A_SAND_MI = 15,A_CACO3_IF = 0.8)
 #' 
 #' @return 
 #' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
@@ -126,7 +127,8 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
-  crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  BD = D_NHA = D_NSC = A_SILT_MI = stype = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -154,10 +156,10 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
                    value = NA_real_)
   
   # estimate bulk density
-  dt[, D_BDS := 0.80806 + 0.823844*exp(0.0578*0.1*A_C_OF) + 0.0014065 * A_SAND_MI - (0.0010299 * A_CLAY_MI)]
+  dt[, BD := 0.80806 + 0.823844*exp(0.0578*0.1*A_C_OF) + 0.0014065 * A_SAND_MI - (0.0010299 * A_CLAY_MI)]
   
   # estimate helper variables
-  dt[,D_NHA := A_N_RT * 0.2 * D_BDS * 10000 * 1000 * 10^-6]
+  dt[,D_NHA := A_N_RT * 0.2 * BD * 10000 * 1000 * 10^-6]
   dt[,D_NSC := (22/((12+A_CLAY_MI)*(545+A_CACO3_IF))) * D_NHA * 21.35 * 0.33]
   
   # merge crop properties
@@ -211,6 +213,9 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
                               A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
                               A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
   
+  # add visual bindings
+  A_SILT_MI = stype = cf1 = BD = NSC = NSCPS = arate = NULL
+  
   # max length of input parameters
   arg.length <- max(length(B_LU), 
                     length(A_CLAY_MI), length(A_SAND_MI),
@@ -245,13 +250,13 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
   dt[stype == 'BG6', cf1 := 0]
   
   # estimate bulk density via pedotransfer function
-  dt[, BDS := (1/(0.02525 * A_SOM_LOI + 0.6541)) * 1000]
+  dt[, BD := (1/(0.02525 * A_SOM_LOI + 0.6541)) * 1000]
   
   # set annual decomposition rate of 2%
   dt[, arate := 0.02]
   
   # estimate N supply for top 30 cm soil layer
-  dt[, NSC := (100 * 100 * 0.3 * B_DS) * A_N_RT * arate * 0.001 * 0.001]
+  dt[, NSC := (100 * 100 * 0.3 * BD) * A_N_RT * arate * 0.001 * 0.001]
   
   # assume that 25% is mineralized in winter, and available in pre-season
   dt[, NSCPS := 0.25 * NSC]
@@ -295,7 +300,7 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
   
   # add visual bindings
   osi_country = osi_indicator = NULL
-  D_BDS = id = value = crop_code = crop_cat1 = D_NHA = D_NSC = osi_st_c1 = NULL
+  BD = id = value = crop_code = crop_cat1 = D_NHA = D_NSC = osi_st_c1 = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -334,8 +339,8 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
               all.x = TRUE)
   
   # calculate derivative supporting soil properties: bulk density and N pool (kg N / ha)
-  dt[, D_BDS := 0.80806 + (0.823844*exp(0.0578*0.1*A_C_OF)) + (0.0014065 * A_SAND_MI) - (0.0010299 * A_CLAY_MI)] 
-  dt[, D_NHA := A_N_RT * 0.2 * D_BDS * 10000 * 1000 * 10^-6]  
+  dt[, BD := 0.80806 + (0.823844*exp(0.0578*0.1*A_C_OF)) + (0.0014065 * A_SAND_MI) - (0.0010299 * A_CLAY_MI)] 
+  dt[, D_NHA := A_N_RT * 0.2 * BD * 10000 * 1000 * 10^-6]  
   
   # calculate the N supplying capacity for France (kg N/ha/yr)
   dt[, D_NSC := ((22/((12+A_CLAY_MI)*(545+A_CACO3_IF))) * D_NHA)*21.35 * 0.33]
@@ -390,7 +395,7 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
   
   # add visual bindings
   osi_country = osi_indicator = crop_code = crop_cat1 = osi_threshold_cropcat = NULL
-  A_CN_FR = D_BDS = D_RD = D_OC = D_GA = id = value = osi_st_c1 = NULL
+  A_CN_FR = BD = D_RD = D_OC = D_GA = id = value = osi_st_c1 = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -431,14 +436,14 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
               all.x = TRUE)
   
   # calculate derivative supporting soil properties
-  dt[, D_BDS := OBIC::calc_bulk_density(B_SOILTYPE_AGR,A_SOM_LOI)]
+  dt[, BD := OBIC::calc_bulk_density(B_SOILTYPE_AGR,A_SOM_LOI)]
   dt[, D_RD := OBIC::calc_root_depth(B_LU_BRP = B_LU)]
-  dt[, D_OC := OBIC::calc_organic_carbon(A_SOM_LOI, D_BDS, D_RD)]
+  dt[, D_OC := OBIC::calc_organic_carbon(A_SOM_LOI, BD, D_RD)]
   dt[, D_GA := OBIC::calc_grass_age(id, B_LU_BRP = B_LU)]
   
   # calculate the N supplying capacity for the Netherlands using the Dutch OBIC
   dt[,value := OBIC::calc_nlv(B_LU_BRP = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
-                              A_N_RT = A_N_RT, A_CN_FR = A_CN_FR, D_OC = D_OC, D_BDS = D_BDS, 
+                              A_N_RT = A_N_RT, A_CN_FR = A_CN_FR, D_OC = D_OC, D_BDS = BD, 
                               D_GA = D_GA)]
   
   # convert to OSI score
@@ -475,8 +480,10 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_nitrogen_eu(B_LU = 'T1',A_CLAY_MI = 2.5, A_SAND_MI = 45, A_SOM_LOI = 4.5, A_C_OF = 22, A_N_RT=1240)
-#' osi_c_nitrogen_eu(B_LU = c('T1','T2'),A_CLAY_MI = c(2.5,5.5), A_SAND_MI = c(45,45), A_SOM_LOI = c(4.5,7.5), A_C_OF = c(22,18), A_N_RT=c(1240,800))
+#' osi_c_nitrogen_eu(B_LU = 'T1',A_CLAY_MI = 2.5, A_SAND_MI = 45, 
+#' A_SOM_LOI = 4.5, A_C_OF = 22, A_N_RT=1240)
+#' osi_c_nitrogen_eu(B_LU = c('T1','T2'),A_CLAY_MI = c(2.5,5.5), 
+#' A_SAND_MI = c(45,45), A_SOM_LOI = c(4.5,7.5), A_C_OF = c(22,18), A_N_RT=c(1240,800))
 #' 
 #' @return 
 #' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
@@ -487,6 +494,7 @@ osi_c_nitrogen_eu <- function(B_LU = NA_character_,
                               A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
   
   # add visual bindings
+  A_CN_FR = BD = value = arate = NSC = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -518,7 +526,6 @@ osi_c_nitrogen_eu <- function(B_LU = NA_character_,
                    value = NA_real_
                    )
  
-  
   # estimate texture information
   # dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
   # dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
@@ -531,13 +538,13 @@ osi_c_nitrogen_eu <- function(B_LU = NA_character_,
   dt[,A_CN_FR := A_C_OF * 1000 / A_N_RT ]
   
   # estimate bulk density via pedotransfer function
-  dt[, B_DS := (1/(0.02525 * A_SOM_LOI + 0.6541)) * 1000]
+  dt[, BD := (1/(0.02525 * A_SOM_LOI + 0.6541)) * 1000]
   
   # set annual decomposition rate of 2%
   dt[, arate := 0.02]
   
   # estimate N supply for top 30 cm soil layer, set at max at 400 kg / yr
-  dt[, NSC := pmin(400,(100 * 100 * 0.3 * B_DS) * A_N_RT * arate * 0.001 * 0.001)]
+  dt[, NSC := pmin(400,(100 * 100 * 0.3 * BD) * A_N_RT * arate * 0.001 * 0.001)]
   
   # convert to OSI score, optimum is 125 kg N / ha / yr
   dt[, value := osi_evaluate_logistic(x = NSC, b = 0.04856090, x0 = -17.79554596,v= 0.08588367)]

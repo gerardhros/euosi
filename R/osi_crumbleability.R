@@ -11,7 +11,10 @@
 #' @import data.table  
 #' @import OBIC
 #'
+#' @importFrom stats approxfun
+#'
 #' @examples 
+#' osi_p_crumbleability(B_LU = '256', A_CLAY_MI = 5, A_SOM_LOI = 3.5, A_PH_CC = 5.5, B_COUNTRY = 'NL')
 #' 
 #' @return 
 #' The function returns the crumbleability index
@@ -20,7 +23,8 @@
 osi_p_crumbleability <- function(B_LU,A_CLAY_MI,A_SOM_LOI,A_PH_CC,B_COUNTRY) {
   
   # Add visual bindings
-  id = NULL
+  id = . = crop_code = osi_country = crop_crumbleability = NULL
+  value.A_CLAY_MI = cor.A_PH_CC = cor.A_SOM_LOI = crvalue = lower = upper = NULL
   
   # load internal table
   dt.crops <- as.data.table(euosi::osi_crops)

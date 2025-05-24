@@ -10,6 +10,7 @@
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
+#' @param A_CACO3_IF (numeric) The percentage of carbonated lime (\%) 
 #' @param A_CEC_CO (numeric) The cation exchange capacity of the soil (mmol+ / kg), analyzed via Cobalt-hexamine extraction
 #' @param A_K_AAA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction 
 #' @param A_K_AL (numeric) The exchangeable K-content of the soil measured via Ammonium Lactate extracton (mg K/ kg)
@@ -20,6 +21,7 @@
 #' @param A_K_DL (numeric) The exchangeable K-content of the soil measured via Double Lactate extraction (mg K/ kg)
 #' @param A_K_M3 (numeric) The exchangeable K-content of the soil measured via Mehlich 3 extracton (mg K/ kg)
 #' @param A_K_NaAAA (numeric) The K-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)
+#' @param A_K_WA (numeric) The exchangeable K-content of the soil measured via water extracton (mg K/ kg)
 #' @param B_COUNTRY (character) The country code
 #' 
 #' @import data.table
@@ -36,22 +38,22 @@
 osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                             A_SOM_LOI = NA, A_C_OF = NA, 
                             A_CLAY_MI = NA,A_SAND_MI = NA,
-                            A_PH_CC = NA, A_PH_WA = NA,
+                            A_PH_CC = NA, A_PH_WA = NA,A_CACO3_IF = NA,
                             A_CEC_CO = NA, 
                             A_K_AAA = NA,A_K_AL = NA,A_K_AN = NA,A_K_CAL = NA,A_K_CC = NA,
-                            A_K_CO_PO = NA,A_K_DL = NA,A_K_M3 = NA,A_K_NaAAA = NA,
+                            A_K_CO_PO = NA,A_K_DL = NA,A_K_M3 = NA,A_K_NaAAA = NA,A_K_WA = NA,
                             B_COUNTRY) {
   
   # add visual bindings
-  i_c_k = NULL
+  i_c_k = B_TEXTURE_USDA = B_TEXTURE_HYPRES = B_TEXTURE_BE = B_TEXTURE_GEPPA = A_SILT_MI = NULL
   
   # desired length of inputs
   arg.length <- max(length(B_LU),length(B_SOILTYPE_AGR),length(A_SOM_LOI),length(A_C_OF),
                     length(A_CLAY_MI),length(A_SAND_MI),
-                    length(A_PH_CC), length(A_PH_WA), length(A_CEC_CO),
+                    length(A_PH_CC), length(A_PH_WA), length(A_CACO3_IF), length(A_CEC_CO),
                     length(A_K_AAA),length(A_K_AL),length(A_K_AN),length(A_K_CAL),
                     length(A_K_CC),length(A_K_CO_PO),length(A_K_DL),length(A_K_M3),
-                    length(A_K_NaAAA),length(B_COUNTRY))
+                    length(A_K_NaAAA),length(A_K_WA),length(B_COUNTRY))
   
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
@@ -65,6 +67,7 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                    A_SILT_MI = pmax(0,100 - A_CLAY_MI - A_SAND_MI),
                    A_PH_CC = A_PH_CC,
                    A_PH_WA = A_PH_WA,
+                   A_CACO3_IF = A_CACO3_IF,
                    A_CEC_CO = A_CEC_CO,
                    A_K_AAA = A_K_AAA,
                    A_K_AL = A_K_AL,
@@ -75,6 +78,7 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                    A_K_DL = A_K_DL,
                    A_K_M3 = A_K_M3,
                    A_K_NaAAA = A_K_NaAAA,
+                   A_K_WA = A_K_WA,
                    value = NA_real_
   )
   
@@ -141,7 +145,7 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   
   # Poland (PL), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_nut_k_pl(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_K_DL = A_K_DL)]
-  dt[B_COUNTRY == 'UK', value := osi_c_posphor_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_K_AN = A_K_AN)]
+  dt[B_COUNTRY == 'UK', value := osi_nut_k_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_K_AN = A_K_AN)]
   
   # select the output variable
   value <- dt[,value]
@@ -184,6 +188,9 @@ osi_nut_k_at <- function(A_K_CAL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # get max length of input variables
+  arg.length <- max(length(A_K_CAL),length(B_TEXTURE_HYPRES),length(B_LU))
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -248,6 +255,7 @@ osi_nut_k_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_) {
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
   crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  B_SOILTYPE_AGR = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -337,6 +345,9 @@ osi_nut_k_ch <- function(A_K_AAA,A_CLAY_MI,B_LU = NA_character_) {
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
   
+  # get max length of input variables
+  arg.length <- max(length(A_K_AAA),length(A_CLAY_MI),length(B_LU))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -412,6 +423,9 @@ osi_nut_k_cz <- function(A_K_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
   
+  # get max length of input variables
+  arg.length <- max(length(A_K_M3),length(B_TEXTURE_HYPRES),length(B_LU))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -469,6 +483,8 @@ osi_nut_k_cz <- function(A_K_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @export
 osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AAA) {
   
+  # add visual bindings
+  A_SILT_MI = stype = B_LU_CAT = NULL
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
@@ -543,6 +559,9 @@ osi_nut_k_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # get max length of input variables
+  arg.length <- max(length(A_K_M3),length(B_TEXTURE_USDA),length(B_LU))
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -686,8 +705,8 @@ osi_nut_k_es <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA) {
 osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
-  crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  osi_country = osi_indicator = id = crop_cat1 = B_SOILTYPE_AGR = NULL
+  crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = osi_threshold_region = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -752,6 +771,7 @@ osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0) {
 #' 
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_GEPPA (character) The soil texture class in a particular region. 
+#' @param B_SOILTYPE_AGR (character) The agricultural soil type classification
 #' @param B_AER_FR (character) An agroeconomic region in France. Optional argument.
 #' @param A_K_AAA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction
 #' @param A_PH_WA (numeric) The pH measured in water.
@@ -759,7 +779,7 @@ osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_fr(B_LU = 'SOJ', A_K_AAA = 45,
+#' osi_nut_k_fr(B_LU = 'SOJ', A_K_AAA = 45,B_TEXTURE_GEPPA ='As',
 #' B_SOILTYPE_AGR = 'limons battants', B_AER_FR = 'nord picardie')
 #' 
 #' @details
@@ -769,10 +789,10 @@ osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0) {
 #' The potassium excess index in France estimated from extractable potassium. A numeric value.
 #' 
 #' @export
-osi_nut_k_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_, B_AER_FR = NA_character_, A_PH_WA = NA_real_) {
+osi_nut_k_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_, B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_PH_WA = NA_real_) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
+  osi_country = osi_indicator = id = crop_cat1 = osi_threshold_cropcat = NULL
   crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   
   # crop data
@@ -797,12 +817,14 @@ osi_nut_k_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_, B_AER_F
   dt.soiltype <- as.data.table(euosi::osi_soiltype)
   
   # Check length of desired input
-  arg.length <- max(length(B_LU),length(B_TEXTURE_GEPPA),length(B_AER_FR),length(A_K_AAA))
+  arg.length <- max(length(B_LU),length(B_TEXTURE_GEPPA),length(B_SOILTYPE_AGR),
+                    length(B_AER_FR),length(A_K_AAA))
   
   # check the values (update the limits later via dt.parms)
   checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_subset(B_TEXTURE_GEPPA, choices =c("L","LL","Ls","Lsa","La","LAS","AA","A","As","Als","Al","Sa","Sal","S","SS","Sl"), empty.ok = FALSE)
+  checkmate::assert_subset(B_TEXTURE_GEPPA, choices =c("L","LL","Ls","Lsa","La","LAS","AA","A","As",
+                                                       "Als","Al","Sa","Sal","S","SS","Sl",NA_character_), empty.ok = FALSE)
   checkmate::assert_character(B_AER_FR, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_AER_FR, choices = unique(dt.thresholds$osi_threshold_region), empty.ok = FALSE)
   checkmate::assert_numeric(A_K_AAA, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
@@ -811,6 +833,7 @@ osi_nut_k_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_, B_AER_F
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    B_TEXTURE_GEPPA = B_TEXTURE_GEPPA,
+                   B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    B_AER_FR = B_AER_FR,
                    A_K_AAA = A_K_AAA,
                    A_PH_WA = A_PH_WA,
@@ -824,9 +847,10 @@ osi_nut_k_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_, B_AER_F
               all.x=TRUE)
   
   # merge thresholds
+  if(sum(is.na(B_AER_FR))>0){scol <- 'B_TEXTURE_GEPPA'} else {scol <- 'B_SOILTYPE_AGR'}
   dt <- merge(dt,
               dt.thresholds,
-              by.x = c('B_TEXTURE_GEPPA','B_AER_FR', 'crop_k'),
+              by.x = c(scol,'B_AER_FR', 'crop_k'),
               by.y = c('osi_threshold_soilcat','osi_threshold_region','osi_threshold_cropcat'),
               all.x = TRUE)
   
@@ -881,6 +905,9 @@ osi_nut_k_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_K_AL,B_LU = NA_charact
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # get max length of input variables
+  arg.length <- max(length(A_K_AL),length(A_SOM_LOI),length(A_CLAY_MI),length(A_CACO3_IF),length(B_LU))
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -952,6 +979,9 @@ osi_nut_k_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_K_AL,B_LU = NA_charact
 #' 
 #' @export
 osi_nut_k_ie <- function(B_LU, A_SOM_LOI,A_K_NaAAA) {
+  
+  # add visual bindings
+  BDS = NULL
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -1057,6 +1087,9 @@ osi_nut_k_lv <- function(A_K_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
   
+  # get max length of input variables
+  arg.length <- max(length(A_K_DL),length(B_TEXTURE_USDA),length(B_LU))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -1118,8 +1151,7 @@ osi_nut_k_lv <- function(A_K_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
 osi_nut_k_lt <- function(A_K_AL,A_SOM_LOI,B_LU = NA_character_) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
-  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  id = NULL
   
   # crop data
   # dt.crops <- as.data.table(euosi::osi_crops)
@@ -1131,6 +1163,9 @@ osi_nut_k_lt <- function(A_K_AL,A_SOM_LOI,B_LU = NA_character_) {
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # get max length of input variables
+  arg.length <- max(length(A_K_AL),length(A_SOM_LOI),length(B_LU))
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1416,8 +1451,7 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
 osi_nut_k_pl <- function(A_K_DL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
-  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  osi_country = osi_indicator = osi_threshold_region = id = crop_cat1 = NULL
   
   # crop data
   # dt.crops <- as.data.table(euosi::osi_crops)
@@ -1429,6 +1463,9 @@ osi_nut_k_pl <- function(A_K_DL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  
+  # get max length of input variables
+  arg.length <- max(length(A_K_DL),length(B_TEXTURE_HYPRES),length(B_LU))
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1453,16 +1490,16 @@ osi_nut_k_pl <- function(A_K_DL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
   # calculate the OSI score very light textured soils
   dt[B_TEXTURE_HYPRES %in% c('C'),
-     value := osi_evaluate_logistic(x = A_K_CAL, b= -0.02113, x0 = 149.6, v = 1.6449)]
+     value := osi_evaluate_logistic(x = A_K_DL, b= -0.02113, x0 = 149.6, v = 1.6449)]
   # calculate the OSI score light textured soils
   dt[B_TEXTURE_HYPRES %in% c('MF'),
-     value := osi_evaluate_logistic(x = A_K_CAL, b = -0.01207, x0 = 300.45, v = 0.5917)]
+     value := osi_evaluate_logistic(x = A_K_DL, b = -0.01207, x0 = 300.45, v = 0.5917)]
   # calculate the OSI score medium texture soils
   dt[B_TEXTURE_HYPRES %in% c('M'),
-     value := osi_evaluate_logistic(x = A_K_CAL, b = -0.01493, x0 = 219.47, v = 1.7819)]
+     value := osi_evaluate_logistic(x = A_K_DL, b = -0.01493, x0 = 219.47, v = 1.7819)]
   # calculate the OSI score for heavy textured soils
   dt[B_TEXTURE_HYPRES %in% c('F','VF'),
-     value := osi_evaluate_logistic(x = A_K_CAL, b = -0.01342, x0 = 249.39, v = 1.8557)]
+     value := osi_evaluate_logistic(x = A_K_DL, b = -0.01342, x0 = 249.39, v = 1.8557)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -1541,6 +1578,9 @@ osi_nut_k_sk <- function(B_TEXTURE_HYPRES,A_K_M3,B_LU = NA_character_) {
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
   
+  # get max length of input variables
+  arg.length <- max(length(A_K_M3),length(B_TEXTURE_HYPRES),length(B_LU))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -1614,6 +1654,9 @@ osi_nut_k_sl <- function(A_K_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
   
+  # get max length of input variables
+  arg.length <- max(length(A_K_AL),length(B_TEXTURE_HYPRES),length(B_LU))
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -1670,6 +1713,9 @@ osi_nut_k_sl <- function(A_K_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' 
 #' @export
 osi_nut_k_uk <- function(B_LU, A_SOM_LOI,A_K_AN) {
+  
+  # add visual bindings
+  crop_name = . = crop_cat1 = BDS = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)

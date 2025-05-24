@@ -88,6 +88,9 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
   # load and subset thresholds to Dutch situation for PMN
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country=='NL' & osi_indicator=='i_b_pmn']
+
+  # ensure input as character
+  B_LU = as.character(B_LU)
   
   # check length and of arguments
   arg.length <- max(length(A_N_PMN), length(B_LU), length(B_SOILTYPE_AGR))
@@ -132,6 +135,7 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
 osi_b_pmn_eu <- function(B_LU, A_N_RT, A_CLAY_MI) {
   
   # add visual bindings
+  osi_country = osi_indicator = PMN = NULL
   
   # Load in the crops data set and the parms dataset
   dt.crops <- as.data.table(euosi::osi_crops)

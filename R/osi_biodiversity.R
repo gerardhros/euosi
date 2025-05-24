@@ -17,8 +17,9 @@
 osi_biodiversity <- function(A_SOM_LOI, A_PH_CC) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
+  osi_country = osi_indicator = id = crop_cat1 = A_PH_WA = NULL
   crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  bio_ph = bio_som = NULL
   
   # parameters
   dt.parms <- as.data.table(euosi::osi_parms)
@@ -34,6 +35,7 @@ osi_biodiversity <- function(A_SOM_LOI, A_PH_CC) {
   dt <- data.table(id = 1:arg.length,
                    A_SOM_LOI = A_SOM_LOI,
                    A_PH_CC = A_PH_CC,
+                   A_PH_WA = A_PH_WA,
                    value = NA_real_)
   
   # estimate pH water from pH CaCl2

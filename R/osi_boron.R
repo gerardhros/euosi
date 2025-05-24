@@ -6,7 +6,7 @@
 #' @param A_CLAY_MI (numeric) The clay content (\%)
 #' @param A_SAND_MI (numeric) The sand content (\%)
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
-#' @param A_B_HW (numeric) The plant available content of B in the soil (mg  Cu per kg) extracted by hot water
+#' @param A_B_HW (numeric) The plant available content of B in the soil (mg  B per kg) extracted by hot water
 #' @param B_COUNTRY (character) The country code
 #' 
 #' @import data.table
@@ -18,7 +18,8 @@
 osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_COUNTRY) {
   
   # add visual bindings
-  i_c_bo = NULL
+  i_c_bo = A_SILT_MI = B_TEXTURE_USDA = B_TEXTURE_HYPRES = B_TEXTURE_GEPPA = B_TEXTURE_BE = NULL
+  A_PH_WA = A_C_OF = NULL
   
   # desired length of inputs
   arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),
@@ -32,6 +33,7 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
                    A_SAND_MI = A_SAND_MI,
                    A_SILT_MI = pmax(0,100 - A_CLAY_MI - A_SAND_MI),
                    A_SOM_LOI = A_SOM_LOI,
+                   A_C_OF = NA_real_,
                    A_PH_CC = A_PH_CC,
                    A_PH_WA = NA_real_,
                    A_B_HW = A_B_HW,
@@ -48,6 +50,7 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   # estimate missing soil properties
   dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
   dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
+  dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
   
   # calculate the OSI score for boron
   
@@ -56,7 +59,7 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   dt[B_COUNTRY == 'BE', value := NA_real_]
   dt[B_COUNTRY == 'CH', value := osi_c_boron_ch(B_LU = B_LU, A_B_HW = A_B_HW)]
   dt[B_COUNTRY == 'CZ', value := NA_real_]
-  dt[B_COUNTRY == 'DE', value := osi_c_boron(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_PH_CC = A_PH_CC, A_B_HW = A_B_HW)]
+  dt[B_COUNTRY == 'DE', value := osi_c_boron_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_PH_CC = A_PH_CC, A_B_HW = A_B_HW)]
   
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
@@ -82,7 +85,7 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   
   # Poland (PL), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
-  dt[B_COUNTRY == 'UK', value := osi_c_boron_nl(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,A_B_HW = A_B_HW)]
+  dt[B_COUNTRY == 'UK', value := osi_c_boron_uk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,A_B_HW = A_B_HW)]
   
   # select the output variable
   value <- dt[,value]
@@ -111,11 +114,17 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
 #' @export
 osi_c_boron_ch <- function(B_LU, A_B_HW) {
   
+  # add visual bindings
+  crop_name = . = crop_cat1 = senscrop = id = NULL
+  
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
   
+  # get max length of inputs
+  arg.length <- max(length(B_LU),length(A_B_HW))
+  
   # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
+  dt <- data.table(id = 1: arg.length,
                    B_LU = B_LU,
                    A_B_HW = A_B_HW,
                    value = NA_real_)
@@ -167,6 +176,9 @@ osi_c_boron_ch <- function(B_LU, A_B_HW) {
 #' @export
 osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
   
+  # add visual bindings
+  A_SILT_MI = stype = . = crop_name = crop_cat1 = id = NULL
+  
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
   
@@ -182,12 +194,12 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
                    value = NA_real_)
   
   # add soil type
-  dt.ge[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
-  dt.ge[A_SAND_MI >= 42 & A_SAND_MI <= 95 & A_SILT_MI <= 40 & A_CLAY_MI <= 17 & A_C_OF < 150,  stype :="BG2"]
-  dt.ge[A_SAND_MI >= 33 & A_SAND_MI <= 83 & A_SILT_MI <= 50 & A_CLAY_MI >= 8 & A_CLAY_MI <= 25 & A_C_OF < 150,  stype :="BG3"]
-  dt.ge[A_SAND_MI <= 75 & A_SILT_MI <= 100 & A_CLAY_MI <= 35 & A_C_OF < 150,  stype :="BG4"]
-  dt.ge[A_SAND_MI <= 65 & A_SILT_MI <= 75 & A_CLAY_MI >= 25 & A_CLAY_MI <= 100 & A_C_OF < 150, stype := "BG5"]
-  dt.ge[ A_C_OF >= 150,  stype := "BG6"]
+  dt[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
+  dt[A_SAND_MI >= 42 & A_SAND_MI <= 95 & A_SILT_MI <= 40 & A_CLAY_MI <= 17 & A_C_OF < 150,  stype :="BG2"]
+  dt[A_SAND_MI >= 33 & A_SAND_MI <= 83 & A_SILT_MI <= 50 & A_CLAY_MI >= 8 & A_CLAY_MI <= 25 & A_C_OF < 150,  stype :="BG3"]
+  dt[A_SAND_MI <= 75 & A_SILT_MI <= 100 & A_CLAY_MI <= 35 & A_C_OF < 150,  stype :="BG4"]
+  dt[A_SAND_MI <= 65 & A_SILT_MI <= 75 & A_CLAY_MI >= 25 & A_CLAY_MI <= 100 & A_C_OF < 150, stype := "BG5"]
+  dt[ A_C_OF >= 150,  stype := "BG6"]
   
   # merge with crop
   dt <- merge(dt,
@@ -234,6 +246,9 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
 #' 
 #' @export
 osi_c_boron_ie <- function(B_LU, A_B_HW) {
+  
+  # add visual bindings
+  id = . = crop_cat1 = crop_name = senscrop = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -363,6 +378,7 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
   soil_cat_bo = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
+  id = .= crop_code = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -440,7 +456,7 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
 #' The boron availability index in Sweden depends primarily on pH. A numeric value.
 #' 
 #' @export
-osi_c_boron_sw <- function(B_LU, A_PH_WA) {
+osi_c_boron_se <- function(B_LU, A_PH_WA) {
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -480,14 +496,19 @@ osi_c_boron_sw <- function(B_LU, A_PH_WA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_boron_uk(B_LU = 265,B_TEXTURE_HYPRES='C',A_SOM_LOI=3,A_PH_CC = 4,A_B_HW = 50)
-#' osi_c_boron_uk(B_LU = c(265,1019),B_TEXTURE_HYPRES = c('C','F'),A_SOM_LOI = c(3,3),A_PH_CC = c(4,6),A_B_HW = c(35,55))
+#' osi_c_boron_uk(B_LU = 265,B_TEXTURE_HYPRES='C',A_SOM_LOI=3,
+#' A_PH_CC = 4,A_B_HW = 50)
+#' osi_c_boron_uk(B_LU = c(265,1019),B_TEXTURE_HYPRES = c('C','F'),
+#' A_SOM_LOI = c(3,3),A_PH_CC = c(4,6),A_B_HW = c(35,55))
 #' 
 #' @return 
 #' The boron availability index in UK derived from extractable soil B fractions. A numeric value.
 #' 
 #' @export
 osi_c_boron_uk <- function(B_LU, B_TEXTURE_HYPRES,A_SOM_LOI,A_PH_CC,A_B_HW) {
+  
+  # add visual bindings
+  crop_code = crop_name = crop_cat1 = . = id = A_PH_WA = BDS = senscrop = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -497,6 +518,7 @@ osi_c_boron_uk <- function(B_LU, B_TEXTURE_HYPRES,A_SOM_LOI,A_PH_CC,A_B_HW) {
                    B_LU = B_LU,
                    B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                    A_PH_CC = A_PH_CC,
+                   A_PH_WA = NA_real_,
                    A_SOM_LOI = A_SOM_LOI,
                    A_B_HW = A_B_HW,
                    value = NA_real_)
@@ -510,6 +532,9 @@ osi_c_boron_uk <- function(B_LU, B_TEXTURE_HYPRES,A_SOM_LOI,A_PH_CC,A_B_HW) {
   # convert from mg / kg to mg / liter sample volume
   dt[, BDS := (1/(0.02525 * A_SOM_LOI + 0.6541))]
   dt[,A_B_HW := A_B_HW * BDS]
+  
+  # estimate pH water
+  dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
   
   # evaluate risk based on optimum value of 0.8 mg B per liter dry soil
   dt[,value := osi_evaluate_logistic(x = A_B_HW, b = 29.1874386, x0 = 0.6872707, v = 5.1035358)]

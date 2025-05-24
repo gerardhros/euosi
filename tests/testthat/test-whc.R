@@ -3,7 +3,6 @@ test_that("osi_p_whc works", {
   expect_equal(
     osi_p_whc(
       A_CLAY_MI = 25,
-      A_SILT_MI = 15,
       A_SAND_MI = 60,
       A_SOM_LOI = 6,
       type = 'plant available water',
@@ -15,7 +14,6 @@ test_that("osi_p_whc works", {
   expect_equal(
     osi_p_whc(
       A_CLAY_MI = seq(5,90,length.out = 7),
-      A_SILT_MI = rep(10,7),
       A_SAND_MI = 100 - 10 - seq(5,90,length.out = 7),
       A_SOM_LOI = rep(6,7),
       type = 'plant available water',
@@ -27,7 +25,6 @@ test_that("osi_p_whc works", {
   expect_equal(
     osi_p_whc(
       A_CLAY_MI = rep(10,7), 
-      A_SILT_MI = seq(5,90,length.out = 7),
       A_SAND_MI = 100 - 10 - seq(5,90,length.out = 7),
       A_SOM_LOI = rep(6,7),
       type = 'plant available water',
@@ -40,7 +37,6 @@ test_that("osi_p_whc works", {
   expect_equal(
     osi_p_whc(
       A_CLAY_MI = rep(25,7), 
-      A_SILT_MI = rep(5,7),
       A_SAND_MI = rep(70,7),
       A_SOM_LOI = seq(1,80,length.out = 7),
       type = 'plant available water',
@@ -54,7 +50,6 @@ test_that("osi_p_whc works", {
   expect_equal(
     osi_p_whc(
       A_CLAY_MI = rep(10,7), 
-      A_SILT_MI = seq(5,90,length.out = 7),
       A_SAND_MI = 100 - 10 - seq(5,90,length.out = 7),
       A_SOM_LOI = rep(6,7),
       type = 'Ksat',
@@ -67,7 +62,6 @@ test_that("osi_p_whc works", {
   expect_equal(
     osi_p_whc(
       A_CLAY_MI = rep(25,7), 
-      A_SILT_MI = rep(5,7),
       A_SAND_MI = rep(70,7),
       A_SOM_LOI = seq(1,80,length.out = 7),
       type = 'Ksat',
@@ -80,7 +74,6 @@ test_that("osi_p_whc works", {
   expect_equal(
     osi_p_whc(
       A_CLAY_MI = rep(10,7), 
-      A_SILT_MI = seq(5,90,length.out = 7),
       A_SAND_MI = 100 - 10 - seq(5,90,length.out = 7),
       A_SOM_LOI = rep(6,7),
       type = 'water holding capacity',
@@ -93,7 +86,6 @@ test_that("osi_p_whc works", {
   expect_equal(
     osi_p_whc(
       A_CLAY_MI = rep(25,7), 
-      A_SILT_MI = rep(5,7),
       A_SAND_MI = rep(70,7),
       A_SOM_LOI = seq(1,40,length.out = 7),
       type = 'water holding capacity',

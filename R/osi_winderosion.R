@@ -9,7 +9,7 @@
 #' 
 #' @examples 
 #' osi_p_wef(B_LU = 265, A_CLAY_MI = 4, A_SAND_MI = 15, B_COUNTRY='NL')
-#' osi_p_wef(B_LU = c(265,1019), A_CLAY_MI = c(4,18), A_SAND_MI = c(15,65),B_COUNTRY=c('NL','NL))
+#' osi_p_wef(B_LU = c(265,1019), A_CLAY_MI = c(4,18), A_SAND_MI = c(15,65), B_COUNTRY=c('NL','NL'))
 #' 
 #' @return 
 #' The vulnerability of the soil for wind erosion. A numeric value.
@@ -18,7 +18,7 @@
 osi_p_wef <- function(B_LU,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   
   # add visual bindings
-  id = crop_code = crop_cat1 = loam = NULL
+  id = crop_code = crop_cat1 = loam = A_SILT_MI = osi_country = NULL
   
   # ensure B_LU is character
   B_LU <- as.character(B_LU)
