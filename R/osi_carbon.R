@@ -12,7 +12,7 @@
 #' @import data.table
 #' 
 #' @examples 
-#' osi_carbon(B_LU,A_C_OF, B_BGZ = 4,A_CLAY_MI=5,A_SAND_MI=25,B_COUNTRY='DE')
+#' osi_carbon(B_LU = '165',A_C_OF = 25, B_BGZ = '4',A_CLAY_MI=5,A_SAND_MI=25,B_COUNTRY='DE')
 #' 
 #' @return 
 #' The carbon index. A numeric value.

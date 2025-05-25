@@ -135,18 +135,18 @@ osi_evaluate_logistic_gaus_down <- function(x, b, x0, v, optimum, optimum_ofset 
 
 #' Helper function to weight and correct the risk and scores
 #' 
-#' @param x The risk or score value to be weighted
+#' @param value The risk or OSI core value to be weighted
 #' 
 #' @examples 
-#' cf_ind_importance(x = 0.5)
-#' cf_ind_importance(x = c(0.1,0.5,1.5))
+#' cf_ind_importance(value = 0.5)
+#' cf_ind_importance(value = c(0.1,0.5,1.5))
 #' 
 #' @return 
 #' A transformed variable after applying a inverse weighing function so that lower values will gain more impact when applied in a weighed.mean function. A numeric value.
 #' 
 #' @export
-cf_ind_importance <- function(x) {
-    y <- 1 / (x  + 0.2)
+cf_ind_importance <- function(value) {
+    y <- 1 / (value  + 0.2)
   
   return(y)
 }

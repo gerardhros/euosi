@@ -27,16 +27,11 @@
 #' 
 #' @import data.table
 #' 
-#' @examples 
-#' osi_c_potassium(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4, 
-#' A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
-#' A_K_CO_PO = 8.5, A_K_CC = 145,B_COUNTRY = 'NL')
-#' 
 #' @return
 #' The capacity of the soil to supply and buffer potassium, evaluated given an optimum threshold for yield. A numeric value.
 #' 
 #' @export
-osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
+osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_character_,
                             A_SOM_LOI = NA, A_C_OF = NA, 
                             A_CLAY_MI = NA,A_SAND_MI = NA,
                             A_PH_CC = NA, A_PH_WA = NA,A_CACO3_IF = NA,
@@ -50,7 +45,8 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   A_SILT_MI  = NULL
     
   # desired length of inputs
-  arg.length <- max(length(B_LU),length(B_SOILTYPE_AGR),length(A_SOM_LOI),length(A_C_OF),
+  arg.length <- max(length(B_LU),length(B_SOILTYPE_AGR),length(B_AER_FR),
+                    length(A_SOM_LOI),length(A_C_OF),
                     length(A_CLAY_MI),length(A_SAND_MI),
                     length(A_PH_CC), length(A_PH_WA), length(A_CEC_CO), length(A_CACO3_IF),
                     length(A_K_AAA),length(A_K_AL),length(A_K_AN),length(A_K_CAL),
@@ -61,6 +57,7 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                   B_AER_FR = B_AER_FR,
                    B_COUNTRY = B_COUNTRY,
                    A_SOM_LOI = A_SOM_LOI,
                    A_C_OF = A_C_OF,
@@ -125,7 +122,7 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   dt[B_COUNTRY == 'ES', value := osi_c_potassium_es(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_K_AAA = A_K_AAA)]
   dt[B_COUNTRY == 'FR', value := osi_c_potassium_fr(B_LU = B_LU, B_TEXTURE_GEPPA  = B_TEXTURE_GEPPA, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
                                                     A_PH_WA = A_PH_WA,
-                                                    B_AER_FR = NA_character_, A_K_AAA = A_K_AAA)]
+                                                    B_AER_FR = B_AER_FR, A_K_AAA = A_K_AAA)]
   dt[B_COUNTRY == 'FI', value := osi_c_potassium_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_K_AAA = A_K_AAA, A_C_OF = A_C_OF)]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
@@ -169,7 +166,7 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium_at(A_K_CAL = 47,B_TEXTURE_HYPRES)
+#' osi_c_potassium_at(A_K_CAL = 47,B_TEXTURE_HYPRES = 'C')
 #' 
 #' @return 
 #' The potassium availability index in Austria estimated from extractable potassium. A numeric value.
@@ -247,7 +244,7 @@ osi_c_potassium_at <- function(A_K_CAL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium_be(B_LU = 'SOJ',B_TEXTURE_BE, A_K_AAA = 45)
+#' osi_c_potassium_be(B_LU = 'SOJ',B_TEXTURE_BE = 'S', A_K_AAA = 45)
 #' 
 #' @return 
 #' The potassium availability index in Belgium estimated from extractable potassium. A numeric value.
@@ -324,7 +321,7 @@ osi_c_potassium_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium_ch(A_K_AAA = 50)
+#' osi_c_potassium_ch(A_K_AAA = 50, A_CLAY_MI = 25)
 #' 
 #' @return 
 #' The potassium availability index in Switzerland estimated from extractable potassium. A numeric value.
@@ -540,7 +537,7 @@ osi_c_potassium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AAA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium_ee(A_K_M3 = 45,B_TEXTURE_USDA = 'clay')
+#' osi_c_potassium_ee(A_K_M3 = 45,B_TEXTURE_USDA = 'ClLo')
 #' 
 #' @return 
 #' The potassium availability index in Estonia estimated from extractable potassium. A numeric value.
@@ -617,7 +614,7 @@ osi_c_potassium_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
 #' 
 #' @examples 
 #' osi_c_potassium_dk(B_LU = 265,A_K_AL = 5)
-#' osi_c_potassium_dk(B_LU = c(265,1019),A_K_AL = c(3.5,5.5)))
+#' osi_c_potassium_dk(B_LU = c(265,1019),A_K_AL = c(3.5,5.5))
 #' 
 #' @return 
 #' The potassium availability index in Denmark derived from extractable soil K fractions. A numeric value.
@@ -699,7 +696,7 @@ osi_c_potassium_es <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_K_AAA = 45)
+#' osi_c_potassium_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_K_AAA = 45,A_C_OF = 15)
 #' 
 #' @return 
 #' The potassium availability index in Finland estimated from extractable potassium. A numeric value.
@@ -1065,7 +1062,7 @@ osi_c_potassium_it <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium_lv(A_K_DL = 45,B_TEXTURE_USDA='sand')
+#' osi_c_potassium_lv(A_K_DL = 45,B_TEXTURE_USDA='S')
 #' 
 #' @return 
 #' The potassium availability index in Latvia estimated from extractable potassium A numeric value.
@@ -1634,7 +1631,7 @@ osi_c_potassium_sk <- function(B_TEXTURE_HYPRES,A_K_M3,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_potassium_sl(A_K_AL = 45)
+#' osi_c_potassium_sl(A_K_AL = 45,B_TEXTURE_HYPRES='S')
 #' 
 #' @return 
 #' The potassium availability index in Slovenia estimated from extractable potassium. A numeric value.

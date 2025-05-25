@@ -203,7 +203,7 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_nitrogen_de(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
+#' osi_c_nitrogen_de(B_LU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
 #' 
 #' @return 
 #' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
@@ -511,8 +511,8 @@ osi_c_nitrogen_eu <- function(B_LU = NA_character_,
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE)
   checkmate::assert_numeric(A_SAND_MI, lower = 0, upper = 100, any.missing = FALSE)
   checkmate::assert_numeric(A_N_RT, lower = 0.1, upper = 30000, any.missing = FALSE)
-  checkmate::assert_numeric(dt$A_SOM_LOI, lower = 0, upper = 100, any.missing = TRUE)
-  checkmate::assert_numeric(dt$A_C_OF, lower = 0, upper = 100, any.missing = TRUE)
+  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = TRUE)
+  checkmate::assert_numeric(A_C_OF, lower = 0, upper = 100, any.missing = TRUE)
   
   # Collect data in an internal table
   dt <- data.table(id = 1:arg.length,

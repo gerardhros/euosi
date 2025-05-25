@@ -177,8 +177,8 @@ osi_gw_nleach <- function(B_LU = NA_character_,
 #' 
 #' @export
 osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_IF,
-                             B_PREC_SUM,B_PREC_WIN, B_PET_SUM,B_PET_WIN,
-                             B_TEMP_SUM,B_TEMP_WIN) {
+                             B_PREC_SUM = NA_real_,B_PREC_WIN = NA_real_, B_PET_SUM = NA_real_,B_PET_WIN = NA_real_,
+                             B_TEMP_SUM = NA_real_,B_TEMP_WIN = NA_real_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -345,8 +345,8 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
 #' 
 #' @export
 osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_IF,
-                             B_PREC_SUM,B_PREC_WIN, B_PET_SUM,B_PET_WIN,
-                             B_TEMP_SUM,B_TEMP_WIN
+                             B_PREC_SUM = NA_real_,B_PREC_WIN = NA_real_, B_PET_SUM = NA_real_,B_PET_WIN = NA_real_,
+                             B_TEMP_SUM = NA_real_,B_TEMP_WIN = NA_real_
                              ) {
   
   # set visual bindings
@@ -587,14 +587,15 @@ osi_gw_nleach_fi <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_gw_nleach_eu(B_LU ='265',A_N_RT = 4100, A_C_OF = 22, A_CLAY_MI = 4.5, A_SAND_MI = 15, B_PREC_Y = 900, B_PET_Y = 650,B_TEMP_Y = 4.5)
+#' osi_gw_nleach_eu(B_LU ='265',A_N_RT = 4100, A_C_OF = 22, A_CLAY_MI = 4.5, 
+#' A_SAND_MI = 15, B_PREC_Y = 900, B_PET_Y = 650,B_TEMP_Y = 4.5)
 #' 
 #' @return 
 #' The risk for N leaching
 #' 
 #' @export
 osi_gw_nleach_eu <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
-                             B_PREC_Y, B_PET_Y, B_TEMP_Y) {
+                             B_PREC_Y = NA_real_, B_PET_Y = NA_real_, B_TEMP_Y = NA_real_) {
   
   # set visual bindings
   D_BS = B_TEXTURE_USDA = A_SILT_MI =arate = NSC = crop_cat1 = NS = NULL

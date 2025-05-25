@@ -20,24 +20,6 @@ checkvar <- function(parm) {
 }
 
 
-#' Select the correct boundary values (min and max) for a given parameter
-#' 
-#' This function gives a value a given weight depending on distance to target
-#' 
-#' @param value (numeric) The a OSI index value varying between 0 and 1.
-#' 
-#' @import data.table
-#' 
-#' @return 
-#' a weighing factor that can be used in calculated a weighted mean
-#' 
-#' @export
-cf_ind_importance <- function(x) {
-  
-  y <- 1/(x + 0.2)
-  return(y)
-}
-
 #' Water retention curve
 #' 
 #' This function compute water content at given pressure head, using Van Genuchten water retention curve

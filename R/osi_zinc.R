@@ -114,7 +114,7 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_zinc_de(B_LU = 265,A_C_OF=25, A_CLAY_MI=5,A_SAND_MI=15,A_ZN_EDTA = 50)
+#' osi_c_zinc_de(B_LU = '265',A_C_OF=25, A_CLAY_MI=5,A_SAND_MI=15,A_ZN_EDTA = 50)
 #'  
 #' @return 
 #' The zinc availability index in Germany derived from extractable soil Zn fractions. A numeric value.
@@ -123,10 +123,11 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
 osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA) {
 
   # add visual bindings
-  stype = . = crop_name = crop_cat1 = A_SILT_MI = NULL
+  stype = . = crop_name = crop_cat1 = osi_country = A_SILT_MI = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='DE']
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -337,7 +338,7 @@ osi_c_zinc_ie <- function(B_LU,A_SOM_LOI, A_PH_WA, A_ZN_EDTA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_zinc_nl(B_LU = 265, A_ZN_CC = 45, A_PH_CC = 6.5)
+#' osi_c_zinc_nl(B_LU = '265', A_ZN_CC = 45, A_PH_CC = 6.5)
 #' 
 #' @return 
 #' The function of the soil to supply zinc (a numeric value).
@@ -366,7 +367,7 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
 
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
+                   B_LU = as.character(B_LU),
                    A_PH_CC = A_PH_CC,
                    A_ZN_CC = A_ZN_CC,
                    D_ZN = NA_real_,

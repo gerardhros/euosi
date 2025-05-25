@@ -7,6 +7,7 @@
 #' @param A_SAND_MI (numeric) The sand content (\%)
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
 #' @param A_B_HW (numeric) The plant available content of B in the soil (mg  B per kg) extracted by hot water
+#' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
 #' @param B_COUNTRY (character) The country code
 #' 
 #' @import data.table
@@ -115,10 +116,11 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
 osi_c_boron_ch <- function(B_LU, A_B_HW) {
   
   # add visual bindings
-  crop_name = . = crop_cat1 = senscrop = id = NULL
+  crop_name = . = crop_cat1 = osi_country = senscrop = id = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'CH']
   
   # get max length of inputs
   arg.length <- max(length(B_LU),length(A_B_HW))
@@ -177,10 +179,11 @@ osi_c_boron_ch <- function(B_LU, A_B_HW) {
 osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
   
   # add visual bindings
-  A_SILT_MI = stype = . = crop_name = crop_cat1 = id = NULL
+  A_SILT_MI = stype = . = crop_name = osi_country = crop_cat1 = id = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'DE']
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -248,10 +251,11 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
 osi_c_boron_ie <- function(B_LU, A_B_HW) {
   
   # add visual bindings
-  id = . = crop_cat1 = crop_name = senscrop = NULL
+  id = . = crop_cat1 = crop_name = osi_country = senscrop = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'IE']
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -449,8 +453,8 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_boron_ie(B_LU = 265,A_PH_WA = 5.0)
-#' osi_c_boron_ie(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5))
+#' osi_c_boron_se(B_LU = 265,A_PH_WA = 5.0)
+#' osi_c_boron_se(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5))
 #' 
 #' @return 
 #' The boron availability index in Sweden depends primarily on pH. A numeric value.
@@ -458,8 +462,12 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
 #' @export
 osi_c_boron_se <- function(B_LU, A_PH_WA) {
   
+  # add visual bindings
+  osi_country = NULL
+  
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'SE']
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -496,9 +504,9 @@ osi_c_boron_se <- function(B_LU, A_PH_WA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_boron_uk(B_LU = 265,B_TEXTURE_HYPRES='C',A_SOM_LOI=3,
+#' osi_c_boron_uk(B_LU = '265',B_TEXTURE_HYPRES='C',A_SOM_LOI=3,
 #' A_PH_CC = 4,A_B_HW = 50)
-#' osi_c_boron_uk(B_LU = c(265,1019),B_TEXTURE_HYPRES = c('C','F'),
+#' osi_c_boron_uk(B_LU = c('265','1019'),B_TEXTURE_HYPRES = c('C','F'),
 #' A_SOM_LOI = c(3,3),A_PH_CC = c(4,6),A_B_HW = c(35,55))
 #' 
 #' @return 
@@ -508,14 +516,15 @@ osi_c_boron_se <- function(B_LU, A_PH_WA) {
 osi_c_boron_uk <- function(B_LU, B_TEXTURE_HYPRES,A_SOM_LOI,A_PH_CC,A_B_HW) {
   
   # add visual bindings
-  crop_code = crop_name = crop_cat1 = . = id = A_PH_WA = BDS = senscrop = NULL
+  crop_code = crop_name = crop_cat1 = . = id = A_PH_WA = BDS = senscrop = osi_country = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'UK']
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
-                   B_LU = B_LU,
+                   B_LU = as.character(B_LU),
                    B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                    A_PH_CC = A_PH_CC,
                    A_PH_WA = NA_real_,

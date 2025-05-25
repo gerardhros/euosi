@@ -209,7 +209,7 @@ osi_nut_p_at <- function(A_P_CAL,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_posphor_be(B_LU = 'SOJ', A_P_AL = 45)
+#' osi_nut_p_be(B_LU = 'SOJ', A_P_AL = 45)
 #' 
 #' @return 
 #' The phosphorus excess index in Belgium estimated from extractable phosphorus. A numeric value.
@@ -419,8 +419,9 @@ osi_nut_p_cz <- function(A_P_M3,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_p_de(B_LU = 265, A_P_AL = 45,A_P_DL = 5)
-#' osi_nut_p_de(B_LU = c(265,1019),A_P_AL = c(35,54),A_P_DL = c(3.5,5.5))
+#' osi_nut_p_de(B_LU = 265, A_SOM_LOI = 4.5, A_P_CAL = 45,A_P_DL = 5)
+#' osi_nut_p_de(B_LU = c(265,1019),A_SOM_LOI = c(4,6),
+#' A_P_CAL = c(35,54),A_P_DL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate excess index in Germany stimated from extractable soil P fractions. A numeric value.
@@ -502,7 +503,7 @@ osi_nut_p_dk <- function(B_LU, A_P_OL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_p_ee(A_P_M3 = 45)
+#' osi_nut_p_ee(A_P_M3 = 45, A_SOM_LOI = 4)
 #' 
 #' @return 
 #' The phosphorus excess index in Estonia estimated from extractable phosphorus. A numeric value.
@@ -575,7 +576,8 @@ osi_nut_p_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_) {
 #' 
 #' @examples 
 #' osi_nut_p_es(B_LU = 265,A_CLAY_MI = 5,A_SAND_MI = 25, A_P_OL = 5)
-#' osi_nut_p_es(B_LU = c(265,1019),A_CLAY_MI = c(5,10),A_SAND_MI = c(25,15),A_P_OL = c(3.5,5.5))
+#' osi_nut_p_es(B_LU = c(265,1019),A_CLAY_MI = c(5,10),
+#' A_SAND_MI = c(25,15),A_P_OL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate excess index in Spain derived from extractable soil P fractions. A numeric value.
@@ -615,12 +617,12 @@ osi_nut_p_es <- function(B_LU, A_CLAY_MI,A_SAND_MI,A_P_OL) {
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_P_AAA(numeric) The exchangeable P-content of the soil measured via ammonium acetate extraction
+#' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via ammonium acetate extraction
 #' 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_posphor_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_P_AAA= 45)
+#' osi_nut_p_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_P_AAA= 45)
 #' 
 #' @return 
 #' The phosphorus excess index in Finland estimated from extractable phosphorus. A numeric value.
@@ -791,7 +793,7 @@ osi_nut_p_fr <- function(B_LU, A_P_OL,A_PH_WA = NA_real_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_hu(A_P_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
+#' osi_nut_p_hu(A_P_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
 #' 
 #' @return 
 #' The phosphorus excess index in Hungary estimated from extractable phosphorus. A numeric value.
@@ -944,7 +946,7 @@ osi_nut_p_it <- function(B_LU, A_P_OL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_lv(A_P_DL = 45,B_TEXTURE_USDA = 'S')
+#' osi_nut_p_lv(A_P_DL = 45,B_TEXTURE_USDA = 'S')
 #' 
 #' @return 
 #' The phosphorus excess index in Latvia estimated from extractable phosphorus. A numeric value.
@@ -1021,7 +1023,7 @@ osi_nut_p_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_lt(A_P_AL = 45)
+#' osi_nut_p_lt(A_P_AL = 45,A_SOM_LOI = 5)
 #' 
 #' @return 
 #' The phosphorus excess index in Lithuania estimated from extractable phosphorus. A numeric value.
@@ -1093,8 +1095,8 @@ osi_nut_p_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_p_nl(B_LU = 265, A_P_AL = 45, A_P_CC = 2.5)
-#' osi_nut_p_nl(B_LU = c(265,1019),A_P_AL = c(35,54),A_P_CC = c(2.5,4.5), A_P_WA = c(35,65))
+#' osi_nut_p_nl(B_LU = '265', A_P_AL = 45, A_P_CC = 2.5)
+#' osi_nut_p_nl(B_LU = c('265','1019'),A_P_AL = c(35,54),A_P_CC = c(2.5,4.5), A_P_WA = c(35,65))
 #' 
 #' @return 
 #' The phosphate excess index in the Netherlands estimated from extractable soil P fractions. A numeric value.
@@ -1179,7 +1181,7 @@ osi_nut_p_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_no(A_P_AL = 50)
+#' osi_nut_p_no(A_P_AL = 50)
 #' 
 #' @return 
 #' The phosphorus excess index in Norway estimated from extractable phosphorus. A numeric value.
@@ -1248,7 +1250,7 @@ osi_nut_p_no <- function(A_P_AL,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_pl(A_P_DL = 45)
+#' osi_nut_p_pl(A_P_DL = 45)
 #' 
 #' @return 
 #' The phosphorus excess index in Poland estimated from extractable phosphorus. A numeric value.
@@ -1360,7 +1362,7 @@ osi_nut_p_se <- function(B_LU, A_P_AL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_sk(A_P_M3 = 45)
+#' osi_nut_p_sk(A_P_M3 = 45, B_TEXTURE_HYPRES = 'C')
 #' 
 #' @return 
 #' The phosphorus excess index in Slovak Republic estimated from extractable phosphorus. A numeric value.
@@ -1432,7 +1434,7 @@ osi_nut_p_sk <- function(B_TEXTURE_HYPRES,A_P_M3,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_sl(A_P_AL = 45)
+#' osi_nut_p_sl(A_P_AL = 45)
 #' 
 #' @return 
 #' The phosphorus excess index in Slovenia estimated from extractable phosphorus. A numeric value.

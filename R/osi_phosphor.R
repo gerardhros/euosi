@@ -23,15 +23,11 @@
 #' 
 #' @import data.table
 #' 
-#' @examples 
-#' osi_c_posphor(B_LU = 265, A_P_AL = 45, A_P_CC = 2.5,B_COUNTRY='NL')
-#' osi_c_posphor(B_LU = 1019,A_P_AL = 54,A_P_CC = 4.5, A_P_WA = 65,B_COUNTRY ='NL')
-#' 
 #' @return 
 #' The phosphate availability index in European countries estimated from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_posphor <- function(B_LU, 
+osi_c_phosphor <- function(B_LU, 
                           B_SOILTYPE_AGR = NA_character_, A_CLAY_MI = NA_real_, A_SAND_MI = NA_real_,
                           A_SOM_LOI = NA_real_,A_C_OF = NA_real_,
                           A_PH_WA = NA_real_,A_PH_CC = NA_real_,A_CACO3_IF = NA_real_,
@@ -96,36 +92,36 @@ osi_c_posphor <- function(B_LU,
   # calculate the OSI score per country
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
-  dt[B_COUNTRY == 'AT', value := osi_c_posphor_at(B_LU = B_LU, A_P_CAL = A_P_CAL)]
-  dt[B_COUNTRY == 'BE', value := osi_c_posphor_be(B_LU = B_LU, A_P_AL = A_P_AL)]
-  dt[B_COUNTRY == 'CH', value := osi_c_posphor_ch(B_LU = B_LU, A_P_AAA = A_P_AAA)]
-  dt[B_COUNTRY == 'CZ', value := osi_c_posphor_cz(B_LU = B_LU, A_P_M3 = A_P_M3)]
-  dt[B_COUNTRY == 'DE', value := osi_c_posphor_de(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_CAL = A_P_CAL, A_P_DL = A_P_DL)]
+  dt[B_COUNTRY == 'AT', value := osi_c_phosphor_at(B_LU = B_LU, A_P_CAL = A_P_CAL)]
+  dt[B_COUNTRY == 'BE', value := osi_c_phosphor_be(B_LU = B_LU, A_P_AL = A_P_AL)]
+  dt[B_COUNTRY == 'CH', value := osi_c_phosphor_ch(B_LU = B_LU, A_P_AAA = A_P_AAA)]
+  dt[B_COUNTRY == 'CZ', value := osi_c_phosphor_cz(B_LU = B_LU, A_P_M3 = A_P_M3)]
+  dt[B_COUNTRY == 'DE', value := osi_c_phosphor_de(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_CAL = A_P_CAL, A_P_DL = A_P_DL)]
   
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
-  dt[B_COUNTRY == 'DK', value := osi_c_posphor_dk(B_LU = B_LU, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'EE', value := osi_c_posphor_ee(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_M3 = A_P_M3)]
-  dt[B_COUNTRY == 'ES', value := osi_c_posphor_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'FR', value := osi_c_posphor_fr(B_LU = B_LU, B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_P_OL= A_P_OL)]
-  dt[B_COUNTRY == 'FI', value := osi_c_posphor_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_AAA = A_P_AAA, A_C_OF = A_C_OF )]
+  dt[B_COUNTRY == 'DK', value := osi_c_phosphor_dk(B_LU = B_LU, A_P_OL = A_P_OL)]
+  dt[B_COUNTRY == 'EE', value := osi_c_phosphor_ee(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_M3 = A_P_M3)]
+  dt[B_COUNTRY == 'ES', value := osi_c_phosphor_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_P_OL = A_P_OL)]
+  dt[B_COUNTRY == 'FR', value := osi_c_phosphor_fr(B_LU = B_LU, B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_P_OL= A_P_OL)]
+  dt[B_COUNTRY == 'FI', value := osi_c_phosphor_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_AAA = A_P_AAA, A_C_OF = A_C_OF )]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
-  dt[B_COUNTRY == 'HU', value := osi_c_posphor_hu(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI, A_CACO3_IF = A_CACO3_IF,A_P_AL = A_P_AL )]
-  dt[B_COUNTRY == 'IE', value := osi_c_posphor_ie(B_LU = B_LU, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'IT', value := osi_c_posphor_it(B_LU = B_LU, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'LV', value := osi_c_posphor_lv(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_DL = A_P_DL)]
-  dt[B_COUNTRY == 'LT', value := osi_c_posphor_lt(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_AL = A_P_AL)]
+  dt[B_COUNTRY == 'HU', value := osi_c_phosphor_hu(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI, A_CACO3_IF = A_CACO3_IF,A_P_AL = A_P_AL )]
+  dt[B_COUNTRY == 'IE', value := osi_c_phosphor_ie(B_LU = B_LU, A_P_OL = A_P_OL)]
+  dt[B_COUNTRY == 'IT', value := osi_c_phosphor_it(B_LU = B_LU, A_P_OL = A_P_OL)]
+  dt[B_COUNTRY == 'LV', value := osi_c_phosphor_lv(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_DL = A_P_DL)]
+  dt[B_COUNTRY == 'LT', value := osi_c_phosphor_lt(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_AL = A_P_AL)]
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
-  dt[B_COUNTRY == 'NL', value := osi_c_posphor_nl(B_LU = B_LU, A_P_AL = A_P_AL, A_P_CC = A_P_CC, A_P_WA = A_P_WA)]
-  dt[B_COUNTRY == 'NO', value := osi_c_posphor_no(B_LU = B_LU, A_P_AL = A_P_AL)]
-  dt[B_COUNTRY == 'SE', value := osi_c_posphor_se(B_LU = B_LU, A_P_AL = A_P_AL)]
-  dt[B_COUNTRY == 'SK', value := osi_c_posphor_sk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_P_M3 = A_P_M3)]
-  dt[B_COUNTRY == 'SL', value := osi_c_posphor_sl(B_LU = B_LU, A_P_AL = A_P_AL)]
+  dt[B_COUNTRY == 'NL', value := osi_c_phosphor_nl(B_LU = B_LU, A_P_AL = A_P_AL, A_P_CC = A_P_CC, A_P_WA = A_P_WA)]
+  dt[B_COUNTRY == 'NO', value := osi_c_phosphor_no(B_LU = B_LU, A_P_AL = A_P_AL)]
+  dt[B_COUNTRY == 'SE', value := osi_c_phosphor_se(B_LU = B_LU, A_P_AL = A_P_AL)]
+  dt[B_COUNTRY == 'SK', value := osi_c_phosphor_sk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_P_M3 = A_P_M3)]
+  dt[B_COUNTRY == 'SL', value := osi_c_phosphor_sl(B_LU = B_LU, A_P_AL = A_P_AL)]
   
   # Poland (PL), United Kingdom (UK)
-  dt[B_COUNTRY == 'PL', value := osi_c_posphor_pl(B_LU = B_LU, A_P_DL = A_P_DL)]
-  dt[B_COUNTRY == 'IE', value := osi_c_posphor_uk(B_LU = B_LU, A_P_OL = A_P_OL)]
+  dt[B_COUNTRY == 'PL', value := osi_c_phosphor_pl(B_LU = B_LU, A_P_DL = A_P_DL)]
+  dt[B_COUNTRY == 'IE', value := osi_c_phosphor_uk(B_LU = B_LU, A_P_OL = A_P_OL)]
   
   # sort data.table
   setorder(dt,id)
@@ -148,13 +144,13 @@ osi_c_posphor <- function(B_LU,
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_at(A_P_CAL = 47)
+#' osi_c_phosphor_at(A_P_CAL = 47)
 #' 
 #' @return 
 #' The phosphorus availability index in Austria estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_at <- function(A_P_CAL,B_LU = NA_character_) {
+osi_c_phosphor_at <- function(A_P_CAL,B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -217,13 +213,13 @@ osi_c_posphor_at <- function(A_P_CAL,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_be(B_LU = 'SOJ', A_P_AL = 45)
+#' osi_c_phosphor_be(B_LU = 'SOJ', A_P_AL = 45)
 #' 
 #' @return 
 #' The phosphorus availability index in Belgium estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_be <- function(B_LU, A_P_AL) {
+osi_c_phosphor_be <- function(B_LU, A_P_AL) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -286,13 +282,13 @@ osi_c_posphor_be <- function(B_LU, A_P_AL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_ch(A_P_AAA = 50)
+#' osi_c_phosphor_ch(A_P_AAA = 50)
 #' 
 #' @return 
 #' The phosphorus availability index in Switzerland estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_ch <- function(A_P_AAA,B_LU = NA_character_) {
+osi_c_phosphor_ch <- function(A_P_AAA,B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -355,13 +351,13 @@ osi_c_posphor_ch <- function(A_P_AAA,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_cz(A_P_M3 = 81)
+#' osi_c_phosphor_cz(A_P_M3 = 81)
 #' 
 #' @return 
 #' The phosphorus availability index in Czech Republic estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_cz <- function(A_P_M3,B_LU = NA_character_) {
+osi_c_phosphor_cz <- function(A_P_M3,B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -426,14 +422,15 @@ osi_c_posphor_cz <- function(A_P_M3,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor_de(B_LU = 265, A_P_AL = 45,A_P_DL = 5)
-#' osi_c_posphor_de(B_LU = c(265,1019),A_P_AL = c(35,54),A_P_DL = c(3.5,5.5))
+#' osi_c_phosphor_de(B_LU = 265, A_SOM_LOI = 4.5, A_P_CAL = 45,A_P_DL = 5)
+#' osi_c_phosphor_de(B_LU = c(265,1019),A_SOM_LOI = c(3,3),
+#' A_P_CAL = c(35,54),A_P_DL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Germany stimated from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_posphor_de <- function(B_LU, A_SOM_LOI,A_P_CAL = NA_real_, A_P_DL = NA_real_) {
+osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_P_CAL = NA_real_, A_P_DL = NA_real_) {
   
   # add visual bindings
   value1 = value2 = NULL
@@ -475,14 +472,14 @@ osi_c_posphor_de <- function(B_LU, A_SOM_LOI,A_P_CAL = NA_real_, A_P_DL = NA_rea
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor_dk(B_LU = 265,A_P_OL = 5)
-#' osi_c_posphor_dk(B_LU = c(265,1019),A_P_OL = c(3.5,5.5))
+#' osi_c_phosphor_dk(B_LU = '265',A_P_OL = 5)
+#' osi_c_phosphor_dk(B_LU = c('265','1019'),A_P_OL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Denmark derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_posphor_dk <- function(B_LU, A_P_OL) {
+osi_c_phosphor_dk <- function(B_LU, A_P_OL) {
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -509,13 +506,13 @@ osi_c_posphor_dk <- function(B_LU, A_P_OL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_ee(A_P_M3 = 45)
+#' osi_c_phosphor_ee(A_P_M3 = 45,A_SOM_LOI = 3, B_LU='23')
 #' 
 #' @return 
 #' The phosphorus availability index in Estonia estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_) {
+osi_c_phosphor_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -582,14 +579,15 @@ osi_c_posphor_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor_es(B_LU = 265,A_CLAY_MI = 5,A_SAND_MI = 25,A_P_OL = 5)
-#' osi_c_posphor_es(B_LU = c(265,1019),A_CLAY_MI = c(5,10),A_SAND_MI = c(50,50),A_P_OL = c(3.5,5.5))
+#' osi_c_phosphor_es(B_LU = '265',A_CLAY_MI = 5,A_SAND_MI = 25,A_P_OL = 5)
+#' osi_c_phosphor_es(B_LU = c('265','1019'),A_CLAY_MI = c(5,10),
+#' A_SAND_MI = c(50,50),A_P_OL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Spain derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_posphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL) {
+osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL) {
   
   # get max length of input
   arg.length <- max(length(B_LU),length(A_CLAY_MI),length(A_SAND_MI),length(A_P_OL))
@@ -627,13 +625,14 @@ osi_c_posphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_P_AAA = 45)
+#' osi_c_phosphor_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',
+#' A_P_AAA = 45,A_C_OF=1.5)
 #' 
 #' @return 
 #' The phosphorus availability index in Finland estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0) {
+osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -709,7 +708,7 @@ osi_c_posphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor_fr(B_LU = 'SOJ', A_P_OL = 45, 
+#' osi_c_phosphor_fr(B_LU = 'SOJ', A_P_OL = 45, 
 #' B_SOILTYPE_AGR = 'limons battants', B_AER_FR = 'nord-picardie')
 #' 
 #' @details
@@ -719,7 +718,7 @@ osi_c_posphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0) {
 #' The phosphate availability index in France estimated from extractable soil P Olsen (a numeric value). 
 #' 
 #' @export
-osi_c_posphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_PH_WA = NA_real_) {
+osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_PH_WA = NA_real_) {
   
   # set visual bindings
   value = osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -814,13 +813,13 @@ osi_c_posphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER_
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_hu(A_P_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
+#' osi_c_phosphor_hu(A_P_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
 #' 
 #' @return 
 #' The phosphorus availability index in Hungary estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,B_LU = NA_character_) {
+osi_c_phosphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -895,14 +894,14 @@ osi_c_posphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,B_LU = NA_cha
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor_ie(B_LU = 265,A_P_OL = 5)
-#' osi_c_posphor_ie(B_LU = c(265,1019),A_P_OL = c(3.5,5.5))
+#' osi_c_phosphor_ie(B_LU = '265',A_P_OL = 5)
+#' osi_c_phosphor_ie(B_LU = c('265','1019'),A_P_OL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Ireland derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_posphor_ie <- function(B_LU, A_P_OL) {
+osi_c_phosphor_ie <- function(B_LU, A_P_OL) {
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -933,14 +932,14 @@ osi_c_posphor_ie <- function(B_LU, A_P_OL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor_it(B_LU = 265,A_P_OL = 5)
-#' osi_c_posphor_it(B_LU = c(265,1019),A_P_OL = c(3.5,5.5))
+#' osi_c_phosphor_it(B_LU = '265',A_P_OL = 5)
+#' osi_c_phosphor_it(B_LU = c('265','1019'),A_P_OL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Italy derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_posphor_it <- function(B_LU, A_P_OL) {
+osi_c_phosphor_it <- function(B_LU, A_P_OL) {
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -967,13 +966,13 @@ osi_c_posphor_it <- function(B_LU, A_P_OL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_lv(A_P_DL = 45,B_TEXTURE_USDA = 'S')
+#' osi_c_phosphor_lv(A_P_DL = 45,B_TEXTURE_USDA = 'S')
 #' 
 #' @return 
 #' The phosphorus availability index in Latvia estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
+osi_c_phosphor_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1044,13 +1043,13 @@ osi_c_posphor_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_lt(A_P_AL = 45)
+#' osi_c_phosphor_lt(A_P_AL = 45,A_SOM_LOI = 4.5)
 #' 
 #' @return 
 #' The phosphorus availability index in Lithuania estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
+osi_c_phosphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1116,14 +1115,14 @@ osi_c_posphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor_nl(B_LU = 265, A_P_AL = 45, A_P_CC = 2.5)
-#' osi_c_posphor_nl(B_LU = c(265,1019),A_P_AL = c(35,54),A_P_CC = c(2.5,4.5), A_P_WA = c(35,65))
+#' osi_c_phosphor_nl(B_LU = 265, A_P_AL = 45, A_P_CC = 2.5)
+#' osi_c_phosphor_nl(B_LU = c(265,1019),A_P_AL = c(35,54),A_P_CC = c(2.5,4.5), A_P_WA = c(35,65))
 #' 
 #' @return 
 #' The phosphate availability index in the Netherlands estimated from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_) {
+osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = NULL
@@ -1202,13 +1201,13 @@ osi_c_posphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_no(A_P_AL = 50)
+#' osi_c_phosphor_no(A_P_AL = 50)
 #' 
 #' @return 
 #' The phosphorus availability index in Norway estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_no <- function(A_P_AL,B_LU = NA_character_) {
+osi_c_phosphor_no <- function(A_P_AL,B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1271,13 +1270,13 @@ osi_c_posphor_no <- function(A_P_AL,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_pl(A_P_DL = 45)
+#' osi_c_phosphor_pl(A_P_DL = 45)
 #' 
 #' @return 
 #' The phosphorus availability index in Poland estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_pl <- function(A_P_DL,B_LU = NA_character_) {
+osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1340,14 +1339,14 @@ osi_c_posphor_pl <- function(A_P_DL,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor_se(B_LU = 265,A_P_AL = 5)
-#' osi_c_posphor_se(B_LU = c(265,1019),A_P_AL = c(3.5,5.5))
+#' osi_c_phosphor_se(B_LU = 265,A_P_AL = 5)
+#' osi_c_phosphor_se(B_LU = c(265,1019),A_P_AL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Sweden derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_posphor_se <- function(B_LU, A_P_AL) {
+osi_c_phosphor_se <- function(B_LU, A_P_AL) {
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -1383,13 +1382,13 @@ osi_c_posphor_se <- function(B_LU, A_P_AL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_sk(A_P_M3 = 45)
+#' osi_c_phosphor_sk(A_P_M3 = 45,B_TEXTURE_HYPRES = 'C')
 #' 
 #' @return 
 #' The phosphorus availability index in Slovak Republic estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_sk <- function(B_TEXTURE_HYPRES,A_P_M3,B_LU = NA_character_) {
+osi_c_phosphor_sk <- function(B_TEXTURE_HYPRES,A_P_M3,B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1455,13 +1454,13 @@ osi_c_posphor_sk <- function(B_TEXTURE_HYPRES,A_P_M3,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphorus_sl(A_P_AL = 45)
+#' osi_c_phosphor_sl(A_P_AL = 45)
 #' 
 #' @return 
 #' The phosphorus availability index in Slovenia estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_posphor_sl <- function(A_P_AL,B_LU = NA_character_) {
+osi_c_phosphor_sl <- function(A_P_AL,B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1527,14 +1526,14 @@ osi_c_posphor_sl <- function(A_P_AL,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_posphor_uk(B_LU = 265,A_SOM_LOI = 3,A_P_OL = 5)
-#' osi_c_posphor_uk(B_LU = c(265,1019),A_SOM_LOI = c(3,4),A_P_OL = c(3.5,5.5))
+#' osi_c_phosphor_uk(B_LU = 265,A_SOM_LOI = 3,A_P_OL = 5)
+#' osi_c_phosphor_uk(B_LU = c(265,1019),A_SOM_LOI = c(3,4),A_P_OL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in United Kingdom derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_posphor_uk <- function(B_LU, A_SOM_LOI,A_P_OL) {
+osi_c_phosphor_uk <- function(B_LU, A_SOM_LOI,A_P_OL) {
   
   # set visual bindings
   crop_name = crop_cat1 = BD = . = NULL

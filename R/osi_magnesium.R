@@ -123,12 +123,12 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   dt[B_COUNTRY == 'BE', value := NA_real_]
   dt[B_COUNTRY == 'CH', value := osi_c_magnesium_ch(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI, A_MG_AAA = A_MG_AAA)]
   dt[B_COUNTRY == 'CZ', value := oci_c_magnesium_cz(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_M3 = A_MG_M3)]
-  dt[B_COUNTRY == 'DE', value := oci_c_magnesium_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_MG_CC = A_MG_CC)]
+  dt[B_COUNTRY == 'DE', value := osi_c_magnesium_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_MG_CC = A_MG_CC)]
   
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := osi_c_magnesium_dk(B_LU = B_LU, A_MG_AL = A_MG_AL)]
   dt[B_COUNTRY == 'EE', value := oci_c_magnesium_ee(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA,A_MG_M3 = A_MG_M3)]
-  dt[B_COUNTRY == 'ES', value := oci_c_magnesium_es(B_LU = B_LU,A_MG_CO_PO = A_MG_CO_PO)]
+  dt[B_COUNTRY == 'ES', value := osi_c_magnesium_es(B_LU = B_LU,A_MG_CO_PO = A_MG_CO_PO)]
   dt[B_COUNTRY == 'FR', value := osi_c_magnesium_fr(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI,A_CEC_CO = A_CEC_CO, 
                                                     A_MG_AAA = A_MG_AAA,A_CACO3_IF = A_CACO3_IF)]
   dt[B_COUNTRY == 'FI', value := osi_c_magnesium_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_MG_AAA = A_MG_AAA,A_C_OF = A_C_OF)]
@@ -251,7 +251,7 @@ osi_c_magnesium_at <- function(A_MG_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_magnesium_ch(A_MG_AAA = 50)
+#' osi_c_magnesium_ch(B_LU = 'da55', A_MG_AAA = 50,A_CLAY_MI=15)
 #' 
 #' @return 
 #' The potassium availability index in Switzerland estimated from extractable potassium. A numeric value.
@@ -333,7 +333,7 @@ osi_c_magnesium_ch <- function(A_MG_AAA,A_CLAY_MI,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_magnesium_cz(A_MG_M3 = 81,B_TEXTURE_HYPRES='C')
+#' oci_c_magnesium_cz(A_MG_M3 = 81,B_TEXTURE_HYPRES='C')
 #' 
 #' @return 
 #' The magnesium availability index in Czech Republic estimated from extractable magnesium. A numeric value.
@@ -406,7 +406,7 @@ oci_c_magnesium_cz <- function(A_MG_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @param A_C_OF (numeric) The carbon content of the soil layer (g/ kg)
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_K_MG (numeric) The magnesium content extracted with CaCl2 (g / kg)
+#' @param A_MG_CC (numeric) The magnesium content extracted with CaCl2 (g / kg)
 #' 
 #' @import data.table
 #' 
@@ -466,7 +466,7 @@ osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC) {
 #' 
 #' @examples 
 #' osi_c_magnesium_dk(B_LU = 265,A_MG_AL = 5)
-#' osi_c_magnesium_dk(B_LU = c(265,1019),A_MG_AL = c(3.5,5.5)))
+#' osi_c_magnesium_dk(B_LU = c(265,1019),A_MG_AL = c(3.5,5.5))
 #' 
 #' @return 
 #' The magnesium availability index in Denmark derived from extractable soil Mg fractions. A numeric value.
@@ -500,13 +500,13 @@ osi_c_magnesium_dk <- function(B_LU, A_MG_AL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_magnesium_ee(A_MG_M3 = 45,B_TEXTURE_USDA = 'clay')
+#' oci_c_magnesium_ee(A_MG_M3 = 45,B_TEXTURE_USDA = 'clay')
 #' 
 #' @return 
 #' The magnesium availability index in Estonia estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_ee <- function(A_MG_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
+oci_c_magnesium_ee <- function(A_MG_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1172,7 +1172,7 @@ osi_c_magnesium_lt <- function(A_MG_AL,A_PH_KCL,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples
-#' osi_c_magnesium_nl(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',
+#' osi_c_magnesium_nl(B_LU = '265', B_SOILTYPE_AGR = 'dekzand',
 #' A_SOM_LOI = 3.5,A_CLAY_MI = 8.5,A_PH_CC = 5.4, 
 #' A_CEC_CO = 185,A_K_CO_PO = 4.5,A_MG_CC = 125,A_K_CC = 65)
 #' 
@@ -1468,7 +1468,7 @@ osi_c_magnesium_se <- function(A_MG_AL,B_LU = NA_character_) {
 #' 
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
-#' @param A_K_M3 (numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)
+#' @param A_MG_M3 (numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)
 #' 
 #' @import data.table
 #' 
@@ -1550,7 +1550,7 @@ osi_c_magnesium_sk <- function(B_TEXTURE_HYPRES,A_MG_M3,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_magnesium_sl(A_MG_AL = 45)
+#' osi_c_magnesium_sl(A_MG_AL = 45,B_TEXTURE_HYPRES='C')
 #' 
 #' @return 
 #' The magnesium availability index in Slovenia estimated from extractable magnesium. A numeric value.

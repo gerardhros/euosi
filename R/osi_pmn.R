@@ -14,7 +14,8 @@
 #' 
 #' @examples 
 #' osi_b_pmn(B_LU = 256, B_SOILTYPE_AGR = 'dekzand', A_N_PMN = 125, B_COUNTRY = 'NL')
-#' osi_b_pmn(c(256,1027), c('dekzand','rivierklei'), c(125,45),c('NL','NL'))
+#' osi_b_pmn(B_LU = c(256,1027), B_SOILTYPE_AGR = c('dekzand','rivierklei'), 
+#' A_N_PMN = c(125,45),B_COUNTRY = c('NL','NL'))
 #'
 #' @return 
 #' the normalized potentially mineralizable Nitrogen pool (mg N / kg), a numeric value, converted to an OSI score.

@@ -671,8 +671,8 @@ osi_c_ph_fi <- function(B_LU, B_TEXTURE_USDA, A_PH_WA,A_C_OF = 0) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_ph_ie(B_LU = 265,A_PH_WA = 5)
-#' osi_c_ph_ie(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5))
+#' osi_c_ph_ie(B_LU = '265',A_PH_WA = 5, A_SOM_LOI = 3.5)
+#' osi_c_ph_ie(B_LU = c('265','1019'),A_PH_WA = c(3.5,5.5),A_SOM_LOI = c(3.5,6.5))
 #' 
 #' @return 
 #' The pH index in Ireland. A numeric value.
@@ -689,7 +689,7 @@ osi_c_ph_ie <- function(B_LU, A_PH_WA,A_SOM_LOI) {
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
-                   B_LU = B_LU,
+                   B_LU = as.character(B_LU),
                    A_SOM_LOI = A_SOM_LOI,
                    A_PH_WA = A_PH_WA,
                    value = NA_real_)
@@ -730,7 +730,7 @@ osi_c_ph_ie <- function(B_LU, A_PH_WA,A_SOM_LOI) {
 #' This functions evaluates the difference between the measured pH and the optimal pH according to the Bemestingsadvies
 #'
 #' @param ID (character) A field id
-#' @param B_LU_BRP (numeric) The crop code from the BRP
+#' @param B_LU (numeric) The crop code
 #' @param B_SOILTYPE_AGR (character) The agricultural type of soil
 #' @param A_SOM_LOI (numeric) The organic matter content of soil in percentage
 #' @param A_CLAY_MI (numeric) The percentage of clay (\%) 
@@ -822,8 +822,8 @@ osi_c_ph_nl <- function(ID,B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC) 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_ph_ie(B_LU = 265,A_PH_WA = 5)
-#' osi_c_ph_ie(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5))
+#' osi_c_ph_se(B_LU = 265,A_PH_WA = 5,A_CLAY_MI = 15, A_SOM_LOI = 2)
+#' osi_c_ph_se(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5), A_CLAY_MI = c(5,15),A_SOM_LOI = c(2,4))
 #' 
 #' @return 
 #' The pH index in Sweden. A numeric value.
@@ -903,8 +903,8 @@ osi_c_ph_se <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_PH_WA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_ph_uk(B_LU = 265,A_PH_WA = 5)
-#' osi_c_ph_uk(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5))
+#' osi_c_ph_uk(B_LU = '265',A_PH_WA = 5, A_SOM_LOI = 4)
+#' osi_c_ph_uk(B_LU = c('265','1019'),A_PH_WA = c(3.5,5.5), A_SOM_LOI = c(3.5,4))
 #' 
 #' @return 
 #' The pH index in UK A numeric value.
@@ -924,7 +924,7 @@ osi_c_ph_uk <- function(B_LU, A_PH_WA,A_SOM_LOI) {
   
   # internal data.table
   dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
+                   B_LU = as.character(B_LU),
                    A_SOM_LOI = A_SOM_LOI,
                    A_PH_WA = A_PH_WA,
                    value = NA_real_)

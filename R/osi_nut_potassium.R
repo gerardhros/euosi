@@ -10,6 +10,7 @@
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
+#' @param A_PH_WA (numeric) The acidity of the soil, measured in water
 #' @param A_CACO3_IF (numeric) The percentage of carbonated lime (\%) 
 #' @param A_CEC_CO (numeric) The cation exchange capacity of the soil (mmol+ / kg), analyzed via Cobalt-hexamine extraction
 #' @param A_K_AAA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction 
@@ -28,14 +29,14 @@
 #' 
 #' @examples 
 #' osi_nut_k(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4, 
-#' A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
-#' A_K_CO_PO = 8.5, A_K_CC = 145,B_COUNTRY = 'NL')
+#' A_CLAY_MI = 11,A_SAND = 24, A_PH_CC = 5.4, A_CEC_CO = 125, 
+#' A_K_AAA=346, A_K_CO_PO = 8.5, A_K_CC = 145,B_COUNTRY = 'NL')
 #' 
 #' @return
 #' The capacity of the soil to supply and buffer potassium, evaluated given an optimum threshold for yield. If the value is exceeding this threshold, then the efficiency of fertilizers decline. A numeric value.
 #' 
 #' @export
-osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
+osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_character_,
                             A_SOM_LOI = NA, A_C_OF = NA, 
                             A_CLAY_MI = NA,A_SAND_MI = NA,
                             A_PH_CC = NA, A_PH_WA = NA,A_CACO3_IF = NA,
@@ -48,7 +49,8 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   i_c_k = B_TEXTURE_USDA = B_TEXTURE_HYPRES = B_TEXTURE_BE = B_TEXTURE_GEPPA = A_SILT_MI = NULL
   
   # desired length of inputs
-  arg.length <- max(length(B_LU),length(B_SOILTYPE_AGR),length(A_SOM_LOI),length(A_C_OF),
+  arg.length <- max(length(B_LU),length(B_SOILTYPE_AGR),length(B_AER_FR),
+                    length(A_SOM_LOI),length(A_C_OF),
                     length(A_CLAY_MI),length(A_SAND_MI),
                     length(A_PH_CC), length(A_PH_WA), length(A_CACO3_IF), length(A_CEC_CO),
                     length(A_K_AAA),length(A_K_AL),length(A_K_AN),length(A_K_CAL),
@@ -59,6 +61,7 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                   B_AER_FR = B_AER_FR,
                    B_COUNTRY = B_COUNTRY,
                    A_SOM_LOI = A_SOM_LOI,
                    A_C_OF = A_C_OF,
@@ -122,7 +125,7 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   dt[B_COUNTRY == 'EE', value := osi_nut_k_ee(B_LU = B_LU,B_TEXTURE_USDA = B_TEXTURE_USDA,A_K_M3 = A_K_M3)]
   dt[B_COUNTRY == 'ES', value := osi_nut_k_es(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_K_AAA = A_K_AAA)]
   dt[B_COUNTRY == 'FR', value := osi_nut_k_fr(B_LU = B_LU, B_TEXTURE_GEPPA  = B_TEXTURE_GEPPA, A_PH_WA = A_PH_WA,
-                                                    B_AER_FR = NA_character_, A_K_AAA = A_K_AAA)]
+                                                    B_AER_FR = B_AER_FR, A_K_AAA = A_K_AAA)]
   dt[B_COUNTRY == 'FI', value := osi_nut_k_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_K_AAA = A_K_AAA, A_C_OF = A_C_OF)]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
@@ -166,7 +169,7 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_at(A_K_CAL = 47,B_TEXTURE_HYPRES)
+#' osi_nut_k_at(A_K_CAL = 47,B_TEXTURE_HYPRES = 'C')
 #' 
 #' @return 
 #' The potassium excess index in Austria estimated from extractable potassium. A numeric value.
@@ -244,7 +247,7 @@ osi_nut_k_at <- function(A_K_CAL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_be(B_LU = 'SOJ',B_TEXTURE_BE, A_K_AAA = 45)
+#' osi_nut_k_be(B_LU = 'SOJ',B_TEXTURE_BE ='S', A_K_AAA = 45)
 #' 
 #' @return 
 #' The potassium excess index in Belgium estimated from extractable potassium. A numeric value.
@@ -322,7 +325,7 @@ osi_nut_k_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_ch(A_K_AAA = 50)
+#' osi_nut_k_ch(A_K_AAA = 50, A_CLAY_MI = 4.5)
 #' 
 #' @return 
 #' The potassium excess index in Switzerland estimated from extractable potassium. A numeric value.
@@ -400,7 +403,7 @@ osi_nut_k_ch <- function(A_K_AAA,A_CLAY_MI,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_cz(A_K_M3 = 81,B_TEXTURE_HYPRES='C')
+#' osi_nut_k_cz(B_LU = '165', A_K_M3 = 81, B_TEXTURE_HYPRES='C')
 #' 
 #' @return 
 #' The potassium excess index in Czech Republic estimated from extractable potassium. A numeric value.
@@ -614,7 +617,7 @@ osi_nut_k_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
 #' 
 #' @examples 
 #' osi_nut_k_dk(B_LU = 265,A_K_AL = 5)
-#' osi_nut_k_dk(B_LU = c(265,1019),A_K_AL = c(3.5,5.5)))
+#' osi_nut_k_dk(B_LU = c(265,1019),A_K_AL = c(3.5,5.5))
 #' 
 #' @return 
 #' The potassium excess index in Denmark derived from extractable soil K fractions. A numeric value.
@@ -649,8 +652,8 @@ osi_nut_k_dk <- function(B_LU, A_K_AL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_es(B_LU = 265,A_K_AAA = 5,B_TEXTURE_HYPRES='C')
-#' osi_nut_k_es(B_LU = c(265,1019),A_K_AAA = c(3.5,5.5),B_TEXTURE_HYPRES=c('C','C'))
+#' osi_nut_k_es(B_LU = '265',A_K_AAA = 5,B_TEXTURE_HYPRES='C')
+#' osi_nut_k_es(B_LU = c('265','1019'),A_K_AAA = c(3.5,5.5),B_TEXTURE_HYPRES=c('C','C'))
 #' 
 #' @return 
 #' The potassium excess index in Spain derived from extractable soil K fractions. A numeric value.
@@ -792,7 +795,7 @@ osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0) {
 osi_nut_k_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_, B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_PH_WA = NA_real_) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = osi_threshold_cropcat = NULL
+  osi_country = osi_indicator = id = crop_cat1 = osi_threshold_cropcat = osi_threshold_region = NULL
   crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   
   # crop data
@@ -1064,7 +1067,7 @@ osi_nut_k_it <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_lv(A_K_DL = 45,B_TEXTURE_USDA='sand')
+#' osi_nut_k_lv(A_K_DL = 45,B_TEXTURE_USDA='S')
 #' 
 #' @return 
 #' The potassium excess index in Latvia estimated from extractable potassium A numeric value.
@@ -1631,7 +1634,7 @@ osi_nut_k_sk <- function(B_TEXTURE_HYPRES,A_K_M3,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_sl(A_K_AL = 45)
+#' osi_nut_k_sl(A_K_AL = 45 ,B_TEXTURE_HYPRES = 'C')
 #' 
 #' @return 
 #' The potassium excess index in Slovenia estimated from extractable potassium. A numeric value.
@@ -1715,10 +1718,11 @@ osi_nut_k_sl <- function(A_K_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 osi_nut_k_uk <- function(B_LU, A_SOM_LOI,A_K_AN) {
   
   # add visual bindings
-  crop_name = . = crop_cat1 = BDS = NULL
+  crop_name = . = crop_cat1 = osi_country = BDS = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='UK']
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
