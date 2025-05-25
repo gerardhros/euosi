@@ -20,6 +20,6 @@ The phosphorus excess index in Lithuania estimated from extractable phosphorus. 
 This function calculates the phosphorus excess.
 }
 \examples{
-osi_c_phosphorus_lt(A_P_AL = 45)
+osi_nut_p_lt(A_P_AL = 45,A_SOM_LOI = 5)
 
 }

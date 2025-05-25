@@ -11,12 +11,12 @@ osi_gw_nleach_fr(
   A_CLAY_MI,
   A_SAND_MI,
   A_CACO3_IF,
-  B_PREC_SUM,
-  B_PREC_WIN,
-  B_PET_SUM,
-  B_PET_WIN,
-  B_TEMP_SUM,
-  B_TEMP_WIN
+  B_PREC_SUM = NA_real_,
+  B_PREC_WIN = NA_real_,
+  B_PET_SUM = NA_real_,
+  B_PET_WIN = NA_real_,
+  B_TEMP_SUM = NA_real_,
+  B_TEMP_WIN = NA_real_
 )
 }
 \arguments{

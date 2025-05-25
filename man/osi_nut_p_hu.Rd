@@ -24,6 +24,6 @@ The phosphorus excess index in Hungary estimated from extractable phosphorus. A 
 This function calculates the phosphorus excess.
 }
 \examples{
-osi_c_phosphorus_hu(A_P_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
+osi_nut_p_hu(A_P_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
 
 }

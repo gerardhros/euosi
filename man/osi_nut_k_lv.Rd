@@ -20,6 +20,6 @@ The potassium excess index in Latvia estimated from extractable potassium A nume
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_lv(A_K_DL = 45,B_TEXTURE_USDA='sand')
+osi_nut_k_lv(A_K_DL = 45,B_TEXTURE_USDA='S')
 
 }

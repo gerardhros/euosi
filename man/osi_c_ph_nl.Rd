@@ -9,6 +9,8 @@ osi_c_ph_nl(ID, B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC)
 \arguments{
 \item{ID}{(character) A field id}
 
+\item{B_LU}{(numeric) The crop code}
+
 \item{B_SOILTYPE_AGR}{(character) The agricultural type of soil}
 
 \item{A_SOM_LOI}{(numeric) The organic matter content of soil in percentage}
@@ -16,8 +18,6 @@ osi_c_ph_nl(ID, B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC)
 \item{A_CLAY_MI}{(numeric) The percentage of clay (\%)}
 
 \item{A_PH_CC}{(numeric) The pH-CaCl2 of the soil}
-
-\item{B_LU_BRP}{(numeric) The crop code from the BRP}
 }
 \value{
 The osi indicator for the soil pH

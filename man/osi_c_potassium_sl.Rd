@@ -20,6 +20,6 @@ The potassium availability index in Slovenia estimated from extractable potassiu
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_sl(A_K_AL = 45)
+osi_c_potassium_sl(A_K_AL = 45,B_TEXTURE_HYPRES='S')
 
 }

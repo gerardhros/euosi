@@ -18,7 +18,7 @@ The boron availability index in Sweden depends primarily on pH. A numeric value.
 This function calculates the boron availability.
 }
 \examples{
-osi_c_boron_ie(B_LU = 265,A_PH_WA = 5.0)
-osi_c_boron_ie(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5))
+osi_c_boron_se(B_LU = 265,A_PH_WA = 5.0)
+osi_c_boron_se(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5))
 
 }

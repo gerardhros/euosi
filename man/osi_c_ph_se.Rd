@@ -22,7 +22,7 @@ The pH index in Sweden. A numeric value.
 This function calculates the pH index
 }
 \examples{
-osi_c_ph_ie(B_LU = 265,A_PH_WA = 5)
-osi_c_ph_ie(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5))
+osi_c_ph_se(B_LU = 265,A_PH_WA = 5,A_CLAY_MI = 15, A_SOM_LOI = 2)
+osi_c_ph_se(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5), A_CLAY_MI = c(5,15),A_SOM_LOI = c(2,4))
 
 }

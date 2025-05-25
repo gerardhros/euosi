@@ -9,9 +9,9 @@ osi_c_magnesium_sk(B_TEXTURE_HYPRES, A_MG_M3, B_LU = NA_character_)
 \arguments{
 \item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
 
-\item{B_LU}{(character) The crop code}
+\item{A_MG_M3}{(numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)}
 
-\item{A_K_M3}{(numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)}
+\item{B_LU}{(character) The crop code}
 }
 \value{
 The magnesium availability index in Slovak Republic estimated from extractable magnesium. A numeric value.

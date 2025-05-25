@@ -20,6 +20,6 @@ The potassium availability index in Belgium estimated from extractable potassium
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_be(B_LU = 'SOJ',B_TEXTURE_BE, A_K_AAA = 45)
+osi_c_potassium_be(B_LU = 'SOJ',B_TEXTURE_BE = 'S', A_K_AAA = 45)
 
 }

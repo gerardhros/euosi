@@ -20,6 +20,6 @@ The phosphorus excess index in Estonia estimated from extractable phosphorus. A 
 This function calculates the phosphorus excess
 }
 \examples{
-osi_nut_p_ee(A_P_M3 = 45)
+osi_nut_p_ee(A_P_M3 = 45, A_SOM_LOI = 4)
 
 }

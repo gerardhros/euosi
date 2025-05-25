@@ -20,6 +20,6 @@ The phosphorus excess index in Slovak Republic estimated from extractable phosph
 This function calculates the phosphorus excess.
 }
 \examples{
-osi_c_phosphorus_sk(A_P_M3 = 45)
+osi_nut_p_sk(A_P_M3 = 45, B_TEXTURE_HYPRES = 'C')
 
 }

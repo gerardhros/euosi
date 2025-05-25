@@ -18,6 +18,6 @@ The phosphorus excess index in Norway estimated from extractable phosphorus. A n
 This function calculates the phosphorus excess.
 }
 \examples{
-osi_c_phosphorus_no(A_P_AL = 50)
+osi_nut_p_no(A_P_AL = 50)
 
 }

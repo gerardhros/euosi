@@ -20,6 +20,6 @@ The potassium excess index in Czech Republic estimated from extractable potassiu
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_cz(A_K_M3 = 81,B_TEXTURE_HYPRES='C')
+osi_nut_k_cz(B_LU = '165', A_K_M3 = 81, B_TEXTURE_HYPRES='C')
 
 }

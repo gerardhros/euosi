@@ -37,6 +37,8 @@ osi_conv_phosphor(
 
 \item{A_P_AAA_EDTA}{(numeric) The exchangeable P-content of the soil measured via acid ammonium acetate+EDTA extraction}
 
+\item{A_P_M3}{(numeric) The P-content of the soil extracted with Mehlig 3}
+
 \item{A_PH_CC}{(numeric) The pH measured in cacl2}
 }
 \description{

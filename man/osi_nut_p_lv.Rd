@@ -20,6 +20,6 @@ The phosphorus excess index in Latvia estimated from extractable phosphorus. A n
 This function calculates the phosphorus excess.
 }
 \examples{
-osi_c_phosphorus_lv(A_P_DL = 45,B_TEXTURE_USDA = 'S')
+osi_nut_p_lv(A_P_DL = 45,B_TEXTURE_USDA = 'S')
 
 }

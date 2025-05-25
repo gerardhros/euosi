@@ -20,6 +20,6 @@ The potassium availability index in Austria estimated from extractable potassium
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_at(A_K_CAL = 47,B_TEXTURE_HYPRES)
+osi_c_potassium_at(A_K_CAL = 47,B_TEXTURE_HYPRES = 'C')
 
 }

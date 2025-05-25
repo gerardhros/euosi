@@ -22,7 +22,7 @@ The phosphate excess index in the Netherlands estimated from extractable soil P 
 This function calculates the phosphate excess.
 }
 \examples{
-osi_nut_p_nl(B_LU = 265, A_P_AL = 45, A_P_CC = 2.5)
-osi_nut_p_nl(B_LU = c(265,1019),A_P_AL = c(35,54),A_P_CC = c(2.5,4.5), A_P_WA = c(35,65))
+osi_nut_p_nl(B_LU = '265', A_P_AL = 45, A_P_CC = 2.5)
+osi_nut_p_nl(B_LU = c('265','1019'),A_P_AL = c(35,54),A_P_CC = c(2.5,4.5), A_P_WA = c(35,65))
 
 }

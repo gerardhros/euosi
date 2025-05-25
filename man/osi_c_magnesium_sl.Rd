@@ -20,6 +20,6 @@ The magnesium availability index in Slovenia estimated from extractable magnesiu
 This function calculates the magnesium availability.
 }
 \examples{
-osi_c_magnesium_sl(A_MG_AL = 45)
+osi_c_magnesium_sl(A_MG_AL = 45,B_TEXTURE_HYPRES='C')
 
 }

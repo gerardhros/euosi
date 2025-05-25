@@ -23,6 +23,7 @@ This function calculates the phosphate excess.
 }
 \examples{
 osi_nut_p_es(B_LU = 265,A_CLAY_MI = 5,A_SAND_MI = 25, A_P_OL = 5)
-osi_nut_p_es(B_LU = c(265,1019),A_CLAY_MI = c(5,10),A_SAND_MI = c(25,15),A_P_OL = c(3.5,5.5))
+osi_nut_p_es(B_LU = c(265,1019),A_CLAY_MI = c(5,10),
+A_SAND_MI = c(25,15),A_P_OL = c(3.5,5.5))
 
 }

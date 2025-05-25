@@ -33,6 +33,6 @@ The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, c
 This function calculates the nitrogen producing capacity of the soil, and applies correction factors used affecting N availability.
 }
 \examples{
-osi_c_nitrogen_de(BLU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
+osi_c_nitrogen_de(B_LU= 2515, A_CLAY_MI = 25, A_SAND_MI = 7.5, A_SOM_LOI = 4.5, A_N_RT = 2500)
 
 }

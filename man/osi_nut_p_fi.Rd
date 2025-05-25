@@ -11,9 +11,9 @@ osi_nut_p_fi(B_LU, B_TEXTURE_USDA, A_P_AAA, A_C_OF = 0)
 
 \item{B_TEXTURE_USDA}{(character) The soil texture according to USDA classification system}
 
-\item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
+\item{A_P_AAA}{(numeric) The exchangeable P-content of the soil measured via ammonium acetate extraction}
 
-\item{A_P_AAA(numeric)}{The exchangeable P-content of the soil measured via ammonium acetate extraction}
+\item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
 }
 \value{
 The phosphorus excess index in Finland estimated from extractable phosphorus. A numeric value.
@@ -22,6 +22,6 @@ The phosphorus excess index in Finland estimated from extractable phosphorus. A 
 This function calculates the phosphorus excess index
 }
 \examples{
-osi_nut_posphor_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_P_AAA= 45)
+osi_nut_p_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_P_AAA= 45)
 
 }

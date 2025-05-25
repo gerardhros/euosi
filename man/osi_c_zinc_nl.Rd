@@ -20,6 +20,6 @@ The function of the soil to supply zinc (a numeric value).
 This function calculates the availability of Zn for plant uptake
 }
 \examples{
-osi_c_zinc_nl(B_LU = 265, A_ZN_CC = 45, A_PH_CC = 6.5)
+osi_c_zinc_nl(B_LU = '265', A_ZN_CC = 45, A_PH_CC = 6.5)
 
 }

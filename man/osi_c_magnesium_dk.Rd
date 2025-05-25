@@ -19,6 +19,6 @@ This function calculates the magnesium availability.
 }
 \examples{
 osi_c_magnesium_dk(B_LU = 265,A_MG_AL = 5)
-osi_c_magnesium_dk(B_LU = c(265,1019),A_MG_AL = c(3.5,5.5)))
+osi_c_magnesium_dk(B_LU = c(265,1019),A_MG_AL = c(3.5,5.5))
 
 }

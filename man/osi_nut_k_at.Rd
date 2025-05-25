@@ -20,6 +20,6 @@ The potassium excess index in Austria estimated from extractable potassium. A nu
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_at(A_K_CAL = 47,B_TEXTURE_HYPRES)
+osi_nut_k_at(A_K_CAL = 47,B_TEXTURE_HYPRES = 'C')
 
 }

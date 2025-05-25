@@ -20,6 +20,6 @@ The potassium excess index in Slovenia estimated from extractable potassium. A n
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_sl(A_K_AL = 45)
+osi_nut_k_sl(A_K_AL = 45 ,B_TEXTURE_HYPRES = 'C')
 
 }

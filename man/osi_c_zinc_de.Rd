@@ -24,6 +24,6 @@ The zinc availability index in Germany derived from extractable soil Zn fraction
 This function calculates the zinc availability.
 }
 \examples{
-osi_c_zinc_de(B_LU = 265,A_C_OF=25, A_CLAY_MI=5,A_SAND_MI=15,A_ZN_EDTA = 50)
+osi_c_zinc_de(B_LU = '265',A_C_OF=25, A_CLAY_MI=5,A_SAND_MI=15,A_ZN_EDTA = 50)
  
 }

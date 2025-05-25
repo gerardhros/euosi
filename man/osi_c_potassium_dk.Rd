@@ -19,6 +19,6 @@ This function calculates the potassium availability.
 }
 \examples{
 osi_c_potassium_dk(B_LU = 265,A_K_AL = 5)
-osi_c_potassium_dk(B_LU = c(265,1019),A_K_AL = c(3.5,5.5)))
+osi_c_potassium_dk(B_LU = c(265,1019),A_K_AL = c(3.5,5.5))
 
 }

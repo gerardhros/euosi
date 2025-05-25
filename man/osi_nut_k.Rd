@@ -7,6 +7,7 @@
 osi_nut_k(
   B_LU,
   B_SOILTYPE_AGR = NA_character_,
+  B_AER_FR = NA_character_,
   A_SOM_LOI = NA,
   A_C_OF = NA,
   A_CLAY_MI = NA,
@@ -33,6 +34,8 @@ osi_nut_k(
 
 \item{B_SOILTYPE_AGR}{(character) The agricultural type of soil}
 
+\item{B_AER_FR}{(character) An agroeconomic region in France}
+
 \item{A_SOM_LOI}{(numeric) The organic matter content of the soil (\%)}
 
 \item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
@@ -42,6 +45,8 @@ osi_nut_k(
 \item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
 
 \item{A_PH_CC}{(numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)}
+
+\item{A_PH_WA}{(numeric) The acidity of the soil, measured in water}
 
 \item{A_CACO3_IF}{(numeric) The percentage of carbonated lime (\%)}
 
@@ -68,8 +73,6 @@ osi_nut_k(
 \item{A_K_WA}{(numeric) The exchangeable K-content of the soil measured via water extracton (mg K/ kg)}
 
 \item{B_COUNTRY}{(character) The country code}
-
-\item{B_AER_FR}{(character) An agroeconomic region in France}
 }
 \value{
 The capacity of the soil to supply and buffer potassium, evaluated given an optimum threshold for yield. If the value is exceeding this threshold, then the efficiency of fertilizers decline. A numeric value.
@@ -79,7 +82,7 @@ This function calculates the potassium excess for all European countries (if ava
 }
 \examples{
 osi_nut_k(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4, 
-A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
-A_K_CO_PO = 8.5, A_K_CC = 145,B_COUNTRY = 'NL')
+A_CLAY_MI = 11,A_SAND = 24, A_PH_CC = 5.4, A_CEC_CO = 125, 
+A_K_AAA=346, A_K_CO_PO = 8.5, A_K_CC = 145,B_COUNTRY = 'NL')
 
 }

@@ -20,6 +20,6 @@ The potassium availability index in Estonia estimated from extractable potassium
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_ee(A_K_M3 = 45,B_TEXTURE_USDA = 'clay')
+osi_c_potassium_ee(A_K_M3 = 45,B_TEXTURE_USDA = 'ClLo')
 
 }
