@@ -32,3 +32,4 @@ Suggests:
     patchwork,
     covr
 VignetteBuilder: knitr
+URL: https://gerardhros.github.io/euosi/
