@@ -37,12 +37,12 @@ test_that("osi_evaluate_parabolic works", {
 
 test_that("cf_ind_importance works", {
   expect_equal(
-    cf_ind_importance(x = c(0.1,0.5,1.5)),
+    cf_ind_importance(value = c(0.1,0.5,1.5)),
     expected = c(3.33,1.43,0.59),
     tolerance = 0.01
   )
   expect_equal(
-    cf_ind_importance(x = 0.5),
+    cf_ind_importance(value = 0.5),
     expected = c(1.43),
     tolerance = 0.01
   )

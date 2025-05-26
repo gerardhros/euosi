@@ -4,10 +4,10 @@
 \alias{cf_ind_importance}
 \title{Helper function to weight and correct the risk and scores}
 \usage{
-cf_ind_importance(x)
+cf_ind_importance(value)
 }
 \arguments{
-\item{x}{The risk or score value to be weighted}
+\item{value}{The risk or OSI core value to be weighted}
 }
 \value{
 A transformed variable after applying a inverse weighing function so that lower values will gain more impact when applied in a weighed.mean function. A numeric value.
@@ -16,7 +16,7 @@ A transformed variable after applying a inverse weighing function so that lower 
 Helper function to weight and correct the risk and scores
 }
 \examples{
-cf_ind_importance(x = 0.5)
-cf_ind_importance(x = c(0.1,0.5,1.5))
+cf_ind_importance(value = 0.5)
+cf_ind_importance(value = c(0.1,0.5,1.5))
 
 }

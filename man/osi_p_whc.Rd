@@ -4,21 +4,12 @@
 \alias{osi_p_whc}
 \title{Calculate indicators for water holding capacity in  the topsoil}
 \usage{
-osi_p_whc(
-  A_CLAY_MI,
-  A_SAND_MI,
-  A_SILT_MI,
-  A_SOM_LOI,
-  type = "whc",
-  ptf = "Wosten1999"
-)
+osi_p_whc(A_CLAY_MI, A_SAND_MI, A_SOM_LOI, type = "whc", ptf = "Wosten1999")
 }
 \arguments{
 \item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
 
 \item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
-
-\item{A_SILT_MI}{(numeric) The silt content of the soil (\%)}
 
 \item{A_SOM_LOI}{(numeric) The organic matter content of the soil (\%)}
 
@@ -36,9 +27,9 @@ This function calculates different kind of Water Retention Indices given the con
 These include : 'water holding capacity','plant available water' and 'Ksat'
 }
 \examples{
-osi_p_whc(A_CLAY_MI = 20.5,A_SAND_MI = 65,A_SILT_MI = 14.5,A_SOM_LOI = 3.5)
-osi_p_whc(A_CLAY_MI = 5,A_SAND_MI = 15,A_SILT_MI = 80,A_SOM_LOI = 6.5)
-osi_p_whc(A_CLAY_MI = 5,A_SAND_MI = 15,A_SILT_MI = 80,A_SOM_LOI = 6.5, 
+osi_p_whc(A_CLAY_MI = 20.5,A_SAND_MI = 65,A_SOM_LOI = 3.5)
+osi_p_whc(A_CLAY_MI = 5,A_SAND_MI = 15,A_SOM_LOI = 6.5)
+osi_p_whc(A_CLAY_MI = 5,A_SAND_MI = 15,A_SOM_LOI = 6.5, 
 type = 'water holding capacity')
 
 }

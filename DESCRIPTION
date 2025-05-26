@@ -1,7 +1,7 @@
 Package: euosi
 Type: Package
 Title: Calculate the Open Soil Index Score for Europe
-Version: 0.0.7
+Version: 0.1.0
 Authors@R: c(
     person(given = "Gerard", family = "Ros", email = "gerard.ros@nmi-agro.nl", role = c("aut","cre")),
     person(given = "Elise", family = "van Eynde", email = "elise.van-eynde@ec.europa.eu", role = "aut"),
@@ -23,7 +23,7 @@ License:
     GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 2.1.0),
     knitr,

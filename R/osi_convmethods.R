@@ -119,7 +119,9 @@ osi_conv_ph <- function(element, A_PH_KCL = NA_real_,A_PH_CC = NA_real_, A_PH_WA
   
   # estimate pH from other measurements
   dt[is.na(A_PH_CC), A_PH_CC := A_PH_KCL * 0.9288 + 0.5262]
+  dt[is.na(A_PH_CC), A_PH_CC := ((A_PH_WA - 2.23) / 0.777) * 0.9288 + 0.5262]
   dt[is.na(A_PH_WA), A_PH_WA := 2.23 + 0.777 * A_PH_KCL]
+  dt[is.na(A_PH_WA), A_PH_WA := 2.23 + 0.777 * ((A_PH_CC - 0.5262) / 0.9288)]
   dt[is.na(A_PH_KCL), A_PH_KCL := (A_PH_WA - 2.23) / 0.777]
   dt[is.na(A_PH_KCL), A_PH_KCL := (A_PH_CC - 0.5262) / 0.9288]
   
@@ -185,4 +187,208 @@ osi_conv_npmn <- function(A_N_RT, A_CLAY_MI, med_PMN = 51.9, med_NRT = 1425, med
   
   # return value
   return(value)
+}
+
+#' Estimate soil extractable phosphorus (-)
+#' 
+#' @param element (character) the method requested to be calculated
+#' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate
+#' @param A_P_CC (numeric) The P-content of the soil extracted with CaCl2
+#' @param A_P_WA (numeric) The P-content of the soil extracted with water
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen
+#' @param A_P_CAL (numeric) The P-content of the soil extracted with ammonium lactate(mg P2O5 / 100g)
+#' @param A_P_DL (numeric) The P-content of the soil extracted with double lactate (mg P / kg)
+#' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction
+#' @param A_P_AAA_EDTA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate+EDTA extraction
+#' @param A_P_M3 (numeric) The P-content of the soil extracted with Mehlig 3
+#' @param A_PH_CC (numeric) The pH measured in cacl2 
+#' 
+#' @references 
+#' Steinfurth et al., (2021) Conversion equations between Olsen-P and other methods used to assess plant available soil phosphorus in Europe – A review
+#' 
+#' @export 
+osi_conv_phosphor <- function(element, 
+                              A_P_AL = NA_real_,A_P_CC = NA_real_, A_P_WA = NA_real_,
+                              A_P_OL = NA_real_,A_P_CAL = NA_real_,A_P_DL = NA_real_,A_P_AAA = NA_real_,
+                              A_P_AAA_EDTA = NA_real_,A_P_M3 = NA_real_,
+                              A_PH_CC = NA_real_){
+  
+  # check inputs
+  checkmate::assert_subset(element,choices = c('A_P_AL','A_P_CAL','A_P_DL','A_P_AAA','A_P_AAA_EDTA',
+                                               'A_P_WA','A_P_M3','A_P_CC'),empty.ok = FALSE)
+  
+  # make internal table with inputs
+  dt <- data.table(A_P_AL = A_P_AL,
+                   A_P_CC = A_P_CC,
+                   A_P_WA = A_P_WA,
+                   A_P_OL = A_P_OL,
+                   A_P_CAL = A_P_CAL,
+                   A_P_DL = A_P_DL,
+                   A_P_M3 = A_P_M3,
+                   A_P_AAA = A_P_AAA,
+                   A_P_AAA_EDTA = A_P_AAA_EDTA,
+                   A_PH_CC = A_PH_CC)
+  
+  # estimate P from other measurements (all in mg P per kg soil)
+  # https://doi.org/10.1016/j.geoderma.2021.115339, tables 3 and 5
+  dt[is.na(A_P_AL) & !is.na(A_P_OL), A_P_AL := (A_P_OL - 21.9 + 3.19 * A_PH_CC)/0.275]
+  dt[is.na(A_P_AAA) & !is.na(A_P_OL), A_P_AAA := 10^(log10((A_P_OL + 56.9)/54.9)/0.2824)]
+  dt[is.na(A_P_AAA_EDTA) & !is.na(A_P_OL), A_P_AAA_EDTA := A_P_OL/ mean(0.4,0.5,0.79,0.4,0.25)]
+  dt[is.na(A_P_CAL) & !is.na(A_P_OL), A_P_CAL := A_P_OL / 0.625]
+  dt[is.na(A_P_DL) & !is.na(A_P_OL), A_P_DL := A_P_OL / 0.53]
+  dt[is.na(A_P_WA) & !is.na(A_P_OL), A_P_WA := A_P_OL / mean(2.77,2.5,4,4,3,2.45)]
+  dt[is.na(A_P_M3) & !is.na(A_P_OL), A_P_M3 := A_P_OL / 0.39]
+  
+  # to do: add relationship
+  dt[is.na(A_P_CC) & !is.na(A_P_OL), A_P_CC := A_P_OL/10]
+  
+  # select the reqestred pH
+  value <- dt[,get(element)]
+  
+  # return value
+  return(value)
+  
+}
+
+#' Estimate soil extractable potassium (-)
+#' 
+#' @param element (character) the method requested to be calculated
+#' @param A_K_AAA (numeric) The exchangeable K-content of the soil measured via acid ammonium acetate extraction
+#' @param A_K_AL (numeric) The K-content of the soil extracted with ammonium lactate
+#' @param A_K_AN (numeric) The K-content of the soil extracted with ammonium nitrate (mg K /kg)
+#' @param A_K_CAL (numeric) The K-content of the soil extracted with ammonium lactate(mg K / kg)
+#' @param A_K_CC (numeric) The K-content of the soil extracted with CaCl2
+#' @param A_K_CO_PO (numeric) The occupation of the CEC with potassium (\%)
+#' @param A_K_DL (numeric) The K-content of the soil extracted with double lactate (mg K / kg)
+#' @param A_K_M3 (numeric) The exchangeable K-content of the soil measured via Mehlich 3 extracton (mg K/ kg)
+#' @param A_K_NaAAA (numeric) The K-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)
+#' @param A_K_WA (numeric) The K-content of the soil extracted with water
+#' @param A_PH_CC (numeric) The pH measured in cacl2 
+#' @param A_CEC_CO (numeric) The cation exchange capacity of the soil, measured via Cohenx (mmol+ / kg)
+#' 
+#' @export 
+osi_conv_potassium <- function(element, 
+                              A_K_AAA = NA_real_,A_K_AL = NA_real_,A_K_AN = NA_real_,A_K_CAL = NA_real_,
+                              A_K_CC = NA_real_,A_K_CO_PO = NA_real_, A_K_DL = NA_real_, 
+                              A_K_M3 = NA_real_,A_K_NaAAA = NA_real_,A_K_WA = NA_real_,
+                              A_CEC_CO = NA_real_,A_PH_CC = NA_real_){
+  
+  # add visual bindings
+  A_PH_WA = NULL
+  
+  # check inputs
+  checkmate::assert_subset(element,choices = c('A_K_AL','A_K_AN','A_K_CAL','A_K_CC',
+                                               'A_K_CO_PO','A_K_DL','A_K_M3',
+                                               'A_K_NaAAA','A_K_WA'),empty.ok = FALSE)
+  
+  # make internal table with inputs
+  dt <- data.table(A_K_AAA = A_K_AAA,
+                   A_K_AL = A_K_AL,
+                   A_K_AN = A_K_AN,
+                   A_K_CAL = A_K_CAL,
+                   A_K_CC = A_K_CC,
+                   A_K_CO_PO = A_K_CO_PO,
+                   A_K_DL = A_K_DL,
+                   A_K_M3 = A_K_M3,
+                   A_K_NaAAA = A_K_NaAAA,
+                   A_K_WA = A_K_WA,
+                   A_CEC_CO = A_CEC_CO,
+                   A_PH_CC = A_PH_CC,
+                   A_PH_WA = NA_real_
+                   )
+  
+  # estimate pH water from pH-CaCl2
+  dt[,A_PH_WA := osi_conv_ph('A_PH_WA',A_PH_CC = A_PH_CC)]
+  
+  # estimate K from other measurements (note: these are not the best ones, but good ones are rare)
+  
+  # derive from Angelova et al. (2021), assume linearity
+  dt[is.na(A_K_AL) & !is.na(A_K_AAA), A_K_AL := pmax(10,(A_K_AAA - 45 * 0.8301)) * 55 / 45] 
+  dt[is.na(A_K_AN) & !is.na(A_K_AAA), A_K_AN := A_K_AAA]
+  dt[is.na(A_K_CAL) & !is.na(A_K_AAA), A_K_CAL := A_K_AL]
+  
+  # derived from Zebect et al. (2017) assuming linearity (divided by 10 by GR since valus are far to high)
+  dt[is.na(A_K_CC) & !is.na(A_K_AAA), A_K_CC := 0.1 * (A_K_AAA + 50 * 0.8301) * 55 / 13]
+  
+  # correction function developed by Gerard for OCP
+  dt[is.na(A_K_CO_PO) & !is.na(A_K_AAA), A_K_CO_PO := (A_K_AAA / 39.0983 / fifelse(A_PH_WA <7, 1.184,1.175))*100/A_CEC_CO]
+  
+  # pedotransfer function from Breure et al. (2022)
+  dt[is.na(A_K_M3) & !is.na(A_K_AAA), A_K_M3 := (A_K_AAA - 15.21 + 2.12 * A_PH_WA)/1.01]
+  
+  # pedotransfer function from Loide et al. (2005)
+  dt[is.na(A_K_DL) & !is.na(A_K_AAA), A_K_DL := A_K_M3 / 1.319]
+  
+  # unknown, assume equality
+  dt[is.na(A_K_NaAAA) & !is.na(A_K_AAA), A_K_NaAAA := A_K_AAA]
+  dt[is.na(A_K_WA) & !is.na(A_K_AAA), A_K_WA := A_K_AAA]
+  
+  # select the requested element
+  value <- dt[,get(element)]
+  
+  # return value
+  return(value)
+  
+}
+
+#' Estimate soil extractable magnesium (-)
+#' 
+#' @param element (character) the method requested to be calculated
+#' @param A_MG_AAA (numeric) The exchangeable K-content of the soil measured via acid ammonium acetate extraction
+#' @param A_MG_AL (numeric) The exchangeable Mg-content of the soil measured via Ammonium Lactate extraction (mg Mg/ kg)
+#' @param A_MG_AN (numeric) The Mg-content of the soil extracted with ammonium nitrate (mg Mg /kg)
+#' @param A_MG_CC (numeric) The plant available content of Mg in the soil (mg  Mg per kg) extracted by 0.01M CaCl2
+#' @param A_MG_CO_PO (numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+#' @param A_MG_DL (numeric) The exchangeable Mg-content of the soil measured via Double Lactate extraction (mg Mg/ kg)
+#' @param A_MG_KCL (numeric) The plant available potassium, extracted with KCL (mg per kg)
+#' @param A_MG_M3 (numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)
+#' @param A_MG_NaAAA (numeric) The Mg-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)
+#' @param A_CEC_CO (numeric) The cation exchange capacity of the soil, measured via Cohenx (mmol+ / kg)
+#' @param A_PH_CC (numeric) The pH measured in cacl2 
+#' 
+#' @export 
+osi_conv_magnesium <- function(element, 
+                               A_MG_AAA = NA_real_,A_MG_AL = NA_real_, A_MG_AN = NA_real_,A_MG_CC = NA_real_,
+                               A_MG_CO_PO = NA_real_, A_MG_DL = NA_real_,A_MG_KCL = NA_real_,A_MG_M3 = NA_real_, 
+                               A_MG_NaAAA = NA_real_,
+                               A_CEC_CO = NA_real_,A_PH_CC = NA_real_){
+  
+  # check inputs
+  checkmate::assert_subset(element,choices = c('A_MG_AL','A_MG_AN','A_MG_CC','A_MG_CO_PO',
+                                               'A_MG_DL','A_MG_KCL','A_MG_M3','A_MG_NaAAA'),empty.ok = FALSE)
+  
+  # make internal table with inputs
+  dt <- data.table(A_MG_AAA = A_MG_AAA,
+                   A_MG_AL = A_MG_AL,
+                   A_MG_AN = A_MG_AN,
+                   A_MG_CC = A_MG_CC,
+                   A_MG_CO_PO = A_MG_CO_PO,
+                   A_MG_DL = A_MG_DL,
+                   A_MG_KCL = A_MG_KCL,
+                   A_MG_M3 = A_MG_M3,
+                   A_MG_NaAAA = A_MG_NaAAA,
+                   A_CEC_CO = A_CEC_CO,
+                   A_PH_CC = A_PH_CC)
+  
+  # estimate Mg from other measurements (note: these are not the best ones, but good ones are rare)
+  
+  # relationships from Staugaitis & Rutkuskiene (2010)
+  dt[is.na(A_MG_AL) & !is.na(A_MG_AAA) & A_MG_AAA <= 400, A_MG_AL := 1.291 * A_MG_AAA + 65.18]
+  dt[is.na(A_MG_AL) & !is.na(A_MG_AAA) & A_MG_AAA > 400, A_MG_AL := 4.49 * A_MG_AAA + 386.95]
+  dt[is.na(A_MG_CC) & !is.na(A_MG_AAA), A_MG_CC := (A_MG_AAA + 30.49)/1.287] 
+  dt[is.na(A_MG_KCL) & !is.na(A_MG_AAA), A_MG_KCL := (A_MG_AAA + 12.35)/1.03]
+  dt[is.na(A_MG_M3) & !is.na(A_MG_AAA), A_MG_M3 := (A_MG_AAA + 3.74)/0.887]
+  
+  # unknown, estimate from comparable methodologies
+  dt[is.na(A_MG_AN) & !is.na(A_MG_AAA), A_MG_AN := A_MG_AAA]
+  dt[is.na(A_MG_CO_PO) & !is.na(A_MG_AAA), A_MG_CO_PO := A_MG_AAA * (2 / 24.305) * 100 / A_CEC_CO]
+  dt[is.na(A_MG_AL) & !is.na(A_MG_AAA), A_MG_DL := A_MG_AL]
+  dt[is.na(A_MG_NaAAA) & !is.na(A_MG_AAA), A_MG_NaAAA := A_MG_AAA]
+  
+  # select the requested element
+  value <- dt[,get(element)]
+  
+  # return value
+  return(value)
+  
 }

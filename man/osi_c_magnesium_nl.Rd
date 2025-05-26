@@ -42,7 +42,7 @@ An index representing the availability of Magnesium in a soil. A numeric value.
 This function calculates an index for the availability of Magnesium in soil
 }
 \examples{
-osi_c_magnesium_nl(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',
+osi_c_magnesium_nl(B_LU = '265', B_SOILTYPE_AGR = 'dekzand',
 A_SOM_LOI = 3.5,A_CLAY_MI = 8.5,A_PH_CC = 5.4, 
 A_CEC_CO = 185,A_K_CO_PO = 4.5,A_MG_CC = 125,A_K_CC = 65)
 

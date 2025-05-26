@@ -1,3 +1,35 @@
+# euosi 0.1.0 2025-05-27
+
+## Added
+* `osi_c_nitrogen` to assess soil N supply for countries BE, DE, FR, NL and EU 
+* `osi_c_p` to assess soil P supply for countries AT, BE, CH, CZ, DE, DK, EE, ES, FI, FR, HU, IE, IT, LV, LT, NO, NL, PL, SE, SK, SL and UK
+* `oci_c_k` to assess soil K supply for all countries
+* `oci_c_mg` to assess soil Mg supply for all countries
+* `osi_c_b` to assess soil B supply for countries CH, DE, IE, FR, NL, SE and UK
+* `osi_c_zn` to assess Zn availability for countries DE, FR, IE, NL and UK
+* `osi_nut_p` and `osi_nut_k` to assess excess of P and K for all 22 countries
+* `osi_carbon` for soil carbon index, for application in EU, not country specific
+* `osi_biodiversity` for conditions favoring soil biodiversity, for application in EU, not country specific
+* `osi_conv_phosphor`, `osi_conv_potassium` and `osi_conv_magnesium` to convert LUCAS properties to extractable nutrient pools
+* `osi_p_crumbleability` for application in EU, not country specific
+* `osi_p_wef` to assess wind erosion risk, applicable for whole EU
+* `osi_p_whc` to assess water holding capacity, plant available water and permeability, applicable for whole EU
+* `osi_density` to evaluate impact of soil density on rootability, not country specific
+* `osi_gw_nleach` for countries Be, FR, FI and EU to assess nitrate leaching risk
+* `osi_c_ph` to assess soil pH for countries AT, BE, CH, DE, FR, FI, IE, NL, SE and UK
+* `osi_b_pmn` to assess potentially mineralizable N for NL and EU
+* `osi_clim`, an internal package table with climatic data per country
+* `osi_erosion` to estimate water erosion using RUSL approach, applicable for whole EU
+* `get_TEXTURE_GEPPA` to derive soil texture following French classification
+* `get_TEXTURE_HYPRES` to derive soil texture following HYPRES classification
+* `get_TEXTURE_BE` to derive soil texture following Belgium classification
+
+## Changed
+* `osi_crops` for countries BE, FI and FR
+* `osi_thresholds` for countries BE, FI and FR
+* `get_TEXTURE_USDA` allows names and codes to extract
+* `osi_field` to run EU OSI on LUCAS dataset
+
 # euosi 0.0.7 2024-01-09 
 
 ## Added

@@ -19,6 +19,7 @@ checkvar <- function(parm) {
   return(NULL)
 }
 
+
 #' Water retention curve
 #' 
 #' This function compute water content at given pressure head, using Van Genuchten water retention curve
@@ -307,6 +308,236 @@ pFpara_class <- function(Pklei, Pleem, Psom, M50){
   return(dt[, list(ThetaR = thres, ThetaS = thsat, alfa = alpha, n, ksat = Ks)])
 }
 
+#' Estimate soil texture according to USDA classification
+#' 
+#' @param A_CLAY_MI (numeric) Clay content (\%)
+#' @param A_SILT_MI (numeric) Silt content (\%)
+#' @param A_SAND_MI (numeric) Silt content (\%)
+#' @param type (character) return HYPRES classification names or codes (options: 'name' or 'code')
+#' 
+#' @return 
+#' Texture classifcation according to the USDA classification system
+#' 
+#' @export 
+osi_get_TEXTURE_USDA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type = 'code'){
+  
+  # add visual bindings
+  cl = si = sa = tcode = tname = NULL
+  
+  # check inputs
+  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  
+  # set internal copies
+  dt <- data.table(cl = A_CLAY_MI,
+                   sa = A_SAND_MI,
+                   si = A_SILT_MI,
+                   tname = NA_character_,
+                   tcode = NA_character_)
+  
+  # derive soil texture USDA classfication
+  cols <- c('tcode','tname')
+  
+   dt[cl>40 & sa <=45 & si<=40, c(cols) := list('Cl','clay')]
+   dt[is.na(tcode) & cl>40 & sa <=20 & si<=60 & si>40 , c(cols) := list('SiCL','silty clay') ]
+   dt[is.na(tcode) & cl>35 & cl <=55 & sa<=65 & sa>45 & si<20, c(cols) := list('SaCl','sandy clay') ]
+   dt[is.na(tcode) & cl>20 & cl <=35 & sa>45 & sa<80 & si <=27.5, c(cols) := list('SaCL','sandy clay loam') ]
+   dt[is.na(tcode) & cl>27.5 & cl<=40 & sa>20 & sa<=45 & si>15 & si<=52.5, c(cols) := list('ClLo','clay loam') ]
+   dt[is.na(tcode) & cl>27.5 & cl<=40 & sa<=20 & si>40 & si<=72.5, c(cols) := list('SiClLo','silty clay loam') ]
+   dt[is.na(tcode) & cl<=27.5& sa<=50 & si>50 & si<=80, c(cols) := list('SiLo','silty loam') ]
+   dt[is.na(tcode) & cl<=20 & cl>12.5 & sa<=7.5 & si>80 & si<=87.5, c(cols) := list('SiLo','silty loam') ]
+   dt[is.na(tcode) & cl<=12.5& sa <=20 & si>80, c(cols) := list('Si','silt') ]
+   dt[is.na(tcode) & cl<=27.5& cl>7.5 & sa <=52.5 & sa>22.5& si<=50 & si>27.5, c(cols) := list('Lo','loam') ]
+   dt[is.na(tcode) & cl<=7.5 & sa<=52.5 & sa>42.5 & si>40 & si<=50, c(cols) := list('SaLo','sandy loam') ]
+   dt[is.na(tcode) & cl<=20 & sa>52.5 & sa<=70 & si>10 & si<=47.5, c(cols) := list('SaLo','sandy loam') ]
+   dt[is.na(tcode) & cl>10 & cl<=20 & sa<=80 & sa>70 & si<=20, c(cols) := list('SaLo','sandy loam') ]
+   dt[is.na(tcode) & cl<=10 & si<=15 & sa>85 & cl<=10-si*10/15, c(cols) := list('Sa','sand') ]
+   dt[is.na(tcode) & cl<=15 & si<=30 & sa>70 & cl> 10-si*10/15 & cl<=15-si*15/30, c(cols) := list('LoSa','loamy sand') ]
+   dt[is.na(tcode) & cl<=20 & si<=50 & sa>70 & cl>15-si*15/30, c(cols) := list('SaLo','sandy loam') ]
+   dt[is.na(tcode), c(cols) := list('SaLo','sandy loam') ]
+  
+ # select soil texture HYPRES classification code or name
+ if(type=='code'){value <- dt[,tcode]}
+ if(type=='name'){value <- dt[,tname]}
+ 
+ # return value
+ return(value)
+  
+}
 
+#' Estimate soil texture according to HYPRES classification
+#' 
+#' @param A_CLAY_MI (numeric) Clay content (\%)
+#' @param A_SILT_MI (numeric) Silt content (\%)
+#' @param A_SAND_MI (numeric) Silt content (\%)
+#' @param type (character) return HYPRES classification names or codes (options: 'name' or 'code')
+#' 
+#' @return Texture class according to the HYPRES classification system
+#' 
+#'
+#' @export 
+osi_get_TEXTURE_HYPRES <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
   
+  # add visual bindings
+  cl = si = sa = tcode = tname = NULL
   
+  # check inputs
+  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  
+  # set internal copies
+  dt <- data.table(cl = A_CLAY_MI,
+                   sa = A_SAND_MI,
+                   si = A_SILT_MI,
+                   tname = NA_character_,
+                   tcode = NA_character_)
+  
+  # derive soil texture HYPRES classfication
+  cols <- c('tcode','tname')
+  dt[cl <= 18 & sa > 65, c(cols) := list('C','course')]
+  dt[cl <= 35 & sa <= 15, c(cols) := list('MF','medium fine')]
+  dt[cl <= 35 & sa > 15 & is.na(tcode),c(cols) := list('M','medium')]
+  dt[cl <= 60 & cl > 35, c(cols) := list('F','fine')]
+  dt[cl > 60, c(cols) := list('VF','very fine')]
+  
+  # select soil texture HYPRES classification code or name
+  if(type=='code'){value <- dt[,tcode]}
+  if(type=='name'){value <- dt[,tname]}
+  
+  # return value
+  return(value)
+  
+}
+
+#' Estimate soil texture according to GEPPA classification
+#' 
+#' @param A_CLAY_MI (numeric) Clay content (\%)
+#' @param A_SILT_MI (numeric) Silt content (\%)
+#' @param A_SAND_MI (numeric) Silt content (\%)
+#' @param type (character) return HYPRES classification names or codes (options: 'name' or 'code')
+#' 
+#' @return Texture class according to the French GEPPA classification system
+#' 
+#'
+#' @export 
+osi_get_TEXTURE_GEPPA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
+  
+  # add visual bindings
+  cl = si = sa = tcode = tname = cr1 = cr2 = cr3 = cr4 = cr5 = NULL
+  
+  # check inputs
+  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  
+  # set internal copies
+  dt <- data.table(cl = round(A_CLAY_MI),
+                   sa = round(A_SAND_MI),
+                   si = round(A_SILT_MI),
+                   tname = NA_character_,
+                   tcode = NA_character_)
+  
+  # derive soil texture GEPPA classification
+  cols <- c('tcode','tname')
+  dt[,cr1 := 60 - si * (60-55)/45]
+  dt[,cr2 := 45 - si * (45-40)/40]
+  dt[cl > cr1 & sa <= 40, c(cols) := list('AA','argile lourde')]
+  dt[cl <= cr1 & cl > cr2 & si <= 65 & sa <= 55, c(cols) := list('A','argileux')]
+  
+  dt[,cr1 := cr2]
+  dt[,cr2 := 32 - si * (32 - 30)/40]
+  dt[,cr3 := 20 + (cl - 42.5) * (25 - 20)/(31 - 42.5)]
+  dt[,cr4 := 47 + (cl - 39.5) * (75 - 47)/(0-39.5)]
+  dt[cl <= cr1  & cl > cr2 & si <= cr3 & sa > 35, c(cols) := list('As','argile sableuse')]
+  dt[cl <= cr1  & cl > cr2 & si > cr3 & si <= cr4 & sa <= 45 & sa >= 14, c(cols) := list('Als','argile limono-sableuse')]
+  dt[cl <= cr1  & cl > cr2 & si > cr4 & sa <= 18, c(cols) := list('Al','argile limoneuse')]
+  
+  dt[,cr1 := cr2]
+  dt[,cr2 := 23 - si * (23 - 20)/40]
+  dt[,cr3 := 25]
+  dt[cl <= cr1  & cl > cr2 & si <= cr3 & sa > 44, c(cols) := list('AS','argilo-sableux')]
+  dt[cl <= cr1  & cl > cr2 & si > cr3 & si <= cr4 & sa <= 55, c(cols) := list('LAS','limon argilo-sableux')]
+  dt[cl <= cr1  & cl > cr2 & si > cr4 & sa <= 20, c(cols) := list('La','limon argileux')]
+  
+  dt[,cr1 := cr2]
+  dt[,cr2 := 13 - si * (13 - 10)/40]
+  dt[,cr3 := 25]
+  dt[,cr5 := cr4]
+  dt[,cr4 := 35.5 + (cl - 20.5) * (45 - 35.5)/(0-20.5)]
+  
+  dt[cl <= cr1  & cl > cr2 & si <= cr3 & sa > 53, c(cols) := list('Sa','sable argileux')]
+  dt[cl <= cr1  & cl > cr2 & si > cr3 & si <= cr4 & sa > 44, c(cols) := list('SaI','sable argilo-limoneux')]
+  dt[cl <= cr1  & cl > cr2 & si > cr4 & si <= cr5 & sa <= 50, c(cols) := list('Lsa','limon sablo-argileux')]
+  dt[cl <= cr1  & cl > cr2 & si > cr5 & sa <= 25, c(cols) := list('L','limon')]
+  
+  dt[,cr1 := cr2]
+  dt[,cr2 := 0]
+  dt[,cr3 := 25]
+  dt[,cr4 := cr4]
+  dt[,cr5 := cr5]
+  
+  dt[cl <= cr1  & cl >= cr2 & si <= cr3 & sa > 63, c(cols) := list('S','sableux')]
+  dt[cl <= cr1  & cl >= cr2 & si > cr3 & si <= cr4 & sa <= 75, c(cols) := list('Sl','sable limoneux')]
+  dt[cl <= cr1  & cl >= cr2 & si > cr4 & si <= cr5 & sa <= 55, c(cols) := list('Ls','limon sableux')]
+  dt[cl <= cr1  & cl >= cr2 & si > cr5 & sa <= 25, c(cols) := list('LL','limon pur')]
+  
+  dt[,cr1 := 8 - si *(8-0)/50]
+  dt[cl <= cr1  & si <= cr3 & sa > 71, c(cols) := list('SS','sable')]
+  
+  # select soil texture HYPRES classification code or name
+  if(type=='code'){value <- dt[,tcode]}
+  if(type=='name'){value <- dt[,tname]}
+  
+  # return value
+  return(value)
+  
+}
+
+#' Estimate soil texture according to Belgium classification
+#' 
+#' @param A_CLAY_MI (numeric) Clay content (\%)
+#' @param A_SILT_MI (numeric) Silt content (\%)
+#' @param A_SAND_MI (numeric) Silt content (\%)
+#' @param type (character) return Belgium classification names or codes (options: 'name' or 'code')
+#' 
+#' @return Texture class according to the Belgium classification system
+#' 
+#'
+#' @export 
+osi_get_TEXTURE_BE <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
+  
+  # add visual bindings
+  cl = si = sa = tcode = tname = NULL
+  
+  # check inputs
+  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  
+  # set internal copies
+  dt <- data.table(cl = A_CLAY_MI,
+                   sa = A_SAND_MI,
+                   si = A_SILT_MI,
+                   tname = NA_character_,
+                   tcode = NA_character_)
+  
+  # derive soil texture Belgium classfication
+  cols <- c('tcode','tname')
+  dt[cl > 65 & si <= 55, c(cols) := list('U','zware klei')]
+  dt[cl <= 65 & cl > pmax(17.5, (30 - sa * (30 - 20)/20)) & si <= 70 & is.na(tcode), c(cols) := list('E','klei')]
+  dt[sa <= 15 & cl <= (30 - sa * (30 - 20)/20) & si > 60, c(cols) := list('A','leem')]
+  dt[cl <= 9 & sa > 82.5, c(cols) := list ('Z', 'zand')]
+  dt[cl <= 17.5 & sa > 67.5 & is.na(tcode), c(cols) := list ('S','lemig zand')]
+  dt[cl <= 11 & sa > 50 & sa <= 67.5, c(cols) := list('P','licht zandleem')]
+  dt[si > 15 & si <= 85 & cl <= 25 & sa >15 & sa <= 67.5 & is.na(tcode), c(cols) := list('L','zandleem')]
+  
+  # select soil texture Belgium classification code or name
+  if(type=='code'){value <- dt[,tcode]}
+  if(type=='name'){value <- dt[,tname]}
+  
+  # return value
+  return(value)
+  
+}

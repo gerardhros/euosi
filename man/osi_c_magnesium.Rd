@@ -7,15 +7,25 @@
 osi_c_magnesium(
   B_LU,
   B_SOILTYPE_AGR = NA_character_,
-  A_SOM_LOI = NA_real_,
   A_CLAY_MI = NA_real_,
+  A_SAND_MI = NA_real_,
+  A_SOM_LOI = NA_real_,
+  A_C_OF = NA_real_,
+  A_CEC_CO = NA_real_,
   A_PH_CC = NA_real_,
   A_CACO3_IF = NA_real_,
-  A_CEC_CO = NA_real_,
+  A_MG_AAA = NA_real_,
+  A_MG_AL = NA_real_,
+  A_MG_AN = NA_real_,
+  A_MG_CC = NA_real_,
+  A_MG_CO_PO = NA_real_,
+  A_MG_DL = NA_real_,
+  A_MG_KCL = NA_real_,
+  A_MG_M3 = NA_real_,
+  A_MG_NaAAA = NA_real_,
+  A_K_AAA = NA_real_,
   A_K_CO_PO = NA_real_,
   A_K_CC = NA_real_,
-  A_MG_AA = NA_real_,
-  A_MG_CC = NA_real_,
   B_COUNTRY
 )
 }
@@ -24,28 +34,48 @@ osi_c_magnesium(
 
 \item{B_SOILTYPE_AGR}{(character) The agricultural type of soil}
 
+\item{A_CLAY_MI}{(numeric) is the clay content (\%)}
+
+\item{A_SAND_MI}{(numeric) is the sand content (\%)}
+
 \item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil (\%)}
 
-\item{A_CLAY_MI}{(numeric) is the Clay content (\%)}
+\item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
+
+\item{A_CEC_CO}{(numeric) is the Cation exhange capacity in mmol+/kg}
 
 \item{A_PH_CC}{(numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)}
 
 \item{A_CACO3_IF}{(numeric) the percentage of CaCO3 (\%)}
 
-\item{A_CEC_CO}{(numeric) is the Cation exhange capacity in mmol+/kg}
+\item{A_MG_AAA}{(numeric) is the exchangeable Mg concentration (mg/kg)}
+
+\item{A_MG_AL}{(numeric) The exchangeable Mg-content of the soil measured via Ammonium Lactate extraction (mg Mg/ kg)}
+
+\item{A_MG_AN}{(numeric) The Mg-content of the soil extracted with ammonium nitrate (mg Mg /kg)}
+
+\item{A_MG_CC}{(numeric) The plant available content of Mg in the soil (mg  Mg per kg) extracted by 0.01M CaCl2}
+
+\item{A_MG_CO_PO}{(numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)}
+
+\item{A_MG_DL}{(numeric) The exchangeable Mg-content of the soil measured via Double Lactate extraction (mg Mg/ kg)}
+
+\item{A_MG_KCL}{(numeric) The plant available potassium, extracted with KCL (mg per kg)}
+
+\item{A_MG_M3}{(numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)}
+
+\item{A_MG_NaAAA}{(numeric) The Mg-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)}
+
+\item{A_K_AAA}{(numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction}
 
 \item{A_K_CO_PO}{(numeric) The occupation of the CEC with potassium (\%)}
 
 \item{A_K_CC}{(numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg per kg)}
 
-\item{A_MG_AA}{(numeric) is the exchangeable Mg concentration (mg/kg)}
-
-\item{A_MG_CC}{(numeric) The plant available content of Mg in the soil (mg  Mg per kg) extracted by 0.01M CaCl2}
-
 \item{B_COUNTRY}{(character) The country code}
 }
 \value{
-The capacity of the soil to supply and buffer potassium, evaluated given an optimum threshold for yield. A numeric value.
+The capacity of the soil to supply and buffer magnesium, evaluated given an optimum threshold for yield. A numeric value.
 }
 \description{
 This function calculates the magnesium availability for all European countries (if available).

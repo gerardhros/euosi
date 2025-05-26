@@ -9,12 +9,23 @@ osi_c_potassium(
   B_SOILTYPE_AGR = NA_character_,
   B_AER_FR = NA_character_,
   A_SOM_LOI = NA,
+  A_C_OF = NA,
   A_CLAY_MI = NA,
+  A_SAND_MI = NA,
   A_PH_CC = NA,
+  A_PH_WA = NA,
+  A_CACO3_IF = NA,
   A_CEC_CO = NA,
-  A_K_CO_PO = NA,
+  A_K_AAA = NA,
+  A_K_AL = NA,
+  A_K_AN = NA,
+  A_K_CAL = NA,
   A_K_CC = NA,
-  A_K_AA = NA,
+  A_K_CO_PO = NA,
+  A_K_DL = NA,
+  A_K_M3 = NA,
+  A_K_NaAAA = NA,
+  A_K_WA = NA,
   B_COUNTRY
 )
 }
@@ -27,17 +38,39 @@ osi_c_potassium(
 
 \item{A_SOM_LOI}{(numeric) The organic matter content of the soil (\%)}
 
+\item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
+
 \item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
+
+\item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
 
 \item{A_PH_CC}{(numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)}
 
+\item{A_PH_WA}{(numeric) The acidity of the soil, measured in water (-)}
+
+\item{A_CACO3_IF}{(numeric) the percentage of CaCO3 (\%)}
+
 \item{A_CEC_CO}{(numeric) The cation exchange capacity of the soil (mmol+ / kg), analyzed via Cobalt-hexamine extraction}
 
-\item{A_K_CO_PO}{(numeric) The occupation of the CEC with potassium (\%)}
+\item{A_K_AAA}{(numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction}
+
+\item{A_K_AL}{(numeric) The exchangeable K-content of the soil measured via Ammonium Lactate extracton (mg K/ kg)}
+
+\item{A_K_AN}{(numeric) The K-content of the soil extracted with ammonium nitrate (mg K /kg)}
+
+\item{A_K_CAL}{(numeric) The exchangeable K-content of the soil measured via Calcium Ammonium Lactate (mg K/ kg)}
 
 \item{A_K_CC}{(numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg / kg),}
 
-\item{A_K_AA}{(numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction}
+\item{A_K_CO_PO}{(numeric) The occupation of the CEC with potassium (\%)}
+
+\item{A_K_DL}{(numeric) The exchangeable K-content of the soil measured via Double Lactate extraction (mg K/ kg)}
+
+\item{A_K_M3}{(numeric) The exchangeable K-content of the soil measured via Mehlich 3 extracton (mg K/ kg)}
+
+\item{A_K_NaAAA}{(numeric) The K-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)}
+
+\item{A_K_WA}{(numeric) The exchangeable K-content of the soil measured via water extracton (mg K/ kg)}
 
 \item{B_COUNTRY}{(character) The country code}
 }
@@ -46,10 +79,4 @@ The capacity of the soil to supply and buffer potassium, evaluated given an opti
 }
 \description{
 This function calculates the potassium availability for all European countries (if available).
-}
-\examples{
-osi_c_potassium(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4, 
-A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
-A_K_CO_PO = 8.5, A_K_CC = 145,B_COUNTRY = 'NL')
-
 }

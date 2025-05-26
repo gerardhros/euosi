@@ -6,6 +6,10 @@
 \usage{
 osi_c_zinc(
   B_LU,
+  A_CLAY_MI = NA_real_,
+  A_SAND_MI = NA_real_,
+  A_SOM_LOI = NA_real_,
+  A_C_OF = NA_real_,
   A_PH_WA = NA_real_,
   A_PH_CC = NA_real_,
   A_ZN_EDTA = NA_real_,
@@ -15,6 +19,14 @@ osi_c_zinc(
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
+
+\item{A_CLAY_MI}{(numeric) The clay content (\%)}
+
+\item{A_SAND_MI}{(numeric) The sand content (\%)}
+
+\item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil (\%)}
+
+\item{A_C_OF}{(numeric) The carbon content of the soil layer (g/ kg)}
 
 \item{A_PH_WA}{(numeric) The acidity of the soil, measured in water (-)}
 
