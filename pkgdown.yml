@@ -1,0 +1,18 @@
+pandoc: 3.1.11
+pkgdown: 2.1.3
+pkgdown_sha: ~
+articles:
+  description_osi_boron: description_osi_boron.html
+  description_osi_copper: description_osi_copper.html
+  description_osi_crops_table: description_osi_crops_table.html
+  description_osi_magnesium: description_osi_magnesium.html
+  description_osi_nitrogen: description_osi_nitrogen.html
+  description_osi_parameters_france: description_osi_parameters_france.html
+  description_osi_ph: description_osi_ph.html
+  description_osi_phosphor: description_osi_phosphor.html
+  description_osi_potassium: description_osi_potassium.html
+  description_osi_zinc: description_osi_zinc.html
+last_built: 2025-05-26T22:44Z
+urls:
+  reference: https://gerardhros.github.io/euosi/reference
+  article: https://gerardhros.github.io/euosi/articles
