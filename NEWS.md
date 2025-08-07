@@ -1,3 +1,8 @@
+# euosi 0.1.1 2025-08-07
+
+## Changed
+* updated `osi_crops`
+
 # euosi 0.1.0 2025-05-27
 
 ## Added
