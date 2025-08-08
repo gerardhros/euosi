@@ -1,3 +1,8 @@
+# euosi 0.2.0 2025-08-08
+
+# Changed
+* vignettes updated 
+
 # euosi 0.1.0 2025-05-27
 
 ## Added
