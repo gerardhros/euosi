@@ -208,7 +208,7 @@ osi_c_phosphor_at <- function(A_P_CAL,B_LU = NA_character_) {
 #' This function calculates the phosphorus availability. 
 #' 
 #' @param B_LU (character) The crop code
-#' @param A_P_AL (numeric) The exchangeable P-content of the soil measured via ammonium lactate extraction
+#' @param A_P_AL (numeric) The exchangeable P-content of the soil measured via ammonium lactate extraction (mg P/ kg)
 #' 
 #' @import data.table
 #' 
@@ -239,10 +239,10 @@ osi_c_phosphor_be <- function(B_LU, A_P_AL) {
   # get length of input arguments
   arg.length <- max(length(B_LU),length(A_P_AL))
   
-  # Collect the data into a table
+  # Collect the data into a table, convert from mg P/kg to units being used in Belgium (mg P/100g)
   dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_P_AL = A_P_AL,
+                   B_LU = as.character(B_LU),
+                   A_P_AL = A_P_AL * 0.1,
                    value = NA_real_)
   
   # merge crop properties
@@ -260,7 +260,8 @@ osi_c_phosphor_be <- function(B_LU, A_P_AL) {
               all.x = TRUE)
   
   # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = A_P_AL, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  dt[grepl('gras',crop_cat1),value := osi_evaluate_logistic(x = A_P_AL, b= 0.34526357,x0 = -5.8598799,v = 0.01086684)]
+  dt[grepl('arable',crop_cat1),value := osi_evaluate_logistic(x = A_P_AL, b= 0.22848283,x0 = -7.07661435,v = 0.01468356)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -702,7 +703,7 @@ osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0) {
 #' @param B_LU (character) The crop code
 #' @param B_SOILTYPE_AGR (character) The soil type in a particular region. Optional.
 #' @param B_AER_FR (character) An agroeconomic region in France. Optional.
-#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P/ kg)
 #' @param A_PH_WA (numeric) The pH measured in water.
 #' 
 #' @import data.table
@@ -749,23 +750,30 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
   dt.soiltype <- as.data.table(euosi::osi_soiltype)
   
   # Check length of desired input
-  arg.length <- max(length(B_LU),length(A_P_OL),length(B_SOILTYPE_AGR), length(B_AER_FR))
+  arg.length <- max(length(B_LU),length(A_P_OL),length(B_SOILTYPE_AGR), length(B_AER_FR),length(A_PH_WA))
   
   # check the values (update the limits later via dt.parms)
   checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(dt.soiltype$osi_soil_cat1), empty.ok = FALSE)
-  checkmate::assert_character(B_AER_FR, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_AER_FR, choices = unique(dt.thresholds$osi_threshold_region), empty.ok = FALSE)
   checkmate::assert_numeric(A_P_OL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
+  checkmate::assert_numeric(A_PH_WA, lower = 1, upper = 10, any.missing = TRUE, len = arg.length)
+  
+  # check optional parameters 
+  if(sum(!is.na(B_SOILTYPE_AGR))>0){
+    checkmate::assert_character(B_SOILTYPE_AGR, any.missing = TRUE, min.len = 1, len = arg.length)
+    checkmate::assert_subset(B_SOILTYPE_AGR, choices = c(NA,unique(dt.soiltype$osi_soil_cat1)), empty.ok = FALSE)
+  }
+  if(sum(!is.na(B_AER_FR))>0){
+    checkmate::assert_character(B_AER_FR, any.missing = TRUE, min.len = 1, len = arg.length)
+    checkmate::assert_subset(B_AER_FR, choices = unique(dt.thresholds$osi_threshold_region), empty.ok = FALSE)
+  }
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    B_AER_FR = B_AER_FR,
-                   A_P_OL = A_P_OL,
+                   A_P_OL = A_P_OL * 2.291,
                    A_PH_WA = A_PH_WA,
                    value = NA_real_)
   
@@ -778,6 +786,7 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
   
   # estimate agricultural soil type
   dt[is.na(B_SOILTYPE_AGR), B_SOILTYPE_AGR := fifelse(A_PH_WA > 8,'craie','general')]
+  dt[is.na(B_SOILTYPE_AGR) & is.na(A_PH_WA), B_SOILTYPE_AGR := 'general']
   
   # merge thresholds
   dt <- merge(dt,
@@ -1108,9 +1117,9 @@ osi_c_phosphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
 #' This function calculates the phosphate availability. 
 #' 
 #' @param B_LU (numeric) The crop code
-#' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate
-#' @param A_P_CC (numeric) The P-content of the soil extracted with CaCl2
-#' @param A_P_WA (numeric) The P-content of the soil extracted with water
+#' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate (mg P/ kg)
+#' @param A_P_CC (numeric) The P-content of the soil extracted with CaCl2 (mg P/ kg)
+#' @param A_P_WA (numeric) The P-content of the soil extracted with water (mg P/ kg)
 #' 
 #' @import data.table
 #' 
@@ -1156,10 +1165,11 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
   checkmate::assert_data_table(dt.thresholds,max.rows = 1)
   
   # Collect the data into a table, convert to Dutch units
+  # assume 3.5% organic matter for the calculation of bulk density
   dt <- data.table(id = 1:arg.length,
                    A_P_AL = A_P_AL * 2.29 * 0.1,
                    A_P_CC = A_P_CC,
-                   A_P_WA = A_P_WA,
+                   A_P_WA = A_P_WA *(1 / (0.02525 * 3.5 + 0.6541))/0.43646,
                    B_LU = B_LU,
                    value = NA_real_
                   )
@@ -1173,7 +1183,7 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
   dt[grepl("gras",crop_cat1), value := pmax(0,log(A_P_CC) * (-0.0114 * A_P_AL + 2.5) + 0.0251 * A_P_CC + 2)]
   
   # Calculate the phosphate availability for maize (PBI)
-  dt[grepl("maize",crop_cat1), value := A_P_CC + 0.05 * (A_P_AL / A_P_CC)]
+  dt[grepl("maize",crop_cat1), value := A_P_CC + 0.05 * pmin(37,A_P_AL / A_P_CC)]
   
   # calculate the P-availability for arable systems, normalized to a scale with maximum around 6
   dt[grepl("arable",crop_cat1), value := A_P_WA * 0.1]
