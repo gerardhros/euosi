@@ -1,6 +1,6 @@
 ---
 title: "Description of osi_phosphor"
-author: 'Elise van Eynde & Gerard Ros'
+author: 'Gerard Ros & Elise van Eynde'
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -11,27 +11,164 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+rmarkdown.html_vignette.check_title = FALSE
+
+# require packages
+require(euosi);require(data.table);require(ggplot2)
+devtools::load_all()
 ```
 
-This document explains how the phosphorus indicator is calculated for each country and provides references
+## Introduction
+Phosphorus (P) is an essential nutrient for crops and is applied to agricultural soil to bring or keep the soil at a certain target soil P status in view of an optimal crop yield. As such the P supply is a key aspect of soil health. Phosphorus in soil can be present as organic and inorganic P, with inorganic P typically contributing between 35 and 70% to total soil P. For soils receiving long-term inputs of P fertilizers and animal manures, the contribution of inorganic P to total soil P usually increases, as inorganic P is abundant in animal manures. Inorganic P includes phosphate sorbed to reactive soil particles (such as amorphous Fe- and Al-(hydr)oxides and oxidic clay mineral edges) and phosphate-bearing minerals. In the normal pH range of 5 to 8 of most agricultural soils, P sorption is the major mechanism controlling the P concentration in soil solution. The extent to which soils can sorb P depends on the maximum P sorption capacity which for non-calcareous soils relates to the amorphous Fe- and Al-(hydr)oxides contents.
+
+Assessments of the soil health in view of phosphorus usually follow the agronomic Build-Up and Maintenance approach, where measured soil P contents are used to classify the soil P status, which is used to derive the best P fertilizer strategy for a specific crop. With this approach, all agricultural soils ultimately reach a “target” soil P status being optimal for crop produciton. Currently, this target soil P status is determined by the economic optimization of crop yield at which the P fertilizer inputs equals crop P removal, although some countries recommend adding additional P to correct for “inevitable” P losses caused by a progressive shift of plant-available P to less available soil P forms and environmental P losses. The target soil P status currently corresponds to the P status at which over 90% of relative crop yield is achieved. This target soil P status is derived from long-term P fertilization experiments. 
+
+Routine agronomic soil P tests have in common that they make use of extraction methods to determine a certain fraction of total soil P that is correlated to crop response. The extracted amount of P varies with the nature of the extraction solution and methodological factors such as soil pretreatment, the soil-to-solution ratio and the analytical technique used for P measurement. For measuring readily available P forms that can be taken up by the crop in the short-term, soil P tests (referred to as P intensity methods) such as the 0.01 M CaCl2 and the water extraction method can be used. For the measurement of labile or moderately strong bound P (referred to as P quantity methods), extractions with acid ammonium acetate-lactate (P-AL), Mehlich3 and sodium bicarbonate (P-Olsen) can be used.
+
+The European Open Soil Index assesses the soil function for P supply using the agronomic knowledge base as being used in the various EU countries. The soil P supply is transformed into an unitless indicator score ranging between zero (poor quality) and one (optimum quality). This indicator score reflects the ‘distance to target’ (i.e. difference between the current and optimum situation, while ensuring that other soil functions are not limiting). The further it deviates from score 1, the poorer the soil function works. An indicator value of 0.5 approximately corresponds to the threshold level of the fertilization guidelines under which (additional) fertilization is
+recommended (given the ‘buildup and maintenance’ approach as being implemented in
+fertilizer recommendation systems). Overall, the indicator value can be interpreted as good (>0.75), sufficient (0.5-0.75), and poor (<0.5).
+
+## Netherlands
+The phosphorus supply for grassland and maize fields is quantified based on soil P reserves (determined with ammonium lactate extraction) and plant available P (determined with CaCl2 extraction), where the optimum P supply is derived from multiple field experiments across the Netherlands. For arable fields, the phosphorus supply is approximated with water-extractable P, which reflect P availability controlled by chemical sorption and desorption equilibria and affected by the iron and aluminum oxides content of soils. The P supply is evaluated with a more-is-better logistic scoring function, which reaches the maximum score when the phosphorus supply is around 4.8 (unitless index, for maize and grassland fields) and 45 (mg P2O5 per liter, for arable fields). More information for grasland and maize can be found [here](www.bemestingsadvies.nl) and for arable crops can be found [here](https://www.handboekbodemenbemesting.nl/bemestingsadviezen/fosfaat/).
+
+In the euosi package the P indicator for the Netherlands can be estimated via `osi_c_phosphor_nl`. This function requires the following inputs:
+* B_LU, being the Dutch BRP code, an unique number for each crop
+* A_P_AL, being the extracted P content with ammonium lactate, unit mg P /kg (internally converted to the unit mg P2O5/100g as being used in the Dutch context).
+* A_P_CC, being the extracted P content with 0.01M CaCl2, unit mg P/kg.
+* A_P_WA, being the extracted P content with water, unit mg P/kg (internally converted to the unit mg P2O5/L as being used in the Dutch context).
+
+An example is illustrated below for a maize crop (crop code 265) and a single soil is:
 
 
-## Netherlands:
+```{r example NL1, echo = TRUE}
+
+# show an example for maize crop
+osi_c_phosphor_nl(B_LU = 265, A_P_AL = 197, A_P_CC = 2.5)
+
+```
+
+Below the same example but then visualised for a series of soils with a single P-AL value (of 45 mg P2O5/100g) and a variable P-CaCl2 value (ranging from 0.1 to 10 mg P /kg). This is done for two crops: grassland and maize. From this example one can see that the soil health index score varies from very low to very high, depending on the content of P-CaCl2.
+
+```{r example NL2, out.width="75%", fig.cap="Evaluation P-indicator for the Netherlands.",fig.height = 2,dpi=300, echo = FALSE}
+
+# make an example with varying P-CaCl2 and a fixed P-AL
+dt <- CJ(B_LU = c(259,265),
+         A_P_AL = 197, 
+         A_P_WA = 15,
+         A_P_CC = seq(0.1,4,0.05))
+dt[,landuse := fifelse(B_LU==259,'maize','grassland')]
+dt[,osi_c_p := osi_c_phosphor_nl(B_LU,A_P_AL = A_P_AL,A_P_CC = A_P_CC,A_P_WA=A_P_WA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_CC, xpar_label = 'P-CaCl2',pgroup = dt$landuse)
+
+```
 
 
+## Belgium (Flanders)
+The phosphorus supply in Belgium is based on the P level in soil being extracted with ammonium lactate. There is also a distinction between cropland or grassland with a higher optimum threshold value for grassland than cropland. More information of the optimum threshold values and the soil P status evaluation can be found [here](https://www.rundveeloket.be/sites/default/files/inline-files/ILVO%20mededeling%20195%20fosforreeks%20deel%201.pdf). In the euosi package the soil health score for P supply can be calculated with `osi_c_phosphor_be`, requiring the following inputs:
+* B_LU, being the Belgium crop code, an unique number for each crop
+* A_P_AL, being the extracted P content with ammonium lactate, unit mg P /kg (internally converted to the unit mg P/100g as being used in the Belgium context).
 
-## Belgium (Flanders): 
+An example is illustrated below for a sugar beet crop (crop code 91) and a grassland (code = 60) for a single soil with P-content of 25 mg P / 100g:
+
+
+```{r example BE1, echo = TRUE}
+
+# show an example for sugar beet crop (code = 91) and grassland (code = 60)
+c(osi_c_phosphor_be(B_LU = '91', A_P_AL = 250),
+  osi_c_phosphor_be(B_LU = '60', A_P_AL = 250))
+
+```
+Below the same example but then visualised for a series of soils with a  P-AL value ranging from 0 to 300 mg P per kg (equal to 0 to 30 mg P/100g) for two crops: grassland and sugar beet. From this example one can see that the soil health index score varies from very low to very high, depending on the content of P-AL (mg P/kg).
+
+```{r example BE2, out.width="75%", fig.cap="Evaluation P-indicator for the Belgium.",fig.height = 2,dpi=300, echo = FALSE}
+
+# make an example with varying P-AL content for two crops
+dt <- CJ(B_LU = c(91,60),
+         A_P_AL = seq(1,300,10))
+dt[,landuse := fifelse(B_LU==91,'sugar beet','grassland')]
+dt[,osi_c_p := osi_c_phosphor_be(B_LU,A_P_AL = A_P_AL)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_AL, xpar_label = 'P-AL',pgroup = dt$landuse)
+
+```
+
 
 ## France:
+In France, soil phosphorus status for crop production is determined by assessing plant-available phosphorus levels, using the Olsen excration method. This soil P pool is then compared against thresholds specific to different crops, which vary based on factors like soil type and climate. In France the P supply can be assessed with varying degree of detail depending on the availability of regional threshold values. More information of the optimum threshold values and the soil P status evaluation can be found [here](https://comifer.asso.fr/wp-content/uploads/2015/03/COMIFER_RAPPORT_fertilisation_15102019.pdf).
 
-Principle: The P-olsen is evaluated based on (1) the crop needs (high need, moderate need, low need) which is mentioned in the osi_crops table (2) the region (3) the soil type 
+The euosi package the soil health score for P supply can be calculated with `osi_c_phosphor_fr`, requiring the following inputs:
+* B_LU, being the French crop code, an unique code for each crop
+* A_P_OL, being the extracted P content with Olsen method, unit mg P /kg.
+* A_PH_WA, being the soil acidity measured in water. 
+The soil pH is used to distinghuish between calcareous and non-calcareous soils. If not given, then the function assumes the soil is not calcareous.
 
-Two thresholds exist     (1) Timp = soil supplies the crop need, above this concentration no fertilizer response
-                         (2) Trenf = below this threshold, soil needs to be replenished, fertilizer recommendation > supply 
+If one likes to adress the regional differences, it is also possible to add the agroeconomic region in France (argument `B_AER_FR`) and the agricultural soil type (argument `B_SOILTYPE_AGR`). These two arguments are optional. There are 40 soil types that can be selected (see below for the exact types possible). 
 
-The logistic function is based on the P Olsen evaluation in comparison with the export by the plant: score 0 when supply = 0; score 1 when supply = export
-The growth rate and offset are based on the threshold values, the growth rate near the maximum is set to 1. 
+```{r table FR1, echo = FALSE}
 
-See page 25 in reference. !!! Threshold values are given in mg/kg P2O5, conversion is done by =(Treshold/(141.943x10^3))x2x30.97*10^3
+ # show the available French soil types
+  dt.soiltype <- as.data.table(euosi::osi_soiltype)
+  dt.soiltype <- dt.soiltype[osi_country=='FR',.(osi_soil_id,type = osi_soil_cat1)]
+  dt.soiltype <- cbind(dt.soiltype[c(1:13,NA),.(type)],
+                       dt.soiltype[c(14:26,NA),.(type)],
+                       dt.soiltype[27:40,.(type)])
 
-Reference: Comifer, 2019, La fertilisation P-K-Mg; Les bases due raisonnement
+  # print table
+  knitr::kable(dt.soiltype,align='c',caption='Soil types used for P soil health assessment.')
+```
+
+
+For more information on the possible regions, see the table below.
+
+```{r table FR2, echo = FALSE}
+
+ # show the available French agricultural regions
+ dt.thresholds <- as.data.table(euosi::osi_thresholds)
+ dt.thresholds <- dt.thresholds[osi_country == 'FR' & osi_indicator =='i_c_p']
+ dt.thresholds <- unique(dt.thresholds[!is.na(osi_threshold_region),.(region = osi_threshold_region)])
+ dt.thresholds <- cbind(dt.thresholds[1:4],
+                        dt.thresholds[5:8],
+                        dt.thresholds[9:13],
+                        dt.thresholds[14:16])
+
+  # print table
+  knitr::kable(dt.thresholds,align='c',caption='French regions used for P soil health assessment.')
+```
+
+
+An example of the `osi_c_phosphor_fr` function is illustrated below for potato (crop code PTC) and permanent grassland (code = PRL) for a single soil with P-content of 20 mg P / kg. 
+
+
+```{r example FR1, echo = TRUE}
+
+# show an example for soil P asssesment for sugar beet crop (code = 91) and grassland (code = 60)
+c(osi_c_phosphor_fr(B_LU = 'PTC', A_P_OL = 20),
+  osi_c_phosphor_fr(B_LU = 'PRL', A_P_OL = 20))
+
+# show an example with regional information available
+osi_c_phosphor_fr(B_LU = 'SOJ', A_P_OL = 45, 
+                  B_SOILTYPE_AGR = 'limons battants', 
+                  B_AER_FR = 'nord-picardie')
+```
+
+Below the same example but then visualised for a series of soils with a P-Olsen value ranging from 0 to 30 mg P per kg (equal to 0 to 69 mg P2O5 /kg) for two crops: grassland and potato. From this example one can see that the soil health index score varies from very low to very high, depending on the content of P-Olsen (mg P/kg).
+
+```{r example FR2, out.width="75%", fig.cap="Evaluation P-indicator for the France.",fig.height = 2,dpi=300, echo = FALSE}
+
+# make an example with varying P-Olsen content
+dt <- CJ(B_LU = c('PTC','PRL'),
+         A_P_OL = seq(1,30,0.5),
+         A_PH_WA = 7.5)
+dt[,landuse := fifelse(B_LU=='PTC','potato','grassland')]
+dt[,osi_c_p := osi_c_phosphor_fr(B_LU,A_P_OL = A_P_OL, A_PH_WA = A_PH_WA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_OL, xpar_label = 'P-Olsen (mg P/kg)',pgroup = dt$landuse)
+
+```
+
+
