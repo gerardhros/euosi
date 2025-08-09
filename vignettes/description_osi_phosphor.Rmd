@@ -29,7 +29,7 @@ The European Open Soil Index assesses the soil function for P supply using the a
 recommended (given the ‘buildup and maintenance’ approach as being implemented in
 fertilizer recommendation systems). Overall, the indicator value can be interpreted as good (>0.75), sufficient (0.5-0.75), and poor (<0.5).
 
-## Netherlands
+## Netherlands (NL)
 The phosphorus supply for grassland and maize fields is quantified based on soil P reserves (determined with ammonium lactate extraction) and plant available P (determined with CaCl2 extraction), where the optimum P supply is derived from multiple field experiments across the Netherlands. For arable fields, the phosphorus supply is approximated with water-extractable P, which reflect P availability controlled by chemical sorption and desorption equilibria and affected by the iron and aluminum oxides content of soils. The P supply is evaluated with a more-is-better logistic scoring function, which reaches the maximum score when the phosphorus supply is around 4.8 (unitless index, for maize and grassland fields) and 45 (mg P2O5 per liter, for arable fields). More information for grasland and maize can be found [here](www.bemestingsadvies.nl) and for arable crops can be found [here](https://www.handboekbodemenbemesting.nl/bemestingsadviezen/fosfaat/).
 
 In the euosi package the P indicator for the Netherlands can be estimated via `osi_c_phosphor_nl`. This function requires the following inputs:
@@ -61,7 +61,7 @@ dt[,landuse := fifelse(B_LU==259,'maize','grassland')]
 dt[,osi_c_p := osi_c_phosphor_nl(B_LU,A_P_AL = A_P_AL,A_P_CC = A_P_CC,A_P_WA=A_P_WA)]
 
 # show plot
-osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_CC, xpar_label = 'P-CaCl2',pgroup = dt$landuse)
+osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_CC, xpar_label = 'P-CaCl2 (mg P/kg)',pgroup = dt$landuse)
 
 ```
 
@@ -92,12 +92,12 @@ dt[,landuse := fifelse(B_LU==91,'sugar beet','grassland')]
 dt[,osi_c_p := osi_c_phosphor_be(B_LU,A_P_AL = A_P_AL)]
 
 # show plot
-osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_AL, xpar_label = 'P-AL',pgroup = dt$landuse)
+osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_AL, xpar_label = 'P-AL (mg P/kg)',pgroup = dt$landuse)
 
 ```
 
 
-## France:
+## France (FR)
 In France, soil phosphorus status for crop production is determined by assessing plant-available phosphorus levels, using the Olsen excration method. This soil P pool is then compared against thresholds specific to different crops, which vary based on factors like soil type and climate. In France the P supply can be assessed with varying degree of detail depending on the availability of regional threshold values. More information of the optimum threshold values and the soil P status evaluation can be found [here](https://comifer.asso.fr/wp-content/uploads/2015/03/COMIFER_RAPPORT_fertilisation_15102019.pdf).
 
 The euosi package the soil health score for P supply can be calculated with `osi_c_phosphor_fr`, requiring the following inputs:
@@ -170,5 +170,37 @@ dt[,osi_c_p := osi_c_phosphor_fr(B_LU,A_P_OL = A_P_OL, A_PH_WA = A_PH_WA)]
 osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_OL, xpar_label = 'P-Olsen (mg P/kg)',pgroup = dt$landuse)
 
 ```
+
+## Austria (AT)
+The phosphorus supply in view of soil health can be calculated using `osi_c_phosphor_at` using the following inputs:
+* B_LU, being the crop code, an unique number for each crop
+* A_P_CAL, being the extracted P content with calcium ammonium lactate, unit mg P /kg.
+The soil P threshold for optimum soil health is generic for all soil types but differs between arable land and grassland. The optimum threshold is set around 47-68 mg P/kg for grassland and around 47-111 mg P/kg for cropland. More information can be found in the article of Bohner et al. (2013), that can be downloaded [here](https://raumberg-gumpenstein.at/jdownloads/Forschungsberichte/Umweltressourcen_im_Gruenland/Naehrstoffe/2_2013_INTERREG_IV_Projekt_Abschlussbericht_gewaesserzukunft_Bohner.pdf) with a reference to the publication entitled RICHTLINIEN FÜR DIE SACHGERECHTE DÜNGUNG, 2006: Anleitung zur Interpretation von Bodenuntersuchungsergebnissen in der Landwirtschaft. 6. Aufl. Bundesministerium für Land- und Forstwirtschaft,
+Umwelt und Wasserwirtschaft, 80 S that can be found [here](https://www.bmluk.gv.at/dam/jcr:6e638ac4-6dd2-441d-8e51-9304966230cf/Richtlinien%20f%C3%BCr%20die%20sachgerechte%20D%C3%BCngung%20im%20Ackerbau%20und%20Gr%C3%BCnland_akt.pdf).
+
+Note that the crop codes are not yet available in `osi_crops` package table. There is a temporary fix that B_LU codes with the string "grass" are considered as grassland whereas all others are considered cropland. 
+
+```{r example AT1, out.width="75%", fig.cap="Evaluation P-indicator for Austria.",fig.height = 2,dpi=300, echo = FALSE}
+
+# make an example with varying P-CAL content
+dt <- CJ(B_LU = c('grassland','potato'),
+         A_P_CAL = seq(1,100,5))
+dt[,osi_c_p := osi_c_phosphor_at(B_LU,A_P_CAL = A_P_CAL)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_CAL, xpar_label = 'P-CAL (mg P/kg)',pgroup = dt$B_LU)
+
+```
+
+
+## Switzerland (CH)
+The phosphorus supply in view of soil health can be calculated using `osi_c_phosphor_ch` using the following inputs:
+* B_LU, being the crop code, an unique number for each crop
+* A_P_AAA, being the extracted P content with ammonium acetate, unit mg P /kg.
+
+More information can be found in Flisch et al. (2017) entitled `Grundlagen für die Düngung landwirtschaftlicher Kulturen in der Schweiz`. This document can be downloaded [here](https://www.agroscope.admin.ch/agroscope/de/home/themen/pflanzenbau/ackerbau/Pflanzenernaehrung/grud.html)
+Note that the crop codes are not yet available in `osi_crops` package table.  
+
+
 
 

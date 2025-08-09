@@ -143,6 +143,20 @@ spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
 p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
 findoptvalue(spool,spoolopt,p0)
 
+# Austria P-CAL, grassland, Bohner et al. (2013)
+# evaluation soil pool (A+, A, B, C, D, E)
+spool <- c(1,25,(26+46)/2,(47+68),69,175)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Austria P-CAL, ackerbou, Bohner et al. (2013)
+# evaluation soil pool (A+, A, B, C, D, E)
+spool <- c(1,25,(26+46)/2,(47+111),112,175)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
 # Norway P-AL, only optimum (C) is known
 # evaluation soil pool (A+, A, B, C, D, E)
 spool <- c(0.5,10,22.5,45.5,75,100)*50/45.5

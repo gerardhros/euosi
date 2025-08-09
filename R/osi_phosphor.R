@@ -190,8 +190,12 @@ osi_c_phosphor_at <- function(A_P_CAL,B_LU = NA_character_) {
   #             by.y = 'osi_threshold_soilcat',
   #             all.x = TRUE)
   
+  # temporary fix
+  dt[,crop_cat1 := fifelse(grepl('grass',B_LU),'grassland','arable')]
+  
   # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = A_P_CAL, b= 0.138491,x0 = 2.81405015,v = 0.01965865)]
+  dt[crop_cat1 =='arable',value := osi_evaluate_logistic(x = A_P_CAL, b= 0.138491,x0 = 2.81405015,v = 0.01965865)]
+  dt[crop_cat1 =='grassland',value := osi_evaluate_logistic(x = A_P_CAL, b= 0.13874251,x0 = 2.96274411,v = 0.01992203)]
   
   # set the order to the original inputs
   setorder(dt, id)
