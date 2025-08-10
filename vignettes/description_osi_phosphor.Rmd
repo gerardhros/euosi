@@ -201,6 +201,22 @@ The phosphorus supply in view of soil health for agricultural soils in Switzerla
 More information can be found in Flisch et al. (2017) entitled `Grundlagen für die Düngung landwirtschaftlicher Kulturen in der Schweiz`. This document can be downloaded [here](https://www.agroscope.admin.ch/agroscope/de/home/themen/pflanzenbau/ackerbau/Pflanzenernaehrung/grud.html)
 Note that the crop codes are not yet available in `osi_crops` package table.  
 
+Below an example is visualized how the soil health index varies in relation to variation in P-AAA. The optimum soil P threshold value for sustainable crop production is around 75 mg P/ kg, and the soil index decreases to zero when P-AAA values decreases down to 20 mg P/kg.
+
+
+```{r example CH1, out.width="75%", fig.cap="Evaluation P-indicator for Switzerland.",fig.height = 2,dpi=300, echo = FALSE}
+
+# make an example with varying P-AAA content
+dt <- CJ(B_LU = c('cropland'),
+         A_P_AAA = seq(1,75,1))
+dt[,osi_c_p := osi_c_phosphor_ch(B_LU,A_P_AAA = A_P_AAA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_AAA, xpar_label = 'P-AAA (mg P/kg)',pgroup = NULL)
+
+```
+
+
 ## Czech Republic (CZ)
 The phosphorus supply in view of soil health for agricultural soils in Czech Republic can be calculated using `osi_c_phosphor_cz` using the following inputs:
 * B_LU, being the crop code, an unique number for each crop
@@ -227,8 +243,62 @@ osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_M3, xpar_label = 'P-M3 (mg P/kg)',p
 
 
 ## Germany (DE)
+The phosphorus supply in view of soil health for agricultural soils in Germany can be calculated using `osi_c_phosphor_de` using the following inputs:
+* B_LU, being the crop code, an unique number for each crop
+* A_SOM_LOI, being the soil organic matter content, in units percentage (\%)
+* A_P_CAL, being the extracted P content with calcium ammonium lactate, unit mg P /kg (internally converted to the common unit mg P /100g for mineral soils and mg P/100 ml for peat soils, as being used in German fertilizer recommendation systems).
+* A_P_DL, being the extracted P content with double lactate, unit mg P/kg, optional.
+
+The P supplying capacity differ for soils varying in clay content and distinghuises also between peaty and mineral soils. Information on the threshold values for P-CAL in view of sustainable crop production has been derived by the VDLUFA. In 2020 the threshold values have been updated. For more information, see [here](https://www.lufa-nord-west.de/index.cfm/action/downloadcenter?file=08E6CC) 
+
+Note that the crop codes for Germany are not yet available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in P-AL. The optimum soil P threshold value for sustainable crop production is around 60 mg P/ kg for peat soils and around 100 mg P/kg for mineral soils. The soil index decreases when P-AL values decreases down to 20 mg P/kg (peat soils) or 50 mg P/kg (mineral soils).
+
+
+```{r example DE1, out.width="75%", fig.cap="Evaluation P-indicator for Germany.",fig.height = 2,dpi=300, echo = FALSE}
+
+# make an example with varying P-CAL content for three soil types
+dt <- CJ(B_LU = c('cropland'),
+         A_SOM_LOI = c(5,10,20),
+         A_P_CAL = seq(1,130,5))
+dt[A_SOM_LOI==5,A_CLAY_MI := 10]
+dt[A_SOM_LOI > 5,A_CLAY_MI := 5]
+dt[,stype := fifelse(A_SOM_LOI <= 8 ,'clay low humus',
+             fifelse(A_SOM_LOI==10, 'sand high humus','peat'))]
+dt[,osi_c_p := osi_c_phosphor_de(B_LU,A_P_CAL = A_P_CAL,A_SOM_LOI = A_SOM_LOI,A_CLAY_MI = A_CLAY_MI)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_CAL, xpar_label = 'P-CAL (mg P/kg)',pgroup = dt$stype)
+
+```
+
+
 
 ## Denmark (DK)
+The phosphorus supply in Denmark is based on the P level in soil being extracted with the Olsen method. There is no distinction between cropland or grassland or between soil types. The threshold values for optimum soil P levels are taken from the study of Knudsen & Schnug (2016), with the table found [here](https://link.springer.com/chapter/10.1007/978-94-017-7612-7_11/tables/2)
+
+In the euosi package the soil health score for P supply can be calculated with `osi_c_phosphor_dk`, requiring the following inputs:
+* B_LU, being the crop code, an unique number for each crop
+* A_P_OL, being the extracted P content with Olsen, unit mg P /kg.
+
+Note that the crop codes for Denmark are not yet available in `osi_crops` package table.
+
+Below the same example but then visualised for a series of soils with a  P-Olsen value ranging from 0 to 70 mg P per kg. The optimum soil P threshold value for sustainable crop production is around 50 mg P/ kg for all soils. The soil index decreases when P-Olsen values decreases down to 30 mg P/kg.
+
+
+```{r example DK1, out.width="75%", fig.cap="Evaluation P-indicator for the Belgium.",fig.height = 2,dpi=300, echo = FALSE}
+
+# make an example with varying P-Olsen
+dt <- CJ(B_LU = c(91,60),
+         A_P_OL= seq(1,75,1))
+dt[,osi_c_p := osi_c_phosphor_dk(B_LU,A_P_OL = A_P_OL)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_OL, xpar_label = 'P-Olsen (mg P/kg)',pgroup = NULL)
+
+```
+
 
 ## Estonia (EE)
 The phosphorus supply in view of soil health for agricultural soils in Estonia can be calculated using `osi_c_phosphor_ee` using the following inputs:
