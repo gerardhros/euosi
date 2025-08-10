@@ -32,6 +32,13 @@ spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
 p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
 findoptvalue(spool,spoolopt,p0)
 
+# Finland (mg P/ L soil), P_AAA
+# evaluation soil pool (A+, A, B, C, D, E)
+spool <- c(1,2,6,(6+12)/2,13,45)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
 # Belgie PAL grassland (mg P/ kg)
 # evaluation soil pool (A+, A, B, C, D, E)
 spool <- c(1,8,14,25,40,90)
