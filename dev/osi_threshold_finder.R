@@ -25,6 +25,55 @@ findoptvalue <- function(spool, spoolopt,p0 = NULL) {
   return(xpar)
 }
 
+# Belgie PAL bouwland (mg P/kg)
+# evaluation soil pool (A+, A, B, C, D, E)
+spool <- c(1,5,9,18,30,75)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Finland (mg P/ L soil), P_AAA
+# evaluation soil pool (A+, A, B, C, D, E)
+spool <- c(1,2,6,(6+12)/2,13,45)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Belgie PAL grassland (mg P/ kg)
+# evaluation soil pool (A+, A, B, C, D, E)
+spool <- c(1,8,14,25,40,90)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany PCAL updated VDLUFA 2020, mg P/100g
+# evaluation soil pool sandy soil (A+, A, B, C, D, E)
+spool <- c(1,2,5,(6+10)/2,11,18)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany PCAL updated VDLUFA 2020, mg P/100g
+# evaluation soil pool clay soil (A+, A, B, C, D, E)
+spool <- c(1,2,4,(5+9)/2,10,16)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany PCAL updated VDLUFA 2020, mg P/100g
+# evaluation soil pool mineral soil high SOM (A+, A, B, C, D, E)
+spool <- c(1,2,6,(7+12)/2,13,20)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany PCAL updated VDLUFA 2020, mg P/100ml
+# evaluation soil pool peat (A+, A, B, C, D, E)
+spool <- c(1,1.1,2,(3+4)/2,5,13)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
 # Germany PCAL
 # evaluation soil pool (A+, A, B, C, D, E)
 spool <- c(1,5,10,20,35,45)
@@ -122,6 +171,20 @@ p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
 findoptvalue(spool,spoolopt,p0)
 
 # Austria P-CAL, 
+# evaluation soil pool (A+, A, B, C, D, E)
+spool <- c(1,25,(26+46)/2,(47+111),112,175)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Austria P-CAL, grassland, Bohner et al. (2013)
+# evaluation soil pool (A+, A, B, C, D, E)
+spool <- c(1,25,(26+46)/2,(47+68),69,175)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Austria P-CAL, ackerbou, Bohner et al. (2013)
 # evaluation soil pool (A+, A, B, C, D, E)
 spool <- c(1,25,(26+46)/2,(47+111),112,175)
 spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
@@ -1192,6 +1255,13 @@ findoptvalue(spool,spoolopt,p0)
 spool <- c(0.1,0.5,1.5,(2+6)/2,6.5,10)
 spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
 p0 <- list(b = 0.09371117, x0 =0.50, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Denmark, P-Olsen, https://link.springer.com/chapter/10.1007/978-94-017-7612-7_11/tables/2
+# evaluation soil pool (A+, A, B, C, D, E)
+spool <- c(1,5,20,(20+40),60,100)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
 findoptvalue(spool,spoolopt,p0)
 
 # denmark potassium, IFS

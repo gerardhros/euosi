@@ -12,7 +12,7 @@ test_that("osi_c_phosphor_nl works", {
   
   expect_equal(
     osi_c_phosphor_nl(B_LU = c(265,1019),A_P_AL = c(35,10),A_P_CC = c(2.5,0.5), A_P_WA = c(35,15)),
-    expected = c(0.94,0.20),
+    expected = c(0.94,0.96),
     tolerance = 0.01
   )
   

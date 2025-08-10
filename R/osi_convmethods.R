@@ -204,7 +204,7 @@ osi_conv_npmn <- function(A_N_RT, A_CLAY_MI, med_PMN = 51.9, med_NRT = 1425, med
 #' @param A_PH_CC (numeric) The pH measured in cacl2 
 #' 
 #' @references 
-#' Steinfurth et al., (2021) Conversion equations between Olsen-P and other methods used to assess plant available soil phosphorus in Europe – A review
+#' Steinfurth et al., (2021) Conversion equations between Olsen-P and other methods used to assess plant available soil phosphorus in Europe. A review
 #' 
 #' @export 
 osi_conv_phosphor <- function(element, 

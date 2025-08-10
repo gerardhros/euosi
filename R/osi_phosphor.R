@@ -190,8 +190,12 @@ osi_c_phosphor_at <- function(A_P_CAL,B_LU = NA_character_) {
   #             by.y = 'osi_threshold_soilcat',
   #             all.x = TRUE)
   
+  # temporary fix
+  dt[,crop_cat1 := fifelse(grepl('grass',B_LU),'grassland','arable')]
+  
   # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = A_P_CAL, b= 0.138491,x0 = 2.81405015,v = 0.01965865)]
+  dt[crop_cat1 =='arable',value := osi_evaluate_logistic(x = A_P_CAL, b= 0.138491,x0 = 2.81405015,v = 0.01965865)]
+  dt[crop_cat1 =='grassland',value := osi_evaluate_logistic(x = A_P_CAL, b= 0.13874251,x0 = 2.96274411,v = 0.01992203)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -208,7 +212,7 @@ osi_c_phosphor_at <- function(A_P_CAL,B_LU = NA_character_) {
 #' This function calculates the phosphorus availability. 
 #' 
 #' @param B_LU (character) The crop code
-#' @param A_P_AL (numeric) The exchangeable P-content of the soil measured via ammonium lactate extraction
+#' @param A_P_AL (numeric) The exchangeable P-content of the soil measured via ammonium lactate extraction (mg P/ kg)
 #' 
 #' @import data.table
 #' 
@@ -239,10 +243,10 @@ osi_c_phosphor_be <- function(B_LU, A_P_AL) {
   # get length of input arguments
   arg.length <- max(length(B_LU),length(A_P_AL))
   
-  # Collect the data into a table
+  # Collect the data into a table, convert from mg P/kg to units being used in Belgium (mg P/100g)
   dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_P_AL = A_P_AL,
+                   B_LU = as.character(B_LU),
+                   A_P_AL = A_P_AL * 0.1,
                    value = NA_real_)
   
   # merge crop properties
@@ -260,7 +264,8 @@ osi_c_phosphor_be <- function(B_LU, A_P_AL) {
               all.x = TRUE)
   
   # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = A_P_AL, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  dt[grepl('gras',crop_cat1),value := osi_evaluate_logistic(x = A_P_AL, b= 0.34526357,x0 = -5.8598799,v = 0.01086684)]
+  dt[grepl('arable',crop_cat1),value := osi_evaluate_logistic(x = A_P_AL, b= 0.22848283,x0 = -7.07661435,v = 0.01468356)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -418,38 +423,43 @@ osi_c_phosphor_cz <- function(A_P_M3,B_LU = NA_character_) {
 #' @param A_P_CAL (numeric) The P-content of the soil extracted with ammonium lactate(mg P / kg)
 #' @param A_P_DL (numeric) The P-content of the soil extracted with double lactate (mg P / kg)
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_de(B_LU = 265, A_SOM_LOI = 4.5, A_P_CAL = 45,A_P_DL = 5)
-#' osi_c_phosphor_de(B_LU = c(265,1019),A_SOM_LOI = c(3,3),
+#' osi_c_phosphor_de(B_LU = 265, A_SOM_LOI = 4.5, A_CLAY_MI = 5,A_P_CAL = 45,A_P_DL = 5)
+#' osi_c_phosphor_de(B_LU = c(265,1019),A_SOM_LOI = c(3,3),A_CLAY_MI = c(3,15),
 #' A_P_CAL = c(35,54),A_P_DL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Germany stimated from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_P_CAL = NA_real_, A_P_DL = NA_real_) {
+osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL = NA_real_, A_P_DL = NA_real_) {
   
   # add visual bindings
-  value1 = value2 = NULL
+  value1 = value2 = A_P_CAL2 = NULL
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
                    A_SOM_LOI= A_SOM_LOI,
-                   A_P_CAL = A_P_CAL * 2.29 * 0.1,
+                   A_P_CAL = A_P_CAL * 0.1, # in mg P/100g
+                   A_P_CAL2 = A_P_CAL * ((1 / (0.02525 * A_SOM_LOI + 0.6541))/10), #in mg P/100ml
                    A_P_DL = A_P_DL,
                    value1 = NA_real_,
                    value2 = NA_real_,
                    value = NA_real_)
   
   # evaluation conform VDLUFA for cropland and soil types
-  dt[!is.na(A_P_CAL), value1 := osi_evaluate_logistic(A_P_CAL, b = 0.2711, x0 = -5.9449, v = 0.0239)]
+  # with updated VDLUFA thresholds in 2020
+  dt[!is.na(A_P_CAL) & A_CLAY_MI <= 5 & A_SOM_LOI <= 8, value1 := osi_evaluate_logistic(A_P_CAL, b = 0.5996987, x0 =2.4412617, v = 0.3761158)]
+  dt[!is.na(A_P_CAL) & A_CLAY_MI > 5 & A_SOM_LOI <= 8, value1 := osi_evaluate_logistic(A_P_CAL, b = 0.68396217 , x0 =-1.84402293, v = 0.03343337)]
+  dt[!is.na(A_P_CAL) & A_SOM_LOI > 8 & A_SOM_LOI <=15, value1 := osi_evaluate_logistic(A_P_CAL, b = 0.5074791 , x0 =3.7313763, v = 0.5351896)]
   
-  # adjust for peat soils
-  dt[!is.na(A_P_CAL) & A_SOM_LOI > 20, value1 := osi_evaluate_logistic(A_P_CAL, b = 0.1743, x0 = 2.92395, v = 0.096079)]
+  # adjust for peat soils (mg P/ 100 ml soil)
+  dt[!is.na(A_P_CAL) & A_SOM_LOI > 15, value1 := osi_evaluate_logistic(A_P_CAL2, b = 1.61286938, x0 = -0.96990632, v = 0.01516823)]
   
   # evaluation conform VDLUFA for cropland and soil types
   dt[!is.na(A_P_DL), value2 := osi_evaluate_logistic(A_P_DL, b = 0.5357, x0 = -4.03796, v = 0.01856)]
@@ -488,7 +498,7 @@ osi_c_phosphor_dk <- function(B_LU, A_P_OL) {
                    value = NA_real_)
   
   # evaluation P-Olsen for cropland and soil types
-  dt[, value := osi_evaluate_logistic(A_P_OL, b = 0.226612, x0 = 30.137321,v = 1.247315)]
+  dt[, value := osi_evaluate_logistic(A_P_OL, b = 0.09574493, x0 = -21.16642269,v = 0.03619003)]
   
   # select value and return
   value <- dt[,value]
@@ -702,7 +712,7 @@ osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0) {
 #' @param B_LU (character) The crop code
 #' @param B_SOILTYPE_AGR (character) The soil type in a particular region. Optional.
 #' @param B_AER_FR (character) An agroeconomic region in France. Optional.
-#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P/ kg)
 #' @param A_PH_WA (numeric) The pH measured in water.
 #' 
 #' @import data.table
@@ -749,23 +759,30 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
   dt.soiltype <- as.data.table(euosi::osi_soiltype)
   
   # Check length of desired input
-  arg.length <- max(length(B_LU),length(A_P_OL),length(B_SOILTYPE_AGR), length(B_AER_FR))
+  arg.length <- max(length(B_LU),length(A_P_OL),length(B_SOILTYPE_AGR), length(B_AER_FR),length(A_PH_WA))
   
   # check the values (update the limits later via dt.parms)
   checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(dt.soiltype$osi_soil_cat1), empty.ok = FALSE)
-  checkmate::assert_character(B_AER_FR, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_AER_FR, choices = unique(dt.thresholds$osi_threshold_region), empty.ok = FALSE)
   checkmate::assert_numeric(A_P_OL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
+  checkmate::assert_numeric(A_PH_WA, lower = 1, upper = 10, any.missing = TRUE, len = arg.length)
+  
+  # check optional parameters 
+  if(sum(!is.na(B_SOILTYPE_AGR))>0){
+    checkmate::assert_character(B_SOILTYPE_AGR, any.missing = TRUE, min.len = 1, len = arg.length)
+    checkmate::assert_subset(B_SOILTYPE_AGR, choices = c(NA,unique(dt.soiltype$osi_soil_cat1)), empty.ok = FALSE)
+  }
+  if(sum(!is.na(B_AER_FR))>0){
+    checkmate::assert_character(B_AER_FR, any.missing = TRUE, min.len = 1, len = arg.length)
+    checkmate::assert_subset(B_AER_FR, choices = unique(dt.thresholds$osi_threshold_region), empty.ok = FALSE)
+  }
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    B_AER_FR = B_AER_FR,
-                   A_P_OL = A_P_OL,
+                   A_P_OL = A_P_OL * 2.291,
                    A_PH_WA = A_PH_WA,
                    value = NA_real_)
   
@@ -778,6 +795,7 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
   
   # estimate agricultural soil type
   dt[is.na(B_SOILTYPE_AGR), B_SOILTYPE_AGR := fifelse(A_PH_WA > 8,'craie','general')]
+  dt[is.na(B_SOILTYPE_AGR) & is.na(A_PH_WA), B_SOILTYPE_AGR := 'general']
   
   # merge thresholds
   dt <- merge(dt,
@@ -903,6 +921,9 @@ osi_c_phosphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,B_LU = NA_ch
 #' @export
 osi_c_phosphor_ie <- function(B_LU, A_P_OL) {
   
+  # add visual binding
+  cropcat1 = NULL
+  
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
@@ -910,11 +931,16 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL) {
                    value = NA_real_)
   
   # P index derived following P-Olsen.
+  
+  # temporary fix since crop codes are unknown
+  dt[grepl('grass',B_LU),cropcat1 := 'grassland']
+  dt[!grepl('grass',B_LU),cropcat1 := 'arable']
+  
   # evaluation soil P status for grasslands
-  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.6560111, x0 = 3.44709, v = 0.588379)]
+  dt[cropcat1 =='grassland', value := OBIC::evaluate_logistic(A_P_OL, b = 0.6560111, x0 = 3.44709, v = 0.588379)]
   
   # evaluation soil P status for other crops
-  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.50194, x0 = 3.91821, v = 0.5799892)]
+  dt[cropcat1 == 'arable', value := OBIC::evaluate_logistic(A_P_OL, b = 0.50194, x0 = 3.91821, v = 0.5799892)]
   
   # select value and return
   value <- dt[,value]
@@ -1108,9 +1134,9 @@ osi_c_phosphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
 #' This function calculates the phosphate availability. 
 #' 
 #' @param B_LU (numeric) The crop code
-#' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate
-#' @param A_P_CC (numeric) The P-content of the soil extracted with CaCl2
-#' @param A_P_WA (numeric) The P-content of the soil extracted with water
+#' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate (mg P/ kg)
+#' @param A_P_CC (numeric) The P-content of the soil extracted with CaCl2 (mg P/ kg)
+#' @param A_P_WA (numeric) The P-content of the soil extracted with water (mg P/ kg)
 #' 
 #' @import data.table
 #' 
@@ -1156,10 +1182,11 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
   checkmate::assert_data_table(dt.thresholds,max.rows = 1)
   
   # Collect the data into a table, convert to Dutch units
+  # assume 3.5% organic matter for the calculation of bulk density
   dt <- data.table(id = 1:arg.length,
                    A_P_AL = A_P_AL * 2.29 * 0.1,
                    A_P_CC = A_P_CC,
-                   A_P_WA = A_P_WA,
+                   A_P_WA = A_P_WA *(1 / (0.02525 * 3.5 + 0.6541))/0.43646,
                    B_LU = B_LU,
                    value = NA_real_
                   )
@@ -1173,7 +1200,7 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
   dt[grepl("gras",crop_cat1), value := pmax(0,log(A_P_CC) * (-0.0114 * A_P_AL + 2.5) + 0.0251 * A_P_CC + 2)]
   
   # Calculate the phosphate availability for maize (PBI)
-  dt[grepl("maize",crop_cat1), value := A_P_CC + 0.05 * (A_P_AL / A_P_CC)]
+  dt[grepl("maize",crop_cat1), value := A_P_CC + 0.05 * pmin(37,A_P_AL / A_P_CC)]
   
   # calculate the P-availability for arable systems, normalized to a scale with maximum around 6
   dt[grepl("arable",crop_cat1), value := A_P_WA * 0.1]
@@ -1348,23 +1375,31 @@ osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_) {
 #' @export
 osi_c_phosphor_se <- function(B_LU, A_P_AL) {
   
+  # add visual binding
+  cropcat1 = NULL
+  
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
                    A_P_AL = A_P_AL,
                    value = NA_real_)
   
+  # temporary fix for land uses
+  dt[grepl('maize|cere|whea',B_LU),cropcat1 := 'cereal']
+  dt[grepl('potato|sugar',B_LU),cropcat1 := 'potato']
+  dt[grepl('oil',B_LU),cropcat1 := 'oilcrop']
+  
   # evaluation soil P status III for maize and cereals
-  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
+  dt[cropcat1=='cereal', value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
   
   # evaluation soil P status II for hostvete
   dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.60458, x0 = 2.8517965, v = 0.0256494)]
   
   # evaluation soil P status III for oil crops
-  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
+  dt[cropcat1=='oilcrop', value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
   
   # evaluation soil P status IVA for potato and sugar beet
-  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.0695783, x0 = -27.867195, v = 0.0163328)]
+  dt[cropcat1 =='potato', value := OBIC::evaluate_logistic(A_P_AL, b = 0.0695783, x0 = -27.867195, v = 0.0163328)]
   
   # select value and return
   value <- dt[,value]
@@ -1549,10 +1584,13 @@ osi_c_phosphor_uk <- function(B_LU, A_SOM_LOI,A_P_OL) {
                    value = NA_real_)
   
   # merge with crop
-  dt <- merge(dt,
-              dt.crops[,.(B_LU, crop_name, crop_cat1)],
-              by = 'B_LU',
-              all.x = TRUE)
+  # dt <- merge(dt,
+  #             dt.crops[,.(B_LU, crop_name, crop_cat1)],
+  #             by = 'B_LU',
+  #             all.x = TRUE)
+  
+  # temporary fix
+  dt[,crop_name := B_LU]
   
   # P index derived following P-Olsen.
   

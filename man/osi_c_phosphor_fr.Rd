@@ -15,7 +15,7 @@ osi_c_phosphor_fr(
 \arguments{
 \item{B_LU}{(character) The crop code}
 
-\item{A_P_OL}{(numeric) The P-content of the soil extracted with Olsen}
+\item{A_P_OL}{(numeric) The P-content of the soil extracted with Olsen (mg P/ kg)}
 
 \item{B_SOILTYPE_AGR}{(character) The soil type in a particular region. Optional.}
 

@@ -4,12 +4,20 @@
 \alias{osi_c_phosphor_de}
 \title{Calculate the phosphate availability index in Germany}
 \usage{
-osi_c_phosphor_de(B_LU, A_SOM_LOI, A_P_CAL = NA_real_, A_P_DL = NA_real_)
+osi_c_phosphor_de(
+  B_LU,
+  A_SOM_LOI,
+  A_CLAY_MI,
+  A_P_CAL = NA_real_,
+  A_P_DL = NA_real_
+)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_SOM_LOI}{(numeric) The organic matter content of the soil (\%)}
+
+\item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
 
 \item{A_P_CAL}{(numeric) The P-content of the soil extracted with ammonium lactate(mg P / kg)}
 
@@ -22,8 +30,8 @@ The phosphate availability index in Germany stimated from extractable soil P fra
 This function calculates the phosphate availability.
 }
 \examples{
-osi_c_phosphor_de(B_LU = 265, A_SOM_LOI = 4.5, A_P_CAL = 45,A_P_DL = 5)
-osi_c_phosphor_de(B_LU = c(265,1019),A_SOM_LOI = c(3,3),
+osi_c_phosphor_de(B_LU = 265, A_SOM_LOI = 4.5, A_CLAY_MI = 5,A_P_CAL = 45,A_P_DL = 5)
+osi_c_phosphor_de(B_LU = c(265,1019),A_SOM_LOI = c(3,3),A_CLAY_MI = c(3,15),
 A_P_CAL = c(35,54),A_P_DL = c(3.5,5.5))
 
 }

@@ -9,7 +9,7 @@ osi_c_phosphor_be(B_LU, A_P_AL)
 \arguments{
 \item{B_LU}{(character) The crop code}
 
-\item{A_P_AL}{(numeric) The exchangeable P-content of the soil measured via ammonium lactate extraction}
+\item{A_P_AL}{(numeric) The exchangeable P-content of the soil measured via ammonium lactate extraction (mg P/ kg)}
 }
 \value{
 The phosphorus availability index in Belgium estimated from extractable phosphorus. A numeric value.
