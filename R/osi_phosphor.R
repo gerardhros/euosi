@@ -928,11 +928,16 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL) {
                    value = NA_real_)
   
   # P index derived following P-Olsen.
+  
+  # temporary fix since crop codes are unknown
+  dt[grepl('grass',B_LU),cropcat1 := 'grassland']
+  dt[!grepl('grass',B_LU),cropcat1 := 'arable']
+  
   # evaluation soil P status for grasslands
-  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.6560111, x0 = 3.44709, v = 0.588379)]
+  dt[cropcat1 =='grassland', value := OBIC::evaluate_logistic(A_P_OL, b = 0.6560111, x0 = 3.44709, v = 0.588379)]
   
   # evaluation soil P status for other crops
-  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.50194, x0 = 3.91821, v = 0.5799892)]
+  dt[cropcat1 == 'arable', value := OBIC::evaluate_logistic(A_P_OL, b = 0.50194, x0 = 3.91821, v = 0.5799892)]
   
   # select value and return
   value <- dt[,value]
@@ -1373,17 +1378,22 @@ osi_c_phosphor_se <- function(B_LU, A_P_AL) {
                    A_P_AL = A_P_AL,
                    value = NA_real_)
   
+  # temporary fix for land uses
+  dt[grepl('maize|cere|whea',B_LU),cropcat1 := 'cereal']
+  dt[grepl('potato|sugar',B_LU),cropcat1 := 'potato']
+  dt[grepl('oil',B_LU),cropcat1 := 'oilcrop']
+  
   # evaluation soil P status III for maize and cereals
-  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
+  dt[cropcat1=='cereal', value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
   
   # evaluation soil P status II for hostvete
   dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.60458, x0 = 2.8517965, v = 0.0256494)]
   
   # evaluation soil P status III for oil crops
-  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
+  dt[cropcat1=='oilcrop', value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
   
   # evaluation soil P status IVA for potato and sugar beet
-  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.0695783, x0 = -27.867195, v = 0.0163328)]
+  dt[cropcat1 =='potato', value := OBIC::evaluate_logistic(A_P_AL, b = 0.0695783, x0 = -27.867195, v = 0.0163328)]
   
   # select value and return
   value <- dt[,value]
@@ -1568,10 +1578,13 @@ osi_c_phosphor_uk <- function(B_LU, A_SOM_LOI,A_P_OL) {
                    value = NA_real_)
   
   # merge with crop
-  dt <- merge(dt,
-              dt.crops[,.(B_LU, crop_name, crop_cat1)],
-              by = 'B_LU',
-              all.x = TRUE)
+  # dt <- merge(dt,
+  #             dt.crops[,.(B_LU, crop_name, crop_cat1)],
+  #             by = 'B_LU',
+  #             all.x = TRUE)
+  
+  # temporary fix
+  dt[,crop_name := B_LU]
   
   # P index derived following P-Olsen.
   
