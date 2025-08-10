@@ -423,19 +423,20 @@ osi_c_phosphor_cz <- function(A_P_M3,B_LU = NA_character_) {
 #' @param A_P_CAL (numeric) The P-content of the soil extracted with ammonium lactate(mg P / kg)
 #' @param A_P_DL (numeric) The P-content of the soil extracted with double lactate (mg P / kg)
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_de(B_LU = 265, A_SOM_LOI = 4.5, A_P_CAL = 45,A_P_DL = 5)
-#' osi_c_phosphor_de(B_LU = c(265,1019),A_SOM_LOI = c(3,3),
+#' osi_c_phosphor_de(B_LU = 265, A_SOM_LOI = 4.5, A_CLAY_MI = 5,A_P_CAL = 45,A_P_DL = 5)
+#' osi_c_phosphor_de(B_LU = c(265,1019),A_SOM_LOI = c(3,3),A_CLAY_MI = c(3,15),
 #' A_P_CAL = c(35,54),A_P_DL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Germany stimated from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_P_CAL = NA_real_, A_P_DL = NA_real_) {
+osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL = NA_real_, A_P_DL = NA_real_) {
   
   # add visual bindings
   value1 = value2 = NULL
@@ -444,17 +445,21 @@ osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_P_CAL = NA_real_, A_P_DL = NA_re
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
                    A_SOM_LOI= A_SOM_LOI,
-                   A_P_CAL = A_P_CAL * 2.29 * 0.1,
+                   A_P_CAL = A_P_CAL * 0.1, # in mg P/100g
+                   A_P_CAL2 = A_P_CAL * ((1 / (0.02525 * A_SOM_LOI + 0.6541))/10), #in mg P/100ml
                    A_P_DL = A_P_DL,
                    value1 = NA_real_,
                    value2 = NA_real_,
                    value = NA_real_)
   
   # evaluation conform VDLUFA for cropland and soil types
-  dt[!is.na(A_P_CAL), value1 := osi_evaluate_logistic(A_P_CAL, b = 0.2711, x0 = -5.9449, v = 0.0239)]
+  # with updated VDLUFA thresholds in 2020
+  dt[!is.na(A_P_CAL) & A_CLAY_MI <= 5 & A_SOM_LOI <= 8, value1 := osi_evaluate_logistic(A_P_CAL, b = 0.5996987, x0 =2.4412617, v = 0.3761158)]
+  dt[!is.na(A_P_CAL) & A_CLAY_MI > 5 & A_SOM_LOI <= 8, value1 := osi_evaluate_logistic(A_P_CAL, b = 0.68396217 , x0 =-1.84402293, v = 0.03343337)]
+  dt[!is.na(A_P_CAL) & A_SOM_LOI > 8 & A_SOM_LOI <=15, value1 := osi_evaluate_logistic(A_P_CAL, b = 0.5074791 , x0 =3.7313763, v = 0.5351896)]
   
-  # adjust for peat soils
-  dt[!is.na(A_P_CAL) & A_SOM_LOI > 20, value1 := osi_evaluate_logistic(A_P_CAL, b = 0.1743, x0 = 2.92395, v = 0.096079)]
+  # adjust for peat soils (mg P/ 100 ml soil)
+  dt[!is.na(A_P_CAL) & A_SOM_LOI > 15, value1 := osi_evaluate_logistic(A_P_CAL2, b = 1.61286938, x0 = -0.96990632, v = 0.01516823)]
   
   # evaluation conform VDLUFA for cropland and soil types
   dt[!is.na(A_P_DL), value2 := osi_evaluate_logistic(A_P_DL, b = 0.5357, x0 = -4.03796, v = 0.01856)]
@@ -493,7 +498,7 @@ osi_c_phosphor_dk <- function(B_LU, A_P_OL) {
                    value = NA_real_)
   
   # evaluation P-Olsen for cropland and soil types
-  dt[, value := osi_evaluate_logistic(A_P_OL, b = 0.226612, x0 = 30.137321,v = 1.247315)]
+  dt[, value := osi_evaluate_logistic(A_P_OL, b = 0.09574493, x0 = -21.16642269,v = 0.03619003)]
   
   # select value and return
   value <- dt[,value]
