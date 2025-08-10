@@ -14,11 +14,11 @@ osi_c_phosphor_nl(
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
-\item{A_P_AL}{(numeric) The P-content of the soil extracted with ammonium lactate}
+\item{A_P_AL}{(numeric) The P-content of the soil extracted with ammonium lactate (mg P/ kg)}
 
-\item{A_P_CC}{(numeric) The P-content of the soil extracted with CaCl2}
+\item{A_P_CC}{(numeric) The P-content of the soil extracted with CaCl2 (mg P/ kg)}
 
-\item{A_P_WA}{(numeric) The P-content of the soil extracted with water}
+\item{A_P_WA}{(numeric) The P-content of the soil extracted with water (mg P/ kg)}
 }
 \value{
 The phosphate availability index in the Netherlands estimated from extractable soil P fractions. A numeric value.

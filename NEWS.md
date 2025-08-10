@@ -1,7 +1,16 @@
 # euosi 0.2.0 2025-08-08
 
-# Changed
-* vignettes updated 
+## Added
+* `osi_plot_shi` to plot the SHI score for one or more groups
+
+## Changed
+* vignette updated for `osi_c_phosphor` 
+* P threshold values for P-CAL in `osi_c_phosphor_de` given VDLUFA update in 2020
+* update threshold values for Belgium and Finland
+
+## Fixed
+* small bug fixes in `osi_c_phosphor_nl` for unrealistic PBI values
+* add temporary fixes for missing land use code for IE, SE, and UK where P-index depends on land use
 
 # euosi 0.1.0 2025-05-27
 

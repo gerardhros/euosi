@@ -439,7 +439,7 @@ osi_c_phosphor_cz <- function(A_P_M3,B_LU = NA_character_) {
 osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL = NA_real_, A_P_DL = NA_real_) {
   
   # add visual bindings
-  value1 = value2 = NULL
+  value1 = value2 = A_P_CAL2 = NULL
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -921,6 +921,9 @@ osi_c_phosphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,B_LU = NA_ch
 #' @export
 osi_c_phosphor_ie <- function(B_LU, A_P_OL) {
   
+  # add visual binding
+  cropcat1 = NULL
+  
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
@@ -1371,6 +1374,9 @@ osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_) {
 #' 
 #' @export
 osi_c_phosphor_se <- function(B_LU, A_P_AL) {
+  
+  # add visual binding
+  cropcat1 = NULL
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),

@@ -45,5 +45,5 @@ osi_conv_phosphor(
 Estimate soil extractable phosphorus (-)
 }
 \references{
-Steinfurth et al., (2021) Conversion equations between Olsen-P and other methods used to assess plant available soil phosphorus in Europe – A review
+Steinfurth et al., (2021) Conversion equations between Olsen-P and other methods used to assess plant available soil phosphorus in Europe. A review
 }

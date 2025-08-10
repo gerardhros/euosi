@@ -2,12 +2,16 @@
 #' 
 #' @param shi (numeric) A soil health indicator value estimated with euosi
 #' @param xpar (numeric) The soil property controlling the shi value
+#' @param xpar_label (character) The label to be printed on the x-axis of the plot
 #' @param pgroup (character) A grouping factor to show different responses of shi
 #' 
 #' @import ggplot2
 #' 
 #' @export
 osi_plot_shi <- function(shi, xpar, xpar_label ='soil indicator',pgroup = NULL){
+  
+  # add visual bindings
+  xmin = xmax = ymin = ymax = id = classUK = NULL
   
   # check length inputs
   arg.length <- max(length(shi),length(xpar),length(pgroup))
@@ -88,6 +92,8 @@ osi_plot_shi <- function(shi, xpar, xpar_label ='soil indicator',pgroup = NULL){
                 axis.title = element_text(size=9),
                 axis.text = element_text(size=9),
                 legend.margin=margin(0,5,0,0),
+                legend.spacing.y = unit(0.1, 'cm'),
+                legend.key.size = unit(0.2, "cm"),
                 legend.background = element_rect(color='white')) 
   }
   

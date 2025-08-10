@@ -20,7 +20,8 @@ Depends:
 Imports: 
     checkmate,
     data.table,
-    OBIC
+    OBIC,
+    ggplot2
 License: 
     GPL-3 + file LICENSE
 Encoding: UTF-8
@@ -30,7 +31,6 @@ Suggests:
     testthat (>= 2.1.0),
     knitr,
     rmarkdown,
-    ggplot2,
     patchwork,
     covr
 VignetteBuilder: knitr
