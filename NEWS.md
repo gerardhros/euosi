@@ -3,10 +3,13 @@
 ## Added
 * vignette `eu_osi_for_potassium` with an introduction to potassium
 * vignette `eu_osi_for_nitrogen` with an introduction to nitrogen
+* `dev/osi_crops_iacs.csv`, a crop table csv with standardized crop_codes across EU `osi_crops`, from #euosi-1
 
 ## Changed
 * `osi_b_pmn_nl` has now BoBi correction resulting in more variation due to texture
 * thresholds for evaluation soil N supply for `osi_c_nitrogen_de` and `osi_c_nitrogen_eu`
+* rename existing crop table csv to `dev/osi_crops_countrycode.csv`, from #euosi-1
+* update `osi_crops` package table to include all IACS crop codes, from #euosi-1
 
 ## Fixed
 * `osi_c_potassium_de` for wrong P soil test in German evaluation of K supply
