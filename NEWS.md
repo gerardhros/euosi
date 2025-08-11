@@ -1,3 +1,23 @@
+# euosi 0.3.0 2025-08-11
+
+## Added
+* vignette `eu_osi_introduction` with a short introduction
+* vignette `eu_osi_variables` with a summary of required input and output variables used
+* vignette `eu_osi_aggregation` to illustrate the aggregation method of the soil health assessment
+* `osi_field_dt` to run `osi_field` with a data.table as input
+* `osi_farm` as package table to illustrate functionality of euosi 
+* `osi_vars_input` and `osi_vars_input` as package tables, prepared in `dev/osi_tables.R`
+* `osi_farm` as package table with default inputs to illustrate functions of euosi
+
+## Changed
+* rename vignette on P to `eu_osi_for_phosphor`
+
+## Fixed
+* missing B_COUNTRY reference to K functions in `osi_field`
+
+## Removed
+* vignettes for B, Cu, Mg, N, pH, Zn and K given that these were more working documents than vignettes.
+
 # euosi 0.2.0 2025-08-08
 
 ## Added

@@ -28,7 +28,7 @@
 #' @param A_B_HW (numeric) The plant available content of B in the soil (mg  B per kg) extracted by hot water
 #' @param A_ZN_CC (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by CaCl2 
 #' @param A_ZN_EDTA (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by EDTA 
-#' @param output (character) An optional argument to select output: obic_score, scores, indicators, recommendations, or all. (default = all)
+#' @param output (character) An optional argument to select output: scores, indicators, or all. (default = all)
 #' 
 #' @details 
 #' It is assumed that the crop series is a continuous series in decreasing order of years. So most recent year first, oldest year last.
@@ -124,7 +124,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                                  A_K_AAA = A_K_AAA,A_K_AL = NA_real_,A_K_AN = NA_real_,A_K_CAL = NA_real_,A_K_CC = NA_real_,
                                  A_K_CO_PO = NA_real_,A_K_DL = NA_real_,A_K_M3 = NA_real_,A_K_NaAAA = NA_real_,
                                  A_K_WA = NA_real_,
-                                 B_COUNTRY)]
+                                 B_COUNTRY = B_COUNTRY)]
     
     # calculate OSI indicator for Mg supply
     dt[, i_c_mg := osi_c_magnesium(B_LU = B_LU,
@@ -231,7 +231,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                                  A_CEC_CO = A_CEC_CO, 
                                  A_K_AAA = A_K_AAA,A_K_AL = NA_real_,A_K_AN = NA_real_,A_K_CAL = NA_real_,A_K_CC = NA_real_,
                                  A_K_CO_PO = NA_real_,A_K_DL = NA_real_,A_K_M3 = NA_real_,A_K_NaAAA = NA_real_,
-                                 B_COUNTRY)]
+                                 B_COUNTRY = B_COUNTRY)]
     
  # --- aggregate indicators before scoring ----
   
@@ -316,7 +316,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
     # overwrite names
     setnames(out.score.cat2,
              old = c('biology', 'chemistry', 'climate', 'nutcycle', 'physics', 'water'),
-             new = c('s_euosi_prod_b','s_euosi_prod_c','s_euosi_clim','s_euosi_nutcycle','s_euosi_prod_p','s_eusi_water'),
+             new = c('s_euosi_prod_b','s_euosi_prod_c','s_euosi_clim','s_euosi_nutcycle','s_euosi_prod_p','s_euosi_water'),
              skip_absent = TRUE)
     
     # calculate weighing factor depending on number of indicators
@@ -340,11 +340,11 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
              new = c('s_euosi_ess_prod','s_euosi_ess_env','s_euosi_ess_clim','s_euosi_ess_nut','s_euosi_ess_water'),
              skip_absent = TRUE)
     
-    # calculate weighing factor depending on number of indicators
+    # calculate weighing factor depending on number of indicators  
     out.score[,cf := log(ncat + 1)]
     
     # calculate total score over all categories
-    out.score.total <- out.score[,list(s_bln_total = round(sum(value * cf / sum(cf[value >= 0])),3)),by= c('ID')]
+    out.score.total <- out.score[,list(s_euosi_total = round(sum(value * cf / sum(cf[value >= 0])),3)),by= c('ID')]
     
     # combine OSI subscores, BLN scores and BLN total score
     out.score.osi <- merge(out.score.cat1,
@@ -382,4 +382,69 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
   
   # return output
   return(out)
+}
+
+
+#' Calculate the OSI score for one field using a data.table as input
+#'
+#' This functions wraps the functions of the euosi into one main function to calculate the soil quality score for a single field. Whereas the function `osi_field` requires all variables as separate inputs, the function `osi_field_dt` allows one to send in a data.table
+#'
+#' @param dt (data.table) A data.table with all input required to calculate BLN on field level
+#' @param output (character) An optional argument to select output: scores, indicators, or all. (default = all)
+#'
+#' @export
+osi_field_dt <- function(dt, output ='all'){
+  
+  # check the input names
+  checkmate::assert_data_table(dt)
+  
+  # add default numeric variables when missing
+  cols <- c('B_PREC_SUM','B_PREC_WIN','B_PET_SUM','B_PET_WIN','B_TEMP_SUM','B_TEMP_WIN',
+            'A_ZN_EDTA')
+  cols <- cols[!cols %in% colnames(dt)]
+  if(length(cols)>0){dt[,c(cols):= NA_real_]}
+  
+  # add default categorial variables when missing
+  cols <- c('B_BGZ')
+  cols <- cols[!cols %in% colnames(dt)]
+  if(length(cols)>0){dt[,c(cols):= NA_character_]}
+  
+  # check whether all input variables are present
+  colsp <- c('ID',"B_COUNTRY","B_LU","B_SOILTYPE_AGR","B_PREC_SUM","B_PREC_WIN","B_PET_SUM",     
+             "B_PET_WIN","B_TEMP_SUM","B_TEMP_WIN","A_SOM_LOI","A_CLAY_MI","A_SAND_MI" ,    
+             "A_PH_CC","A_CACO3_IF","A_CEC_CO","A_C_OF","A_N_RT","A_N_PMN",       
+             "A_P_OL","A_K_AAA","A_B_HW","A_ZN_CC","A_MG_AAA")
+  checkmate::assert_true(all(colsp  %in% colnames(dt)))
+  
+  # run osi_field
+  d1 <- euosi::osi_field(B_LU = dt$B_LU,
+                         B_SOILTYPE_AGR = dt$B_SOILTYPE_AGR,
+                         B_COUNTRY = dt$B_COUNTRY, 
+                         B_BGZ = dt$B_BGZ,
+                         B_PREC_SUM = dt$B_PREC_SUM,
+                         B_PREC_WIN = dt$B_PREC_WIN, 
+                         B_PET_SUM = dt$B_PET_SUM,
+                         B_PET_WIN = dt$B_PET_WIN,
+                         B_TEMP_SUM = dt$B_TEMP_SUM,
+                         B_TEMP_WIN = dt$B_TEMP_WIN,
+                         A_CLAY_MI = dt$A_CLAY_MI,
+                         A_SAND_MI = dt$A_SAND_MI,
+                         A_SOM_LOI = dt$A_SOM_LOI, 
+                         A_C_OF= dt$A_C_OF,
+                         A_CEC_CO = dt$A_CEC_CO,
+                         A_PH_CC = dt$A_PH_CC, 
+                         A_CACO3_IF = dt$A_CACO3_IF,
+                         A_N_RT = dt$A_N_RT,
+                         A_N_PMN = dt$A_N_PMN,
+                         A_P_OL = dt$A_P_OL,
+                         A_K_AAA = dt$A_K_AAA,
+                         A_MG_AAA = dt$A_MG_AAA, 
+                         A_B_HW = dt$A_B_HW, 
+                         A_ZN_CC = dt$A_ZN_CC, 
+                         A_ZN_EDTA = dt$A_ZN_EDTA,
+                         ID = dt$ID, 
+                         output = output)
+  
+  # return output
+  return(d1)
 }

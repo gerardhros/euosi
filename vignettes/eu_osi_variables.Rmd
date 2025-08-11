@@ -1,0 +1,87 @@
+---
+title: "EU OSI variables"
+author: "Gerard H Ros"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{eu_osi_variables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+
+  # load packages
+  require(euosi); require(data.table)
+
+  # general settings
+  knitr::opts_chunk$set(echo = TRUE)
+  knitr::opts_chunk$set(collapse = TRUE,comment = "#>")
+  options(rmarkdown.html_vignette.check_title = FALSE)
+  
+  # to run manually
+  # devtools::load_all()
+```
+
+## euosi input variables
+The main function of the package `osi_field()` requires as input a series of soil properties required to assess the soil quality. 
+The required input columns are specified in `euosi::osi_vars_input` and can also be seen in the table below.
+
+Note that not all parameters are required. Optional parameters incude:
+
+* all country specific soil measurement methods: the `osi_field` function has been made given the main soil properties being available across Europe from the lUCAS monitoring network. Note that the optional input parameters can be used for the individual soil health function already, but not yet for the `osi_field` function.
+* climatic conditions (precipitation, evaporation and temperature) are set to defaults per country, but can be overwritten with user defined data
+
+
+All numeric input variables are described below:
+
+```{r table input1, echo=FALSE}
+desc_num <- osi_vars_input
+desc_num <- desc_num[!data_type == 'char',.(code,parameter,unit,min = value_min,max = value_max)]
+
+# knit table
+knitr::kable(desc_num)
+
+```
+
+All categorial input variables are described below:
+
+
+```{r table input2, echo=FALSE}
+desc_cat <- osi_vars_input
+desc_cat <- desc_cat[data_type == 'char',.(code,parameter,options = categories)]
+
+# adjust the properties: convert string to list
+desc_cat[,options2 := strsplit(options,split="||",fixed=T)]
+
+# remove cases from NL
+desc_cat <- desc_cat[!code %in% c('B_SOILTYPE_HELP','B_SOILTYPE_NL50')]
+
+# knit table
+knitr::kable(desc_cat[,.(code,parameter,options = options2)])
+
+```
+
+## euosi output variables
+When the function `osi_field` or `osi_field_dt` has been used to assess the quality of the soil, then by default all soil indicators and BLN soil quality scores are calculated. A soil indicator is a number varying between zero (value 0) and one (value 1) expressing the distance to target. The target is met when the distance equals to 1. There are serious bottlenecks when the indicator value approaches zero. Similarly, a high score represents a high soil quality. Soil quality scores are basically a weighted mean of a subset of soil indicators, where the weighing procedure accounts for the distance to target.
+
+All output variables are listed in the table below:
+
+
+```{r table output, echo=FALSE}
+outdesc <- euosi::osi_vars_output
+knitr::kable(outdesc)
+```
+
+
+## Adding new variables
+When one aims to add new input or output variables, the following steps need to be taken:
+
+* new input variables can be defined in the `dev/osi_parameters.csv`. Please follow the same definition style. When the file is updated, run the relevant section in `dev/osi_tables.R` for the tables `osi_parms`, `osi_vars_input` and `osi_vars_output`. 
+* ensure that the R code is updated for the country specific function as well the wrapper functions `osi_field` and `osi_field_dt`.
+
+Regarding paramater naming:
+
+* soil properties measured in the lab follow a fixed structure. It always start with "A", followed by the chemical element like "P" for phosphorus, followed by the extraction method abbreviation like "AL" for ammonium lactate. The fourth position is free to use when the element has specific aspects not covered by the first three positions. So, for the given example, this leads to "A_P_AL". For a full list of the current inputs, see `osi_vars_input`.
+* field or site properties follow the same structure. It starts with "B" followed by the parameter determined (e.g. "TEXTURE"), followed by the methods (e.g. "HYPRES"). 
+

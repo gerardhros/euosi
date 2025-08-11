@@ -48,7 +48,7 @@
   dt[, A_CEC_CO := NA_real_]
   dt[, A_C_OF := A_SOM_LOI * 10 * 0.5]  
   dt[, A_N_RT := A_C_OF *1000/ rnorm(.N,mean=12,sd=1)]  
-  dt[, A_N_PMN := NA_real_]
+  dt[, A_N_PMN := exp(-3.440931 + 1.1012449 * log(A_N_RT) - 0.055858 * log(A_CLAY_MI))]
   dt[, A_P_OL := rnorm(.N,mean=25,sd=8)]
   dt[, A_K_AAA := rnorm(.N, mean =75, sd = 12)]
   dt[, A_B_HW := rnorm(.N,mean = 0.4, sd = 0.05)]
@@ -57,8 +57,64 @@
   dt[,ID := fieldid]  
 
   
+  dt.test <- osi_field(B_LU = dt$B_LU,
+                        B_SOILTYPE_AGR = dt$B_SOILTYPE_AGR,
+                        B_COUNTRY = dt$B_COUNTRY, 
+                        B_BGZ = NA_character_,
+                        B_PREC_SUM = dt$B_PREC_SUM,
+                        B_PREC_WIN = dt$B_PREC_WIN, 
+                        B_PET_SUM = dt$B_PET_SUM,
+                        B_PET_WIN = dt$B_PET_WIN,
+                        B_TEMP_SUM = dt$B_TEMP_SUM,
+                        B_TEMP_WIN = dt$B_TEMP_WIN,
+                        A_CLAY_MI = dt$A_CLAY_MI,
+                        A_SAND_MI = dt$A_SAND_MI,
+                        A_SOM_LOI = dt$A_SOM_LOI, 
+                        A_C_OF= dt$A_C_OF,
+                        A_CEC_CO = dt$A_CEC_CO,
+                        A_PH_CC = dt$A_PH_CC, 
+                        A_CACO3_IF = dt$A_CACO3_IF,
+                        A_N_RT = dt$A_N_RT,
+                        A_N_PMN = dt$A_N_PMN,
+                        A_P_OL = dt$A_P_OL,
+                        A_K_AAA = dt$A_K_AAA,
+                        A_MG_AAA = dt$A_MG_AAA, 
+                        A_B_HW = dt$A_B_HW, 
+                        A_ZN_CC = dt$A_ZN_CC, 
+                        A_ZN_EDTA = NA_real_,
+                        ID = dt$ID, 
+                        output = 'all')
   
-  # select input osi_c_nitrogen
+  # select all inputs
+  B_LU = dt$B_LU
+  B_SOILTYPE_AGR = dt$B_SOILTYPE_AGR
+  B_COUNTRY = dt$B_COUNTRY
+  B_BGZ = NA_character_
+  B_PREC_SUM = dt$B_PREC_SUM
+  B_PREC_WIN = dt$B_PREC_WIN
+  B_PET_SUM = dt$B_PET_SUM
+  B_PET_WIN = dt$B_PET_WIN
+  B_TEMP_SUM = dt$B_TEMP_SUM
+  B_TEMP_WIN = dt$B_TEMP_WIN
+  A_CLAY_MI = dt$A_CLAY_MI
+  A_SAND_MI = dt$A_SAND_MI
+  A_SOM_LOI = dt$A_SOM_LOI
+  A_C_OF= dt$A_C_OF
+  A_CEC_CO = dt$A_CEC_CO
+  A_PH_CC = dt$A_PH_CC
+  A_CACO3_IF = dt$A_CACO3_IF
+  A_N_RT = dt$A_N_RT
+  A_N_PMN = dt$A_N_PMN
+  A_P_OL = dt$A_P_OL
+  A_K_AAA = dt$A_K_AAA
+  A_MG_AAA = dt$A_MG_AAA
+  A_B_HW = dt$A_B_HW
+  A_ZN_CC = dt$A_ZN_CC
+  A_ZN_EDTA = NA_real_
+  ID = dt$ID
+  output = 'all'
+  
+  
   B_LU = dt$B_LU
   B_SOILTYPE_AGR = dt$B_SOILTYPE_AGR
   A_CLAY_MI = dt$A_CLAY_MI
@@ -75,6 +131,10 @@
   A_P_OL = dt$A_P_OL
   A_B_HW = dt$A_B_HW
   
+  # test pH
+  A_CA_CO_PO = NA_real_; A_MG_CO_PO = NA_real_;A_K_CO_PO = NA_real_
+  A_NA_CO_PO = NA_real_;
+  A_PH_WA = NA_real_; A_PH_KCL= NA_real_
   
   # test P
   A_P_AAA = NA_real_
