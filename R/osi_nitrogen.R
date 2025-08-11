@@ -147,7 +147,7 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
+                   B_LU = as.character(B_LU),
                    A_SAND_MI = A_SAND_MI,
                    A_CLAY_MI = A_CLAY_MI,
                    A_C_OF = A_C_OF,
@@ -264,8 +264,8 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
   # correction per soil type (being related to losses)
   dt[,NSCPS := (1- cf1) * NSCPS]
   
-  # run default NSC calculation (optimum around 100 kg N/ ha)
-  dt[, value := osi_evaluate_logistic(x = NSCPS, b = 0.05, x0 = -18, v = 0.859)]
+  # run default NSC calculation for Nmin in springg (optimum around 100 kg N/ ha)
+  dt[, value := osi_evaluate_logistic(x = NSCPS, b =   0.13683559, x0 = -14.84508232, v =  0.03487421)]
   
   # select calculated NSC
   value <- dt[,value]
@@ -543,11 +543,17 @@ osi_c_nitrogen_eu <- function(B_LU = NA_character_,
   # set annual decomposition rate of 2%
   dt[, arate := 0.02]
   
-  # estimate N supply for top 30 cm soil layer, set at max at 400 kg / yr
-  dt[, NSC := pmin(400,(100 * 100 * 0.3 * BD) * A_N_RT * arate * 0.001 * 0.001)]
+  # estimate N supply for top 30 cm soil layer, set at max at 600 kg / yr
+  dt[, NSC := pmin(600,(100 * 100 * 0.3 * BD) * A_N_RT * arate * 0.001 * 0.001)]
   
-  # convert to OSI score, optimum is 125 kg N / ha / yr
-  dt[, value := osi_evaluate_logistic(x = NSC, b = 0.04856090, x0 = -17.79554596,v= 0.08588367)]
+  # assume that 25% is mineralized in winter, and available in pre-season
+  dt[, NSCPS := 0.25 * NSC]
+  
+  # correction for losses (a generic 50%)
+  dt[, NSCPS := (1- 0.5) * NSCPS]
+  
+  # convert to OSI score, optimum is 40 kg N / ha / yr in spring
+  dt[, value := osi_evaluate_logistic(x = NSC, b =   0.13683559, x0 = -14.84508232, v =  0.03487421)]
   
   # select output variable
   out <- dt[,value]
