@@ -61,13 +61,17 @@
 
 # make crop table with crop data for France, Belgium, Finland and the Netherlands
   
-  # load crop datat
-  osi_crops <-  fread('dev/osi_crops.csv',encoding = 'UTF-8',na.strings = c(NA_character_, "","NA"))
+  # load crop data with crop codes per country
+  osi_crops1 <- fread('dev/osi_crops_countrycode.csv',encoding = 'UTF-8',na.strings = c(NA_character_, "","NA"))
   
-  # select only selected categories
-  osi_crops <- osi_crops[,.(osi_country,crop_code,crop_name,crop_cat1,crop_cat2,
-                            crop_n,crop_p,crop_k,crop_c,crop_s,crop_crumbleability)]
+  # load crop data with crop codes standardized from IACS data
+  osi_crops2 <- fread('dev/osi_crops_iacs.csv',encoding = 'UTF-8',na.strings = c(NA_character_, "","NA"))
   
+  # combine both
+  osi_crops <- rbind(osi_crops1[,.(osi_country,crop_code,crop_name,crop_cat1,crop_cat2,
+                                  crop_n,crop_p,crop_k,crop_c,crop_s,crop_crumbleability)],
+                     osi_crops2[,.(osi_country,crop_code,crop_name,crop_cat1,crop_cat2,
+                                   crop_n,crop_p,crop_k,crop_c,crop_s,crop_crumbleability)])
   # save updated crop table
   usethis::use_data(osi_crops,overwrite = TRUE)
 
