@@ -237,7 +237,7 @@ osi_c_ph_be <- function(B_LU, B_TEXTURE_BE, A_PH_KCL) {
                    B_LU = B_LU,
                    B_TEXTURE_BE = B_TEXTURE_BE,
                    A_PH_KCL = A_PH_KCL,
-                   B_SOILTYPE_AGR = NA_real_,
+                   B_SOILTYPE_AGR = NA_character_,
                    value = NA_real_)
   
   # set soil type to categories
