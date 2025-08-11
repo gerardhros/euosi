@@ -80,7 +80,7 @@ osi_b_pmn <- function(B_LU, B_SOILTYPE_AGR,A_CLAY_MI = NA_real_, A_N_PMN = NA_re
 osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
   
   # add visual bindings
-  osi_country = osi_indicator = crop_code = NULL
+  osi_country = osi_indicator = crop_code = osi_b_pmn = NULL
   
   # Load in the crops data set and the parms dataset
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -102,14 +102,46 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
   checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(euosi::osi_soiltype$osi_soil_cat1), empty.ok = FALSE)
   checkmate::assert_data_table(dt.thresholds,max.rows = 1)
   
-  # calculate the PMN value for the Netherlands using the Dutch OBIC
-  value <- OBIC::calc_pmn(B_LU_BRP = as.integer(B_LU), B_SOILTYPE_AGR = B_SOILTYPE_AGR, A_N_PMN = A_N_PMN)
-
+  # make internal data.table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = as.integer(B_LU),
+                   A_N_PMN = A_N_PMN,
+                   B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                   value = NA_real_
+                   )
+  
+  # merge with crop_category  
+  dt <- merge(dt, 
+              dt.crops[, list(crop_code = as.integer(crop_code), crop_cat1)], 
+              by.x = "B_LU", 
+              by.y = "crop_code", 
+              all.x = TRUE)
+  
+  # OBIC normalization of measured data on sector and soil averaged BOBI measurements
+  dt[crop_cat1 %in% c('maize','grassland') & grepl('klei|loess',B_SOILTYPE_AGR), cf := 137 / 120]
+  dt[crop_cat1 %in% c('maize','grassland') & grepl('veen',B_SOILTYPE_AGR), cf := 1]
+  dt[crop_cat1 %in% c('maize','grassland') & grepl('zand|dal',B_SOILTYPE_AGR), cf := 84 / 89]
+  dt[crop_cat1 %in% 'arable' & grepl('zand|dal',B_SOILTYPE_AGR), cf := 37 / 45]
+  dt[crop_cat1 %in% 'arable' & grepl('klei|loess',B_SOILTYPE_AGR), cf := 22 / 42]
+  
+  # Calculate PMN index for soil fertility
+  dt[, value := A_N_PMN * cf]
+  
+  # PMN values above 500 are very unlikely, so maximize the PMN-index
+  dt[value > 500, value := 500]
+  
   # convert to OSI score
-  value <- osi_evaluate_logistic(x = value,
-                                 b = dt.thresholds$osi_st_c1, 
-                                 x0 = dt.thresholds$osi_st_c2,
-                                 v = dt.thresholds$osi_st_c3)
+  dt[, osi_b_pmn := osi_evaluate_logistic(x = value,
+                                          b = dt.thresholds$osi_st_c1, 
+                                          x0 = dt.thresholds$osi_st_c2,
+                                          v = dt.thresholds$osi_st_c3)]
+  
+  # setorderid
+  setorder(dt,id)
+  
+  # get value
+  value <- dt[,osi_b_pmn]
+  
   # return value
   return(value)
 }
