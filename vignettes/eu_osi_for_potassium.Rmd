@@ -19,7 +19,7 @@ vignette: >
   options(rmarkdown.html_vignette.check_title = FALSE)
   setDTthreads(1)
 
-  devtools::load_all()
+  # devtools::load_all()
 ```
 
 ## Introduction
@@ -29,7 +29,7 @@ ffective management of potassium (K) nutrition begins with understanding the amo
 
 Potassium in the soil solution is the only mobile and immediately available form for plants, representing roughly 0.02% to 2% of the total soil K. Exchangeable K, while not mobile, can be released from cation exchange sites into the soil solution, making up about 1% to 3% of total K. The vast majority—around 95% to 98%—exists in insoluble forms bound within soil minerals, making it unavailable to plants. Over long periods, weathering gradually releases K from these minerals into more available forms. Certain microorganisms can also enhance K availability from the mineral pool by producing organic acids that solubilize mineral-bound K, increasing its accessibility for plant uptake.
 
-The [European Open Soil Index](https://gerardhros.github.io/euosi/) assesses the soil function for P supply using the agronomic knowledge base as being used in the various EU countries. The soil P supply is transformed into an unitless indicator score ranging between zero (poor quality) and one (optimum quality). This indicator score reflects the ‘distance to target’ (i.e. difference between the current and optimum situation, while ensuring that other soil functions are not limiting). The further it deviates from score 1, the poorer the soil function works. An indicator value of 0.5 approximately corresponds to the threshold level of the fertilization guidelines under which (additional) fertilization is recommended (given the ‘buildup and maintenance’ approach as being implemented in fertilizer recommendation systems). Overall, the indicator value can be interpreted as good (>0.75), sufficient (0.5-0.75), and poor (<0.5).
+The [European Open Soil Index](https://gerardhros.github.io/euosi/) assesses the soil function for P supply using the agronomic knowledge base as being used in the various EU countries. The soil P supply is transformed into an unitless indicator score ranging between zero (poor quality) and one (optimum quality). This indicator score reflects the ‘distance to target’ (i.e. difference between the current and optimum situation, while ensuring that other soil functions are not limiting). The further it deviates from score 1, the poorer the soil function works. An indicator value of 0.5 approximately corresponds to the lower threshold level of the fertilization guidelines under which (additional) fertilization is recommended (given the ‘buildup and maintenance’ approach as being implemented in fertilizer recommendation systems). Overall, the indicator value can be interpreted as good (>0.75), sufficient (0.5-0.75), and poor (<0.5).
 
 ## The soil K wrapper function
 In euosi package has a wrapper function to assess the soil health index for the soil K supply in agricultural soils across Europe. The wrapper function is `osi_c_potassium` and has the following inputs:
@@ -63,7 +63,7 @@ The wrapper function wraps country specific K assessment functions. These are il
 
 
 ## Austria (AT)
-The poatssium supply in view of soil health can be calculated using `osi_c_potassium_at` using the following inputs:
+The potassium supply in view of soil health can be calculated using `osi_c_potassium_at` using the following inputs:
 
 * B_LU, being the crop code, an unique number for each crop
 * A_K_CAL, being the extracted K content with calcium ammonium lactate, unit mg K /kg.

@@ -43,7 +43,7 @@ More information on the input and ouput variables are documented in a separate v
 
 ```{r make data,echo=TRUE}
 
-# select the data for de Mare farm
+# select the data for de euosi farm
 dt.of <- copy(euosi::osi_farm)
 
 # show the first line with all properties for a single field and latest year

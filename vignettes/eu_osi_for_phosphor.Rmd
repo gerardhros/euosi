@@ -29,8 +29,7 @@ Assessments of the soil health in view of phosphorus usually follow the agronomi
 
 Routine agronomic soil P tests have in common that they make use of extraction methods to determine a certain fraction of total soil P that is correlated to crop response. The extracted amount of P varies with the nature of the extraction solution and methodological factors such as soil pretreatment, the soil-to-solution ratio and the analytical technique used for P measurement. For measuring readily available P forms that can be taken up by the crop in the short-term, soil P tests (referred to as P intensity methods) such as the 0.01 M CaCl2 and the water extraction method can be used. For the measurement of labile or moderately strong bound P (referred to as P quantity methods), extractions with acid ammonium acetate-lactate (P-AL), Mehlich3 and sodium bicarbonate (P-Olsen) can be used.
 
-The European Open Soil Index assesses the soil function for P supply using the agronomic knowledge base as being used in the various EU countries. The soil P supply is transformed into an unitless indicator score ranging between zero (poor quality) and one (optimum quality). This indicator score reflects the ‘distance to target’ (i.e. difference between the current and optimum situation, while ensuring that other soil functions are not limiting). The further it deviates from score 1, the poorer the soil function works. An indicator value of 0.5 approximately corresponds to the threshold level of the fertilization guidelines under which (additional) fertilization is
-recommended (given the ‘buildup and maintenance’ approach as being implemented in fertilizer recommendation systems). Overall, the indicator value can be interpreted as good (>0.75), sufficient (0.5-0.75), and poor (<0.5).
+The European Open Soil Index assesses the soil function for P supply using the agronomic knowledge base as being used in the various EU countries. The soil P supply is transformed into an unitless indicator score ranging between zero (poor quality) and one (optimum quality). This indicator score reflects the ‘distance to target’ (i.e. difference between the current and optimum situation, while ensuring that other soil functions are not limiting). The further it deviates from score 1, the poorer the soil function works. An indicator value of 0.5 approximately corresponds to the lower threshold level of the fertilization guidelines under which (additional) fertilization is recommended (given the ‘buildup and maintenance’ approach as being implemented in fertilizer recommendation systems). Overall, the indicator value can be interpreted as good (>0.75), sufficient (0.5-0.75), and poor (<0.5).
 
 ## The soil P wrapper function
 In euso package has a wrapper function to assess the soil health index for the soil P supply in agricultural soils across Europe. The wrapper function is `osi_c_phosphor` and has the following inputs:
@@ -374,7 +373,7 @@ An example of the `osi_c_phosphor_fr` function is illustrated below for potato (
 
 ```{r example FR1, echo = TRUE}
 
-# show an example for soil P asssesment for sugar beet crop (code = 91) and grassland (code = 60)
+# show an example for soil P asssesment for potato crop (code = PTC) and grassland (code = PRL)
 c(osi_c_phosphor_fr(B_LU = 'PTC', A_P_OL = 20),
   osi_c_phosphor_fr(B_LU = 'PRL', A_P_OL = 20))
 
