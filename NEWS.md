@@ -1,4 +1,18 @@
-# euosi 0.4.0 UNRELEASED
+# euosi 0.4.0 2025-08-12
+
+## Added
+* vignette `eu_osi_for_potassium` with an introduction to potassium
+* vignette `eu_osi_for_nitrogen` with an introduction to nitrogen
+
+## Fixed
+* `osi_c_potassium_de` for wrong P soil test in German evaluation of K supply
+* `osi_c_potassium_lv` for wrong USDA soil classification for sand
+* `osi_c_potassium_nl` for wrong reference to internal dt.maize subset
+* `osi_c_potassium_uk` uses temporary crop name fix 
+
+## Changed
+* `osi_b_pmn_nl` has now BoBi correction resulting in more variation due to texture
+* thresholds for evaluation soil N supply for `osi_c_nitrogen_de` and `osi_c_nitrogen_eu`
 
 # euosi 0.3.0 2025-08-11
 

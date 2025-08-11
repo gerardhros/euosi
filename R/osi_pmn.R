@@ -81,6 +81,7 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
   
   # add visual bindings
   osi_country = osi_indicator = crop_code = osi_b_pmn = NULL
+  crop_cat1 = cf = id = NULL
   
   # Load in the crops data set and the parms dataset
   dt.crops <- as.data.table(euosi::osi_crops)
