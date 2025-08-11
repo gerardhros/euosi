@@ -1,7 +1,18 @@
-# euosi 0.3.0 UNRELEASED
+# euosi 0.3.0 2025-08-11
 
 ## Added
-* introduction vignette
+*  vignette `eu_osi_introduction` with a short introduction
+* `osi_field_dt` to run `osi_field` with a data.table as input
+* `osi_farm` as package table to illustrate functionality of euosi 
+
+## Changed
+* rename vignette on P to `eu_osi_for_phosphor`
+
+## Fixed
+* missing B_COUNTRY reference to K functions in `osi_field`
+
+## Removed
+* vignettes for B, Cu, Mg, N, pH, Zn and K given that these were more working documents than vignettes.
 
 # euosi 0.2.0 2025-08-08
 
