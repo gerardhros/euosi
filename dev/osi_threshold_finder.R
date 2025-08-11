@@ -46,6 +46,88 @@ spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
 p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
 findoptvalue(spool,spoolopt,p0)
 
+# Germany K-CAL updated via Thuringen. mg K/100g, cropland
+# evaluation soil 1 (A+, A, B, C, D, E)
+spool <- c(1,2,(3+6)/2,(7+10)/2,(11+15)/2,21*1.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.4488277, x0 = 9.718321, v = 1.254134)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany K-CAL updated via Thuringen. mg K/100g, cropland
+# evaluation soil 2 (A+, A, B, C, D, E)
+spool <- c(1,3,(4+7)/2,(8+11)/2,(12+18)/2,19*1.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.4488277, x0 = 9.718321, v = 1.254134)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany K-CAL updated via Thuringen. mg K/100g, cropland
+# evaluation soil 3 (A+, A, B, C, D, E)
+spool <- c(1,4,(5+9)/2,(10+14)/2,(15+22)/2,23*1.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.4488277, x0 = 9.718321, v = 1.254134)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany K-CAL updated via Thuringen. mg K/100g, cropland
+# evaluation soil 4 (A+, A, B, C, D, E)
+spool <- c(1,5,(6+10)/2,(11+16)/2,(17+25)/2,26*1.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.4488277, x0 = 9.718321, v = 1.254134)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany K-CAL updated via Thuringen. mg K/100g, cropland
+# evaluation soil 5 (A+, A, B, C, D, E)
+spool <- c(1,7,(8+14)/2,(15+23)/2,(24+36)/2,37*1.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.4488277, x0 = 9.718321, v = 1.254134)
+findoptvalue(spool,spoolopt,p0)
+
+# evaluation soil 6 (A+, A, B, C, D, E), cropland
+spool <- c(1,4,(5+9)/2,(10+16)/2,(17+24)/2,31*1.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.4488277, x0 = 9.718321, v = 1.254134)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany K-CAL updated via Thuringen. mg K/100g, grassland
+# evaluation soil 1 (A+, A, B, C, D, E)
+spool <- c(1,2,(3+6)/2,(7+11)/2,(12+18)/2,21*1.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.4488277, x0 = 9.718321, v = 1.254134)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany K-CAL updated via Thuringen. mg K/100g, grassland
+# evaluation soil 2 (A+, A, B, C, D, E)
+spool <- c(1,3,(4+7)/2,(8+12)/2,(13+21)/2,22*1.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.4488277, x0 = 9.718321, v = 1.254134)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany K-CAL updated via Thuringen. mg K/100g, grassland
+# evaluation soil 3 (A+, A, B, C, D, E)
+spool <- c(1,3,(4+8)/2,(9+14)/2,(15+24)/2,25*1.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.4488277, x0 = 9.718321, v = 1.254134)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany K-CAL updated via Thuringen. mg K/100g, grassland
+# evaluation soil 4 (A+, A, B, C, D, E)
+spool <- c(1,4,(5+9)/2,(10+16)/2,(17+26)/2,27*1.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.4488277, x0 = 9.718321, v = 1.254134)
+findoptvalue(spool,spoolopt,p0)
+
+# Germany K-CAL updated via Thuringen. mg K/100g, grassland
+# evaluation soil 5 (A+, A, B, C, D, E)
+spool <- c(1,5,(+10)/2,(11+16)/2,(17+24)/2,25*1.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.4488277, x0 = 9.718321, v = 1.254134)
+findoptvalue(spool,spoolopt,p0)
+
+# evaluation soil 6 (A+, A, B, C, D, E), grassland
+spool <- c(1,4,(+10)/2,(11+16)/2,(17+24)/2,25*1.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.4488277, x0 = 9.718321, v = 1.254134)
+findoptvalue(spool,spoolopt,p0)
+
 # Germany PCAL updated VDLUFA 2020, mg P/100g
 # evaluation soil pool sandy soil (A+, A, B, C, D, E)
 spool <- c(1,2,5,(6+10)/2,11,18)
