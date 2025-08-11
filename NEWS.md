@@ -1,4 +1,4 @@
-# euosi 0.1.1 2025-08-07
+# euosi 0.1.1 UNRELEASED
 
 ## Changed
 * updated `osi_crops`
