@@ -156,6 +156,13 @@ spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
 p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
 findoptvalue(spool,spoolopt,p0)
 
+# Germany nitrogen, N supply for Nmin in spring
+# evaluation soil pool sandy soil (A+, A, B, C, D, E)
+spool <- c(1,10,35,85,100,150)*0.4
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
 # Germany PCAL
 # evaluation soil pool (A+, A, B, C, D, E)
 spool <- c(1,5,10,20,35,45)
