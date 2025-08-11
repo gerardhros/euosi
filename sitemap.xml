@@ -1,16 +1,11 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://gerardhros.github.io/euosi/404.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/LICENSE-text.html</loc></url>
-<url><loc>https://gerardhros.github.io/euosi/articles/description_osi_boron.html</loc></url>
-<url><loc>https://gerardhros.github.io/euosi/articles/description_osi_copper.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/articles/description_osi_crops_table.html</loc></url>
-<url><loc>https://gerardhros.github.io/euosi/articles/description_osi_magnesium.html</loc></url>
-<url><loc>https://gerardhros.github.io/euosi/articles/description_osi_nitrogen.html</loc></url>
-<url><loc>https://gerardhros.github.io/euosi/articles/description_osi_parameters_france.html</loc></url>
-<url><loc>https://gerardhros.github.io/euosi/articles/description_osi_ph.html</loc></url>
-<url><loc>https://gerardhros.github.io/euosi/articles/description_osi_phosphor.html</loc></url>
-<url><loc>https://gerardhros.github.io/euosi/articles/description_osi_potassium.html</loc></url>
-<url><loc>https://gerardhros.github.io/euosi/articles/description_osi_zinc.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/articles/eu_osi_aggregation.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/articles/eu_osi_for_phosphor.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/articles/eu_osi_introduction.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/articles/eu_osi_variables.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/articles/index.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/authors.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/index.html</loc></url>
@@ -137,7 +132,9 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_evaluate_logistic.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_evaluate_logistic_gaus_down.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_evaluate_parabolic.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_farm.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_field.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_field_dt.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_get_TEXTURE_BE.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_get_TEXTURE_GEPPA.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_get_TEXTURE_HYPRES.html</loc></url>
@@ -202,6 +199,8 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_plot_shi.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_soiltype.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_thresholds.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_vars_input.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_vars_output.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/pF_curve.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/pFpara_class.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/pFpara_ptf_Wosten1999.html</loc></url>
