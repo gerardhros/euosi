@@ -112,3 +112,70 @@
   # save updated weather data table
   usethis::use_data(osi_clim,overwrite = TRUE)
   
+# make output and input overview of variables
+  
+  # make oject with EU OSI input variables for main OSI field function
+  dp <- osi_parms[,.(code = osi_parm_name,
+                     parameter = osi_parm_description,
+                     unit = osi_parm_unit,
+                     data_type = osi_parm_data_type,	
+                     value_min = osi_parm_min,
+                     value_max = osi_parm_max,
+                     categories = osi_parm_options)]
+  
+  # copy as bln_column_description
+  osi_vars_input <- copy(dp)
+  
+  # save output variables
+  usethis::use_data(osi_vars_input,overwrite = TRUE)
+  
+  # make object with EU OSI output variables
+  
+  cols <- c("i_b_biodiv","i_b_pmn","i_c_b","i_c_k","i_c_mg" ,         
+            "i_c_n","i_c_p","i_c_ph","i_c_zn","i_e_carbon","i_e_kexcess" ,    
+            "i_e_nleach","i_e_pexcess","i_e_watererosie","i_p_cr","i_p_dens","i_p_ksat" ,       
+            "i_p_paw","i_p_wef","i_p_whc","s_euosi_ess_env","s_euosi_ess_prod", 
+            "s_euosi_prod_b","s_euosi_prod_c","s_euosi_prod_p",
+            "s_euosi_clim","s_euosi_nutcycle", "s_euosi_water","s_euosi_total")
+  
+  colsnames <- c('The soil indicator value reflecting distance to target for soil biodiversity in view of crop production',
+                 'The soil indicator value reflecting distance to target for soil microbial activity in view of crop production',
+                 'The soil indicator value reflecting distance to target for boron supply in view of crop production',
+                 'The soil indicator value reflecting distance to target for potassium supply in view of crop production',
+                 'The soil indicator value reflecting distance to target for magnesium supply in view of crop production',
+                 'The soil indicator value reflecting distance to target for nitrogen supply in view of crop production',
+                 'The soil indicator value reflecting distance to target for phosphorus supply in view of crop production',
+                 'The soil indicator value reflecting distance to target for soil pH in view of crop production',
+                 'The soil indicator value reflecting distance to target for zinc supply in view of crop production',
+                 'The soil indicator value reflecting distance to target for carbon saturation in mineral soils in view carbon sequestration potential',
+                 'The soil indicator value reflecting distance to target for potassium use efficiency in view of nutrient recycling and reuse',
+                 'The soil indicator value reflecting distance to target for nitrogen leaching risks in view of groundwater regulation and purification',
+                 'The soil indicator value reflecting distance to target for phosphorus use efficiency in view of nutrient recycling and reuse',
+                 'The soil indicator value reflecting distance to target for water erodibility',
+                 'The soil indicator value reflecting distance to target for crumbleability in view of crop production',
+                 'The soil indicator value reflecting distance to target for subsoil compaction in view of crop production',
+                 'The soil indicator value reflecting distance to target for water permeability in view of crop production',
+                 'The soil indicator value reflecting distance to target for water stress in view of crop production',
+                 'The soil indicator value reflecting distance to target for wind erodibility in view of crop production',
+                 'The soil indicator value reflecting distance to target for water retention in view of crop production',
+                 'The aggregated soil quality score for the ecosystem service Environment',
+                 'The aggregated soil quality score for the ecosystem service Crop Production',
+                 'The aggregated soil indicator value for biological soil functions supporting crop production',
+                 'The aggregated soil indicator value for chemical soil functions supporting crop production',
+                 'The aggregated soil indicator value for physical soil functions supporting crop production',
+                 'The aggregated soil indicator value for soil functions supporting carbon sequestration and climate regulation',
+                 'The aggregated soil indicator value for soil functions supporting nutrient recycling and reuse',
+                 'The aggregated soil indicator value for soil functions supporting water regulation and purification',
+                 'The total EU OSI soil quality score')
+  
+  # make output description
+  dp <- data.table(code = cols,
+                   parameter = colsnames)
+  
+  # copy as bln_column_description
+  osi_vars_output <- copy(dp)
+  
+  # save output variables
+  usethis::use_data(osi_vars_output,overwrite = TRUE)
+  
+  
