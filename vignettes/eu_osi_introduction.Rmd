@@ -38,7 +38,7 @@ We start with some (virtual) data being collected for a farms with fields in the
 
 The dataset contains soil properties from 60 agricultural fields and is documented in `?osi_farm`. An overview of all variables is given below. When interested, look to the `summary` of the `osi_farm` object.
 
-More information on the input and ouput variables are documented in a separate vignette `vignette("osi variables")`.
+More information on the input and ouput variables are documented in a separate vignette `vignette("eu_osi_variables")`.
 
 
 ```{r make data,echo=TRUE}
@@ -133,16 +133,10 @@ out <- euosi::osi_field(B_LU = dt$B_LU,
 
   # print the table
   knitr::kable(dt.melt2,caption='categorial input variables for euosi')
-
-  # print the table in nicer format
-   #  knitr::kable(
-   #     list(dt.melt2[1:9,3:4],dt.melt2[10:18,3:4]),
-   #     caption = 'categorial input variables for BLN.',
-   #     booktabs = TRUE
-   # )
+  
 ```
 
-To simplify, one can also use a data.table as input. In that case use the function `soi_field_dt()`. The function checks whether all desired input variables are present. Again, the illustration below shows the use of `osi_field_dt` to retrieve the euosi indicators. For the interpretation of each of the soil indicators, one can have a look at the `vignette("osi variables")`
+To simplify, one can also use a data.table as input. In that case use the function `soi_field_dt()`. The function checks whether all desired input variables are present. Again, the illustration below shows the use of `osi_field_dt` to retrieve the euosi indicators. For the interpretation of each of the soil indicators, one can have a look at the `vignette("eu_osi_variables")`
 
 
 ```{r make-sim2,fig.width = 7, fig.height = 4,fig.fullwidth = TRUE,echo=TRUE}
