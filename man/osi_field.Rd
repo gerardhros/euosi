@@ -87,7 +87,7 @@ osi_field(
 
 \item{ID}{(character) A field id}
 
-\item{output}{(character) An optional argument to select output: obic_score, scores, indicators, recommendations, or all. (default = all)}
+\item{output}{(character) An optional argument to select output: scores, indicators, or all. (default = all)}
 }
 \value{
 The output of the Open Soil Index Calculator for a specific agricultural field. 

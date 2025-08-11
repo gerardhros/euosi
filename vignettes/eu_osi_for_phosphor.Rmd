@@ -1,21 +1,25 @@
 ---
-title: "Description of osi_phosphor"
+title: "EU OSI for phosphor"
 author: 'Gerard Ros & Elise van Eynde'
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Description of osi_phosphor}
+  %\VignetteIndexEntry{eu_osi_for_phosphor}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-rmarkdown.html_vignette.check_title = FALSE
 
-# require packages
-require(euosi);require(data.table);require(ggplot2)
-# devtools::load_all()
+  # require packages
+  require(euosi);require(data.table);require(ggplot2)
+
+  # settings
+  knitr::opts_chunk$set(echo = TRUE)
+  options(rmarkdown.html_vignette.check_title = FALSE)
+  setDTthreads(1)
+
+  # devtools::load_all()
 ```
 
 ## Introduction
