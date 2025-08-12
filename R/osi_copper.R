@@ -89,7 +89,7 @@ osi_c_copper_fr <- function(B_LU,A_CLAY_MI,B_CF, A_SOM_LOI,A_CU_EDTA) {
   soil_cat_cu = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
   
   # checkmate for inputs
-  osi_checkvar(list(B_COUNTRY = rep('FR',length(BLU)),
+  osi_checkvar(list(B_COUNTRY = rep('FR',length(B_LU)),
                     B_LU = B_LU,B_CF = B_CF,
                     A_CLAY_MI = A_CLAY_MI,
                     A_SOM_LOI = A_SOM_LOI,A_CU_EDTA = A_CU_EDTA),
@@ -105,17 +105,10 @@ osi_c_copper_fr <- function(B_LU,A_CLAY_MI,B_CF, A_SOM_LOI,A_CU_EDTA) {
   # load the threshold values
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country=='FR' & osi_indicator=='i_c_cu']
+  checkmate::assert_data_table(dt.thresholds,max.rows = 3)
   
   # Check length of desired input
   arg.length <- max(length(B_LU),length(A_CLAY_MI),length(A_CU_EDTA),length(A_SOM_LOI),length(B_CF))
-  
-  # check the values (update the limits later via dt.parms)
-  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_numeric(A_CU_EDTA, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(A_SOM_LOI, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
-  checkmate::assert_data_table(dt.thresholds,max.rows = 3)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,

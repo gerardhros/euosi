@@ -12,7 +12,7 @@
 #' @import data.table
 #' 
 #' @examples 
-#' osi_carbon(B_LU = '165',A_C_OF = 25, B_BGZ = '4',A_CLAY_MI=5,A_SAND_MI=25,B_COUNTRY='DE')
+#' osi_carbon(B_LU = '172',A_C_OF = 25, B_BGZ = '4',A_CLAY_MI=5,A_SAND_MI=25,B_COUNTRY='NL')
 #' 
 #' @return 
 #' The carbon index. A numeric value.
@@ -25,10 +25,6 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   B_TEXTURE_HYPRES = A_SILT_MI = otratio = osi_other = NULL
   
-  # checkmate for inputs
-  osi_checkvar(list(B_COUNTRY = B_COUNTRY,B_LU = B_LU,B_BGZ = B_BGZ,
-                    A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,
-                    A_C_OF = A_C_OF),fname='osi_carbon')
   # parameters
   dt.parms <- as.data.table(euosi::osi_parms)
   
@@ -53,6 +49,11 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
                    A_SILT_MI = pmax(0,100 - A_CLAY_MI - A_SAND_MI),
                    A_C_OF = A_C_OF,
                    value = NA_real_)
+  
+  # checkmate for inputs
+  osi_checkvar(list(B_COUNTRY = dt$B_COUNTRY,B_LU = dt$B_LU,B_BGZ = dt$B_BGZ,
+                    A_CLAY_MI = dt$A_CLAY_MI, A_SAND_MI = dt$A_SAND_MI,
+                    A_C_OF = dt$A_C_OF),fname='osi_carbon')
   
   # estimate texture HYPRES
   dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI,type = 'code')]

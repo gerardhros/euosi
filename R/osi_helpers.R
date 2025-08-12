@@ -15,6 +15,10 @@
 #' @export
 osi_checkvar <- function(parm,fname = NULL) {
   
+  # add visual bindings
+  osi_parm_name = osi_parm_data_type = osi_parm_enum = osi_parm_options = NULL
+  osi_country = crop_code = osi_parm_min = osi_parm_max = NULL
+  
   # load internal table for all euosi parameters
   dt.parms <- as.data.table(euosi::osi_parms)
   
@@ -91,12 +95,22 @@ osi_checkvar <- function(parm,fname = NULL) {
     # check on soil mineralogy
     if(sum(c('A_CLAY_MI','A_SAND_MI','A_SILT_MI') %in% names(parm))>=2){
       
-      check.sum <- max(0,unlist(parm['A_CLAY_MI'])) + max(0,unlist(parm['A_SAND_MI'])) + max(0,unlist(parm['A_SILT_MI']))
+      clay.value <- unlist(parm['A_CLAY_MI'])
+      sand.value <- unlist(parm['A_SAND_MI'])
+      silt.value <- unlist(parm['A_SILT_MI'])
+      arg.length <- max(length(clay.value),length(sand.value),length(silt.value))
+      
+      if(length(clay.value)==0){clay.value = rep(0,arg.length)}
+      if(length(sand.value)==0){sand.value = rep(0,arg.length)}
+      if(length(silt.value)==0){silt.value = rep(0,arg.length)}
+      
+      check.sum <- pmax(0,clay.value) + pmax(0,sand.value) + pmax(0,silt.value)
+      check.sum <- all(check.sum <= 105)
+      
       if(!is.null(fname)){
-        checkmate::assert_true(check.sum > 105,
-                               .var.name = paste0('total of clay, silt and sand exceeds 100% in ',fname))  
+        checkmate::assert_true(check.sum,.var.name = paste0('total of clay, silt and sand exceeds 100% in ',fname))  
       } else {
-        checkmate::assert_true(check.sum > 105)
+        checkmate::assert_true(check.sum)
       }
       
     }

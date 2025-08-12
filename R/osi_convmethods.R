@@ -11,13 +11,9 @@ osi_conv_som <- function(element, A_SOM_LOI = NA_real_,A_C_OF = NA_real_, A_N_RT
   
   # add visual bindings
   
-  # check inputs
-  arg.length <- max(c(length(A_SOM_LOI),length(A_N_RT),length(A_C_OF),length(A_CN_FR)))
-  checkmate::assert_numeric(A_N_RT, lower = 0.1, upper = 30000, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_C_OF, lower = 0, upper = 3000, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_CN_FR, lower = 5, upper = 25, any.missing = FALSE, len = arg.length)
-  checkmate::assert_subset(element,choices = c('A_SOM_LOI','A_C_OF','A_N_RT','A_CN_FR'),empty.ok = FALSE)
+  # check required inputs
+  checkmate::assert_subset(element,
+                           choices = c('A_SOM_LOI','A_C_OF','A_N_RT','A_CN_FR'),empty.ok = FALSE)
   
   # make internal table with inputs
   dt <- data.table(A_SOM_LOI = A_SOM_LOI,
@@ -25,12 +21,23 @@ osi_conv_som <- function(element, A_SOM_LOI = NA_real_,A_C_OF = NA_real_, A_N_RT
                    A_N_RT = A_N_RT,
                    A_CN_FR = A_CN_FR)
   
+  # check required inputs
+  osi_checkvar(parm = list(A_SOM_LOI = dt$A_SOM_LOI, A_C_OF = dt$A_C_OF,
+                           A_N_RT = dt$A_N_RT, A_CN_FR = dt$A_CN_FR),
+               fname ='osi_conv_som')
+  
   # estimate SOM properties from other measurements
   dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
+  dt[is.na(A_SOM_LOI) & !is.na(A_N_RT) & !is.na(A_CN_FR), A_SOM_LOI := A_N_RT * A_CN_FR * 0.001 / 10]
   dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
   dt[is.na(A_C_OF) & !is.na(A_N_RT) & !is.na(A_CN_FR), A_C_OF := A_N_RT * A_CN_FR * 0.001]
   dt[is.na(A_N_RT) & !is.na(A_C_OF) & !is.na(A_CN_FR), A_N_RT := A_C_OF * 1000 / A_CN_FR]
   dt[is.na(A_CN_FR) & !is.na(A_C_OF) & !is.na(A_N_RT), A_CN_FR := A_C_OF * 1000 / A_N_RT]
+  
+  # check parameters after estimation
+  osi_checkvar(parm = list(A_SOM_LOI = dt$A_SOM_LOI, A_C_OF = dt$A_C_OF,
+                           A_N_RT = dt$A_N_RT, A_CN_FR = dt$A_CN_FR),
+               fname ='osi_conv_som')
   
   # select the reqestred property
   value <- dt[,get(element)]
@@ -72,6 +79,11 @@ osi_conv_hwb <- function(B_SOILTYPE_AGR, A_SOM_LOI = NA_real_, A_B_CC= NA_real_,
                    value3 = NA_real_,
                    value = NA_real_)
   
+  # check required inputs
+  osi_checkvar(parm = list(B_SOILTYPE_AGR = dt$B_SOILTYPE_AGR, A_SOM_LOI = dt$A_SOM_LOI, 
+                           A_B_CC = dt$A_B_CC,A_PH_CC = dt$A_PH_CC),
+               fname ='osi_conv_hwb')
+  
   # estimate A_B_HW from A_SOM_LOI or A_B_CC using equations from Rotterdam & Bussink (2017), NMI project 1323
   dt[grepl('duin|dal|zand',B_SOILTYPE_AGR),value1 := 0.0305 * A_SOM_LOI + 0.2038]
   dt[grepl('klei|loss|loes',B_SOILTYPE_AGR) & A_PH_CC > 6,value1 := 0.2731 * A_SOM_LOI]
@@ -87,6 +99,10 @@ osi_conv_hwb <- function(B_SOILTYPE_AGR, A_SOM_LOI = NA_real_, A_B_CC= NA_real_,
   
   # estimate mean value from three regression equations
   dt[,value := mean(c(value1, value2, value3),na.rm = TRUE),by=id]
+  
+  # check parameters after calculation
+  osi_checkvar(parm = list(A_B_HW = dt$value),
+               fname ='osi_conv_hwb')
   
   # extract output variable
   value <- dt[,value]
@@ -106,16 +122,18 @@ osi_conv_hwb <- function(B_SOILTYPE_AGR, A_SOM_LOI = NA_real_, A_B_CC= NA_real_,
 #' @export 
 osi_conv_ph <- function(element, A_PH_KCL = NA_real_,A_PH_CC = NA_real_, A_PH_WA = NA_real_){
   
-  # check inputs
-  checkmate::assert_numeric(A_PH_KCL, lower = 3, upper = 10, any.missing = TRUE)
-  checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = TRUE)
-  checkmate::assert_numeric(A_PH_WA, lower = 3, upper = 10, any.missing = TRUE)
+  # check options for element argument
   checkmate::assert_subset(element,choices = c('A_PH_CC','A_PH_KCL','A_PH_WA'),empty.ok = FALSE)
   
   # make internal table with inputs
   dt <- data.table(A_PH_KCL = A_PH_KCL,
                    A_PH_CC = A_PH_CC,
                    A_PH_WA = A_PH_WA)
+  
+  # check required inputs
+  osi_checkvar(parm = list(A_PH_KCL = dt$A_PH_KCL, A_PH_CC = dt$A_PH_CC, 
+                           A_PH_WA = dt$A_PH_WA),
+               fname ='osi_conv_ph')
   
   # estimate pH from other measurements
   dt[is.na(A_PH_CC), A_PH_CC := A_PH_KCL * 0.9288 + 0.5262]
@@ -125,7 +143,13 @@ osi_conv_ph <- function(element, A_PH_KCL = NA_real_,A_PH_CC = NA_real_, A_PH_WA
   dt[is.na(A_PH_KCL), A_PH_KCL := (A_PH_WA - 2.23) / 0.777]
   dt[is.na(A_PH_KCL), A_PH_KCL := (A_PH_CC - 0.5262) / 0.9288]
   
-  # select the reqestred pH
+  # check parameters after calculation
+  osi_checkvar(parm = list(A_PH_KCL = dt$A_PH_KCL, 
+                           A_PH_CC = dt$A_PH_CC, 
+                           A_PH_WA = dt$A_PH_WA),
+               fname ='osi_conv_ph')
+  
+  # select the requested pH
   value <- dt[,get(element)]
   
   # return value
@@ -150,13 +174,15 @@ osi_conv_npmn <- function(A_N_RT, A_CLAY_MI, med_PMN = 51.9, med_NRT = 1425, med
   # initialize
   PMN = med_PMN_pred = cor_rg = NULL
   
-  # Check soil inputs
+  # length of inputs
   arg.length <- max(length(A_N_RT),length(A_CLAY_MI))
-  checkmate::assert_numeric(A_N_RT, lower = 0.1, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
+  
+  # check required inputs
   checkmate::assert_numeric(med_PMN, lower = 0.1, any.missing = FALSE, min.len = 1)
   checkmate::assert_numeric(med_NRT, lower = 0.1, any.missing = FALSE, min.len = 1)
   checkmate::assert_numeric(med_CLAY, lower = 0, upper = 100, any.missing = FALSE, min.len = 1)
+  osi_checkvar(parm = list(A_N_RT = A_N_RT, A_CLAY_MI = A_CLAY_MI),
+               fname ='osi_conv_npmn')
   
   # Collect data in a table
   # to avoid NaN from clay = 0, it it slightly increased
@@ -180,7 +206,12 @@ osi_conv_npmn <- function(A_N_RT, A_CLAY_MI, med_PMN = 51.9, med_NRT = 1425, med
   dt[, cor_rg := med_PMN / med_PMN_pred]
   
   # adjust predicted PMN with regional correction
-  dt[, value := PMN * cor_rg]
+  # and do not allow values exceeding 500 mg/kg
+  dt[, value := pmin(500,PMN * cor_rg)]
+  
+  # check parameters after calculation
+  osi_checkvar(parm = list(A_N_PMN = dt$value),
+               fname ='osi_conv_npmn')
   
   # extract value
   value <- dt[, value]
@@ -216,9 +247,7 @@ osi_conv_phosphor <- function(element,
   # check inputs
   checkmate::assert_subset(element,choices = c('A_P_AL','A_P_CAL','A_P_DL','A_P_AAA','A_P_AAA_EDTA',
                                                'A_P_WA','A_P_M3','A_P_CC'),empty.ok = FALSE)
-  # check required inputs
-  osi_checkvar(parm = list(A_P_OL = A_P_OL, A_PH_CC = A_PH_CC),fname ='osi_conv_phosphor')
-  
+   
   # make internal table with inputs
   dt <- data.table(A_P_AL = A_P_AL,
                    A_P_CC = A_P_CC,
@@ -230,6 +259,9 @@ osi_conv_phosphor <- function(element,
                    A_P_AAA = A_P_AAA,
                    A_P_AAA_EDTA = A_P_AAA_EDTA,
                    A_PH_CC = A_PH_CC)
+  
+  # check required inputs
+  osi_checkvar(parm = list(A_P_OL = dt$A_P_OL, A_PH_CC = dt$A_PH_CC),fname ='osi_conv_phosphor')
   
   # estimate P from other measurements (all in mg P per kg soil)
   # https://doi.org/10.1016/j.geoderma.2021.115339, tables 3 and 5
@@ -245,9 +277,9 @@ osi_conv_phosphor <- function(element,
   dt[is.na(A_P_CC) & !is.na(A_P_OL), A_P_CC := A_P_OL/10]
   
   # check calculated inputs
-  osi_checkvar(parm = list(A_P_AL = A_P_AL, A_P_AAA = A_P_AAA,A_P_AAA_EDTA=A_P_AAA_EDTA,
-                           A_P_CAL = A_P_CAL,A_P_DL = A_P_DL,A_P_WA = A_P_WA,
-                           A_P_M3 = A_P_M3, A_P_CC = A_P_CC),fname ='osi_conv_phosphor')
+  osi_checkvar(parm = list(A_P_AL = dt$A_P_AL, A_P_AAA = dt$A_P_AAA,A_P_AAA_EDTA=dt$A_P_AAA_EDTA,
+                           A_P_CAL = dt$A_P_CAL,A_P_DL = dt$A_P_DL,A_P_WA = dt$A_P_WA,
+                           A_P_M3 = dt$A_P_M3, A_P_CC = dt$A_P_CC),fname ='osi_conv_phosphor')
   
   # select the reqestred pH
   value <- dt[,get(element)]
@@ -287,10 +319,7 @@ osi_conv_potassium <- function(element,
   checkmate::assert_subset(element,choices = c('A_K_AL','A_K_AN','A_K_CAL','A_K_CC',
                                                'A_K_CO_PO','A_K_DL','A_K_M3',
                                                'A_K_NaAAA','A_K_WA'),empty.ok = FALSE)
-  # check required inputs
-  osi_checkvar(parm = list(A_K_AAA = A_K_AAA, A_PH_CC = A_PH_CC,
-                           A_CEC_CO = A_CEC_CO),fname ='osi_conv_potassium')
-  
+   
   # make internal table with inputs
   dt <- data.table(A_K_AAA = A_K_AAA,
                    A_K_AL = A_K_AL,
@@ -306,6 +335,10 @@ osi_conv_potassium <- function(element,
                    A_PH_CC = A_PH_CC,
                    A_PH_WA = NA_real_
                    )
+  
+  # check required inputs
+  osi_checkvar(parm = list(A_K_AAA = dt$A_K_AAA, A_PH_CC = dt$A_PH_CC,
+                           A_CEC_CO = dt$A_CEC_CO),fname ='osi_conv_potassium')
   
   # estimate pH water from pH-CaCl2
   dt[,A_PH_WA := osi_conv_ph('A_PH_WA',A_PH_CC = A_PH_CC)]
@@ -334,10 +367,10 @@ osi_conv_potassium <- function(element,
   dt[is.na(A_K_WA) & !is.na(A_K_AAA), A_K_WA := A_K_AAA]
   
   # check calculated inputs
-  osi_checkvar(parm = list(A_PH_WA = A_PH_WA, A_K_AL = A_K_AL, A_K_AN = A_K_AN,
-                           A_K_CAL = A_K_CAL, A_K_CC = A_K_CC, A_K_CO_PO = A_K_CO_PO,
-                           A_K_M3 = A_K_M3, A_K_DL = A_K_DL, A_K_NaAAA = A_K_NaAAA,
-                           A_K_WA = A_K_WA),fname ='osi_conv_potassium')
+  osi_checkvar(parm = list(A_PH_WA = dt$A_PH_WA, A_K_AL = dt$A_K_AL, A_K_AN = dt$A_K_AN,
+                           A_K_CAL = dt$A_K_CAL, A_K_CC = dt$A_K_CC, A_K_CO_PO = dt$A_K_CO_PO,
+                           A_K_M3 = dt$A_K_M3, A_K_DL = dt$A_K_DL, A_K_NaAAA = dt$A_K_NaAAA,
+                           A_K_WA = dt$A_K_WA),fname ='osi_conv_potassium')
   
   # select the requested element
   value <- dt[,get(element)]
@@ -372,10 +405,7 @@ osi_conv_magnesium <- function(element,
   # check inputs
   checkmate::assert_subset(element,choices = c('A_MG_AL','A_MG_AN','A_MG_CC','A_MG_CO_PO',
                                                'A_MG_DL','A_MG_KCL','A_MG_M3','A_MG_NaAAA'),empty.ok = FALSE)
-  # check required inputs
-  osi_checkvar(parm = list(A_MG_AAA = A_MG_AAA, A_PH_CC = A_PH_CC,
-                           A_CEC_CO = A_CEC_CO),fname ='osi_conv_magnesium')
-  
+   
   # make internal table with inputs
   dt <- data.table(A_MG_AAA = A_MG_AAA,
                    A_MG_AL = A_MG_AL,
@@ -388,6 +418,10 @@ osi_conv_magnesium <- function(element,
                    A_MG_NaAAA = A_MG_NaAAA,
                    A_CEC_CO = A_CEC_CO,
                    A_PH_CC = A_PH_CC)
+  
+  # check required inputs
+  osi_checkvar(parm = list(A_MG_AAA = dt$A_MG_AAA, A_PH_CC = dt$A_PH_CC,
+                           A_CEC_CO = dt$A_CEC_CO),fname ='osi_conv_magnesium')
   
   # estimate Mg from other measurements (note: these are not the best ones, but good ones are rare)
   
@@ -405,9 +439,9 @@ osi_conv_magnesium <- function(element,
   dt[is.na(A_MG_NaAAA) & !is.na(A_MG_AAA), A_MG_NaAAA := A_MG_AAA]
   
   # check calculated inputs
-  osi_checkvar(parm = list(A_MG_AL = A_MG_AL, A_MG_CC = A_MG_CC, A_MG_KCL = A_MG_KCL,
-                           A_MG_M3 = A_MG_M3, A_MG_AN = A_MG_AN, A_MG_CO_PO = A_MG_CO_PO,
-                           A_MG_DL = A_MG_DL, A_MG_NaAAA = A_MG_NaAAA),fname ='osi_conv_magnesium')
+  osi_checkvar(parm = list(A_MG_AL = dt$A_MG_AL, A_MG_CC = dt$A_MG_CC, A_MG_KCL = dt$A_MG_KCL,
+                           A_MG_M3 = dt$A_MG_M3, A_MG_AN = dt$A_MG_AN, A_MG_CO_PO = dt$A_MG_CO_PO,
+                           A_MG_DL = dt$A_MG_DL, A_MG_NaAAA = dt$A_MG_NaAAA),fname ='osi_conv_magnesium')
   
   # select the requested element
   value <- dt[,get(element)]
