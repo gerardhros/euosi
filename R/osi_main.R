@@ -185,7 +185,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
     
     # potentially mineralable N / microbial activity
     dt[,i_b_pmn := osi_b_pmn(B_LU = B_LU,B_SOILTYPE_AGR = B_SOILTYPE_AGR,A_CLAY_MI = A_CLAY_MI, 
-                             A_N_PMN = NA_real_,A_N_RT = A_N_RT,B_COUNTRY = B_COUNTRY)]
+                             A_N_PMN = A_N_PMN,A_N_RT = A_N_RT,B_COUNTRY = B_COUNTRY)]
     
     # conditions for biodiversity (equal for all countries)
     dt[,i_b_biodiv := osi_biodiversity(A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC)]
