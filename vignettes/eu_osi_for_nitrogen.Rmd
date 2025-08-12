@@ -19,7 +19,7 @@ vignette: >
   options(rmarkdown.html_vignette.check_title = FALSE)
   setDTthreads(1)
 
-  devtools::load_all()
+  #devtools::load_all()
 ```
 
 ## Introduction
@@ -48,6 +48,7 @@ The function `osi_c_nitrogen` requires the following inputs:
 
 <br>
 The function `osi_b_pmn` requires the following inputs:
+
 * B_LU (character) The crop code
 * B_SOILTYPE_AGR (character) The soil type in a particular region
 * A_CLAY_MI (numeric) The clay content of the soil (\%)
@@ -103,7 +104,7 @@ Lets show a real example given the OSI farm data in the euosi package. We first 
 
 Suprisingly the soil health index score is very high for both indicators: for the set samples it is around 0.99, being almost equal to the maximum score. This requires further evaluation in view of the assumptions made for the virtual farm or the actual variation across Europe.
 
-```{r example EU3, echo = TRUE, eval=TRUE}
+```{r example EU3, out.width="75%", fig.cap="Evaluation N-indicator for Europe.",dpi=300,echo =TRUE, eval = TRUE}
 
   # read the data from the OSI farm
   dt.of <- copy(euosi::osi_farm)
