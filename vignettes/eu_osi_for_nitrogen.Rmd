@@ -19,7 +19,7 @@ vignette: >
   options(rmarkdown.html_vignette.check_title = FALSE)
   setDTthreads(1)
 
-  #devtools::load_all()
+  devtools::load_all()
 ```
 
 ## Introduction
