@@ -380,8 +380,8 @@ osi_c_ph_de <- function(B_LU,A_SOM_LOI, A_C_OF, A_CLAY_MI,A_SAND_MI, A_PH_CC) {
   A_SILT_MI = B_LU_CAT = stype = id = NULL
   
   # crop data
-  # dt.crops <- as.data.table(euosi::osi_crops)
-  # dt.crops <- dt.crops[osi_country=='DE']
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='DE']
   
   # get max length of input
   arg.length <- max(length(B_LU),length(A_SOM_LOI),length(A_C_OF),
@@ -394,19 +394,20 @@ osi_c_ph_de <- function(B_LU,A_SOM_LOI, A_C_OF, A_CLAY_MI,A_SAND_MI, A_PH_CC) {
                    A_SOM_LOI = A_SOM_LOI,
                    A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SILT_MI,
+                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
                    A_PH_CC = A_PH_CC,
                    value = NA_real_)
   
   # merge crop properties
-  # dt <- merge(dt,
-  #             dt.crops[,.(crop_code,crop_cat1)],
-  #             by.x = 'B_LU', 
-  #             by.y = 'crop_code',
-  #             all.x=TRUE)
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # add crop type for now
-  dt[B_LU_CAT := 'arable']
+  dt[,B_LU_CAT := crop_cat1]
+  dt[is.na(B_LU_CAT),B_LU_CAT := 'arable']
   
   # add soil type
   dt[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
@@ -417,35 +418,35 @@ osi_c_ph_de <- function(B_LU,A_SOM_LOI, A_C_OF, A_CLAY_MI,A_SAND_MI, A_PH_CC) {
   dt[ A_C_OF >= 150,  stype := "BG6"]
   
   # evaluate A_PH_CC for arable soils
-  dt.bld.os1 <- dt[B_LU_CAT == 'arable' & A_SOM_LOI <= 4]
+  dt.bld.os1 <- dt[B_LU_CAT %in% c('arable','maize') & A_SOM_LOI <= 4]
   dt.bld.os1[stype=='BG1', value := osi_evaluate_logistic(A_PH_CC, b = 3.195609, x0 = 0.6121391, v = 0.0000020)]
   dt.bld.os1[stype=='BG2', value := osi_evaluate_logistic(A_PH_CC, b = 2.380364, x0 = -0.8092676, v = 0.0000009)]
   dt.bld.os1[stype=='BG3', value := osi_evaluate_logistic(A_PH_CC, b = 2.213768, x0 = -1.3790779, v = 0.0000004)]
   dt.bld.os1[stype=='BG4', value := osi_evaluate_logistic(A_PH_CC, b = 2.409068, x0 = -0.5001904, v = 0.0000006)]
   dt.bld.os1[stype=='BG5', value := osi_evaluate_logistic(A_PH_CC, b = 2.729031, x0 = 2.1575810, v = 0.0000881)]
   
-  dt.bld.os2 <- dt[B_LU_CAT == 'arable' & A_SOM_LOI > 4 & A_SOM_LOI <= 8]
+  dt.bld.os2 <- dt[B_LU_CAT %in% c('arable','maize') & A_SOM_LOI > 4 & A_SOM_LOI <= 8]
   dt.bld.os2[stype=='BG1', value := osi_evaluate_logistic(A_PH_CC, b = 2.312291, x0 = -2.2454588, v = 0.0000002)]
   dt.bld.os2[stype=='BG2', value := osi_evaluate_logistic(A_PH_CC, b = 3.284422, x0 = 0.3346049, v = 0.0000005)]
   dt.bld.os2[stype=='BG3', value := osi_evaluate_logistic(A_PH_CC, b = 1.870397, x0 = -2.5234952, v = 0.0000009)]
   dt.bld.os2[stype=='BG4', value := osi_evaluate_logistic(A_PH_CC, b = 1.954006, x0 = -2.9304223, v = 0.0000001)]
   dt.bld.os2[stype=='BG5', value := osi_evaluate_logistic(A_PH_CC, b = 3.033481, x0 = 1.9002489, v = 0.0000522)]
   
-  dt.bld.os3 <- dt[B_LU_CAT == 'arable' & A_SOM_LOI > 8 & A_SOM_LOI <= 15]
+  dt.bld.os3 <- dt[B_LU_CAT %in% c('arable','maize') & A_SOM_LOI > 8 & A_SOM_LOI <= 15]
   dt.bld.os3[stype=='BG1', value := osi_evaluate_logistic(A_PH_CC, b = 2.877503, x0 = -0.7768501, v = 8.0e-07)]
   dt.bld.os3[stype=='BG2', value := osi_evaluate_logistic(A_PH_CC, b = 2.388151, x0 = -1.8557106, v = 4.0e-07)]
   dt.bld.os3[stype=='BG3', value := osi_evaluate_logistic(A_PH_CC, b = 3.373189, x0 = 0.6575093, v = 2.2e-06)]
   dt.bld.os3[stype=='BG4', value := osi_evaluate_logistic(A_PH_CC, b = 2.282828, x0 = -1.8574349, v = 3.0e-07)]
   dt.bld.os3[stype=='BG5', value := osi_evaluate_logistic(A_PH_CC, b = 2.006280, x0 = -2.1570047, v = 9.0e-07)]
   
-  dt.bld.os4 <- dt[B_LU_CAT == 'arable' & A_SOM_LOI > 15 & A_SOM_LOI <= 30]
+  dt.bld.os4 <- dt[B_LU_CAT %in% c('arable','maize') & A_SOM_LOI > 15 & A_SOM_LOI <= 30]
   dt.bld.os4[stype=='BG1', value := osi_evaluate_logistic(A_PH_CC, b = 4.513283, x0 = 3.2138234, v = 0.0787507)]
   dt.bld.os4[stype=='BG2', value := osi_evaluate_logistic(A_PH_CC, b = 2.772481, x0 = -0.8968812, v = 0.0000016)]
   dt.bld.os4[stype=='BG3', value := osi_evaluate_logistic(A_PH_CC, b = 2.518304, x0 = -1.4907428, v = 0.0000009)]
   dt.bld.os4[stype=='BG4', value := osi_evaluate_logistic(A_PH_CC, b = 3.029233, x0 = 0.3359194, v = 0.0000071)]
   dt.bld.os4[stype=='BG5', value := osi_evaluate_logistic(A_PH_CC, b = 2.492763, x0 = -1.0614226, v = 0.0000016)]
   
-  dt.bld.os5 <- dt[B_LU_CAT == 'arable' & A_SOM_LOI > 30]
+  dt.bld.os5 <- dt[B_LU_CAT %in% c('arable','maize') & A_SOM_LOI > 30]
   dt.bld.os5[,value := osi_evaluate_logistic(A_PH_CC, b = 3.9498965 , x0 = -0.3671917, v = 0.0000002)]
   
   # evaluate A_PH_CC for grassland soils
@@ -467,7 +468,7 @@ osi_c_ph_de <- function(B_LU,A_SOM_LOI, A_C_OF, A_CLAY_MI,A_SAND_MI, A_PH_CC) {
   dt.gld.os3[,value := osi_evaluate_logistic(A_PH_CC, b = 3.9498965 , x0 = -0.3671917, v = 0.0000002)]
   
   # no recommendation for others
-  dt.other <- dt[!B_LU_CAT %in% c('grassland','arable')]
+  dt.other <- dt[!B_LU_CAT %in% c('grassland','maize','arable')]
   
   # rbind all OSI scores
   dt.fin <- rbind(dt.bld.os1,
@@ -528,9 +529,9 @@ osi_c_ph_fr <- function(B_LU,B_TEXTURE_GEPPA, A_PH_WA) {
   # check the values (update the limits later via dt.parms)
   checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_subset(B_TEXTURE_GEPPA, choices =c("L","LL","Ls","Lsa","La","LAS","AA","A","As","Als","Al","Sa","Sal","S","SS","Sl"), empty.ok = FALSE)
+  checkmate::assert_subset(B_TEXTURE_GEPPA, choices =c("L","LL","Ls","Lsa","La","LAS","AA","A","As","Als","Al","Sa","Sal","S","SS","Sl","AS","SaI"), empty.ok = FALSE)
   checkmate::assert_numeric(A_PH_WA, lower = 0, upper = 14, any.missing = TRUE, len = arg.length)
-  checkmate::assert_data_table(dt.thresholds,max.rows = 1)
+  checkmate::assert_data_table(dt.thresholds,max.rows = 4)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -752,6 +753,10 @@ osi_c_ph_nl <- function(ID,B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC) 
   D_PH_DELTA = i_c_ph = . = oid = osi_country = NULL
   osi_soil_cat1 = crop_code = B_LU_BRP = NULL
   
+  # Load in the datasets
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'NL']
+  
   # Check inputs
   arg.length <- max(length(A_PH_CC), length(B_SOILTYPE_AGR), length(A_SOM_LOI), length(A_CLAY_MI),
                     length(B_LU))
@@ -766,6 +771,7 @@ osi_c_ph_nl <- function(ID,B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC) 
   # Collect information in table
   dt <- data.table(FIELD_ID = ID,
                    oid = 1:arg.length,
+                   B_LU = as.character(B_LU),
                    B_LU_BRP = as.numeric(B_LU),
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    A_SOM_LOI = A_SOM_LOI,
@@ -773,21 +779,48 @@ osi_c_ph_nl <- function(ID,B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC) 
                    A_PH_CC = A_PH_CC
                    )
   
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code = as.character(crop_code),crop_cat1)],
+              by.x = 'B_LU', 
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
+  # temporary fix for IACS crop codes
+  cols <- c('D_CP_STARCH','D_CP_POTATO','D_CP_SUGARBEET','D_CP_MAIS','D_CP_OTHER')
+  dt[nchar(B_LU) == 10 & crop_cat1=='grassland', D_CP_GRASS := 1]
+  dt[nchar(B_LU) == 10 & crop_cat1=='grassland', c(cols) := 0]
+  cols <- c('D_CP_STARCH','D_CP_POTATO','D_CP_SUGARBEET','D_CP_GRASS','D_CP_OTHER')
+  dt[nchar(B_LU) == 10 & crop_cat1=='maize', D_CP_MAIS := 1]
+  dt[nchar(B_LU) == 10 & crop_cat1=='maize', c(cols) := 0]
+  cols1 <- c('D_CP_STARCH','D_CP_POTATO','D_CP_SUGARBEET')
+  cols2 <- c('D_CP_GRASS','D_CP_OTHER','D_CP_MAIS')
+  dt[nchar(B_LU) == 10 & crop_cat1=='arable', c(cols1) := list(0.2,0.2,0.2)]
+  dt[nchar(B_LU) == 10 & crop_cat1=='arable', c(cols2) := 0]
+  cols <- c('D_CP_STARCH','D_CP_POTATO','D_CP_SUGARBEET','D_CP_GRASS','D_CP_MAIS','D_CP_OTHER')
+  dt[nchar(B_LU) == 10 & crop_cat1=='nature', c(cols) := 0]
+  dt[nchar(B_LU) == 10 & crop_cat1=='permanent', c(cols) := 0]
+  dt[nchar(B_LU) == 10 & crop_cat1=='forest', c(cols) := 0]
+  dt[nchar(B_LU) == 10 & crop_cat1=='other', c(cols) := 0]
+  dt[nchar(B_LU) == 10, D_CP_RUST := 0]
+  dt[nchar(B_LU) == 10, D_CP_RUSTDEEP := 0]
+  
   # Calculate the crop rotation fraction
-  dt[, D_CP_STARCH := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "starch")]
-  dt[, D_CP_POTATO := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "potato")]
-  dt[, D_CP_SUGARBEET := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "sugarbeet")]
-  dt[, D_CP_GRASS := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "grass")]
-  dt[, D_CP_MAIS := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "mais")]
-  dt[, D_CP_OTHER := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "other")]
-  dt[, D_CP_RUST := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "rustgewas")]
-  dt[, D_CP_RUSTDEEP := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "rustgewasdiep")]
+  dt[is.na(D_CP_STARCH), D_CP_STARCH := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "starch")]
+  dt[is.na(D_CP_POTATO), D_CP_POTATO := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "potato")]
+  dt[is.na(D_CP_SUGARBEET), D_CP_SUGARBEET := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "sugarbeet")]
+  dt[is.na(D_CP_GRASS), D_CP_GRASS := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "grass")]
+  dt[is.na(D_CP_MAIS), D_CP_MAIS := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "mais")]
+  dt[is.na(D_CP_OTHER), D_CP_OTHER := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "other")]
+  dt[is.na(D_CP_RUST), D_CP_RUST := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "rustgewas")]
+  dt[is.na(D_CP_RUSTDEEP), D_CP_RUSTDEEP := OBIC::calc_rotation_fraction(FIELD_ID, B_LU_BRP, crop = "rustgewasdiep")]
   
   # filter on one line per field
   dt[,year := 1:.N,by='FIELD_ID']
   dt2 <- dt[year==1]
   
   # calculate the distance to optimum pH
+  dt2[nchar(B_LU) == 10, B_LU_BRP := 2014]
   dt2[, D_PH_DELTA := OBIC::calc_ph_delta(B_LU_BRP, B_SOILTYPE_AGR, A_SOM_LOI,
                                           A_CLAY_MI, A_PH_CC, D_CP_STARCH,
                                           D_CP_POTATO, D_CP_SUGARBEET, D_CP_GRASS,
