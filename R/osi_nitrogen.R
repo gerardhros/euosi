@@ -396,6 +396,7 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
   # add visual bindings
   osi_country = osi_indicator = crop_code = crop_cat1 = osi_threshold_cropcat = NULL
   A_CN_FR = BD = D_RD = D_OC = D_GA = id = value = osi_st_c1 = NULL
+  soiltype.n = a = c.diss = c.ass = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)

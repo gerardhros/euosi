@@ -378,6 +378,7 @@ osi_c_ph_de <- function(B_LU,A_SOM_LOI, A_C_OF, A_CLAY_MI,A_SAND_MI, A_PH_CC) {
   
   # add visual bindings
   A_SILT_MI = B_LU_CAT = stype = id = NULL
+  osi_country = . = crop_code = crop_cat1 = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -751,7 +752,7 @@ osi_c_ph_nl <- function(ID,B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC) 
   # add visual bindings
   D_CP_STARCH = FIELD_ID = D_CP_POTATO = D_CP_SUGARBEET = D_CP_GRASS = D_CP_MAIS = D_CP_OTHER = D_CP_RUST = D_CP_RUSTDEEP = NULL
   D_PH_DELTA = i_c_ph = . = oid = osi_country = NULL
-  osi_soil_cat1 = crop_code = B_LU_BRP = NULL
+  osi_soil_cat1 = crop_code = crop_cat1 = B_LU_BRP = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
