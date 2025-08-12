@@ -828,7 +828,7 @@ osi_c_potassium_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_,
   # check the values (update the limits later via dt.parms)
   checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_subset(B_TEXTURE_GEPPA, choices =c("L","LL","Ls","Lsa","La","LAS","AA","A","As",
+  checkmate::assert_subset(B_TEXTURE_GEPPA, choices =c("L","LL","Ls","Lsa","La","LAS","AA","A","As","AS","SaI",
                                                        "Als","Al","Sa","Sal","S","SS","Sl",NA_character_), empty.ok = FALSE)
   checkmate::assert_numeric(A_K_AAA, lower = 1, upper = 500, any.missing = TRUE, len = arg.length)
   
@@ -1292,7 +1292,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'NL']
-  dt.crops[, crop_code := as.integer(crop_code)]
+  dt.crops[, crop_code := as.character(crop_code)]
   
   dt.soils <- as.data.table(euosi::osi_soiltype)
   dt.soils <- dt.soils[osi_country == 'NL']
@@ -1301,14 +1301,14 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'NL' & osi_indicator == 'i_c_k']
   
-  # convert B_LU to integer
-  B_LU <- as.integer(B_LU)
+  # convert B_LU to character due to IACS crop coding
+  B_LU <- as.character(B_LU)
   
   # Check inputs
   arg.length <- max(length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO), length(A_K_CO_PO), 
                     length(A_K_CC), length(A_CLAY_MI), length(B_SOILTYPE_AGR), length(B_LU))
   
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(dt.soils$osi_soil_cat1), empty.ok = FALSE)
@@ -1322,7 +1322,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   
   # Collect the data
   dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
+                   B_LU = as.character(B_LU),
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    A_SOM_LOI = A_SOM_LOI,
                    A_CLAY_MI = A_CLAY_MI,
@@ -1334,7 +1334,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   )
   
   # merge with crop and soil classification tables
-  dt <- merge(dt, dt.crops[, list(crop_code, crop_cat1)], 
+  dt <- merge(dt, dt.crops[, list(crop_code = as.character(crop_code), crop_cat1)], 
               by.x = "B_LU", by.y = "crop_code", all.x = TRUE)
   dt <- merge(dt, dt.soils[, list(osi_soil_cat1, osi_soil_cat2)], 
               by.x = "B_SOILTYPE_AGR", by.y = "osi_soil_cat1",all.x = TRUE)
@@ -1397,7 +1397,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   dt.arable[value < 0, value := 0]
   
   # Calculate the K availability for nature
-  dt.nature <- dt[crop_cat1 == 'nature']
+  dt.nature <- dt[crop_cat1 %in% c('nature','permanent','forest','other') | is.na(crop_cat1)]
   dt.nature[,value := 0]
   
   # score the K index given threshold for agronomic production / product quality
