@@ -4,18 +4,18 @@
 \alias{osi_c_potassium_de}
 \title{Calculate the potassium availability index in Germany}
 \usage{
-osi_c_potassium_de(B_LU, A_C_OF, A_CLAY_MI, A_SAND_MI, A_K_AAA)
+osi_c_potassium_de(B_LU, A_C_OF, A_CLAY_MI, A_SAND_MI, A_K_CAL)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
-\item{A_C_OF}{(numeric) The carbon content of the soil layer (g/ kg)}
+\item{A_C_OF}{(numeric) The carbon content of the soil layer (g C/ kg)}
 
 \item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
 
 \item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
 
-\item{A_K_AAA}{(numeric) The potassium content extracted with AA (g / kg)}
+\item{A_K_CAL}{(numeric) The potassium content extracted with CAL (mg K / kg)}
 }
 \value{
 The potassium availability index in Germany derived from extractable soil K fractions. A numeric value.

@@ -231,12 +231,12 @@ osi_conv_phosphor <- function(element,
   
   # estimate P from other measurements (all in mg P per kg soil)
   # https://doi.org/10.1016/j.geoderma.2021.115339, tables 3 and 5
-  dt[is.na(A_P_AL) & !is.na(A_P_OL), A_P_AL := (A_P_OL - 21.9 + 3.19 * A_PH_CC)/0.275]
+  dt[is.na(A_P_AL) & !is.na(A_P_OL), A_P_AL := pmax(1.5,(A_P_OL - 21.9 + 3.19 * A_PH_CC)/0.275)]
   dt[is.na(A_P_AAA) & !is.na(A_P_OL), A_P_AAA := 10^(log10((A_P_OL + 56.9)/54.9)/0.2824)]
   dt[is.na(A_P_AAA_EDTA) & !is.na(A_P_OL), A_P_AAA_EDTA := A_P_OL/ mean(0.4,0.5,0.79,0.4,0.25)]
   dt[is.na(A_P_CAL) & !is.na(A_P_OL), A_P_CAL := A_P_OL / 0.625]
   dt[is.na(A_P_DL) & !is.na(A_P_OL), A_P_DL := A_P_OL / 0.53]
-  dt[is.na(A_P_WA) & !is.na(A_P_OL), A_P_WA := A_P_OL / mean(2.77,2.5,4,4,3,2.45)]
+  dt[is.na(A_P_WA) & !is.na(A_P_OL), A_P_WA := pmax(1.1,A_P_OL / mean(2.77,2.5,4,4,3,2.45))]
   dt[is.na(A_P_M3) & !is.na(A_P_OL), A_P_M3 := A_P_OL / 0.39]
   
   # to do: add relationship

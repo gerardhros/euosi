@@ -147,7 +147,7 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
+                   B_LU = as.character(B_LU),
                    A_SAND_MI = A_SAND_MI,
                    A_CLAY_MI = A_CLAY_MI,
                    A_C_OF = A_C_OF,
@@ -264,8 +264,8 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
   # correction per soil type (being related to losses)
   dt[,NSCPS := (1- cf1) * NSCPS]
   
-  # run default NSC calculation (optimum around 100 kg N/ ha)
-  dt[, value := osi_evaluate_logistic(x = NSCPS, b = 0.05, x0 = -18, v = 0.859)]
+  # run default NSC calculation for Nmin in springg (optimum around 100 kg N/ ha)
+  dt[, value := osi_evaluate_logistic(x = NSCPS, b =   0.13683559, x0 = -14.84508232, v =  0.03487421)]
   
   # select calculated NSC
   value <- dt[,value]
@@ -396,6 +396,7 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
   # add visual bindings
   osi_country = osi_indicator = crop_code = crop_cat1 = osi_threshold_cropcat = NULL
   A_CN_FR = BD = D_RD = D_OC = D_GA = id = value = osi_st_c1 = NULL
+  soiltype.n = a = c.diss = c.ass = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -405,22 +406,22 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country=='NL' & osi_indicator=='i_c_n']
   
-  # convert B_LU to numeric if the input is character
-  B_LU = as.integer(B_LU)
+  # convert B_LU to a character if the input is different
+  B_LU = as.character(B_LU)
   
   # check length and of arguments
   arg.length <- max(length(A_N_RT), length(A_SOM_LOI),length(B_LU), length(B_SOILTYPE_AGR))
   checkmate::assert_numeric(A_N_RT, lower = 0.1, upper = 30000, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = as.integer(unique(dt.crops$crop_code)), empty.ok = FALSE)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_subset(B_LU, choices = as.character(unique(dt.crops$crop_code)), empty.ok = FALSE)
   checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(euosi::osi_soiltype$osi_soil_cat1), empty.ok = FALSE)
   checkmate::assert_data_table(dt.thresholds,max.rows = 2,min.rows = 2)
   
   # Collect data in an internal table
   dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
+                   B_LU = as.character(B_LU),
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    A_SOM_LOI = A_SOM_LOI,
                    A_N_RT = A_N_RT,
@@ -430,34 +431,79 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
   
   # merge with crop_category  
   dt <- merge(dt, 
-              dt.crops[, list(crop_code = as.integer(crop_code), crop_cat1)], 
+              dt.crops[, list(crop_code = as.character(crop_code), crop_cat1)], 
               by.x = "B_LU", 
               by.y = "crop_code", 
               all.x = TRUE)
   
   # calculate derivative supporting soil properties
   dt[, BD := OBIC::calc_bulk_density(B_SOILTYPE_AGR,A_SOM_LOI)]
-  dt[, D_RD := OBIC::calc_root_depth(B_LU_BRP = B_LU)]
-  dt[, D_OC := OBIC::calc_organic_carbon(A_SOM_LOI, BD, D_RD)]
-  dt[, D_GA := OBIC::calc_grass_age(id, B_LU_BRP = B_LU)]
+  dt[crop_cat1 == 'grassland', D_RD := 0.10]
+  dt[grepl('maize|perman|arable', crop_cat1), D_RD := 0.25]
+  dt[grepl('forest|nature|other', crop_cat1), D_RD := 0.25]
+  dt[is.na(D_RD), D_RD := 0.25]
+  dt[, D_OC := 0.58 * (A_SOM_LOI / 100) * 100 * 100 *  D_RD * BD]
   
-  # calculate the N supplying capacity for the Netherlands using the Dutch OBIC
-  dt[,value := OBIC::calc_nlv(B_LU_BRP = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
-                              A_N_RT = A_N_RT, A_CN_FR = A_CN_FR, D_OC = D_OC, D_BDS = BD, 
-                              D_GA = D_GA)]
+  # calculate grassland age (to be updated later)
+  dt[, D_GA := 1]
+  
+  # calculate the N supplying capacity for Dutch soils conform OBIC
+  
+    # Settings
+    param.a <- 20 # Age of organic matter
+    param.b <- 2^((14.1 - 9)/ 9) # Temperature correction
+    param.cn.micro <- 10 # CN ratio of micro organisms
+    param.t <- 5 / 12 # 5 months a year
+    param.diss.micro <- 2 # Dissimilation : assimilation ratio of micro organisms
+  
+    # set soiltype.n
+    dt[grepl('duinzand|dekzand|dalgrond|loess',B_SOILTYPE_AGR), soiltype.n := 'zand']
+    dt[grepl('klei',B_SOILTYPE_AGR), soiltype.n := 'klei']
+    dt[grepl('moerig|veen',B_SOILTYPE_AGR), soiltype.n := 'veen']
+    
+    # Calculate NLV for grass
+    dt.grass <- dt[grepl('grass',crop_cat1)]
+    dt.grass[soiltype.n == "zand" & D_GA < 4, a := 30.79]
+    dt.grass[soiltype.n == "zand" & D_GA >= 4 & D_GA < 7, a := 28.36]
+    dt.grass[soiltype.n == "zand" & D_GA >= 7 & D_GA < 10, a := 27.78]
+    dt.grass[soiltype.n == "zand" & D_GA >= 10, a := 26.57]
+    dt.grass[soiltype.n == "klei" & D_GA < 4, a := 34.25]
+    dt.grass[soiltype.n == "klei" & D_GA >= 4 & D_GA < 7, a := 31.54]
+    dt.grass[soiltype.n == "klei" & D_GA >= 7 & D_GA < 10, a := 30.90]
+    dt.grass[soiltype.n == "klei" & D_GA >= 10, a := 29.56]
+    
+    dt.grass[soiltype.n == "zand", value := 78 + a * (A_N_RT/1000) ^ 1.0046]
+    dt.grass[soiltype.n == "klei", value := 31.7 + a * (A_N_RT/1000) ^ 1.0046]
+    dt.grass[soiltype.n == "zand" & value > 200, value := 200]
+    dt.grass[soiltype.n == "klei" & value > 250, value := 250]
+    dt.grass[soiltype.n == "veen", value := 250]
+    
+    # Calculate the NLV for arable land
+    dt.arable <- dt[grepl('arable|maize|other|forest|permanent|nature',crop_cat1)]
+    dt.arable[, c.diss := D_OC * (1 - exp(4.7 * ((param.a + param.b * param.t)^-0.6 - param.a^-0.6)))]
+    dt.arable[, c.ass := c.diss / param.diss.micro]
+    dt.arable[, value := ((c.diss + c.ass) / A_CN_FR) - (c.ass / param.cn.micro)]
+    dt.arable[value > 250, value := 250]
+    dt.arable[value < -30, value := -30]
+    
+    # Combine both tables and extract values
+    dt <- rbindlist(list(dt.grass, dt.arable), fill = TRUE)
+    
+    # setorder back
+    setorder(dt, id)
   
   # convert to OSI score
   
   # subset and evaluate for arable soils
   dths <- dt.thresholds[osi_threshold_cropcat == 'arable']
-  dt[grepl('arable|maize',crop_cat1), value := osi_evaluate_parabolic(value, x.top = dths[,osi_st_c1])]
+  dt[grepl('arable|maize|perman|other',crop_cat1), value := osi_evaluate_parabolic(value, x.top = dths[,osi_st_c1])]
   
   # subset and evaluate for grassland soils
   dths <- dt.thresholds[osi_threshold_cropcat == 'grassland']
   dt[grepl('grassland',crop_cat1), value := osi_evaluate_parabolic(value, x.top = dths[,osi_st_c1])]
   
   # set OSI score for others  
-  dt[grepl('nature',crop_cat1), value := 1]
+  dt[grepl('nature|forest',crop_cat1), value := 1]
   
   # select output variable
   out <- dt[,value]
@@ -494,7 +540,7 @@ osi_c_nitrogen_eu <- function(B_LU = NA_character_,
                               A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
   
   # add visual bindings
-  A_CN_FR = BD = value = arate = NSC = NULL
+  A_CN_FR = NSCPS = BD = value = arate = NSC = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -543,11 +589,17 @@ osi_c_nitrogen_eu <- function(B_LU = NA_character_,
   # set annual decomposition rate of 2%
   dt[, arate := 0.02]
   
-  # estimate N supply for top 30 cm soil layer, set at max at 400 kg / yr
-  dt[, NSC := pmin(400,(100 * 100 * 0.3 * BD) * A_N_RT * arate * 0.001 * 0.001)]
+  # estimate N supply for top 30 cm soil layer, set at max at 600 kg / yr
+  dt[, NSC := pmin(600,(100 * 100 * 0.3 * BD) * A_N_RT * arate * 0.001 * 0.001)]
   
-  # convert to OSI score, optimum is 125 kg N / ha / yr
-  dt[, value := osi_evaluate_logistic(x = NSC, b = 0.04856090, x0 = -17.79554596,v= 0.08588367)]
+  # assume that 25% is mineralized in winter, and available in pre-season
+  dt[, NSCPS := 0.25 * NSC]
+  
+  # correction for losses (a generic 50%)
+  dt[, NSCPS := (1- 0.5) * NSCPS]
+  
+  # convert to OSI score, optimum is 40 kg N / ha / yr in spring
+  dt[, value := osi_evaluate_logistic(x = NSC, b =   0.13683559, x0 = -14.84508232, v =  0.03487421)]
   
   # select output variable
   out <- dt[,value]

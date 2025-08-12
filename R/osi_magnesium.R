@@ -428,7 +428,7 @@ osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC) {
                    A_C_OF= A_C_OF,
                    A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SILT_MI,
+                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
                    A_MG_CC = A_MG_CC,
                    value = NA_real_)
   
@@ -1288,7 +1288,7 @@ osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
   dt.grass.other[,D_MG := pmin(100 * (mg_pred /2.0), 100)] 
   
   # nature parcels
-  dt.nature <- dt[crop_cat1 == "nature"]
+  dt.nature <- dt[crop_cat1 %in%  c("nature","permanent","forest","other")]
   dt.nature[,D_MG := 0]
   
   # Combine both tables and extract values

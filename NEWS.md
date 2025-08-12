@@ -1,3 +1,29 @@
+# euosi 0.4.0 2025-08-12
+
+## Added
+* vignette `eu_osi_for_potassium` with an introduction to potassium
+* vignette `eu_osi_for_nitrogen` with an introduction to nitrogen
+* `dev/osi_crops_iacs.csv`, a crop table csv with standardized crop_codes across EU `osi_crops`, from #euosi-1
+
+## Changed
+* `osi_b_pmn_nl` has now BoBi correction resulting in more variation due to texture
+* thresholds for evaluation soil N supply for `osi_c_nitrogen_de` and `osi_c_nitrogen_eu`
+* rename existing crop table csv to `dev/osi_crops_countrycode.csv`, from #euosi-1
+* update `osi_crops` package table to include all IACS crop codes, from #euosi-1
+* set minimum boundary values for A_P_AL and A_P_WA in `osi_convmethods`
+
+## Fixed
+* `osi_c_potassium_de` for wrong P soil test in German evaluation of K supply
+* `osi_c_potassium_lv` for wrong USDA soil classification for sand
+* `osi_c_potassium_nl` for wrong reference to internal dt.maize subset
+* `osi_c_potassium_uk` uses temporary crop name fix 
+* `osi_b_pmn_nl`, `osi_c_nitrogen_nl`,`osi_c_phosphor_nl`, `osi_c_potassium_nl`,`osi_nut_p_nl`,`osi_c_ph_nl` and `osi_nut_k_nl` for mismatch b_lu versus b_lu_brp type due to IACS crop coding
+* `osi_c_nitrogen_nl`,`osi_c_phosphor_nl` and `osi_c_potassium_nl`,`osi_nut_p_nl`,`osi_c_ph_nl` and `osi_nut_k_nl` for newly added crop_cat1 options
+* `osi_c_boron`, `osi_c_zinc` adn `osi_c_magnesium_de` for wrong silt calculation
+* `osi_c_phosphor` for missing clay input for `osi_c_phosphor_de`
+* `osi_c_potassium_fr` for missing elements subset check `B_TEXTURE_GEPPA`
+* `osi_c_ph_de` allowing crop merging with newly crop list
+
 # euosi 0.3.0 2025-08-11
 
 ## Added

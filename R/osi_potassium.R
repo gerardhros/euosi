@@ -114,7 +114,7 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_c
   dt[B_COUNTRY == 'BE', value := osi_c_potassium_be(B_LU = B_LU, B_TEXTURE_BE = B_TEXTURE_BE,A_K_AAA  = A_K_AAA )]
   dt[B_COUNTRY == 'CH', value := osi_c_potassium_ch(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_K_AAA = A_K_AAA)]
   dt[B_COUNTRY == 'CZ', value := osi_c_potassium_cz(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_K_M3 = A_K_M3)]
-  dt[B_COUNTRY == 'DE', value := osi_c_potassium_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_K_AAA = A_K_AAA)]
+  dt[B_COUNTRY == 'DE', value := osi_c_potassium_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_K_CAL = A_K_CAL)]
   
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := osi_c_potassium_dk(B_LU = B_LU, A_K_AL = A_K_AL)]
@@ -272,7 +272,7 @@ osi_c_potassium_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_) {
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
+                   B_LU = as.character(B_LU),
                    B_TEXTURE_BE = B_TEXTURE_BE,
                    A_K_AAA = A_K_AAA,
                    value = NA_real_)
@@ -469,10 +469,10 @@ osi_c_potassium_cz <- function(A_K_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' This function calculates the potassium availability. 
 #' 
 #' @param B_LU (numeric) The crop code
-#' @param A_C_OF (numeric) The carbon content of the soil layer (g/ kg)
+#' @param A_C_OF (numeric) The carbon content of the soil layer (g C/ kg)
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_K_AAA (numeric) The potassium content extracted with AA (g / kg)
+#' @param A_K_CAL (numeric) The potassium content extracted with CAL (mg K / kg)
 #' 
 #' @import data.table
 #' 
@@ -480,10 +480,10 @@ osi_c_potassium_cz <- function(A_K_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' The potassium availability index in Germany derived from extractable soil K fractions. A numeric value.
 #' 
 #' @export
-osi_c_potassium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AAA) {
+osi_c_potassium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_CAL) {
   
   # add visual bindings
-  A_SILT_MI = stype = B_LU_CAT = NULL
+  A_SILT_MI = A_K_CAL2 = stype = B_LU_CAT = NULL
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -491,9 +491,14 @@ osi_c_potassium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AAA) {
                    A_C_OF= A_C_OF,
                    A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SILT_MI,
-                   A_K_AAA = A_K_AAA,
+                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
+                   A_K_CAL = A_K_CAL * 0.1, # in mg K/100g,
+                   A_K_CAL2 = A_K_CAL * ((1 / (0.02525 * (A_C_OF*2*0.1) + 0.6541))/10), #in mg K/100ml
                    value = NA_real_)
+  
+  # temporary fix since crop codes are unknown
+  dt[grepl('grass',B_LU),B_LU_CAT := 'grassland']
+  dt[!grepl('grass',B_LU),B_LU_CAT := 'arable']
   
   # add soil type
   dt[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
@@ -503,21 +508,21 @@ osi_c_potassium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AAA) {
   dt[A_SAND_MI <= 65 & A_SILT_MI <= 75 & A_CLAY_MI >= 25 & A_CLAY_MI <= 100 & A_C_OF < 150, stype := "BG5"]
   dt[ A_C_OF >= 150,  stype := "BG6"]
   
-  # evaluate A_K_AAA for arable soils
-  dt[stype=='BG1' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AAA, b = 0.4488277, x0 = 9.718321, v = 1.254134)]
-  dt[stype=='BG2' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AAA, b = 0.4025205, x0 = 11.358496, v = 1.186427)]
-  dt[stype=='BG3' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AAA, b = 0.3578666, x0 = 14.656902, v = 1.373431)]
-  dt[stype=='BG4' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AAA, b = 0.3457865, x0 = 17.303152, v = 1.543785)]
-  dt[stype=='BG5' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AAA, b = 0.2675499, x0 = 25.566018, v = 1.827952)]
-  dt[stype=='BG6' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AAA, b = 0.3735224, x0 = 17.424734, v = 1.874988)]
+  # evaluate A_K_CAL for arable soils (from Thuringen document)
+  dt[stype=='BG1' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_CAL, b = 2.805791, x0 = 5.147517, v = 3.851408)]
+  dt[stype=='BG2' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_CAL, b = 0.56655742, x0 = -0.58961718, v = 0.05731681)]
+  dt[stype=='BG3' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_CAL, b = 0.46922161, x0 = -1.14961640, v = 0.03963138)]
+  dt[stype=='BG4' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_CAL, b = 0.46553707, x0 = 0.34042489, v = 0.05085119)]
+  dt[stype=='BG5' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_CAL, b = 0.34769167, x0 = -2.13161060, v = 0.01896928)]
+  dt[stype=='BG6' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_CAL2, b = 0.47366263, x0 = -0.07583434, v = 0.06328905)]
   
-  # evaluate A_K_AAA for grassland soils
-  dt[stype=='BG1' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AAA, b = 9.030400, x0 = 6.895466, v = 5.5870309)]
-  dt[stype=='BG2' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AAA, b = 5.269679, x0 = 8.321927, v = 4.4726794)]
-  dt[stype=='BG3' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AAA, b = 4.616016, x0 = 9.324117, v = 4.1282965)]
-  dt[stype=='BG4' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AAA, b = 1.713005, x0 = 15.406360, v = 0.4744978)]
-  dt[stype=='BG5' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AAA, b = 1.595327, x0 = 15.460018, v = 0.1341047)]
-  dt[stype=='BG6' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AAA, b = 1.662136, x0 = 15.228511, v = 0.4373691)]
+  # evaluate A_K_CAL for grassland soils (From Thuringen document)
+  dt[stype=='BG1' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_CAL, b = 0.54473978, x0 = -1.56308785, v = 0.06497395)]
+  dt[stype=='BG2' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_CAL, b = 0.54703926, x0 = -0.93014476, v = 0.05270872)]
+  dt[stype=='BG3' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_CAL, b = 0.45389090, x0 = -0.80805767, v = 0.07963215)]
+  dt[stype=='BG4' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_CAL, b = 0.47366263, x0 = -0.07583434, v = 0.06328905 )]
+  dt[stype=='BG5' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_CAL, b = 0.28188689, x0 = -3.20342026, v = 0.08975293)]
+  dt[stype=='BG6' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_CAL2, b = 1.153548, x0 = -4.361503, v = 3.405232e-05)]
   
   # select value and return
   value <- dt[,value]
@@ -823,12 +828,19 @@ osi_c_potassium_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_,
   # check the values (update the limits later via dt.parms)
   checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_subset(B_TEXTURE_GEPPA, choices =c("L","LL","Ls","Lsa","La","LAS","AA","A","As",
+  checkmate::assert_subset(B_TEXTURE_GEPPA, choices =c("L","LL","Ls","Lsa","La","LAS","AA","A","As","AS","SaI",
                                                        "Als","Al","Sa","Sal","S","SS","Sl",NA_character_), empty.ok = FALSE)
-  checkmate::assert_character(B_AER_FR, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_AER_FR, choices = unique(dt.thresholds$osi_threshold_region), empty.ok = FALSE)
-  checkmate::assert_numeric(A_K_AAA, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
+  checkmate::assert_numeric(A_K_AAA, lower = 1, upper = 500, any.missing = TRUE, len = arg.length)
   
+  # check optional parameters 
+  if(sum(!is.na(B_SOILTYPE_AGR))>0){
+    checkmate::assert_character(B_SOILTYPE_AGR, any.missing = TRUE, min.len = 1, len = arg.length)
+    checkmate::assert_subset(B_SOILTYPE_AGR, choices = c(NA,unique(dt.soiltype$osi_soil_cat1)), empty.ok = FALSE)
+  }
+  if(sum(!is.na(B_AER_FR))>0){
+    checkmate::assert_character(B_AER_FR, any.missing = TRUE, min.len = 1, len = arg.length)
+    checkmate::assert_subset(B_AER_FR, choices = unique(dt.thresholds$osi_threshold_region), empty.ok = FALSE)
+  }
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -1110,7 +1122,7 @@ osi_c_potassium_lv <- function(A_K_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
   #             all.x = TRUE)
   
   # convert to the OSI score
-  dt[B_TEXTURE_USDA == 'S',value := osi_evaluate_logistic(x = A_K_DL, b= 0.11109104,x0 = -11.43898675,v = 0.007796498)]
+  dt[B_TEXTURE_USDA == 'Sa',value := osi_evaluate_logistic(x = A_K_DL, b= 0.11109104,x0 = -11.43898675,v = 0.007796498)]
   dt[B_TEXTURE_USDA %in% c('LoSa',
                            'SaLo'),value := osi_evaluate_logistic(x = A_K_DL, b= 0.085102248,x0 = -17.31157273,v = 0.00616734)]
   dt[B_TEXTURE_USDA %in% c('Lo','SaCl',
@@ -1280,7 +1292,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'NL']
-  dt.crops[, crop_code := as.integer(crop_code)]
+  dt.crops[, crop_code := as.character(crop_code)]
   
   dt.soils <- as.data.table(euosi::osi_soiltype)
   dt.soils <- dt.soils[osi_country == 'NL']
@@ -1289,14 +1301,14 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'NL' & osi_indicator == 'i_c_k']
   
-  # convert B_LU to integer
-  B_LU <- as.integer(B_LU)
+  # convert B_LU to character due to IACS crop coding
+  B_LU <- as.character(B_LU)
   
   # Check inputs
   arg.length <- max(length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO), length(A_K_CO_PO), 
                     length(A_K_CC), length(A_CLAY_MI), length(B_SOILTYPE_AGR), length(B_LU))
   
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(dt.soils$osi_soil_cat1), empty.ok = FALSE)
@@ -1310,7 +1322,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   
   # Collect the data
   dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
+                   B_LU = as.character(B_LU),
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    A_SOM_LOI = A_SOM_LOI,
                    A_CLAY_MI = A_CLAY_MI,
@@ -1322,7 +1334,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   )
   
   # merge with crop and soil classification tables
-  dt <- merge(dt, dt.crops[, list(crop_code, crop_cat1)], 
+  dt <- merge(dt, dt.crops[, list(crop_code = as.character(crop_code), crop_cat1)], 
               by.x = "B_LU", by.y = "crop_code", all.x = TRUE)
   dt <- merge(dt, dt.soils[, list(osi_soil_cat1, osi_soil_cat2)], 
               by.x = "B_SOILTYPE_AGR", by.y = "osi_soil_cat1",all.x = TRUE)
@@ -1385,20 +1397,18 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   dt.arable[value < 0, value := 0]
   
   # Calculate the K availability for nature
-  dt.nature <- dt[crop_cat1 == 'nature']
+  dt.nature <- dt[crop_cat1 %in% c('nature','permanent','forest','other') | is.na(crop_cat1)]
   dt.nature[,value := 0]
   
   # score the K index given threshold for agronomic production / product quality
   
-  # subset
-  dths <- dt.thresholds[osi_threshold_cropcat == 'grassland']
-  
   # evaluate grassland
+  dths <- dt.thresholds[osi_threshold_cropcat == 'grassland']
   dt.grass[, i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
   
   # subset and evaluate for maize
   dths <- dt.thresholds[osi_threshold_cropcat == 'maize']
-  dt.grass[, i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+  dt.maize[, i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
   
   # subset and evaluate for arable sandy soils
   dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'sand']
@@ -1728,10 +1738,13 @@ osi_c_potassium_uk <- function(B_LU, A_SOM_LOI,A_K_AN) {
                    value = NA_real_)
   
   # merge with crop
-  dt <- merge(dt,
-              dt.crops[,.(B_LU, crop_name, crop_cat1)],
-              by = 'B_LU',
-              all.x = TRUE)
+  # dt <- merge(dt,
+  #             dt.crops[,.(B_LU, crop_name, crop_cat1)],
+  #             by = 'B_LU',
+  #             all.x = TRUE)
+  
+  # temporary fix
+  dt[,crop_name := B_LU]
   
   # convert from mg / kg to mg / liter sample volume
   dt[, BD := (1/(0.02525 * A_SOM_LOI + 0.6541))]

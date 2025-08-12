@@ -96,13 +96,13 @@ osi_c_phosphor <- function(B_LU,
   dt[B_COUNTRY == 'BE', value := osi_c_phosphor_be(B_LU = B_LU, A_P_AL = A_P_AL)]
   dt[B_COUNTRY == 'CH', value := osi_c_phosphor_ch(B_LU = B_LU, A_P_AAA = A_P_AAA)]
   dt[B_COUNTRY == 'CZ', value := osi_c_phosphor_cz(B_LU = B_LU, A_P_M3 = A_P_M3)]
-  dt[B_COUNTRY == 'DE', value := osi_c_phosphor_de(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_CAL = A_P_CAL, A_P_DL = A_P_DL)]
+  dt[B_COUNTRY == 'DE', value := osi_c_phosphor_de(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI,A_P_CAL = A_P_CAL, A_P_DL = A_P_DL)]
   
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := osi_c_phosphor_dk(B_LU = B_LU, A_P_OL = A_P_OL)]
   dt[B_COUNTRY == 'EE', value := osi_c_phosphor_ee(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_M3 = A_P_M3)]
   dt[B_COUNTRY == 'ES', value := osi_c_phosphor_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'FR', value := osi_c_phosphor_fr(B_LU = B_LU, B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_P_OL= A_P_OL)]
+  dt[B_COUNTRY == 'FR', value := osi_c_phosphor_fr(B_LU = B_LU, B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_P_OL= A_P_OL,A_PH_WA=A_PH_WA)]
   dt[B_COUNTRY == 'FI', value := osi_c_phosphor_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_AAA = A_P_AAA, A_C_OF = A_C_OF )]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
@@ -765,7 +765,6 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
   checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   checkmate::assert_numeric(A_P_OL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(A_PH_WA, lower = 1, upper = 10, any.missing = TRUE, len = arg.length)
   
   # check optional parameters 
   if(sum(!is.na(B_SOILTYPE_AGR))>0){
@@ -1154,12 +1153,12 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
   osi_country = osi_indicator = id = crop_cat1 = crop_code = NULL
   
   # convert B_LU to integer
-  B_LU <- as.integer(B_LU)
+  B_LU <- as.character(B_LU)
   
   # Load in the crops data set and the parms dataset
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country =='NL']
-  dt.crops[, crop_code := as.integer(crop_code)]
+  dt.crops[, crop_code := as.character(crop_code)]
   
   # select parms (to check min and max, to be done later)
   dt.parms <- as.data.table(euosi::osi_parms)
@@ -1175,7 +1174,7 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
   checkmate::assert_numeric(A_P_AL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
   checkmate::assert_numeric(A_P_CC, lower = 0.1, upper = 100, any.missing = TRUE, len = arg.length)
   checkmate::assert_numeric(A_P_WA, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   
   # check that there is only 1 scoring function for P
@@ -1187,7 +1186,7 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
                    A_P_AL = A_P_AL * 2.29 * 0.1,
                    A_P_CC = A_P_CC,
                    A_P_WA = A_P_WA *(1 / (0.02525 * 3.5 + 0.6541))/0.43646,
-                   B_LU = B_LU,
+                   B_LU = as.character(B_LU),
                    value = NA_real_
                   )
   
