@@ -1,4 +1,9 @@
-# euosi 0.4.1 2025-08-12
+# euosi 0.5.0 UNRELEASED
+
+# Added
+* unit tests for all euosi functions
+* `osi_checkvar` for input argument checking
+* input argument checking in all euosi functions
 
 ## Fixed
 * error in vignette 
