@@ -105,7 +105,7 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
   
   # make internal data.table
   dt <- data.table(id = 1:arg.length,
-                   B_LU = as.integer(B_LU),
+                   B_LU = as.character(B_LU),
                    A_N_PMN = A_N_PMN,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    value = NA_real_
@@ -113,7 +113,7 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
   
   # merge with crop_category  
   dt <- merge(dt, 
-              dt.crops[, list(crop_code = as.integer(crop_code), crop_cat1)], 
+              dt.crops[, list(crop_code = as.character(crop_code), crop_cat1)], 
               by.x = "B_LU", 
               by.y = "crop_code", 
               all.x = TRUE)

@@ -191,7 +191,7 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
                    A_C_OF= A_C_OF,
                    A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SILT_MI,
+                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
                    A_PH_CC = A_PH_CC,
                    A_B_HW = A_B_HW,
                    value = NA_real_)
