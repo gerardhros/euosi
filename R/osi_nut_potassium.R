@@ -37,12 +37,12 @@
 #' 
 #' @export
 osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_character_,
-                            A_SOM_LOI = NA, A_C_OF = NA, 
-                            A_CLAY_MI = NA,A_SAND_MI = NA,
-                            A_PH_CC = NA, A_PH_WA = NA,A_CACO3_IF = NA,
-                            A_CEC_CO = NA, 
-                            A_K_AAA = NA,A_K_AL = NA,A_K_AN = NA,A_K_CAL = NA,A_K_CC = NA,
-                            A_K_CO_PO = NA,A_K_DL = NA,A_K_M3 = NA,A_K_NaAAA = NA,A_K_WA = NA,
+                            A_SOM_LOI = NA_real_, A_C_OF = NA_real_, 
+                            A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
+                            A_PH_CC = NA_real_, A_PH_WA = NA_real_,A_CACO3_IF = NA_real_,
+                            A_CEC_CO = NA_real_, 
+                            A_K_AAA = NA_real_,A_K_AL = NA_real_,A_K_AN = NA_real_,A_K_CAL = NA_real_,A_K_CC = NA_real_,
+                            A_K_CO_PO = NA_real_,A_K_DL = NA_real_,A_K_M3 = NA_real_,A_K_NaAAA = NA_real_,A_K_WA = NA_real_,
                             B_COUNTRY) {
   
   # add visual bindings
@@ -494,7 +494,7 @@ osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AAA) {
                    A_C_OF= A_C_OF,
                    A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
-                   A_SILT_MI = 100 - A_CLAY_MI - A_SILT_MI,
+                   A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
                    A_K_AAA = A_K_AAA,
                    value = NA_real_)
   
@@ -827,11 +827,18 @@ osi_nut_k_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_, B_SOILT
   checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   checkmate::assert_subset(B_TEXTURE_GEPPA, choices =c("L","LL","Ls","Lsa","La","LAS","AA","A","As",
-                                                       "Als","Al","Sa","Sal","S","SS","Sl",NA_character_), empty.ok = FALSE)
-  checkmate::assert_character(B_AER_FR, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_AER_FR, choices = unique(dt.thresholds$osi_threshold_region), empty.ok = FALSE)
+                                                       "Als","Al","Sa","Sal","S","SS","Sl",'AS','SaI',NA_character_), empty.ok = FALSE)
   checkmate::assert_numeric(A_K_AAA, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
   
+  # check optional parameters 
+  if(sum(!is.na(B_SOILTYPE_AGR))>0){
+    checkmate::assert_character(B_SOILTYPE_AGR, any.missing = TRUE, min.len = 1, len = arg.length)
+    checkmate::assert_subset(B_SOILTYPE_AGR, choices = c(NA,unique(dt.soiltype$osi_soil_cat1)), empty.ok = FALSE)
+  }
+  if(sum(!is.na(B_AER_FR))>0){
+    checkmate::assert_character(B_AER_FR, any.missing = TRUE, min.len = 1, len = arg.length)
+    checkmate::assert_subset(B_AER_FR, choices = unique(dt.thresholds$osi_threshold_region), empty.ok = FALSE)
+  }
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -1284,7 +1291,7 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'NL']
-  dt.crops[, crop_code := as.integer(crop_code)]
+  dt.crops[, crop_code := as.character(crop_code)]
   
   dt.soils <- as.data.table(euosi::osi_soiltype)
   dt.soils <- dt.soils[osi_country == 'NL']
@@ -1294,13 +1301,13 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   dt.thresholds <- dt.thresholds[osi_country == 'NL' & osi_indicator == 'i_c_k']
   
   # convert B_LU to integer
-  B_LU <- as.integer(B_LU)
+  B_LU <- as.character(B_LU)
   
   # Check inputs
   arg.length <- max(length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO), length(A_K_CO_PO), 
                     length(A_K_CC), length(A_CLAY_MI), length(B_SOILTYPE_AGR), length(B_LU))
   
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(dt.soils$osi_soil_cat1), empty.ok = FALSE)
@@ -1308,7 +1315,7 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_K_CC, lower = 0, upper = 800, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_K_CO_PO, lower = 0.1, upper = 50, any.missing = FALSE, len = arg.length)
+  #checkmate::assert_numeric(A_K_CO_PO, lower = 0.1, upper = 50, any.missing = FALSE, len = arg.length)
   checkmate::assert_numeric(A_CEC_CO, lower = 1, upper = 1000, any.missing = FALSE, len = arg.length)
   checkmate::assert_data_table(dt.thresholds,max.rows = 6, min.rows = 6)
   
@@ -1344,7 +1351,7 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   dt.maize[,value := (1 - (120 - A_K_CC) / 120) * 2.5]
   
   # Calculate the K excess for arable crops (Ros & Bussink, 2011)
-  dt.arable <- dt[crop_cat1 == 'arable']
+  dt.arable <- dt[crop_cat1 %in% c('arable','cropland')]
   
   # derive b-factor, texture dependent correction
   dt.arable[grepl('duin|rivier|maas|klei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10 & A_CLAY_MI <= 11, b := 1.513]
@@ -1389,7 +1396,7 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   dt.arable[value < 0, value := 0]
   
   # Calculate the K excess for nature
-  dt.nature <- dt[crop_cat1 == 'nature']
+  dt.nature <- dt[crop_cat1 %in% c('nature','permanent','forest','other')]
   dt.nature[,value := 0]
   
   # score the K index given threshold for agronomic production / product quality

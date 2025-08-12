@@ -100,7 +100,7 @@ osi_nut_p <- function(B_LU,
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := osi_nut_p_dk(B_LU = B_LU, A_P_OL = A_P_OL)]
   dt[B_COUNTRY == 'EE', value := osi_nut_p_ee(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_M3 = A_P_M3)]
-  dt[B_COUNTRY == 'ES', value := osi_nut_p_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_P_OL = A_P_OL)]
+  dt[B_COUNTRY == 'ES', value := osi_nut_p_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_P_OL = A_P_OL)]
   dt[B_COUNTRY == 'FR', value := osi_nut_p_fr(B_LU = B_LU, A_P_OL = A_P_OL,A_PH_WA = A_PH_WA)]
   dt[B_COUNTRY == 'FI', value := osi_nut_p_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_AAA = A_P_AAA, A_C_OF = A_C_OF )]
   
@@ -1108,12 +1108,12 @@ osi_nut_p_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA
   osi_country = osi_indicator = id = crop_cat1 = crop_code = NULL
   
   # convert B_LU to integer
-  B_LU <- as.integer(B_LU)
+  B_LU <- as.character(B_LU)
   
   # Load in the crops data set and the parms dataset
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country =='NL']
-  dt.crops[, crop_code := as.integer(crop_code)]
+  dt.crops[, crop_code := as.character(crop_code)]
   
   # select parms (to check min and max, to be done later)
   dt.parms <- as.data.table(euosi::osi_parms)
@@ -1129,7 +1129,7 @@ osi_nut_p_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA
   #checkmate::assert_numeric(A_P_AL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
   #checkmate::assert_numeric(A_P_CC, lower = 0.1, upper = 100, any.missing = TRUE, len = arg.length)
   #checkmate::assert_numeric(A_P_WA, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
+  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
   
   # check that there is only 1 scoring function for P
@@ -1156,10 +1156,10 @@ osi_nut_p_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA
   dt[grepl("maize",crop_cat1), value := A_P_CC + 0.05 * (A_P_AL / A_P_CC)]
   
   # calculate the P-excess for arable systems, normalized to a scale with maximum around 6
-  dt[grepl("arable",crop_cat1), value := A_P_WA * 0.1]
+  dt[grepl("arable|cropland",crop_cat1), value := A_P_WA * 0.1]
   
   # calculate the P-excess for nature 
-  dt[grepl("nature",crop_cat1), value := 0]
+  dt[grepl("nature|perman|forest",crop_cat1), value := 0]
   
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = value, b = -0.3248758, x0 =  9.6880541, v =  1.6272915 )]
