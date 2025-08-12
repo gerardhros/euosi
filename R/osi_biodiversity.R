@@ -24,6 +24,9 @@ osi_biodiversity <- function(A_SOM_LOI, A_PH_CC) {
   # parameters
   dt.parms <- as.data.table(euosi::osi_parms)
   
+  # checkmate for inputs
+  osi_checkvar(list(A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC),fname='osi_biodiversity')
+  
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_indicator %in% c('i_b_ph','i_b_som')]
@@ -35,7 +38,7 @@ osi_biodiversity <- function(A_SOM_LOI, A_PH_CC) {
   dt <- data.table(id = 1:arg.length,
                    A_SOM_LOI = A_SOM_LOI,
                    A_PH_CC = A_PH_CC,
-                   A_PH_WA = A_PH_WA,
+                   A_PH_WA = NA_real_,
                    value = NA_real_)
   
   # estimate pH water from pH CaCl2

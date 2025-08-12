@@ -25,6 +25,10 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   B_TEXTURE_HYPRES = A_SILT_MI = otratio = osi_other = NULL
   
+  # checkmate for inputs
+  osi_checkvar(list(B_COUNTRY = B_COUNTRY,B_LU = B_LU,B_BGZ = B_BGZ,
+                    A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,
+                    A_C_OF = A_C_OF),fname='osi_carbon')
   # parameters
   dt.parms <- as.data.table(euosi::osi_parms)
   
@@ -52,6 +56,9 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   
   # estimate texture HYPRES
   dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI,type = 'code')]
+  
+  # do checks on the calculated variables
+  osi_checkvar(list(B_TEXTURE_HYPRES = dt$B_TEXTURE_HYPRES),fname='osi_carbon')
   
   # merge with crop code
   dt <- merge(dt,

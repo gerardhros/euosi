@@ -22,6 +22,12 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   i_c_bo = A_SILT_MI = B_TEXTURE_USDA = B_TEXTURE_HYPRES = B_TEXTURE_GEPPA = B_TEXTURE_BE = NULL
   A_PH_WA = A_C_OF = NULL
   
+  # checkmate for inputs
+  osi_checkvar(list(B_COUNTRY = B_COUNTRY,B_LU = B_LU,
+                    A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,
+                    A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,
+                    A_B_HW = A_B_HW),fname='osi_c_boron')
+  
   # desired length of inputs
   arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),
                     length(A_SOM_LOI), length(A_PH_CC), 
@@ -52,6 +58,11 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
   dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
   dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
+  
+  # do checks on the calculated variables
+  osi_checkvar(list(B_TEXTURE_USDA = dt$B_TEXTURE_USDA,B_TEXTURE_HYPRES = dt$B_TEXTURE_HYPRES,
+                    B_TEXTURE_BE = dt$B_TEXTURE_BE, B_TEXTURE_GEPPA = dt$B_TEXTURE_GEPPA,
+                    A_PH_WA = dt$A_PH_WA, A_C_OF = dt$A_C_OF),fname='osi_c_boron')
   
   # calculate the OSI score for boron
   

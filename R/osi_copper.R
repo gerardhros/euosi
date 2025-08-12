@@ -28,6 +28,13 @@ osi_c_copper <- function(B_LU,A_CLAY_MI = NA_real_,B_CF= NA_real_,A_SOM_LOI= NA_
   # desired length of inputs
   arg.length <- max(length(B_LU), length(A_PH_WA), length(A_CU_EDTA),length(A_SOM_LOI),length(A_CLAY_MI))
   
+  # checkmate for inputs
+  osi_checkvar(list(B_COUNTRY = B_COUNTRY,B_LU = B_LU,B_CF = B_CF,
+                    A_CLAY_MI = A_CLAY_MI,A_CACO3_IF = A_CACO3_IF,
+                    A_SOM_LOI = A_SOM_LOI, A_PH_WA = A_PH_WA,
+                    A_CU_RT = A_CU_RT, A_CU_EDTA = A_CU_EDTA,
+                    A_CU_CC = A_CU_CC),fname='osi_c_copper')
+  
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -80,6 +87,13 @@ osi_c_copper_fr <- function(B_LU,A_CLAY_MI,B_CF, A_SOM_LOI,A_CU_EDTA) {
   # set visual bindings
   i_c_cu = osi_country = osi_indicator = id = crop_cat1 = value = NULL
   soil_cat_cu = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
+  
+  # checkmate for inputs
+  osi_checkvar(list(B_COUNTRY = rep('FR',length(BLU)),
+                    B_LU = B_LU,B_CF = B_CF,
+                    A_CLAY_MI = A_CLAY_MI,
+                    A_SOM_LOI = A_SOM_LOI,A_CU_EDTA = A_CU_EDTA),
+               fname='osi_c_copper_fr')
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)

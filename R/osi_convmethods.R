@@ -216,6 +216,8 @@ osi_conv_phosphor <- function(element,
   # check inputs
   checkmate::assert_subset(element,choices = c('A_P_AL','A_P_CAL','A_P_DL','A_P_AAA','A_P_AAA_EDTA',
                                                'A_P_WA','A_P_M3','A_P_CC'),empty.ok = FALSE)
+  # check required inputs
+  osi_checkvar(parm = list(A_P_OL = A_P_OL, A_PH_CC = A_PH_CC),fname ='osi_conv_phosphor')
   
   # make internal table with inputs
   dt <- data.table(A_P_AL = A_P_AL,
@@ -241,6 +243,11 @@ osi_conv_phosphor <- function(element,
   
   # to do: add relationship
   dt[is.na(A_P_CC) & !is.na(A_P_OL), A_P_CC := A_P_OL/10]
+  
+  # check calculated inputs
+  osi_checkvar(parm = list(A_P_AL = A_P_AL, A_P_AAA = A_P_AAA,A_P_AAA_EDTA=A_P_AAA_EDTA,
+                           A_P_CAL = A_P_CAL,A_P_DL = A_P_DL,A_P_WA = A_P_WA,
+                           A_P_M3 = A_P_M3, A_P_CC = A_P_CC),fname ='osi_conv_phosphor')
   
   # select the reqestred pH
   value <- dt[,get(element)]
@@ -280,6 +287,9 @@ osi_conv_potassium <- function(element,
   checkmate::assert_subset(element,choices = c('A_K_AL','A_K_AN','A_K_CAL','A_K_CC',
                                                'A_K_CO_PO','A_K_DL','A_K_M3',
                                                'A_K_NaAAA','A_K_WA'),empty.ok = FALSE)
+  # check required inputs
+  osi_checkvar(parm = list(A_K_AAA = A_K_AAA, A_PH_CC = A_PH_CC,
+                           A_CEC_CO = A_CEC_CO),fname ='osi_conv_potassium')
   
   # make internal table with inputs
   dt <- data.table(A_K_AAA = A_K_AAA,
@@ -323,6 +333,12 @@ osi_conv_potassium <- function(element,
   dt[is.na(A_K_NaAAA) & !is.na(A_K_AAA), A_K_NaAAA := A_K_AAA]
   dt[is.na(A_K_WA) & !is.na(A_K_AAA), A_K_WA := A_K_AAA]
   
+  # check calculated inputs
+  osi_checkvar(parm = list(A_PH_WA = A_PH_WA, A_K_AL = A_K_AL, A_K_AN = A_K_AN,
+                           A_K_CAL = A_K_CAL, A_K_CC = A_K_CC, A_K_CO_PO = A_K_CO_PO,
+                           A_K_M3 = A_K_M3, A_K_DL = A_K_DL, A_K_NaAAA = A_K_NaAAA,
+                           A_K_WA = A_K_WA),fname ='osi_conv_potassium')
+  
   # select the requested element
   value <- dt[,get(element)]
   
@@ -356,6 +372,9 @@ osi_conv_magnesium <- function(element,
   # check inputs
   checkmate::assert_subset(element,choices = c('A_MG_AL','A_MG_AN','A_MG_CC','A_MG_CO_PO',
                                                'A_MG_DL','A_MG_KCL','A_MG_M3','A_MG_NaAAA'),empty.ok = FALSE)
+  # check required inputs
+  osi_checkvar(parm = list(A_MG_AAA = A_MG_AAA, A_PH_CC = A_PH_CC,
+                           A_CEC_CO = A_CEC_CO),fname ='osi_conv_magnesium')
   
   # make internal table with inputs
   dt <- data.table(A_MG_AAA = A_MG_AAA,
@@ -382,8 +401,13 @@ osi_conv_magnesium <- function(element,
   # unknown, estimate from comparable methodologies
   dt[is.na(A_MG_AN) & !is.na(A_MG_AAA), A_MG_AN := A_MG_AAA]
   dt[is.na(A_MG_CO_PO) & !is.na(A_MG_AAA), A_MG_CO_PO := A_MG_AAA * (2 / 24.305) * 100 / A_CEC_CO]
-  dt[is.na(A_MG_AL) & !is.na(A_MG_AAA), A_MG_DL := A_MG_AL]
+  dt[is.na(A_MG_DL) & !is.na(A_MG_AAA), A_MG_DL := A_MG_AL]
   dt[is.na(A_MG_NaAAA) & !is.na(A_MG_AAA), A_MG_NaAAA := A_MG_AAA]
+  
+  # check calculated inputs
+  osi_checkvar(parm = list(A_MG_AL = A_MG_AL, A_MG_CC = A_MG_CC, A_MG_KCL = A_MG_KCL,
+                           A_MG_M3 = A_MG_M3, A_MG_AN = A_MG_AN, A_MG_CO_PO = A_MG_CO_PO,
+                           A_MG_DL = A_MG_DL, A_MG_NaAAA = A_MG_NaAAA),fname ='osi_conv_magnesium')
   
   # select the requested element
   value <- dt[,get(element)]
