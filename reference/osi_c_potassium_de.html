@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,8 +19,10 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/description_osi_crops_table.html">Description of osi_crops table</a></li>
-    <li><a class="dropdown-item" href="../articles/eu_osi_aggregation.html">EU OSI aggregatio</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_aggregation.html">EU OSI aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_for_nitrogen.html">EU OSI for nitrogen</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_phosphor.html">EU OSI for phosphor</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_for_potassium.html">EU OSI for potassium</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_introduction.html">EU OSI introduction</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_variables.html">EU OSI variables</a></li>
   </ul></li>
@@ -46,7 +48,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">osi_c_potassium_de</span><span class="op">(</span><span class="va">B_LU</span>, <span class="va">A_C_OF</span>, <span class="va">A_CLAY_MI</span>, <span class="va">A_SAND_MI</span>, <span class="va">A_K_AAA</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">osi_c_potassium_de</span><span class="op">(</span><span class="va">B_LU</span>, <span class="va">A_C_OF</span>, <span class="va">A_CLAY_MI</span>, <span class="va">A_SAND_MI</span>, <span class="va">A_K_CAL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -58,7 +60,7 @@
 
 
 <dt id="arg-a-c-of">A_C_OF<a class="anchor" aria-label="anchor" href="#arg-a-c-of"></a></dt>
-<dd><p>(numeric) The carbon content of the soil layer (g/ kg)</p></dd>
+<dd><p>(numeric) The carbon content of the soil layer (g C/ kg)</p></dd>
 
 
 <dt id="arg-a-clay-mi">A_CLAY_MI<a class="anchor" aria-label="anchor" href="#arg-a-clay-mi"></a></dt>
@@ -69,8 +71,8 @@
 <dd><p>(numeric) The sand content of the soil (%)</p></dd>
 
 
-<dt id="arg-a-k-aaa">A_K_AAA<a class="anchor" aria-label="anchor" href="#arg-a-k-aaa"></a></dt>
-<dd><p>(numeric) The potassium content extracted with AA (g / kg)</p></dd>
+<dt id="arg-a-k-cal">A_K_CAL<a class="anchor" aria-label="anchor" href="#arg-a-k-cal"></a></dt>
+<dd><p>(numeric) The potassium content extracted with CAL (mg K / kg)</p></dd>
 
 </dl></div>
     <div class="section level2">

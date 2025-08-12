@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,8 +19,10 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/description_osi_crops_table.html">Description of osi_crops table</a></li>
-    <li><a class="dropdown-item" href="../articles/eu_osi_aggregation.html">EU OSI aggregatio</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_aggregation.html">EU OSI aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_for_nitrogen.html">EU OSI for nitrogen</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_phosphor.html">EU OSI for phosphor</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_for_potassium.html">EU OSI for potassium</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_introduction.html">EU OSI introduction</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_variables.html">EU OSI variables</a></li>
   </ul></li>
@@ -39,6 +41,52 @@
 
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.0" id="euosi-040-2025-08-12">euosi 0.4.0 2025-08-12<a class="anchor" aria-label="anchor" href="#euosi-040-2025-08-12"></a></h2>
+<div class="section level3">
+<h3 id="added-0-4-0">Added<a class="anchor" aria-label="anchor" href="#added-0-4-0"></a></h3>
+<ul><li>vignette <code>eu_osi_for_potassium</code> with an introduction to potassium</li>
+<li>vignette <code>eu_osi_for_nitrogen</code> with an introduction to nitrogen</li>
+<li>
+<code>dev/osi_crops_iacs.csv</code>, a crop table csv with standardized crop_codes across EU <code>osi_crops</code>, from #euosi-1</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changed-0-4-0">Changed<a class="anchor" aria-label="anchor" href="#changed-0-4-0"></a></h3>
+<ul><li>
+<code>osi_b_pmn_nl</code> has now BoBi correction resulting in more variation due to texture</li>
+<li>thresholds for evaluation soil N supply for <code>osi_c_nitrogen_de</code> and <code>osi_c_nitrogen_eu</code>
+</li>
+<li>rename existing crop table csv to <code>dev/osi_crops_countrycode.csv</code>, from #euosi-1</li>
+<li>update <code>osi_crops</code> package table to include all IACS crop codes, from #euosi-1</li>
+<li>set minimum boundary values for A_P_AL and A_P_WA in <code>osi_convmethods</code>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="fixed-0-4-0">Fixed<a class="anchor" aria-label="anchor" href="#fixed-0-4-0"></a></h3>
+<ul><li>
+<code>osi_c_potassium_de</code> for wrong P soil test in German evaluation of K supply</li>
+<li>
+<code>osi_c_potassium_lv</code> for wrong USDA soil classification for sand</li>
+<li>
+<code>osi_c_potassium_nl</code> for wrong reference to internal dt.maize subset</li>
+<li>
+<code>osi_c_potassium_uk</code> uses temporary crop name fix</li>
+<li>
+<code>osi_b_pmn_nl</code>, <code>osi_c_nitrogen_nl</code>,<code>osi_c_phosphor_nl</code>, <code>osi_c_potassium_nl</code>,<code>osi_nut_p_nl</code>,<code>osi_c_ph_nl</code> and <code>osi_nut_k_nl</code> for mismatch b_lu versus b_lu_brp type due to IACS crop coding</li>
+<li>
+<code>osi_c_nitrogen_nl</code>,<code>osi_c_phosphor_nl</code> and <code>osi_c_potassium_nl</code>,<code>osi_nut_p_nl</code>,<code>osi_c_ph_nl</code> and <code>osi_nut_k_nl</code> for newly added crop_cat1 options</li>
+<li>
+<code>osi_c_boron</code>, <code>osi_c_zinc</code> adn <code>osi_c_magnesium_de</code> for wrong silt calculation</li>
+<li>
+<code>osi_c_phosphor</code> for missing clay input for <code>osi_c_phosphor_de</code>
+</li>
+<li>
+<code>osi_c_potassium_fr</code> for missing elements subset check <code>B_TEXTURE_GEPPA</code>
+</li>
+<li>
+<code>osi_c_ph_de</code> allowing crop merging with newly crop list</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="euosi-030-2025-08-11">euosi 0.3.0 2025-08-11<a class="anchor" aria-label="anchor" href="#euosi-030-2025-08-11"></a></h2>
 <div class="section level3">

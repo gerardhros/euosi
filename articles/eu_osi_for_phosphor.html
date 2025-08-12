@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,8 +34,10 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/description_osi_crops_table.html">Description of osi_crops table</a></li>
-    <li><a class="dropdown-item" href="../articles/eu_osi_aggregation.html">EU OSI aggregatio</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_aggregation.html">EU OSI aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_for_nitrogen.html">EU OSI for nitrogen</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_phosphor.html">EU OSI for phosphor</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_for_potassium.html">EU OSI for potassium</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_introduction.html">EU OSI introduction</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_variables.html">EU OSI variables</a></li>
   </ul>
@@ -63,7 +65,7 @@
                         <h4 data-toc-skip class="author">Gerard Ros
 &amp; Elise van Eynde</h4>
             
-            <h4 data-toc-skip class="date">2025-08-11</h4>
+            <h4 data-toc-skip class="date">2025-08-12</h4>
       
 
       <div class="d-none name"><code>eu_osi_for_phosphor.Rmd</code></div>
@@ -123,12 +125,12 @@ This indicator score reflects the ‘distance to target’ (i.e. difference
 between the current and optimum situation, while ensuring that other
 soil functions are not limiting). The further it deviates from score 1,
 the poorer the soil function works. An indicator value of 0.5
-approximately corresponds to the threshold level of the fertilization
-guidelines under which (additional) fertilization is recommended (given
-the ‘buildup and maintenance’ approach as being implemented in
-fertilizer recommendation systems). Overall, the indicator value can be
-interpreted as good (&gt;0.75), sufficient (0.5-0.75), and poor
-(&lt;0.5).</p>
+approximately corresponds to the lower threshold level of the
+fertilization guidelines under which (additional) fertilization is
+recommended (given the ‘buildup and maintenance’ approach as being
+implemented in fertilizer recommendation systems). Overall, the
+indicator value can be interpreted as good (&gt;0.75), sufficient
+(0.5-0.75), and poor (&lt;0.5).</p>
 </div>
 <div class="section level2">
 <h2 id="the-soil-p-wrapper-function">The soil P wrapper function<a class="anchor" aria-label="anchor" href="#the-soil-p-wrapper-function"></a>
@@ -363,8 +365,8 @@ threshold value for sustainable crop production is around 50 mg P/ kg
 for all soils. The soil index decreases when P-Olsen values decreases
 down to 30 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20DK1-1.png" alt="Evaluation P-indicator for the Belgium." width="75%"><p class="caption">
-Evaluation P-indicator for the Belgium.
+<img src="eu_osi_for_phosphor_files/figure-html/example%20DK1-1.png" alt="Evaluation P-indicator for the Denmark." width="75%"><p class="caption">
+Evaluation P-indicator for the Denmark.
 </p>
 </div>
 </div>
@@ -634,7 +636,7 @@ below.</p>
 illustrated below for potato (crop code PTC) and permanent grassland
 (code = PRL) for a single soil with P-content of 20 mg P / kg.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># show an example for soil P asssesment for sugar beet crop (code = 91) and grassland (code = 60)</span></span>
+<code class="sourceCode R"><span><span class="co"># show an example for soil P asssesment for potato crop (code = PTC) and grassland (code = PRL)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/osi_c_phosphor_fr.html">osi_c_phosphor_fr</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="st">'PTC'</span>, A_P_OL <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="../reference/osi_c_phosphor_fr.html">osi_c_phosphor_fr</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="st">'PRL'</span>, A_P_OL <span class="op">=</span> <span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0.9906090 0.9993112</span></span></code></pre>
@@ -650,8 +652,8 @@ P2O5 /kg) for two crops: grassland and potato. From this example one can
 see that the soil health index score varies from very low to very high,
 depending on the content of P-Olsen (mg P/kg).</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20FR2-1.png" alt="Evaluation P-indicator for the France." width="75%"><p class="caption">
-Evaluation P-indicator for the France.
+<img src="eu_osi_for_phosphor_files/figure-html/example%20FR2-1.png" alt="Evaluation P-indicator for France." width="75%"><p class="caption">
+Evaluation P-indicator for France.
 </p>
 </div>
 </div>
@@ -962,7 +964,7 @@ Evaluation P-indicator for Sweden.
 </h2>
 <p>The phosphorus supply in view of soil health for agricultural soils
 in Slovak Republic can be calculated using
-<code>osi_c_phosphor_lv</code> using the following inputs:</p>
+<code>osi_c_phosphor_sk</code> using the following inputs:</p>
 <ul>
 <li>B_LU, being the crop code, an unique number for each crop</li>
 <li>B_TEXTURE_HYPRES, being the soil texture class according to HYPRES
