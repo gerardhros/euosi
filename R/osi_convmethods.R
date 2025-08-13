@@ -450,3 +450,87 @@ osi_conv_magnesium <- function(element,
   return(value)
   
 }
+
+#' Estimate soil extractable zinc (-)
+#' 
+#' @param element (character) the method requested to be calculated
+#' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
+#' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
+#' @param A_ZN_RT (numeric) The total Zn-content of the soil via XRF or Dumas (mg Zn/kg)
+#' @param A_ZN_CC (numeric) The exchangeable Zn-content of the soil measured via 0.01M CaCl2 (ug Zn/kg)
+#' @param A_ZN_CO (numeric) The exchangeable Zn-content of the soil measured via Cohex extraction (mg Zn/kg)
+#' @param A_ZN_DTPA (numeric) The exchangeable Zn-content of the soil measured via DTPA (mg Zn/kg)
+#' @param A_ZN_EDTA (numeric) The exchangeable Zn-content of the soil measured via EDTA (mg Zn/kg)
+#' @param A_ZN_M3 (numeric) The exchangeable Zn-content of the soil measured via Mehlich-III (mg Zn/kg)
+#' @param A_ZN_WA (numeric) The exchangeable Zn-content of the soil measured via water (mg Zn/kg)
+#'  
+#' @export 
+osi_conv_zinc <- function(element, 
+                          A_SOM_LOI, A_ZN_RT,A_PH_CC,
+                          A_ZN_CC = NA_real_,A_ZN_CO = NA_real_,     
+                          A_ZN_DTPA = NA_real_, A_ZN_EDTA = NA_real_,
+                          A_ZN_M3 = NA_real_, A_ZN_WA = NA_real_){
+  
+  # add visual bindings
+  A_PH_WA = A_C_OF = NULL
+  
+  # check inputs
+  checkmate::assert_subset(element,choices = c('A_ZN_CC','A_ZN_CO', 'A_ZN_DTPA',
+                                               'A_ZN_M3','A_ZN_WA','A_ZN_EDTA'),empty.ok = FALSE)
+  
+  # make internal table with inputs
+  dt <- data.table(A_SOM_LOI = A_SOM_LOI,
+                   A_C_OF = NA_real_,
+                   A_ZN_RT = A_ZN_RT,
+                   A_PH_CC = A_PH_CC,
+                   A_PH_WA = NA_real_,
+                   A_ZN_CC = A_ZN_CC,
+                   A_ZN_CO = A_ZN_CO,
+                   A_ZN_DTPA = A_ZN_DTPA,
+                   A_ZN_EDTA = A_ZN_EDTA,
+                   A_ZN_M3 = A_ZN_M3,
+                   A_ZN_WA = A_ZN_WA)
+  
+  # check required inputs
+  osi_checkvar(parm = list(A_ZN_CC = dt$A_ZN_CC,
+                           A_ZN_CO = dt$A_ZN_CO,
+                           A_ZN_DTPA = dt$A_ZN_DTPA,
+                           A_ZN_M3 = dt$A_ZN_M3,
+                           A_ZN_WA = dt$A_ZN_WA
+                           ),fname ='osi_conv_zinc')
+  
+  # estimate Zn from other measurements (temporary, needs an update)
+  
+  # estimate pH water and A_C_OF
+  dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
+  dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
+  
+  # own dataset Gerard (n = 6000, worldwide samples, R2 = 0.43 (for CO) amd 0.23 (for M3)
+  dt[is.na(A_ZN_CO) & !is.na(A_ZN_RT), A_ZN_CO := 65.38*0.5*exp(5.36310 + 0.43778 * log(A_ZN_RT) - 6.83436 * log(A_PH_WA) + 0.29749 * log(A_C_OF))]
+  dt[is.na(A_ZN_M3) & !is.na(A_ZN_RT), A_ZN_M3 := exp(-1.72904 + 0.46599 * log(A_ZN_RT) - 0.28679 * log(A_PH_WA) + 0.48858 * log(A_C_OF))]
+  
+  # own dataset Gerard (n = 6000, worldwide samples, R2 = 0.56-0.52), both in mg/kg
+  dt[is.na(A_ZN_M3) & !is.na(A_ZN_WA), A_ZN_M3 := exp(-0.50807 + 1.14445 * log(A_ZN_WA) + 1.6462 * log(A_PH_WA) + 0.45322 * log(A_C_OF))]
+  dt[!is.na(A_ZN_M3) & is.na(A_ZN_WA), A_ZN_WA := exp(-0.382704 + 0.410019 * log(A_ZN_M3) - 1.251069 * log(A_PH_WA) - 0.083771 * log(A_C_OF))]
+  
+  # own dataset Gerard (n = 6000, worldwide samples, R2 = 0.44-0.63), Cohex was in mmol+/kg
+  dt[!is.na(A_ZN_CO) & is.na(A_ZN_WA), A_ZN_WA := exp(-2.983367 + 0.351938 * log(A_ZN_CO*2/65.38) + 1.091454 * log(A_PH_WA) + 0.026521 * log(A_C_OF))]
+  dt[is.na(A_ZN_CO) & !is.na(A_ZN_WA), A_ZN_CO := 65.38*0.5*exp(6.54734 + 1.10855 * log(A_ZN_WA) - 4.98216 * log(A_PH_WA) + 0.25785 * log(A_C_OF))]
+  
+  # Wang et al. (2006), Louisiana soils, https://doi/10.1081/CSS-120027640
+  dt[is.na(A_ZN_M3) & !is.na(A_ZN_DTPA), A_ZN_M3 := 1.686 * A_ZN_DTPA + 0.171]
+  dt[!is.na(A_ZN_M3) & is.na(A_ZN_DTPA), A_ZN_DTPA := (A_ZN_M3 - 0.171)/1.686]
+  
+  # set A_ZN_WA equal to A_ZN_CC given similarity in extraction conditions (in units ug/kg)
+  dt[is.na(A_ZN_CC),A_ZN_CC := A_ZN_WA * 1000]
+
+  # set EDTA equal to 5 times DTPA (rough estimate, Han et al., 2020) 
+  dt[is.na(A_ZN_EDTA) & !is.na(A_ZN_DTPA), A_ZN_EDTA := 5 * A_ZN_DTPA]
+  
+  # select the requested element
+  value <- dt[,get(element)]
+  
+  # return value
+  return(value)
+  
+}
