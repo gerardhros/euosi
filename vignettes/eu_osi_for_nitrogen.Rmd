@@ -111,8 +111,8 @@ Suprisingly the soil health index score is very high for both indicators: for th
 
   # estimate the soil health score for the N supplying capacity
   dt.of[, osi_c_n := osi_c_nitrogen_eu(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, 
-                                       A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, 
-                                       A_N_RT = A_N_RT)]
+                                       A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI, A_C_OF = A_C_OF, 
+                                       A_N_RT = A_N_RT, B_COUNTRY = B_COUNTRY)]
   
   # estimate the soil health score for microbial activity
   # for this example, total N is reduced with 50% to see some variation in the boxplot
@@ -158,7 +158,7 @@ When applied for a potato crop (code = 906) and grassland (code = 745) and a ser
 ```{r example BE2, out.width="75%", fig.cap="Evaluation N-indicator for Belgium.",dpi=300, echo = FALSE}
 
 # make an example with varying total N and fixed SOM content
-dt <- CJ(B_LU = c(906,745),
+dt <- CJ(B_LU = c('906','745'),
          A_CLAY_MI = 6,
          A_SAND_MI = 45,
          A_C_OF = 25,
@@ -224,7 +224,7 @@ When applied on a sandy and clay soil in Germany, for soils with a CN ratio vary
 ```{r example DE2, out.width="75%", fig.cap="Evaluation N-indicator for Germany.",dpi=300, echo = FALSE}
 
 # make an example with varying total N and fixed SOM content
-dt <- CJ(B_LU = c('maize'),
+dt <- CJ(B_LU = c('3301090400'),
          A_CLAY_MI = c(2.5, 20),
          A_SAND_MI = 85,
          A_SOM_LOI = 4,
@@ -331,7 +331,7 @@ Below the same example but then visualised for a series of soils with a varying 
 ```{r example NL2, out.width="75%", fig.cap="Evaluation N-indicator for the Netherlands.",dpi=300, echo = FALSE}
 
 # make an example with varying total N and fixed SOM content
-dt <- CJ(B_LU = c(259,265),
+dt <- CJ(B_LU = c('259','265'),
          B_SOILTYPE_AGR = 'dekzand',
          A_SOM_LOI = 4, 
          A_N_RT = seq(500,2000,50))
@@ -350,7 +350,7 @@ The potential microbial activity is evaluated using a more-is-better logistic cu
 ```{r example NL3, echo = TRUE}
 
   # show an example for maize crop
-  osi_b_pmn_nl(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',A_N_PMN = 25)
+  osi_b_pmn_nl(B_LU = '265', B_SOILTYPE_AGR = 'dekzand',A_N_PMN = 25)
 
 ```
 
@@ -359,10 +359,10 @@ When applied to a series of soils with varying PMN levels, an now for potato and
 ```{r example NL4, out.width="75%", fig.cap="Evaluation PMN-indicator for the Netherlands.",dpi=300, echo = FALSE}
 
 # make an example with varying total N and fixed SOM content
-dt <- CJ(B_LU = c(2014,265),
+dt <- CJ(B_LU = c('2014','265'),
          B_SOILTYPE_AGR = 'dekzand',
          A_N_PMN = seq(5,65,0.5))
-dt[,landuse := fifelse(B_LU==2014,'potato','grassland')]
+dt[,landuse := fifelse(B_LU=='2014','potato','grassland')]
 dt[,osi_b_n := osi_b_pmn_nl(B_LU,B_SOILTYPE_AGR=B_SOILTYPE_AGR,A_N_PMN=A_N_PMN)]
 
 # show plot
