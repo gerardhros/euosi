@@ -35,6 +35,21 @@ test_that("osi_evaluate_parabolic works", {
   
 })
 
+test_that("osi_evaluate_logistic_gaus_down works", {
+  expect_equal(
+    osi_evaluate_logistic_gaus_down(x = 5, b = 2, x0 = 3, v = 2.6, optimum = 1),
+    expected = c(7.310e-14),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_evaluate_logistic_gaus_down(x = c(0.1,0.5,0.8,1.1), b = 2, x0 = 3, v = 2.6, optimum = 0.5),
+    expected = c(0.107,0.146,0.976,0.298),
+    tolerance = 0.01
+  )
+  
+  
+})
+
 test_that("cf_ind_importance works", {
   expect_equal(
     cf_ind_importance(value = c(0.1,0.5,1.5)),
