@@ -10,32 +10,41 @@
 #' @param A_PH_WA (numeric) The acidity of the soil, measured in water (-)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-) 
 #' @param A_ZN_EDTA (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by EDTA 
-#' @param A_ZN_CC (numeric) The plant available content of Zn in the soil (mg  Zn per kg) extracted by 0.01M CaCl2
+#' @param A_ZN_CC (numeric) The plant available content of Zn in the soil (ug  Zn per kg) extracted by 0.01M CaCl2
+#' @param A_ZN_RT (numeric) The total Zn-content of the soil via XRF or Dumas (mg Zn/kg)
 #' @param B_COUNTRY (character) The country code
 #'  
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_zinc(B_LU = 'SOJ', A_ZN_EDTA = 45, A_PH_WA = 6.5,
-#' A_PH_CC = NA, A_ZN_CC = NA, B_COUNTRY='FR')
+#' osi_c_zinc(B_LU = 'SOJ', A_CLAY_MI = 45, A_SAND_MI = 15,A_ZN_EDTA = 45, A_PH_WA = 6.5,
+#' A_PH_CC = NA, A_ZN_CC = NA, A_ZN_RT = 51, B_COUNTRY='FR')
 #' 
 #' @return
 #' The capacity of the soil to supply and buffer zinc, evaluated given an optimum threshold for yield. A numeric value.
 #' 
 #' @export
-osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
-                       A_SOM_LOI = NA_real_,A_C_OF = NA_real_,
-                       A_PH_WA = NA_real_,A_PH_CC = NA_real_,
+osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = NA_real_,
+                       A_SOM_LOI = NA_real_,A_PH_WA = NA_real_,A_PH_CC = NA_real_,A_ZN_RT = NA_real_,
                        A_ZN_EDTA = NA_real_,A_ZN_CC = NA_real_, B_COUNTRY) {
   
   # add visual bindings
   value = A_SILT_MI = NULL
   
   # desired length of inputs
-  arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),
-                    length(A_SOM_LOI), length(A_C_OF),
-                    length(A_PH_WA), length(A_PH_CC), 
+  arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),length(A_C_OF),
+                    length(A_SOM_LOI), length(A_PH_WA), length(A_PH_CC),length(A_ZN_RT), 
                     length(A_ZN_EDTA), length(A_ZN_CC))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_LU = B_LU,
+                           B_COUNTRY = B_COUNTRY,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_SAND_MI = A_SAND_MI,
+                           A_SOM_LOI = A_SOM_LOI,
+                           A_PH_CC = A_PH_CC,
+                           A_ZN_RT = A_ZN_RT),
+               fname ='osi_c_zinc')
   
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
@@ -48,16 +57,29 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
                    B_COUNTRY = B_COUNTRY,
                    A_PH_WA = A_PH_WA,
                    A_PH_CC = A_PH_CC,
+                   A_ZN_RT = A_ZN_RT,
                    A_ZN_EDTA = A_ZN_EDTA,
                    A_ZN_CC = A_ZN_CC,
-                   value = NA_real_
-  )
+                   value = NA_real_)
   
   # estimate missing soil properties
   dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
   dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
   dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
   dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
+  
+  # temporary fix: estimate missing A_ZN_CC (https://doi.org/10.1080/00103629509369501)
+  dt[!is.na(A_ZN_RT) & is.na(A_ZN_CC), A_ZN_CC := osi_conv_zinc(element = 'A_ZN_CC',A_SOM_LOI = A_SOM_LOI, A_ZN_RT = A_ZN_RT,A_PH_CC = A_PH_CC)]
+  dt[!is.na(A_ZN_RT) & is.na(A_ZN_EDTA), A_ZN_EDTA := osi_conv_zinc(element = 'A_ZN_EDTA',A_SOM_LOI = A_SOM_LOI, A_ZN_RT = A_ZN_RT,A_PH_CC = A_PH_CC)]
+  
+  # check updated soil properties
+  osi_checkvar(parm = list(A_SOM_LOI = dt$A_SOM_LOI,
+                           A_C_OF = dt$A_C_OF,
+                           A_PH_WA = dt$A_PH_WA,
+                           A_PH_CC = dt$A_PH_CC,
+                           A_ZN_CC = dt$A_ZN_CC,
+                           A_ZN_EDTA = dt$A_ZN_EDTA),
+               fname ='osi_c_zinc')
   
   # calculate the open soil index score for Zinc availability 
   
@@ -129,10 +151,23 @@ osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA) {
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='DE']
   
+  # argument length
+  arg.length <- max(length(B_LU),length(A_CLAY_MI),length(A_C_OF),
+                    length(A_SAND_MI),length(A_ZN_EDTA))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_LU = B_LU,
+                           B_COUNTRY = rep('DE',arg.length),
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_SAND_MI = A_SAND_MI,
+                           A_C_OF = A_C_OF,
+                           A_ZN_EDTA = A_ZN_EDTA),
+               fname = 'osi_c_zinc_de')
+  
   # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
+  dt <- data.table(id = 1: arg.length,
                    B_LU = B_LU,
-                   A_C_OF= A_C_OF,
+                   A_C_OF = A_C_OF,
                    A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
                    A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
@@ -197,24 +232,20 @@ osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'FR']
   
-  # Load in the parameter set (to set min and max, to be done later)
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
   # load in thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country=='FR' & osi_indicator=='i_c_zn']
+  checkmate::assert_data_table(dt.thresholds,max.rows = 2)
   
   # Check length of desired input
   arg.length <- max(length(B_LU),length(A_ZN_EDTA),length(A_PH_WA))
   
-  # check the values (update the limits later via dt.parms)
-  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_numeric(A_ZN_EDTA, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(A_PH_WA, lower = 3, upper = 11, any.missing = TRUE, len = arg.length)
-  
-  # check that there are two scoring function for Zinc
-  checkmate::assert_data_table(dt.thresholds,max.rows = 2)
+  # check inputs
+  osi_checkvar(parm = list(B_LU = B_LU,
+                           B_COUNTRY = rep('FR',arg.length),
+                           A_PH_WA = A_PH_WA,
+                           A_ZN_EDTA = A_ZN_EDTA),
+               fname = 'osi_c_zinc_fr')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -235,7 +266,7 @@ osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
   
   # convert to the OSI score only for in and mais soils: DLN, MID, MIE and MIS crops
   dt[, value := osi_evaluate_logistic(A_ZN_EDTA,b = osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
-  dt[!B_LU %in% c('DLN','MID','MIE','MIS'), value := 1]
+  dt[!B_LU %in% c('DLN','MID','MIE','MIS','3301010600','3301010699','3301090400'), value := 1]
 
   # Sort the input in correct order
   setorder(dt, id)
@@ -259,7 +290,7 @@ osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_zinc_ie(B_LU = 'SOJ', A_SOM_LOI = 4, A_ZN_EDTA = 45, A_PH_WA = 6.5)
+#' osi_c_zinc_ie(B_LU = 'testcrop', A_SOM_LOI = 4, A_ZN_EDTA = 45, A_PH_WA = 6.5)
 #' 
 #' @return 
 #' The zinc availability index in Ireland estimated from extractable zinc and pH measured in water, a numeric value.
@@ -272,11 +303,11 @@ osi_c_zinc_ie <- function(B_LU,A_SOM_LOI, A_PH_WA, A_ZN_EDTA) {
   BD = osi_crops = cat_zn = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
   
   # Load in the datasets
-  dt.crops <- as.data.table(euosi::osi_crops)
-  dt.crops <- dt.crops[osi_country == 'IE']
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country == 'IE']
   
   # Load in the parameter set (to set min and max, to be done later)
-  dt.parms <- as.data.table(euosi::osi_parms)
+  # dt.parms <- as.data.table(euosi::osi_parms)
   
   # load in thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
@@ -285,14 +316,11 @@ osi_c_zinc_ie <- function(B_LU,A_SOM_LOI, A_PH_WA, A_ZN_EDTA) {
   # Check length of desired input
   arg.length <- max(length(B_LU),length(A_ZN_EDTA),length(A_PH_WA),length(A_SOM_LOI))
   
-  # check the values (update the limits later via dt.parms)
-  # checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  # checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_numeric(A_ZN_EDTA, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(A_PH_WA, lower = 3, upper = 11, any.missing = TRUE, len = arg.length)
-  
-  # check that there are two scoring function for Zinc
-  # checkmate::assert_data_table(dt.thresholds,max.rows = 2)
+  # check inputs
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
+                           A_PH_WA = A_PH_WA,
+                           A_ZN_EDTA = A_ZN_EDTA),
+               fname = 'osi_c_zinc_ie')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -361,11 +389,14 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
   
   # Check input
   arg.length <- max(length(B_LU), length(A_ZN_CC), length(A_PH_CC))
-  checkmate::assert_numeric(A_ZN_CC, lower = 5, upper = 50000, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = FALSE, len = arg.length)
-  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-
+  
+  # check inputs
+  osi_checkvar(parm = list(B_LU = B_LU,
+                           B_COUNTRY = rep('NL',arg.length),
+                           A_PH_CC = A_PH_CC,
+                           A_ZN_CC = A_ZN_CC),
+               fname = 'osi_c_zinc_nl')
+  
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = as.character(B_LU),
@@ -383,7 +414,7 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
   # Calculate Zn-availability
   dt[crop_cat1 =='arable', D_ZN := 10^(0.88 + 0.56 * log10(A_ZN_CC*0.001) + 0.13 * A_PH_CC)]
   dt[crop_cat1 =='maize', D_ZN := 10^(0.88 + 0.56 * log10(A_ZN_CC*0.001) + 0.13 * A_PH_CC)]
-  dt[crop_cat1 =='nature', D_ZN := 0]
+  dt[crop_cat1 %in% c('nature','forest','other','permanent'), D_ZN := 0]
   dt[crop_cat1 =='grassland', D_ZN := 10^(-1.04 + 0.67 * log10(A_ZN_CC*0.001) + 0.5 * A_PH_CC)]
   
   # Too high values for Zn-availability are prevented
@@ -412,7 +443,7 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_zinc_uk(B_LU = 'SOJ', A_ZN_EDTA = 45, A_PH_WA = 6.5)
+#' osi_c_zinc_uk(B_LU = 'testcrop', A_ZN_EDTA = 45, A_PH_WA = 6.5)
 #' 
 #' @return 
 #' The zinc availability index in United Kingdom estimated from extractable zinc and pH measured in water, a numeric value.
@@ -425,11 +456,8 @@ osi_c_zinc_uk <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
   osi_crops = cat_zn = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
   
   # Load in the datasets
-  dt.crops <- as.data.table(euosi::osi_crops)
-  dt.crops <- dt.crops[osi_country == 'UK']
-  
-  # Load in the parameter set (to set min and max, to be done later)
-  dt.parms <- as.data.table(euosi::osi_parms)
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country == 'UK']
   
   # load in thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
@@ -438,14 +466,10 @@ osi_c_zinc_uk <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
   # Check length of desired input
   arg.length <- max(length(B_LU),length(A_ZN_EDTA),length(A_PH_WA))
   
-  # check the values (update the limits later via dt.parms)
-  # checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  # checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_numeric(A_ZN_EDTA, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(A_PH_WA, lower = 3, upper = 11, any.missing = TRUE, len = arg.length)
-  
-  # check that there are two scoring function for Zinc
-  # checkmate::assert_data_table(dt.thresholds,max.rows = 2)
+  # check inputs
+  osi_checkvar(parm = list(A_PH_WA = A_PH_WA,
+                           A_ZN_EDTA = A_ZN_EDTA),
+               fname = 'osi_c_zinc_uk')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -453,13 +477,6 @@ osi_c_zinc_uk <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
                    A_ZN_EDTA = A_ZN_EDTA,
                    A_PH_WA = A_PH_WA,
                    value = NA_real_)
-  
-  # merge with threshold
-  # dt <- merge(dt,
-  #             dt.thresholds,
-  #             by.x = 'cat_zn',
-  #             by.y = 'osi_threshold_soilcat',
-  #             all.x = TRUE)
   
   # set OSI score with optimum around 1.5 (possible deficiency) and 0.5 (probably deficiency)
   dt[, value := osi_evaluate_logistic(A_ZN_EDTA,b = 8.719122,x0 = -0.9514568,v =  1.134101e-05)]

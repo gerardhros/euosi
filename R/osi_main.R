@@ -26,8 +26,9 @@
 #' @param A_K_AAA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction 
 #' @param A_MG_AAA (numeric) is the exchangeable Mg concentration (mg/kg)
 #' @param A_B_HW (numeric) The plant available content of B in the soil (mg  B per kg) extracted by hot water
-#' @param A_ZN_CC (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by CaCl2 
+#' @param A_ZN_CC (numeric) The plant available content of Zn in the soil (ug Zn per kg) extracted by CaCl2 
 #' @param A_ZN_EDTA (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by EDTA 
+#' @param A_ZN_RT (numeric) The total Zn-content of the soil via XRF or Dumas (mg Zn/kg)
 #' @param output (character) An optional argument to select output: scores, indicators, or all. (default = all)
 #' 
 #' @details 
@@ -52,7 +53,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                       A_PH_CC = NA_real_, A_CACO3_IF = NA_real_,
                       A_N_RT = NA_real_,A_N_PMN = NA_real_,
                       A_P_OL = NA_real_,A_K_AAA = NA_real_,A_MG_AAA = NA_real_, A_B_HW = NA_real_, 
-                      A_ZN_CC = NA_real_, A_ZN_EDTA = NA_real_,
+                      A_ZN_CC = NA_real_, A_ZN_EDTA = NA_real_,A_ZN_RT = NA_real_,
                       ID = 1, output = 'all') {
   
   # add visual bindings
@@ -85,6 +86,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                    A_K_AAA = A_K_AAA,
                    A_MG_AAA = A_MG_AAA,
                    A_B_HW = A_B_HW,
+                   A_ZN_RT = A_ZN_RT,
                    A_ZN_CC = A_ZN_CC,
                    A_ZN_EDTA = A_ZN_EDTA)
   
@@ -148,7 +150,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
     dt[,i_c_zn := osi_c_zinc(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
                              A_SOM_LOI = A_SOM_LOI, A_C_OF = A_C_OF,
                              A_PH_WA = NA_real_, A_PH_CC = A_PH_CC,
-                             A_ZN_EDTA = NA_real_,A_ZN_CC = A_ZN_CC, 
+                             A_ZN_EDTA = NA_real_,A_ZN_CC = A_ZN_CC, A_ZN_RT=A_ZN_RT,
                              B_COUNTRY = B_COUNTRY)]
     
     # calculate OSI indicator for soil pH
@@ -413,7 +415,7 @@ osi_field_dt <- function(dt, output ='all'){
   colsp <- c('ID',"B_COUNTRY","B_LU","B_SOILTYPE_AGR","B_PREC_SUM","B_PREC_WIN","B_PET_SUM",     
              "B_PET_WIN","B_TEMP_SUM","B_TEMP_WIN","A_SOM_LOI","A_CLAY_MI","A_SAND_MI" ,    
              "A_PH_CC","A_CACO3_IF","A_CEC_CO","A_C_OF","A_N_RT","A_N_PMN",       
-             "A_P_OL","A_K_AAA","A_B_HW","A_ZN_CC","A_MG_AAA")
+             "A_P_OL","A_K_AAA","A_B_HW","A_ZN_CC","A_ZN_RT","A_MG_AAA")
   checkmate::assert_true(all(colsp  %in% colnames(dt)))
   
   # run osi_field
@@ -442,6 +444,7 @@ osi_field_dt <- function(dt, output ='all'){
                          A_B_HW = dt$A_B_HW, 
                          A_ZN_CC = dt$A_ZN_CC, 
                          A_ZN_EDTA = dt$A_ZN_EDTA,
+                         A_ZN_RT = dt$A_ZN_RT,
                          ID = dt$ID, 
                          output = output)
   
