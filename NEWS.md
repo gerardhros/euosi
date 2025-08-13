@@ -4,10 +4,13 @@
 * unit tests for all euosi functions
 * `osi_checkvar` for input argument checking
 * input argument checking in all euosi functions
+* `osi_conv_zinc` to estimate extractable Zn content from total Zn content
+* parameter `A_ZN_RT` as input variable for `osi_field` and `osi_c_zinc` functions.
 
 ## Changed
 * `osi_c_magnesium_x` is now accounting for B_LU for all countries in `osi_crop` 
 * `osi_c_zinc_de` and `osi_c_boron_de` updated for new IACS crops
+* `osi_farm` updated with acceptable ranges in soil properties
 
 ## Fixed
 * `osi_p_crumbleability` for forgotten setorder after merge
