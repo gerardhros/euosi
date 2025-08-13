@@ -48,6 +48,16 @@ osi_gw_nleach <- function(B_LU = NA_character_,
                     length(B_TEMP_SUM),length(B_TEMP_WIN),
                     length(B_COUNTRY))
   
+  # check inputs
+  osi_checkvar(parm = list(B_LU = B_LU,
+                           B_COUNTRY = B_COUNTRY,
+                           A_SAND_MI = A_SAND_MI,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_C_OF = A_C_OF,
+                           A_N_RT = A_N_RT,
+                           A_CACO3_IF = A_CACO3_IF),
+               fname ='osi_gw_nleach')
+  
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -89,6 +99,20 @@ osi_gw_nleach <- function(B_LU = NA_character_,
   dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
   dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
   
+  # check calculated inputs
+  osi_checkvar(parm = list(B_PREC_SUM = dt$B_PREC_SUM,
+                           B_PREC_WIN = dt$B_PREC_WIN, 
+                           B_PET_SUM = dt$B_PET_SUM,
+                           B_PET_WIN = dt$B_PET_WIN,
+                           B_TEMP_SUM = dt$B_TEMP_SUM,
+                           B_TEMP_WIN = dt$B_TEMP_WIN,
+                           B_TEXTURE_USDA = dt$B_TEXTURE_USDA,
+                           B_TEXTURE_HYPRES = dt$B_TEXTURE_HYPRES,
+                           B_TEXTURE_BE = dt$B_TEXTURE_BE,
+                           B_TEXTURE_GEPPA = dt$B_TEXTURE_GEPPA,
+                           A_SOM_LOI = dt$A_SOM_LOI),
+               fname ='osi_gw_nleach')
+  
   # calculate the OSI score for N leaching
   
     # for unknown countries, start with annual weather data
@@ -112,7 +136,7 @@ osi_gw_nleach <- function(B_LU = NA_character_,
   dt[B_COUNTRY == 'FR', value := osi_gw_nleach_fr(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI, A_CACO3_IF,    
                                                   B_PREC_SUM, B_PREC_WIN, B_PET_SUM, B_PET_WIN, B_TEMP_SUM,        
                                                   B_TEMP_WIN)]
-  dt[B_COUNTRY == 'FI', value := osi_gw_nleach_fi(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI)]
+  dt[B_COUNTRY == 'FI', value := NA_real_]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
   dt[B_COUNTRY == 'HU', value := NA_real_]
@@ -136,7 +160,7 @@ osi_gw_nleach <- function(B_LU = NA_character_,
   dt[is.na(value), value := osi_gw_nleach_eu(B_LU = B_LU, A_N_RT = A_N_RT, A_C_OF = A_C_OF, 
                                              A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,
                                              B_PREC_Y = B_PREC_Y, B_PET_Y = B_PET_Y, 
-                                             B_TEMP_Y = B_TEMP_Y)]
+                                             B_TEMP_Y = B_TEMP_Y,B_COUNTRY=B_COUNTRY)]
   
   # setorderid
   setorder(dt,id)
@@ -169,7 +193,7 @@ osi_gw_nleach <- function(B_LU = NA_character_,
 #' @import data.table
 #' 
 #' @examples 
-#' osi_gw_nleach_be(B_LU = '772',A_N_RT = 1200, A_C_OF = 25, 
+#' osi_gw_nleach_be(B_LU = '9823',A_N_RT = 1200, A_C_OF = 25, 
 #' A_CLAY_MI = 3.5, A_SAND_MI = 15,A_CACO3_IF = 0.8)
 #' 
 #' @return 
@@ -185,17 +209,15 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   D_BDS = D_NHA = D_NSC = B_TEXTURE_USDA = A_SILT_MI = crop_s = NS = NULL
   flemax = flu = B_PS = fp = B_TEMP = ft = fc = nloss = NULL
+  b_prec_sum = b_prec_win = b_pet_sum = b_pet_win = b_temp_sum = b_temp_win = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='BE']
   
-  # parameters
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
-  # thresholds
-  #dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  #dt.thresholds <- dt.thresholds[osi_country == 'FR' & osi_indicator =='i_c_k']
+  # load internal database with climatic data
+  dt.clim <- as.data.table(euosi::osi_clim)
+  dt.clim <- dt.clim[osi_country=='BE']
   
   # get maximum length of input data
   arg.length <- max(length(B_LU), length(A_N_RT), length(A_C_OF), length(A_CLAY_MI), 
@@ -203,8 +225,19 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
                     length(B_PREC_SUM),length(B_PREC_WIN), length(B_PET_SUM),length(B_PET_WIN),
                     length(B_TEMP_SUM),length(B_TEMP_WIN))
   
+  # check inputs
+  osi_checkvar(parm = list(B_LU = B_LU,
+                           B_COUNTRY = rep('BE',arg.length),
+                           A_SAND_MI = A_SAND_MI,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_C_OF = A_C_OF,
+                           A_N_RT = A_N_RT,
+                           A_CACO3_IF = A_CACO3_IF),
+               fname ='osi_gw_nleach_be')
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
+                   B_COUNTRY = rep('BE',arg.length),
                    B_LU = B_LU,
                    B_PREC_SUM = B_PREC_SUM,
                    B_PREC_WIN = B_PREC_WIN, 
@@ -219,6 +252,22 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
                    A_N_RT = A_N_RT,
                    A_CACO3_IF = A_CACO3_IF,
                    value = NA_real_)
+  
+  # merge with climatic data, and adapt when missing
+  dt <- merge(dt,dt.clim,
+              by.x = 'B_COUNTRY',
+              by.y = 'osi_country', 
+              all.x = TRUE)
+  dt[is.na(B_PREC_SUM),B_PREC_SUM := b_prec_sum]
+  dt[is.na(B_PREC_WIN),B_PREC_WIN := b_prec_win]
+  dt[is.na(B_PET_SUM),B_PET_SUM := b_pet_sum]
+  dt[is.na(B_PET_WIN),B_PET_WIN := b_pet_win]
+  dt[is.na(B_TEMP_SUM),B_TEMP_SUM := b_temp_sum]
+  dt[is.na(B_TEMP_WIN),B_TEMP_WIN := b_temp_win]
+  
+  # remove weather variables
+  cols <- c('b_prec_sum','b_prec_win','b_pet_sum','b_pet_win','b_temp_sum','b_temp_win')
+  dt[,c(cols) := NULL]
   
   # estimate bulk density
   dt[, D_BDS := 0.80806 + 0.823844*exp(0.0578*0.1*A_C_OF) + 0.0014065 * A_SAND_MI - (0.0010299 * A_CLAY_MI)]
@@ -236,13 +285,6 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
               by.x = 'B_LU', 
               by.y = 'crop_code',
               all.x=TRUE)
-  
-  # merge thresholds
-  # dt <- merge(dt,
-  #             dt.thresholds,
-  #             by.x = c('crop_cat1'),
-  #             by.y = c('osi_threshold_cropcat'),
-  #             all.x = TRUE)
   
   # calculate N surplus that potentially can leach
   #dt[crop_cat1 == 'grassland', NS := pmax(0,D_NSC - 140)]
@@ -337,7 +379,7 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
 #' @import data.table
 #' 
 #' @examples 
-#' osi_gw_nleach_fr(B_LU = '772',A_N_RT = 1200, A_C_OF = 25, 
+#' osi_gw_nleach_fr(B_LU = 'BDH',A_N_RT = 1200, A_C_OF = 25, 
 #' A_CLAY_MI = 3.5, A_SAND_MI = 15,A_CACO3_IF = 0.8)
 #' 
 #' @return 
@@ -354,17 +396,15 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   D_BDS = D_NHA = D_NSC = B_TEXTURE_USDA = A_SILT_MI = crop_s = NULL
   flemax = flu = B_PS = fp = B_TEMP = ft = fc = nloss = NS = NULL
+  b_prec_sum = b_prec_win = b_pet_sum = b_pet_win = b_temp_sum = b_temp_win = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='FR']
   
-  # parameters
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
-  # thresholds
-  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  # dt.thresholds <- dt.thresholds[osi_country == 'FR' & osi_indicator =='i_c_n']
+  # load internal database with climatic data
+  dt.clim <- as.data.table(euosi::osi_clim)
+  dt.clim <- dt.clim[osi_country=='FR']
   
   # get maximum length of input data
   arg.length <- max(length(B_LU), length(A_N_RT), length(A_C_OF), length(A_CLAY_MI), 
@@ -372,8 +412,19 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
                     length(B_PREC_SUM),length(B_PREC_WIN), length(B_PET_SUM),length(B_PET_WIN),
                     length(B_TEMP_SUM),length(B_TEMP_WIN))
   
+  # check inputs
+  osi_checkvar(parm = list(B_LU = B_LU,
+                           B_COUNTRY = rep('FR',arg.length),
+                           A_SAND_MI = A_SAND_MI,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_C_OF = A_C_OF,
+                           A_N_RT = A_N_RT,
+                           A_CACO3_IF = A_CACO3_IF),
+               fname ='osi_gw_nleach_fr')
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
+                   B_COUNTRY = rep('FR',arg.length),
                    B_LU = B_LU,
                    B_PREC_SUM = B_PREC_SUM,
                    B_PREC_WIN = B_PREC_WIN, 
@@ -388,6 +439,22 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
                    A_N_RT = A_N_RT,
                    A_CACO3_IF = A_CACO3_IF,
                    value = NA_real_)
+  
+  # merge with climatic data, and adapt when missing
+  dt <- merge(dt,dt.clim,
+              by.x = 'B_COUNTRY',
+              by.y = 'osi_country', 
+              all.x = TRUE)
+  dt[is.na(B_PREC_SUM),B_PREC_SUM := b_prec_sum]
+  dt[is.na(B_PREC_WIN),B_PREC_WIN := b_prec_win]
+  dt[is.na(B_PET_SUM),B_PET_SUM := b_pet_sum]
+  dt[is.na(B_PET_WIN),B_PET_WIN := b_pet_win]
+  dt[is.na(B_TEMP_SUM),B_TEMP_SUM := b_temp_sum]
+  dt[is.na(B_TEMP_WIN),B_TEMP_WIN := b_temp_win]
+  
+  # remove weather variables
+  cols <- c('b_prec_sum','b_prec_win','b_pet_sum','b_pet_win','b_temp_sum','b_temp_win')
+  dt[,c(cols) := NULL]
   
   # estimate bulk density
   dt[, D_BDS := 0.80806 + 0.823844*exp(0.0578*0.1*A_C_OF) + 0.0014065 * A_SAND_MI - (0.0010299 * A_CLAY_MI)]
@@ -406,13 +473,6 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
               by.y = 'crop_code',
               all.x=TRUE)
   
-  # merge thresholds
-  # dt <- merge(dt,
-  #             dt.thresholds,
-  #             by.x = c('crop_cat1'),
-  #             by.y = c('osi_threshold_cropcat'),
-  #             all.x = TRUE)
-
   # calculate N surplus
   # dt[crop_cat1 == 'grassland', NS := pmax(0,D_NSC - 140)]
   # dt[!crop_cat1 == 'grassland', NS := pmax(0,D_NSC - 100)]
@@ -489,88 +549,6 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   
 }
 
-#' Calculate the risk for nitrogen leaching in Finland
-#' 
-#' This function calculates the N leaching risks for the soil
-#' 
-#' @param B_LU (character) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_N_RT (numeric) The organic nitrogen content of the soil (mg N / kg)
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_gw_nleach_fi(B_LU = '772',A_N_RT = 1200, A_C_OF = 25, A_CLAY_MI = 3.5, A_SAND_MI = 15)
-#' 
-#' @return 
-#' The risk for N leaching
-#' 
-#' @export
-osi_gw_nleach_fi <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI) {
-  
-  # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
-  crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
-  crop_s = nloss = NULL
-    
-  # crop data
-  dt.crops <- as.data.table(euosi::osi_crops)
-  dt.crops <- dt.crops[osi_country=='FI']
-  
-  # parameters
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
-  # thresholds
-  #dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  #dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_e_n']
-  
-  # get maximum length of input data
-  arg.length <- max(length(B_LU), length(A_N_RT), length(A_C_OF), length(A_CLAY_MI), 
-                    length(A_SAND_MI))
-  
-  # Collect the data into a table
-  dt <- data.table(id = 1:arg.length,
-                   B_LU = B_LU,
-                   A_SAND_MI = A_SAND_MI,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_SILT_MI = pmax(0,100-A_CLAY_MI - A_SAND_MI),
-                   A_C_OF = A_C_OF,
-                   A_N_RT = A_N_RT,
-                   value = NA_real_)
-  
-
-  # merge crop properties
-  dt <- merge(dt,
-              dt.crops[,.(crop_code,crop_cat1,crop_s)],
-              by.x = 'B_LU', 
-              by.y = 'crop_code',
-              all.x=TRUE)
-  
-  # merge thresholds
-  # dt <- merge(dt,
-  #             dt.thresholds,
-  #             by.x = c('crop_cat1'),
-  #             by.y = c('osi_threshold_cropcat'),
-  #             all.x = TRUE)
-  
-  # calculate N loss
-  dt[,nloss := NA_real_]
-  
-  # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = nloss, b = -0.79255, x0 = 2.5, v=1)]
-  
-  # set the order to the original inputs
-  setorder(dt, id)
-  
-  # return value
-  value <- dt[, value]
-  
-  return(value)
-  
-}
-
 #' Calculate the risk for nitrogen leaching template for EU
 #' 
 #' This function calculates the N leaching risks for the soil
@@ -583,40 +561,50 @@ osi_gw_nleach_fi <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI) {
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil (mg N / kg)
+#' @param B_COUNTRY (character) The country code
 #' 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_gw_nleach_eu(B_LU ='265',A_N_RT = 4100, A_C_OF = 22, A_CLAY_MI = 4.5, 
-#' A_SAND_MI = 15, B_PREC_Y = 900, B_PET_Y = 650,B_TEMP_Y = 4.5)
+#' osi_gw_nleach_eu(B_LU ='3301000000',A_N_RT = 4100, A_C_OF = 22, A_CLAY_MI = 4.5, 
+#' A_SAND_MI = 15, B_PREC_Y = 900, B_PET_Y = 650,B_TEMP_Y = 4.5, B_COUNTRY='ES')
 #' 
 #' @return 
 #' The risk for N leaching
 #' 
 #' @export
 osi_gw_nleach_eu <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
-                             B_PREC_Y = NA_real_, B_PET_Y = NA_real_, B_TEMP_Y = NA_real_) {
+                             B_PREC_Y = NA_real_, B_PET_Y = NA_real_, B_TEMP_Y = NA_real_,
+                             B_COUNTRY) {
   
   # set visual bindings
   D_BS = B_TEXTURE_USDA = A_SILT_MI =arate = NSC = crop_cat1 = NS = NULL
   flemax = flu = B_PS = fp = id = ft = fc = nloss = NULL
+  b_prec_y = b_pet_y = b_temp_y = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
+ 
+  # load internal database with climatic data
+  dt.clim <- as.data.table(euosi::osi_clim)
   
-  # parameters
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
-  # thresholds
-  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
-
   # get maximum length of input data
   arg.length <- max(length(B_LU), length(A_N_RT), length(A_C_OF), length(A_CLAY_MI), 
-                    length(A_SAND_MI),
+                    length(A_SAND_MI),length(B_COUNTRY),
                     length(B_PREC_Y), length(B_PET_Y),length(B_TEMP_Y))
  
+  # check inputs
+  osi_checkvar(parm = list(B_LU = B_LU,
+                           B_COUNTRY = B_COUNTRY,
+                           A_SAND_MI = A_SAND_MI,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_C_OF = A_C_OF,
+                           A_N_RT = A_N_RT),
+               fname ='osi_gw_nleach_eu')
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
+                   B_COUNTRY = B_COUNTRY,
                    B_LU = B_LU,
                    B_PREC_Y = B_PREC_Y,
                    B_PET_Y = B_PET_Y,
@@ -628,6 +616,19 @@ osi_gw_nleach_eu <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
                    A_N_RT = A_N_RT,
                    value = NA_real_)
 
+  # merge with climatic data, and adapt when missing
+  dt <- merge(dt,dt.clim,
+              by.x = 'B_COUNTRY',
+              by.y = 'osi_country', 
+              all.x = TRUE)
+  dt[is.na(B_PREC_Y),B_PREC_Y := b_prec_y]
+  dt[is.na(B_PET_Y),B_PET_Y := b_pet_y]
+  dt[is.na(B_TEMP_Y),B_TEMP_Y := b_temp_y]
+
+  # remove weather variables
+  cols <- c('b_prec_sum','b_prec_win','b_pet_sum','b_pet_win','b_temp_sum','b_temp_win','b_prec_y','b_pet_y','b_temp_y')
+  dt[,c(cols) := NULL]
+  
   # estimate soil texture class
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
   
