@@ -267,3 +267,51 @@ test_that("osi_conv_magnesium works", {
     tolerance = 0.01
   )
 })
+
+
+test_that("osi_conv_zinc works", {
+  expect_equal(
+    osi_conv_zinc(element ='A_ZN_CC', 
+                  A_SOM_LOI = 4.5, 
+                  A_ZN_RT = 1500,
+                  A_PH_CC = 4.3,
+                  A_ZN_CC = NA_real_,
+                  A_ZN_CO = NA_real_,     
+                  A_ZN_DTPA = NA_real_, 
+                  A_ZN_EDTA = NA_real_,
+                  A_ZN_M3 = NA_real_,
+                  A_ZN_WA = NA_real_),
+    expected = c(194.71),
+    tolerance = 0.01
+  )
+  
+  expect_equal(
+    osi_conv_zinc(element ='A_ZN_CC', 
+                  A_SOM_LOI = 4.5, 
+                  A_ZN_RT = 1500,
+                  A_PH_CC = 4.3,
+                  A_ZN_CC = 25000,
+                  A_ZN_CO = NA_real_,     
+                  A_ZN_DTPA = NA_real_, 
+                  A_ZN_EDTA = NA_real_,
+                  A_ZN_M3 = NA_real_,
+                  A_ZN_WA = NA_real_),
+    expected = c(25000),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_conv_zinc(element ='A_ZN_CC', 
+                  A_SOM_LOI = rep(4.5,5), 
+                  A_ZN_RT = c(750,1500,3000,4000,5000),
+                  A_PH_CC = rep(4.3,5),
+                  A_ZN_CC = NA_real_,
+                  A_ZN_CO = NA_real_,     
+                  A_ZN_DTPA = NA_real_, 
+                  A_ZN_EDTA = NA_real_,
+                  A_ZN_M3 = NA_real_,
+                  A_ZN_WA = NA_real_),
+    expected = c(170.556,194.71,222.28,234.84,245.07),
+    tolerance = 0.01
+  )
+})
+
