@@ -5,7 +5,7 @@ osi_parm_id;osi_parm_name;osi_parm_type;osi_parm_description;osi_parm_unit;osi_p
 4;A_AL_RT;measurement;aluminium total content;g Al / kg;0.001;210;num;FALSE;
 5;A_B_CC;measurement;boron plant available (cacl2);\u00B5g B/ kg;0.001;1000;num;FALSE;
 6;A_B_HW;measurement;boron extractable (hot water);mg/kg;0;1000;num;FALSE;
-7;A_CACO3_IF;measurement;carbonated lime;%;0.1;50;num;FALSE;
+7;A_CACO3_IF;measurement;carbonated lime;%;0;50;num;FALSE;
 8;A_CA_CO;measurement;calcium extractable (bacl2);mmol+/kg;0.1;500;num;FALSE;
 9;A_CA_CO_PO;measurement;calcium occupation of cec;%;1;100;num;FALSE;
 10;A_CA_RT;measurement;calcium total content;g Ca / kg;0.001;350;num;FALSE;

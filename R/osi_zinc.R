@@ -114,7 +114,7 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_zinc_de(B_LU = '265',A_C_OF=25, A_CLAY_MI=5,A_SAND_MI=15,A_ZN_EDTA = 50)
+#' osi_c_zinc_de(B_LU = '3301061299',A_C_OF=25, A_CLAY_MI=5,A_SAND_MI=15,A_ZN_EDTA = 50)
 #'  
 #' @return 
 #' The zinc availability index in Germany derived from extractable soil Zn fractions. A numeric value.
@@ -123,7 +123,7 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
 osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA) {
 
   # add visual bindings
-  stype = . = crop_name = crop_cat1 = osi_country = A_SILT_MI = NULL
+  stype = . = crop_name = crop_code = crop_cat1 = osi_country = A_SILT_MI = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -149,8 +149,9 @@ osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA) {
   
   # merge with crop
   dt <- merge(dt,
-              dt.crops[,.(B_LU, crop_name, crop_cat1)],
-              by = 'B_LU',
+              dt.crops[,.(crop_code, crop_name, crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
               all.x = TRUE)
   
   # evaluate A_B_HW for arable soils

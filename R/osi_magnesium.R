@@ -505,7 +505,7 @@ osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC) {
 #' 
 #' @examples 
 #' osi_c_magnesium_dk(B_LU = '3301000000',A_MG_AL = 5)
-#' osi_c_magnesium_dk(B_LU = c('3301000000','3301061299),A_MG_AL = c(3.5,5.5))
+#' osi_c_magnesium_dk(B_LU = c('3301000000','3301061299'),A_MG_AL = c(3.5,5.5))
 #' 
 #' @return 
 #' The magnesium availability index in Denmark derived from extractable soil Mg fractions. A numeric value.
@@ -701,7 +701,7 @@ osi_c_magnesium_es <- function(B_LU,A_MG_CO_PO) {
 #' The magnesium availability index in Finland estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_fi <- function(B_LU, B_TEXTURE_USDA, A_MG_AAA,A_C_OF = 0) {
+osi_c_magnesium_fi <- function(B_LU, B_TEXTURE_USDA, A_MG_AAA,A_C_OF = 0.5) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -942,7 +942,7 @@ osi_c_magnesium_it <- function(B_LU,A_MG_CO_PO,A_K_CO_PO) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
-  fr_mg_k = v1 = v2 = NULL
+  fr_mg_k = v1 = v2 = . = crop_code = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -1538,8 +1538,7 @@ osi_c_magnesium_se <- function(B_LU,A_MG_AL) {
 osi_c_magnesium_sk <- function(B_LU,B_TEXTURE_HYPRES,A_MG_M3) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
-  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)

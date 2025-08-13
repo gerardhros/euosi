@@ -181,7 +181,7 @@ osi_c_boron_ch <- function(B_LU, A_B_HW) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_boron_de(B_LU = 265,A_C_OF=25, A_CLAY_MI=5,A_SAND_MI=15,A_PH_CC = 4,A_B_HW = 50)
+#' osi_c_boron_de(B_LU = '3301061299',A_C_OF=25, A_CLAY_MI=5,A_SAND_MI=15,A_PH_CC = 4,A_B_HW = 50)
 #'  
 #' @return 
 #' The boron availability index in Germany derived from extractable soil B fractions. A numeric value.
@@ -190,7 +190,7 @@ osi_c_boron_ch <- function(B_LU, A_B_HW) {
 osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
   
   # add visual bindings
-  A_SILT_MI = stype = . = crop_name = osi_country = crop_cat1 = id = NULL
+  A_SILT_MI = stype = . = crop_name = crop_code = osi_country = crop_cat1 = id = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -217,8 +217,9 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
   
   # merge with crop
   dt <- merge(dt,
-              dt.crops[,.(B_LU, crop_name, crop_cat1)],
-              by = 'B_LU',
+              dt.crops[,.(crop_code, crop_name, crop_cat1)],
+              by.x = 'B_LU',
+              by.y ='crop_code',
               all.x = TRUE)
   
   # evaluate A_B_HW for arable soils
