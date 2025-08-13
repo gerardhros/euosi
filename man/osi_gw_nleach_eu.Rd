@@ -42,7 +42,7 @@ The risk for N leaching
 This function calculates the N leaching risks for the soil
 }
 \examples{
-osi_gw_nleach_eu(B_LU ='265',A_N_RT = 4100, A_C_OF = 22, A_CLAY_MI = 4.5, 
-A_SAND_MI = 15, B_PREC_Y = 900, B_PET_Y = 650,B_TEMP_Y = 4.5)
+osi_gw_nleach_eu(B_LU ='3301000000',A_N_RT = 4100, A_C_OF = 22, A_CLAY_MI = 4.5, 
+A_SAND_MI = 15, B_PREC_Y = 900, B_PET_Y = 650,B_TEMP_Y = 4.5, B_COUNTRY='ES')
 
 }

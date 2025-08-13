@@ -37,6 +37,8 @@ test_that("osi_field works", {
   dt[, A_K_AAA := 25 + rnorm(.N, mean =75, sd = 12)]
   dt[, A_B_HW := 0.1 + rnorm(.N,mean = 0.4, sd = 0.05)]
   dt[, A_ZN_CC := rnorm(.N, mean = 14.5, sd = 1.5)]
+  dt[A_PH_CC > 7, A_ZN_RT := rnorm(.N, mean = 57,sd = 3)]
+  dt[A_PH_CC <= 7, A_ZN_RT := rnorm(.N, mean = 20,sd = 3)]
   dt[,A_MG_AAA := 15 + rnorm(.N,mean = 30,sd=7.5)]
   dt[,ID := id]  
   
@@ -65,6 +67,7 @@ test_that("osi_field works", {
                        A_B_HW = dt$A_B_HW, 
                        A_ZN_CC = dt$A_ZN_CC, 
                        A_ZN_EDTA = NA_real_,
+                       A_ZN_RT = dt$A_ZN_RT,
                        ID = dt$ID, 
                        output = 'all')
   
