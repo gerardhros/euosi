@@ -20,6 +20,6 @@ The zinc availability index in United Kingdom estimated from extractable zinc an
 This function calculates the Zn availability of a soil, using the agronomic index used in UK.
 }
 \examples{
-osi_c_zinc_uk(B_LU = 'SOJ', A_ZN_EDTA = 45, A_PH_WA = 6.5)
+osi_c_zinc_uk(B_LU = 'testcrop', A_ZN_EDTA = 45, A_PH_WA = 6.5)
 
 }

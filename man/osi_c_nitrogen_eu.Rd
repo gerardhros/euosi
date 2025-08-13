@@ -10,7 +10,8 @@ osi_c_nitrogen_eu(
   A_SAND_MI = NA_real_,
   A_SOM_LOI = NA_real_,
   A_C_OF = NA_real_,
-  A_N_RT = NA_real_
+  A_N_RT = NA_real_,
+  B_COUNTRY = NA_real_
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ osi_c_nitrogen_eu(
 \item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
 
 \item{A_N_RT}{(numeric) The organic nitrogen content of the soil in mg N / kg}
+
+\item{B_COUNTRY}{(character) The country code}
 }
 \value{
 The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.

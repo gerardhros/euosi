@@ -42,7 +42,7 @@ the capacity of soils to supply  nitorgen, converted to an OSI score.
 This function calculates the nitrogen supplying capacity for soils in Europe
 }
 \examples{
-osi_c_nitrogen(B_LU = 256, B_SOILTYPE_AGR = 'dekzand',A_N_RT = 2500, 
+osi_c_nitrogen(B_LU = '256', B_SOILTYPE_AGR = 'dekzand',A_N_RT = 2500, 
 A_CLAY_MI = 11, A_SAND_MI = 3,A_C_OF = NA,A_CACO3_IF = NA,
 A_SOM_LOI = 4.5, B_COUNTRY = 'NL')
 

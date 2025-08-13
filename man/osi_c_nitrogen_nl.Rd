@@ -22,7 +22,7 @@ The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, c
 This function calculates the NLV (nitrogen producing capacity) for the soil
 }
 \examples{
-osi_c_nitrogen_nl(B_LU = 256, B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4.5,A_N_RT = 2500)
+osi_c_nitrogen_nl(B_LU = '256', B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4.5,A_N_RT = 2500)
 osi_c_nitrogen_nl(1019,'dekzand',5.5,2315)
 
 }

@@ -12,7 +12,8 @@ osi_gw_nleach_eu(
   A_SAND_MI,
   B_PREC_Y = NA_real_,
   B_PET_Y = NA_real_,
-  B_TEMP_Y = NA_real_
+  B_TEMP_Y = NA_real_,
+  B_COUNTRY
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ osi_gw_nleach_eu(
 \item{B_PET_Y}{(numeric) Total potential evapotranspiration in year (mm)}
 
 \item{B_TEMP_Y}{(numeric) Mean year temperature (degrees Celcius)}
+
+\item{B_COUNTRY}{(character) The country code}
 }
 \value{
 The risk for N leaching

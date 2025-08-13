@@ -51,7 +51,7 @@ The risk of nitrogen leaching. A numeric value, converted to a OSI score.
 This function calculates the N leaching risks for the soil
 }
 \examples{
-osi_gw_nleach_fr(B_LU = '772',A_N_RT = 1200, A_C_OF = 25, 
+osi_gw_nleach_fr(B_LU = 'BDH',A_N_RT = 1200, A_C_OF = 25, 
 A_CLAY_MI = 3.5, A_SAND_MI = 15,A_CACO3_IF = 0.8)
 
 }

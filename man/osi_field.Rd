@@ -30,6 +30,7 @@ osi_field(
   A_B_HW = NA_real_,
   A_ZN_CC = NA_real_,
   A_ZN_EDTA = NA_real_,
+  A_ZN_RT = NA_real_,
   ID = 1,
   output = "all"
 )
@@ -81,9 +82,11 @@ osi_field(
 
 \item{A_B_HW}{(numeric) The plant available content of B in the soil (mg  B per kg) extracted by hot water}
 
-\item{A_ZN_CC}{(numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by CaCl2}
+\item{A_ZN_CC}{(numeric) The plant available content of Zn in the soil (ug Zn per kg) extracted by CaCl2}
 
 \item{A_ZN_EDTA}{(numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by EDTA}
+
+\item{A_ZN_RT}{(numeric) The total Zn-content of the soil via XRF or Dumas (mg Zn/kg)}
 
 \item{ID}{(character) A field id}
 
