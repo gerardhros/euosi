@@ -20,6 +20,6 @@ The magnesium availability index in Czech Republic estimated from extractable ma
 This function calculates the magnesium availability.
 }
 \examples{
-oci_c_magnesium_cz(A_MG_M3 = 81,B_TEXTURE_HYPRES='C')
+oci_c_magnesium_cz(B_LU = '3301000000',A_MG_M3 = 81,B_TEXTURE_HYPRES='C')
 
 }

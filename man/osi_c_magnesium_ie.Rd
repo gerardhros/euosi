@@ -20,7 +20,7 @@ The magnesium availability index in Ireland derived from extractable soil Mg fra
 This function calculates the magnesium availability.
 }
 \examples{
-osi_c_magnesium_ie(B_LU = 265,A_SOM_LOI = 2,A_MG_NaAAA = 5)
-osi_c_magnesium_ie(B_LU = c(265,1019),A_SOM_LOI = c(2,4),A_MG_NaAAA = c(3.5,5.5))
+osi_c_magnesium_ie(B_LU = 'testcrop',A_SOM_LOI = 2,A_MG_NaAAA = 5)
+osi_c_magnesium_ie(B_LU = c('testcrop','testcrop2'),A_SOM_LOI = c(2,4),A_MG_NaAAA = c(3.5,5.5))
 
 }

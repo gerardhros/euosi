@@ -4,7 +4,7 @@
 \alias{osi_c_magnesium_fi}
 \title{Calculate the magnesium availability index in Finland}
 \usage{
-osi_c_magnesium_fi(B_LU, B_TEXTURE_USDA, A_MG_AAA, A_C_OF = 0)
+osi_c_magnesium_fi(B_LU, B_TEXTURE_USDA, A_MG_AAA, A_C_OF = 0.5)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -22,6 +22,6 @@ The magnesium availability index in Finland estimated from extractable magnesium
 This function calculates the magnesium availability.
 }
 \examples{
-osi_c_magnesium_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_MG_AAA = 45)
+osi_c_magnesium_fi(B_LU = '1110', B_TEXTURE_USDA = 'Si',A_MG_AAA = 45)
 
 }

@@ -20,6 +20,6 @@ The magnesium availability index in Estonia estimated from extractable magnesium
 This function calculates the magnesium availability.
 }
 \examples{
-oci_c_magnesium_ee(A_MG_M3 = 45,B_TEXTURE_USDA = 'clay')
+oci_c_magnesium_ee(B_LU = 'testcrop',A_MG_M3 = 45,B_TEXTURE_USDA = 'clay')
 
 }

@@ -20,6 +20,6 @@ The magnesium availability index in Austria estimated from extractable magnesium
 This function calculates the magnesium availability.
 }
 \examples{
-osi_c_magnesium_at(A_MG_CC = 47,B_TEXTURE_HYPRES = 'C')
+osi_c_magnesium_at(B_LU = '3301000000',A_MG_CC = 47,B_TEXTURE_HYPRES = 'C')
 
 }

@@ -1,12 +1,20 @@
 # euosi 0.5.0 UNRELEASED
 
-# Added
+## Added
 * unit tests for all euosi functions
 * `osi_checkvar` for input argument checking
 * input argument checking in all euosi functions
 
+## Changed
+* `osi_c_magnesium_x` is now accounting for B_LU for all countries in `osi_crop` 
+* `osi_c_zinc_de` and `osi_c_boron_de` updated for new IACS crops
+
 ## Fixed
-* error in vignette 
+* `osi_p_crumbleability` for forgotten setorder after merge
+* `osi_p_crumbleability` add fixed crumbleability factor for crops missing that information
+* `osi_c_magnesium_ee` and `osi_c_magnesium_hu` for wrong filter on B_TEXTURE_USDA name rather than code
+* `osi_c_magnesium_nl` needed updated crop_cat1 due to IACS cropping codes
+
 
 # euosi 0.4.0 2025-08-12
 
