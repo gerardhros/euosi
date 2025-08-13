@@ -6,6 +6,7 @@
 #' 
 #' @param parm (list) The osi parameter - value combination to be checked
 #' @param fname (character) The name of the function where the check is done
+#' @param na_allowed (character) Are NA allowed in categorial inputs (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -13,7 +14,7 @@
 #' warning or error messages when parameter value is beyond the allowed range
 #' 
 #' @export
-osi_checkvar <- function(parm,fname = NULL) {
+osi_checkvar <- function(parm,fname = NULL,na_allowed = FALSE) {
   
   # add visual bindings
   osi_parm_name = osi_parm_data_type = osi_parm_enum = osi_parm_options = NULL
@@ -46,6 +47,9 @@ osi_checkvar <- function(parm,fname = NULL) {
       parm.error <- paste0(parm.name,' in ', fname)  
     }
     
+    # check if parameter is present
+    checkmate::assert_true(parm.name %in% dt.parms$osi_parm_name,
+                           .var.name = parm.error)
     
     # check the type of the parameter
     parm.type <- dt.parms[osi_parm_name== parm.name,osi_parm_data_type]
@@ -126,6 +130,9 @@ osi_checkvar <- function(parm,fname = NULL) {
       
       # remove dashes
       parm.options <- gsub('^ +| +$','',parm.options)
+      
+      # allow NA
+      if(na_allowed){parm.options <- c(NA,parm.options)}
       
       # checkmates
       checkmate::assert_character(parm.value,
@@ -485,9 +492,11 @@ osi_get_TEXTURE_USDA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type = 'code')
   cl = si = sa = tcode = tname = NULL
   
   # check inputs
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_character(type)
+  checkmate::assert_subset(type,choices = c('name','code'))
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI,
+                           A_SAND_MI = A_SAND_MI),
+               fname ='osi_get_TEXTURE_USDA')
   
   # set internal copies
   dt <- data.table(cl = A_CLAY_MI,
@@ -543,9 +552,11 @@ osi_get_TEXTURE_HYPRES <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code')
   cl = si = sa = tcode = tname = NULL
   
   # check inputs
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_character(type)
+  checkmate::assert_subset(type,choices = c('name','code'))
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI,
+                           A_SAND_MI = A_SAND_MI),
+               fname ='osi_get_TEXTURE_HYPRES')
   
   # set internal copies
   dt <- data.table(cl = A_CLAY_MI,
@@ -588,9 +599,11 @@ osi_get_TEXTURE_GEPPA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
   cl = si = sa = tcode = tname = cr1 = cr2 = cr3 = cr4 = cr5 = NULL
   
   # check inputs
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_character(type)
+  checkmate::assert_subset(type,choices = c('name','code'))
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI,
+                           A_SAND_MI = A_SAND_MI),
+               fname ='osi_get_TEXTURE_GEPPA')
   
   # set internal copies
   dt <- data.table(cl = round(A_CLAY_MI),
@@ -675,9 +688,11 @@ osi_get_TEXTURE_BE <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
   cl = si = sa = tcode = tname = NULL
   
   # check inputs
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_character(type)
+  checkmate::assert_subset(type,choices = c('name','code'))
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI,
+                           A_SAND_MI = A_SAND_MI),
+               fname ='osi_get_TEXTURE_BE')
   
   # set internal copies
   dt <- data.table(cl = A_CLAY_MI,

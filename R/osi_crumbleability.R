@@ -29,13 +29,16 @@ osi_p_crumbleability <- function(B_LU,A_CLAY_MI,A_SOM_LOI,A_PH_CC,B_COUNTRY) {
   # load internal table
   dt.crops <- as.data.table(euosi::osi_crops)
   
-  # Check inputs
+  # length of inputs
   arg.length <- max(length(B_LU),length(A_CLAY_MI), length(A_SOM_LOI),length(A_PH_CC),
                     length(B_COUNTRY))
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE)
-  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE)
-  checkmate::assert_numeric(A_SOM_LOI, lower = 2, upper = 12, any.missing = FALSE)
   
+  # check required inputs
+  osi_checkvar(parm = list(B_COUNTRY = B_COUNTRY, B_LU = B_LU,
+                           A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI,
+                           A_PH_CC = A_PH_CC),
+               fname = 'osi_p_crumbleability')
+   
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -51,6 +54,9 @@ osi_p_crumbleability <- function(B_LU,A_CLAY_MI,A_SOM_LOI,A_PH_CC,B_COUNTRY) {
               by.x =c('B_LU','B_COUNTRY'),
               by.y = c('crop_code','osi_country'),
               all.x=TRUE)
+  
+  # for crops having no crumbleability factor assume its similar to cereals
+  dt[is.na(crop_crumbleability), crop_crumbleability := 2]
   
   # make lookup table
   df.lookup <- data.table(A_CLAY_MI = c(4, 10, 17, 24, 30, 40, 100),
@@ -89,6 +95,9 @@ osi_p_crumbleability <- function(B_LU,A_CLAY_MI,A_SOM_LOI,A_PH_CC,B_COUNTRY) {
   dt[crvalue <= lower, value := 0.5 * crvalue / lower]
   dt[, value := pmin(1,pmax(0,value))]
  
+  # sort dt
+  setorder(dt,id)
+  
   # return selected crumbleability index
   value <- dt[, value]
   
