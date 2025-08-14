@@ -218,7 +218,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
     # phosphorus excess risk indicator
     dt[,i_e_pexcess := osi_nut_p(B_LU, 
                                  B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
-                                 A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,
+                                 A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
                                  A_C_OF = A_C_OF, A_SOM_LOI = A_SOM_LOI, 
                                  A_PH_WA = NA_real_,A_PH_CC = A_PH_CC, A_CACO3_IF = A_CACO3_IF,
                                  A_P_OL = A_P_OL, A_P_M3 = NA_real_, A_P_CAL = NA_real_,

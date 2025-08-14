@@ -12,6 +12,7 @@
 
 ## Changed
 * `osi_c_magnesium_x` is now accounting for B_LU for all countries in `osi_crop` 
+* all functions for country AT, CZ, IT, SE and SK is now using IACS crops from IACS crop table
 * `osi_c_zinc_de` and `osi_c_boron_de` updated for new IACS crops
 * `osi_farm` updated with acceptable ranges in soil properties
 
