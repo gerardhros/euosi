@@ -20,7 +20,7 @@ The pH index in Ireland. A numeric value.
 This function calculates the pH index
 }
 \examples{
-osi_c_ph_ie(B_LU = '265',A_PH_WA = 5, A_SOM_LOI = 3.5)
-osi_c_ph_ie(B_LU = c('265','1019'),A_PH_WA = c(3.5,5.5),A_SOM_LOI = c(3.5,6.5))
+osi_c_ph_ie(B_LU = 'testcrop',A_PH_WA = 5, A_SOM_LOI = 3.5)
+osi_c_ph_ie(B_LU = c('testcrop1','testcrop2'),A_PH_WA = c(3.5,5.5),A_SOM_LOI = c(3.5,6.5))
 
 }
