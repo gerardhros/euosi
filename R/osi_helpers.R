@@ -112,9 +112,9 @@ osi_checkvar <- function(parm,fname = NULL,na_allowed = FALSE) {
       check.sum <- all(check.sum <= 105)
       
       if(!is.null(fname)){
-        checkmate::assert_true(check.sum,.var.name = paste0('total of clay, silt and sand exceeds 100% in ',fname))  
+        checkmate::assert_true(check.sum,.var.name = paste0('total of clay, silt and sand exceeds 100% in ',fname),na.ok = TRUE)  
       } else {
-        checkmate::assert_true(check.sum)
+        checkmate::assert_true(check.sum,na.ok = TRUE)
       }
       
     }
@@ -714,6 +714,51 @@ osi_get_TEXTURE_BE <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
   # select soil texture Belgium classification code or name
   if(type=='code'){value <- dt[,tcode]}
   if(type=='name'){value <- dt[,tname]}
+  
+  # return value
+  return(value)
+  
+}
+
+#' Estimate agricultural soil type classification used in the Netherlands
+#' 
+#' @param A_CLAY_MI (numeric) Clay content (\%)
+#' @param A_SAND_MI (numeric) Silt content (\%)
+#' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+#' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
+#' 
+#' @return agricultural soil type according to the Dutch classification system
+#' 
+#'
+#' @export 
+osi_get_SOILTYPE_AGR <- function(A_CLAY_MI, A_SAND_MI, A_SOM_LOI, A_PH_CC){
+  
+  # check inputs
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI, 
+                           A_SAND_MI = A_SAND_MI,
+                           A_SOM_LOI = A_SOM_LOI,
+                           A_PH_CC = A_PH_CC),
+               fname ='osi_get_SOILTYPE_AGR')
+  
+  # set internal copy
+  dt <- data.table(A_CLAY_MI = A_CLAY_MI,
+                   A_SAND_MI = A_SAND_MI,
+                   A_SILT_MI = pmax(0,100 - A_CLAY_MI - A_SAND_MI),
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_PH_CC = A_PH_CC,
+                   value = NA_character_)
+  
+  # estimate the agricultural soil type (expert judgement Gerard)
+  dt[A_SAND_MI > 80 & A_SOM_LOI <= 2 & A_PH_CC > 6, value := 'duinzand']
+  dt[A_CLAY_MI <= 20 & A_SAND_MI > 40, value := 'dekzand']
+  dt[A_CLAY_MI > 20, value := 'zeeklei']
+  dt[(100 - A_CLAY_MI - A_SAND_MI)> 70, value := 'loess']
+  dt[A_CLAY_MI <= 20 & A_SAND_MI > 40 & A_SOM_LOI > 10, value := 'dalgrond']
+  dt[A_CLAY_MI > 20 & A_SOM_LOI > 10, value := 'moerige_klei']
+  dt[A_SOM_LOI > 20, value := 'veen']
+  
+  # select estimated soil type
+  value <- dt[,value]
   
   # return value
   return(value)

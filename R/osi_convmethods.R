@@ -232,7 +232,8 @@ osi_conv_npmn <- function(A_N_RT, A_CLAY_MI, med_PMN = 51.9, med_NRT = 1425, med
 #' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction
 #' @param A_P_AAA_EDTA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate+EDTA extraction
 #' @param A_P_M3 (numeric) The P-content of the soil extracted with Mehlig 3
-#' @param A_PH_CC (numeric) The pH measured in cacl2 
+#' @param B_SOILTYPE_AGR (character) The agricultural type of soil.
+#' @param A_PH_CC (numeric) The pH measured in cacl2. If missing, then assume its agronomic common value of 5. 
 #' 
 #' @references 
 #' Steinfurth et al., (2021) Conversion equations between Olsen-P and other methods used to assess plant available soil phosphorus in Europe. A review
@@ -242,10 +243,10 @@ osi_conv_phosphor <- function(element,
                               A_P_AL = NA_real_,A_P_CC = NA_real_, A_P_WA = NA_real_,
                               A_P_OL = NA_real_,A_P_CAL = NA_real_,A_P_DL = NA_real_,A_P_AAA = NA_real_,
                               A_P_AAA_EDTA = NA_real_,A_P_M3 = NA_real_,
-                              A_PH_CC = NA_real_){
+                              B_SOILTYPE_AGR = NA_real_, A_PH_CC = 5){
   
   # add visual bindings
-  osi_parm_name = osi_parm_min = NULL
+  osi_parm_name = osi_parm_min = bd = NULL
   
   # check inputs
   checkmate::assert_subset(element,choices = c('A_P_AL','A_P_CAL','A_P_DL','A_P_AAA','A_P_AAA_EDTA',
@@ -261,12 +262,38 @@ osi_conv_phosphor <- function(element,
                    A_P_M3 = A_P_M3,
                    A_P_AAA = A_P_AAA,
                    A_P_AAA_EDTA = A_P_AAA_EDTA,
+                   B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                    A_PH_CC = A_PH_CC)
   
-  # check required inputs
-  osi_checkvar(parm = list(A_P_OL = dt$A_P_OL, A_PH_CC = dt$A_PH_CC),fname ='osi_conv_phosphor')
+  # check required inputs, and allow that soiltype has NA values as category
+  osi_checkvar(parm = list(A_P_OL = dt$A_P_OL, A_PH_CC = dt$A_PH_CC, 
+                           B_SOILTYPE_AGR = dt$B_SOILTYPE_AGR),
+               fname ='osi_conv_phosphor',
+               na_allowed = TRUE)
   
-  # estimate P from other measurements (all in mg P per kg soil)
+  # estimate A_P_CC from A_P_WA if available (NMI report 936.03)
+  
+    if(any(!is.na(dt$B_SOILTYPE_AGR))){
+      
+      # estimate A_P_WA using regression functions EA (NMI report 936.03), unit mg P2O5 / 100 ml soil
+      dt[B_SOILTYPE_AGR %in% c('duinzand','veen') & A_P_CC <= 0.2, value := exp(3.0177 + 0.5891 * log(A_P_CC) - 0.1263 * log(A_P_CC)^2)]
+      dt[B_SOILTYPE_AGR %in% c('dekzand','zeeklei','rivierklei') & A_P_CC <= 0.2, value := exp(3.0851 + 0.6646 * log(A_P_CC) - 0.1966 * log(A_P_CC)^2)]
+      dt[B_SOILTYPE_AGR %in% c('maasklei','loess') & A_P_CC <= 0.2, value := exp(3.3862 + 0.5962 * log(A_P_CC))]
+      dt[B_SOILTYPE_AGR %in% c('dalgrond','moerige_klei') & A_P_CC <= 0.2, value := exp(3.0851 + 0.6554 * log(A_P_CC) - 0.1966 * log(A_P_CC)^2)]
+      dt[B_SOILTYPE_AGR %in% c('duinzand','veen') & A_P_CC > 0.2, value := exp(3.1818 + 0.2645 * log(A_P_CC) + 0.0891 * log(A_P_CC)^2)]
+      dt[B_SOILTYPE_AGR %in% c('dekzand','zeeklei','rivierklei') & A_P_CC> 0.2, value := exp(3.533 + 0.4736 * log(A_P_CC) + 0.02595 * log(A_P_CC)^2)]
+      dt[B_SOILTYPE_AGR %in% c('maasklei','loess') & A_P_CC > 0.2, value := exp(3.3862 + 0.5962 * log(A_P_CC))]
+      dt[B_SOILTYPE_AGR %in% c('dalgrond','moerige_klei') & A_P_CC > 0.2, value := exp(3.2267 + 0.4619 * log(A_P_CC))]
+      
+      # convert back to mg P/ kg soil (assume 3.5% SOM for bulk density estimation)
+      dt[B_SOILTYPE_AGR %in% c('dalgrond','moerige_klei'), bd := 1 / (0.02525 * 15 + 0.6541)]
+      dt[B_SOILTYPE_AGR =='veen', bd := 1 / (0.02525 * 20 + 0.6541)]
+      dt[is.na(bd),bd := 1 / (0.02525 * 3.5 + 0.6541)]
+      dt[is.na(A_P_WA), A_P_WA := value * 0.43646 / bd]
+      
+    }
+  
+  # estimate P from A_P_OL (all in mg P per kg soil)
   # https://doi.org/10.1016/j.geoderma.2021.115339, tables 3 and 5
   dt[is.na(A_P_AL) & !is.na(A_P_OL), A_P_AL := pmax(1.5,(A_P_OL - 21.9 + 3.19 * A_PH_CC)/0.275)]
   dt[is.na(A_P_AAA) & !is.na(A_P_OL), A_P_AAA := 10^(log10((A_P_OL + 56.9)/54.9)/0.2824)]
