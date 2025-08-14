@@ -24,6 +24,6 @@ The water erosion index. A numeric value.
 This function calculates the water erosion index
 }
 \examples{
-osi_erosion(B_LU = 'SOJ',A_SOM_LOI = 3.5,A_CLAY_MI = 5,A_SAND_MI = 15,B_COUNTRY='NL')
+osi_erosion(B_LU = '265',A_SOM_LOI = 3.5,A_CLAY_MI = 5,A_SAND_MI = 15,B_COUNTRY='NL')
 
 }
