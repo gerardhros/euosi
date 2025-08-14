@@ -21,9 +21,3 @@ The phosphate excess index in Germany stimated from extractable soil P fractions
 \description{
 This function calculates the phosphate excess
 }
-\examples{
-osi_nut_p_de(B_LU = 265, A_SOM_LOI = 4.5, A_P_CAL = 45,A_P_DL = 5)
-osi_nut_p_de(B_LU = c(265,1019),A_SOM_LOI = c(4,6),
-A_P_CAL = c(35,54),A_P_DL = c(3.5,5.5))
-
-}

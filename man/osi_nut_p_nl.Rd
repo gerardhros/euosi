@@ -4,7 +4,13 @@
 \alias{osi_nut_p_nl}
 \title{Calculate the phosphate excess index in the Netherlands}
 \usage{
-osi_nut_p_nl(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_)
+osi_nut_p_nl(
+  B_LU,
+  A_P_AL = NA_real_,
+  A_P_CC = NA_real_,
+  A_P_WA = NA_real_,
+  B_SOILTYPE_AGR = NA_real_
+)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -14,6 +20,8 @@ osi_nut_p_nl(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_)
 \item{A_P_CC}{(numeric) The P-content of the soil extracted with CaCl2}
 
 \item{A_P_WA}{(numeric) The P-content of the soil extracted with water}
+
+\item{B_SOILTYPE_AGR}{(character) The soil type in a particular region}
 }
 \value{
 The phosphate excess index in the Netherlands estimated from extractable soil P fractions. A numeric value.
@@ -22,7 +30,8 @@ The phosphate excess index in the Netherlands estimated from extractable soil P 
 This function calculates the phosphate excess.
 }
 \examples{
-osi_nut_p_nl(B_LU = '265', A_P_AL = 45, A_P_CC = 2.5)
-osi_nut_p_nl(B_LU = c('265','1019'),A_P_AL = c(35,54),A_P_CC = c(2.5,4.5), A_P_WA = c(35,65))
+osi_nut_p_nl(B_LU = '265', A_P_AL = 45, A_P_CC = 2.5, B_SOILTYPE_AGR = 'dekzand')
+osi_nut_p_nl(B_LU = c('265','1019'),A_P_AL = c(35,54),
+A_P_CC = c(2.5,4.5), A_P_WA = c(35,65), B_SOILTYPE_AGR = rep('dekzand',2))
 
 }

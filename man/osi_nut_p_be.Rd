@@ -18,6 +18,6 @@ The phosphorus excess index in Belgium estimated from extractable phosphorus. A 
 This function calculates the phosphorus excess index
 }
 \examples{
-osi_nut_p_be(B_LU = 'SOJ', A_P_AL = 45)
+osi_nut_p_be(B_LU = '8410', A_P_AL = 45)
 
 }

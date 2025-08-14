@@ -18,6 +18,6 @@ The phosphorus excess index in Slovenia estimated from extractable phosphorus. A
 This function calculates the phosphorus excess.
 }
 \examples{
-osi_nut_p_sl(A_P_AL = 45)
+osi_nut_p_sl(B_LU = 'testcrop1',A_P_AL = 45)
 
 }
