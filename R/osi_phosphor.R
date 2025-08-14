@@ -77,6 +77,7 @@ osi_c_phosphor <- function(B_LU,
   # estimate texture information
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
   dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[is.na(B_SOILTYPE_AGR), B_SOILTYPE_AGR := osi_get_SOILTYPE_AGR(A_CLAY_MI, A_SAND_MI, A_SOM_LOI, A_PH_CC)]
   
   # estimate missing soil properties from P-Olsen (default in LUCAS)
   dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
@@ -113,7 +114,7 @@ osi_c_phosphor <- function(B_LU,
   dt[B_COUNTRY == 'LT', value := osi_c_phosphor_lt(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_AL = A_P_AL)]
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
-  dt[B_COUNTRY == 'NL', value := osi_c_phosphor_nl(B_LU = B_LU, A_P_AL = A_P_AL, A_P_CC = A_P_CC, A_P_WA = A_P_WA)]
+  dt[B_COUNTRY == 'NL', value := osi_c_phosphor_nl(B_LU = B_LU, A_P_AL = A_P_AL, A_P_CC = A_P_CC, A_P_WA = A_P_WA, B_SOILTYPE_AGR = B_SOILTYPE_AGR)]
   dt[B_COUNTRY == 'NO', value := osi_c_phosphor_no(B_LU = B_LU, A_P_AL = A_P_AL)]
   dt[B_COUNTRY == 'SE', value := osi_c_phosphor_se(B_LU = B_LU, A_P_AL = A_P_AL)]
   dt[B_COUNTRY == 'SK', value := osi_c_phosphor_sk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_P_M3 = A_P_M3)]
@@ -144,31 +145,30 @@ osi_c_phosphor <- function(B_LU,
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_at(A_P_CAL = 47)
+#' osi_c_phosphor_at(B_LU = '3301000000', A_P_CAL = 47)
 #' 
 #' @return 
 #' The phosphorus availability index in Austria estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_at <- function(A_P_CAL,B_LU = NA_character_) {
+osi_c_phosphor_at <- function(B_LU, A_P_CAL) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
-  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   
   # crop data
-  # dt.crops <- as.data.table(euosi::osi_crops)
-  # dt.crops <- dt.crops[osi_country=='PO']
-  
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
-  # thresholds
-  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='AT']
   
   # get max length of inputs
   arg.length <- max(length(B_LU),length(A_P_CAL))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('AT',arg.length),
+                           B_LU = B_LU,
+                           A_P_CAL = A_P_CAL),
+               fname = 'osi_c_phosphor_at')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -177,24 +177,14 @@ osi_c_phosphor_at <- function(A_P_CAL,B_LU = NA_character_) {
                    value = NA_real_)
   
   # merge crop properties
-  # dt <- merge(dt,
-  #             dt.crops[,.(crop_code,crop_cat1)],
-  #             by.x = 'B_LU', 
-  #             by.y = 'crop_code',
-  #             all.x=TRUE)
-  
-  # merge thresholds
-  # dt <- merge(dt,
-  #             dt.thresholds,
-  #             by.x = 'B_SOILTYPE_AGR',
-  #             by.y = 'osi_threshold_soilcat',
-  #             all.x = TRUE)
-  
-  # temporary fix
-  dt[,crop_cat1 := fifelse(grepl('grass',B_LU),'grassland','arable')]
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # convert to the OSI score
-  dt[crop_cat1 =='arable',value := osi_evaluate_logistic(x = A_P_CAL, b= 0.138491,x0 = 2.81405015,v = 0.01965865)]
+  dt[crop_cat1 %in% c('arable','maize'),value := osi_evaluate_logistic(x = A_P_CAL, b= 0.138491,x0 = 2.81405015,v = 0.01965865)]
   dt[crop_cat1 =='grassland',value := osi_evaluate_logistic(x = A_P_CAL, b= 0.13874251,x0 = 2.96274411,v = 0.01992203)]
   
   # set the order to the original inputs
@@ -217,7 +207,7 @@ osi_c_phosphor_at <- function(A_P_CAL,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_be(B_LU = 'SOJ', A_P_AL = 45)
+#' osi_c_phosphor_be(B_LU = '8410', A_P_AL = 45)
 #' 
 #' @return 
 #' The phosphorus availability index in Belgium estimated from extractable phosphorus. A numeric value.
@@ -243,6 +233,12 @@ osi_c_phosphor_be <- function(B_LU, A_P_AL) {
   # get length of input arguments
   arg.length <- max(length(B_LU),length(A_P_AL))
   
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('BE',arg.length),
+                           B_LU = B_LU,
+                           A_P_AL = A_P_AL),
+               fname = 'osi_c_phoshor_be')
+  
   # Collect the data into a table, convert from mg P/kg to units being used in Belgium (mg P/100g)
   dt <- data.table(id = 1:arg.length,
                    B_LU = as.character(B_LU),
@@ -264,8 +260,8 @@ osi_c_phosphor_be <- function(B_LU, A_P_AL) {
               all.x = TRUE)
   
   # convert to the OSI score
-  dt[grepl('gras',crop_cat1),value := osi_evaluate_logistic(x = A_P_AL, b= 0.34526357,x0 = -5.8598799,v = 0.01086684)]
-  dt[grepl('arable',crop_cat1),value := osi_evaluate_logistic(x = A_P_AL, b= 0.22848283,x0 = -7.07661435,v = 0.01468356)]
+  dt[grepl('grass',crop_cat1),value := osi_evaluate_logistic(x = A_P_AL, b= 0.34526357,x0 = -5.8598799,v = 0.01086684)]
+  dt[grepl('arable|maize',crop_cat1),value := osi_evaluate_logistic(x = A_P_AL, b= 0.22848283,x0 = -7.07661435,v = 0.01468356)]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -287,7 +283,7 @@ osi_c_phosphor_be <- function(B_LU, A_P_AL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_ch(A_P_AAA = 50)
+#' osi_c_phosphor_ch(B_LU = 'testcrop1',A_P_AAA = 50)
 #' 
 #' @return 
 #' The phosphorus availability index in Switzerland estimated from extractable phosphorus. A numeric value.
@@ -312,6 +308,10 @@ osi_c_phosphor_ch <- function(A_P_AAA,B_LU = NA_character_) {
   
   # get max length of inputs
   arg.length <- max(length(B_LU),length(A_P_AAA))
+  
+  # check inputs
+  osi_checkvar(parm = list(A_P_AAA = A_P_AAA),
+               fname = 'osi_c_phoshor_ch')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -356,31 +356,30 @@ osi_c_phosphor_ch <- function(A_P_AAA,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_cz(A_P_M3 = 81)
+#' osi_c_phosphor_cz(B_LU = '3303030100', A_P_M3 = 81)
 #' 
 #' @return 
 #' The phosphorus availability index in Czech Republic estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_cz <- function(A_P_M3,B_LU = NA_character_) {
+osi_c_phosphor_cz <- function(B_LU, A_P_M3) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
-  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   
   # crop data
-  # dt.crops <- as.data.table(euosi::osi_crops)
-  # dt.crops <- dt.crops[osi_country=='PO']
-  
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
-  # thresholds
-  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='CZ']
   
   # get max length of inputs
   arg.length <- max(length(B_LU),length(A_P_M3))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('CZ',arg.length),
+                           B_LU = B_LU,
+                           A_P_M3 = A_P_M3),
+               fname = 'osi_c_phoshor_cz')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -389,18 +388,11 @@ osi_c_phosphor_cz <- function(A_P_M3,B_LU = NA_character_) {
                    value = NA_real_)
   
   # merge crop properties
-  # dt <- merge(dt,
-  #             dt.crops[,.(crop_code,crop_cat1)],
-  #             by.x = 'B_LU', 
-  #             by.y = 'crop_code',
-  #             all.x=TRUE)
-  
-  # merge thresholds
-  # dt <- merge(dt,
-  #             dt.thresholds,
-  #             by.x = 'B_SOILTYPE_AGR',
-  #             by.y = 'osi_threshold_soilcat',
-  #             all.x = TRUE)
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = A_P_M3, b= 0.0890545,x0 = 4.429710417,v = 0.007972486)]
@@ -428,18 +420,31 @@ osi_c_phosphor_cz <- function(A_P_M3,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_de(B_LU = 265, A_SOM_LOI = 4.5, A_CLAY_MI = 5,A_P_CAL = 45,A_P_DL = 5)
-#' osi_c_phosphor_de(B_LU = c(265,1019),A_SOM_LOI = c(3,3),A_CLAY_MI = c(3,15),
+#' osi_c_phosphor_de(B_LU = '3301000000', A_SOM_LOI = 4.5, A_CLAY_MI = 5,A_P_CAL = 45,A_P_DL = 5)
+#' osi_c_phosphor_de(B_LU = c('3301000000','3301061299'),A_SOM_LOI = c(3,3),A_CLAY_MI = c(3,15),
 #' A_P_CAL = c(35,54),A_P_DL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Germany stimated from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL = NA_real_, A_P_DL = NA_real_) {
+osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL, A_P_DL = NA_real_) {
   
   # add visual bindings
   value1 = value2 = A_P_CAL2 = NULL
+  
+  # argument length
+  arg.length <- max(length(B_LU),length(A_SOM_LOI),length(A_CLAY_MI),
+                    length(A_P_CAL),length(A_P_DL))
+  
+  # repeat A_P_DL if only one default is given
+  if(length(A_P_DL)==1 & arg.length > 1){A_P_DL <- rep(A_P_DL,arg.length)}
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('DE',arg.length),
+                           B_LU = B_LU,
+                           A_P_CAL = A_P_CAL),
+               fname = 'osi_c_phoshor_de')
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -451,6 +456,11 @@ osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL = NA_real_, A_P_
                    value1 = NA_real_,
                    value2 = NA_real_,
                    value = NA_real_)
+  
+  # check calculated inputs
+  osi_checkvar(parm = list(A_P_CAL = A_P_CAL,
+                           A_P_DL = A_P_DL),
+               fname = 'osi_c_phoshor_de')
   
   # evaluation conform VDLUFA for cropland and soil types
   # with updated VDLUFA thresholds in 2020
@@ -482,8 +492,8 @@ osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL = NA_real_, A_P_
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_dk(B_LU = '265',A_P_OL = 5)
-#' osi_c_phosphor_dk(B_LU = c('265','1019'),A_P_OL = c(3.5,5.5))
+#' osi_c_phosphor_dk(B_LU = '3301010399',A_P_OL = 5)
+#' osi_c_phosphor_dk(B_LU = c('3301010399','3301029800'),A_P_OL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Denmark derived from extractable soil P fractions. A numeric value.
@@ -491,8 +501,17 @@ osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL = NA_real_, A_P_
 #' @export
 osi_c_phosphor_dk <- function(B_LU, A_P_OL) {
   
+  # get argument length
+  arg.length <- max(length(B_LU),length(A_P_OL))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('DK',arg.length),
+                           B_LU = B_LU,
+                           A_P_OL = A_P_OL),
+               fname = 'osi_c_phoshor_dk')
+  
   # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
+  dt <- data.table(id = 1: arg.length,
                    B_LU = B_LU,
                    A_P_OL = A_P_OL,
                    value = NA_real_)
@@ -516,7 +535,7 @@ osi_c_phosphor_dk <- function(B_LU, A_P_OL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_ee(A_P_M3 = 45,A_SOM_LOI = 3, B_LU='23')
+#' osi_c_phosphor_ee(A_P_M3 = 45,A_SOM_LOI = 3, B_LU='testcrop1')
 #' 
 #' @return 
 #' The phosphorus availability index in Estonia estimated from extractable phosphorus. A numeric value.
@@ -541,6 +560,11 @@ osi_c_phosphor_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_) {
   
   # get max length of inputs
   arg.length <- max(length(B_LU),length(A_P_M3),length(A_SOM_LOI))
+  
+  # check inputs (no check on crop type due to missing crop codes)
+  osi_checkvar(parm = list(A_P_M3 = A_P_M3,
+                           A_SOM_LOI = A_SOM_LOI),
+               fname = 'osi_c_phoshor_ee')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -589,8 +613,8 @@ osi_c_phosphor_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_es(B_LU = '265',A_CLAY_MI = 5,A_SAND_MI = 25,A_P_OL = 5)
-#' osi_c_phosphor_es(B_LU = c('265','1019'),A_CLAY_MI = c(5,10),
+#' osi_c_phosphor_es(B_LU = '3301010301',A_CLAY_MI = 5,A_SAND_MI = 25,A_P_OL = 5)
+#' osi_c_phosphor_es(B_LU = c('3301010901','3301010500'),A_CLAY_MI = c(5,10),
 #' A_SAND_MI = c(50,50),A_P_OL = c(3.5,5.5))
 #' 
 #' @return 
@@ -601,6 +625,15 @@ osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL) {
   
   # get max length of input
   arg.length <- max(length(B_LU),length(A_CLAY_MI),length(A_SAND_MI),length(A_P_OL))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('ES',arg.length),
+                           B_LU = B_LU,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_SAND_MI = A_SAND_MI,
+                           A_P_OL = A_P_OL),
+               fname = 'osi_c_phoshor_es')
+  
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
@@ -610,10 +643,10 @@ osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL) {
                    value = NA_real_)
   
   # assess P availability for sandy soils (Arenoso)
-  dt[A_CLAY_MI < 15 & A_SAND_MI > 50, value := osi_evaluate_logistic(A_P_OL, b = 0.47947, x0 = -1.94363, v = 0.074075)]
+  dt[A_CLAY_MI <= 15 & A_SAND_MI > 50, value := osi_evaluate_logistic(A_P_OL, b = 0.47947, x0 = -1.94363, v = 0.074075)]
   
   # assess P availability for loamy? soils (Franco)
-  dt[A_CLAY_MI < 15 & A_SAND_MI <=50 , value := osi_evaluate_logistic(A_P_OL, b = 0.27155, x0 = 2.81733, v = 0.154671)]
+  dt[A_CLAY_MI <= 15 & A_SAND_MI <=50 , value := osi_evaluate_logistic(A_P_OL, b = 0.27155, x0 = 2.81733, v = 0.154671)]
   
   # assess P availability for clayey soils (Arcilloso)
   dt[A_CLAY_MI > 15, value := osi_evaluate_logistic(A_P_OL, b = 0.20196, x0 = 2.87602, v = 0.133171)]
@@ -635,14 +668,14 @@ osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',
+#' osi_c_phosphor_fi(B_LU = '4010', B_TEXTURE_USDA = 'Si',
 #' A_P_AAA = 45,A_C_OF=1.5)
 #' 
 #' @return 
 #' The phosphorus availability index in Finland estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0) {
+osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0.5) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -653,15 +686,23 @@ osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0) {
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='FI']
   
-  # parameters
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
   
   # get length of input arguments
-  arg.length <- max(length(B_LU),length(B_TEXTURE_USDA),length(A_P_AAA))
+  arg.length <- max(length(B_LU),length(B_TEXTURE_USDA),length(A_P_AAA),length(A_P_AAA))
+  
+  # repeat A_C_OF if only one default is given
+  if(length(A_C_OF)==1 & arg.length > 1){A_C_OF <- rep(A_C_OF,arg.length)}
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('FI',arg.length),
+                           B_LU = B_LU,
+                           B_TEXTURE_USDA = B_TEXTURE_USDA,
+                           A_C_OF = A_C_OF,
+                           A_P_AAA = A_P_AAA),
+               fname = 'osi_c_phoshor_fi')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -741,9 +782,6 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='FR']
   
-  # parameters
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'FR' & osi_indicator =='i_c_p']
@@ -761,10 +799,15 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
   # Check length of desired input
   arg.length <- max(length(B_LU),length(A_P_OL),length(B_SOILTYPE_AGR), length(B_AER_FR),length(A_PH_WA))
   
-  # check the values (update the limits later via dt.parms)
-  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_numeric(A_P_OL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
+  # repeat A_PH_WA if only one default is given
+  if(length(A_PH_WA)==1 & arg.length > 1){A_PH_WA <- rep(A_PH_WA,arg.length)}
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('FR',arg.length),
+                           B_LU = B_LU,
+                           A_PH_WA = A_PH_WA,
+                           A_P_OL = A_P_OL),
+               fname = 'osi_c_phoshor_fr')
   
   # check optional parameters 
   if(sum(!is.na(B_SOILTYPE_AGR))>0){
@@ -830,7 +873,7 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_hu(A_P_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
+#' osi_c_phosphor_hu(B_LU = 'testcrop1',A_P_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
 #' 
 #' @return 
 #' The phosphorus availability index in Hungary estimated from extractable phosphorus. A numeric value.
@@ -846,15 +889,19 @@ osi_c_phosphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,B_LU = NA_ch
   # dt.crops <- as.data.table(euosi::osi_crops)
   # dt.crops <- dt.crops[osi_country=='PO']
   
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
   
   # get max length of inputs
   arg.length <- max(length(A_SOM_LOI),length(A_CLAY_MI),length(A_CACO3_IF),length(A_P_AL),length(B_LU))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_CACO3_IF = A_CACO3_IF,
+                           A_P_AL = A_P_AL),
+               fname = 'osi_c_phoshor_hu')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -911,8 +958,8 @@ osi_c_phosphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,B_LU = NA_ch
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_ie(B_LU = '265',A_P_OL = 5)
-#' osi_c_phosphor_ie(B_LU = c('265','1019'),A_P_OL = c(3.5,5.5))
+#' osi_c_phosphor_ie(B_LU = 'testcrop1',A_P_OL = 5)
+#' osi_c_phosphor_ie(B_LU = c('testcrop1','testcrop2'),A_P_OL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Ireland derived from extractable soil P fractions. A numeric value.
@@ -923,8 +970,15 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL) {
   # add visual binding
   cropcat1 = NULL
   
+  # length of inputs
+  arg.length <- max(length(B_LU),length(A_P_OL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(A_P_OL = A_P_OL),
+               fname = 'osi_c_phoshor_ie')
+  
   # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
+  dt <- data.table(id = 1: arg.length,
                    B_LU = B_LU,
                    A_P_OL = A_P_OL,
                    value = NA_real_)
@@ -957,8 +1011,8 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_it(B_LU = '265',A_P_OL = 5)
-#' osi_c_phosphor_it(B_LU = c('265','1019'),A_P_OL = c(3.5,5.5))
+#' osi_c_phosphor_it(B_LU = '3301061299',A_P_OL = 5)
+#' osi_c_phosphor_it(B_LU = c('3301061299','3301000000'),A_P_OL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Italy derived from extractable soil P fractions. A numeric value.
@@ -966,11 +1020,34 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL) {
 #' @export
 osi_c_phosphor_it <- function(B_LU, A_P_OL) {
   
+  # add visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='IT']
+  
+  # length of inputs
+  arg.length <- max(length(B_LU),length(A_P_OL))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('IT',arg.length),
+                           B_LU = B_LU,
+                           A_P_OL = A_P_OL),
+               fname = 'osi_c_phoshor_it')
+  
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
                    A_P_OL = A_P_OL,
                    value = NA_real_)
+  
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # evaluation P-Olsen for cropland and soil types
   dt[, value := osi_evaluate_logistic(A_P_OL, b = 0.43987, x0 = -5.7314, v = 0.011909)]
@@ -991,7 +1068,7 @@ osi_c_phosphor_it <- function(B_LU, A_P_OL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_lv(A_P_DL = 45,B_TEXTURE_USDA = 'S')
+#' osi_c_phosphor_lv(B_LU ='testcrop1',A_P_DL = 45,B_TEXTURE_USDA = 'Sa')
 #' 
 #' @return 
 #' The phosphorus availability index in Latvia estimated from extractable phosphorus. A numeric value.
@@ -1007,15 +1084,17 @@ osi_c_phosphor_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
   # dt.crops <- as.data.table(euosi::osi_crops)
   # dt.crops <- dt.crops[osi_country=='PO']
 
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
 
   # get max length of inputs
   arg.length <- max(length(B_LU),length(B_TEXTURE_USDA),length(A_P_DL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(B_TEXTURE_USDA = B_TEXTURE_USDA,
+                           A_P_DL = A_P_DL),
+               fname = 'osi_c_phoshor_lv')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1068,7 +1147,7 @@ osi_c_phosphor_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_lt(A_P_AL = 45,A_SOM_LOI = 4.5)
+#' osi_c_phosphor_lt(B_LU = 'testcrop1', A_P_AL = 45,A_SOM_LOI = 4.5)
 #' 
 #' @return 
 #' The phosphorus availability index in Lithuania estimated from extractable phosphorus. A numeric value.
@@ -1084,15 +1163,17 @@ osi_c_phosphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
   # dt.crops <- as.data.table(euosi::osi_crops)
   # dt.crops <- dt.crops[osi_country=='PO']
   
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
 
   # get max length of inputs
   arg.length <- max(length(B_LU),length(A_SOM_LOI),length(A_P_AL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
+                           A_P_AL = A_P_AL),
+               fname = 'osi_c_phoshor_lt')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1133,6 +1214,7 @@ osi_c_phosphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
 #' This function calculates the phosphate availability. 
 #' 
 #' @param B_LU (numeric) The crop code
+#' @param B_SOILTYPE_AGR (character) The soil type in a particular region
 #' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate (mg P/ kg)
 #' @param A_P_CC (numeric) The P-content of the soil extracted with CaCl2 (mg P/ kg)
 #' @param A_P_WA (numeric) The P-content of the soil extracted with water (mg P/ kg)
@@ -1140,14 +1222,16 @@ osi_c_phosphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_nl(B_LU = 265, A_P_AL = 45, A_P_CC = 2.5)
-#' osi_c_phosphor_nl(B_LU = c(265,1019),A_P_AL = c(35,54),A_P_CC = c(2.5,4.5), A_P_WA = c(35,65))
+#' osi_c_phosphor_nl(B_LU = '265', A_P_AL = 45, A_P_CC = 2.5, B_SOILTYPE_AGR = 'dekzand')
+#' osi_c_phosphor_nl(B_LU = c('265','1019'),A_P_AL = c(35,54),
+#' A_P_CC = c(2.5,4.5), A_P_WA = c(35,65), B_SOILTYPE_AGR = rep('dekzand',2))
 #' 
 #' @return 
 #' The phosphate availability index in the Netherlands estimated from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_) {
+osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_,
+                              B_SOILTYPE_AGR = NA_real_) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = NULL
@@ -1160,37 +1244,46 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
   dt.crops <- dt.crops[osi_country =='NL']
   dt.crops[, crop_code := as.character(crop_code)]
   
-  # select parms (to check min and max, to be done later)
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
   # subset thresholds to Dutch situation for phosphorus
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country=='NL' & osi_indicator=='i_c_p']
+  checkmate::assert_data_table(dt.thresholds,max.rows = 1)
   
   # Check length of desired input
-  arg.length <- max(length(B_LU),length(A_P_AL),length(A_P_CC),length(A_P_WA))
+  arg.length <- max(length(B_LU),length(A_P_AL),length(A_P_CC),length(A_P_WA),length(B_SOILTYPE_AGR))
   
-  # check the values (update the limits later via dt.parms)
-  checkmate::assert_numeric(A_P_AL, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(A_P_CC, lower = 0.1, upper = 100, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(A_P_WA, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
-  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
+  # repeat A_P_WA if only one default is given
+  if(length(A_P_WA)==1 & arg.length > 1){
+    
+    # estimate A_P_WA from A_P_CC (both in mg P/kg)
+    A_P_WA <- osi_conv_phosphor(element='A_P_WA',B_SOILTYPE_AGR = B_SOILTYPE_AGR, A_P_CC = A_P_CC)
+    }
   
-  # check that there is only 1 scoring function for P
-  checkmate::assert_data_table(dt.thresholds,max.rows = 1)
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('NL',arg.length),
+                           B_LU = B_LU,
+                           A_P_AL = A_P_AL,
+                           A_P_CC = A_P_CC,
+                           A_P_WA = A_P_WA),
+               fname = 'osi_c_phoshor_nl',
+               na_allowed = TRUE)
   
   # Collect the data into a table, convert to Dutch units
   # assume 3.5% organic matter for the calculation of bulk density
   dt <- data.table(id = 1:arg.length,
+                   B_LU = as.character(B_LU),
                    A_P_AL = A_P_AL * 2.29 * 0.1,
                    A_P_CC = A_P_CC,
                    A_P_WA = A_P_WA *(1 / (0.02525 * 3.5 + 0.6541))/0.43646,
-                   B_LU = as.character(B_LU),
                    value = NA_real_
                   )
   
-  dt <- merge(dt,dt.crops,by.x = 'B_LU', by.y = 'crop_code',all.x=TRUE)
+  # merge with crop properties
+  dt <- merge(dt,
+              dt.crops,
+              by.x = 'B_LU', 
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -1202,13 +1295,13 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
   dt[grepl("maize",crop_cat1), value := A_P_CC + 0.05 * pmin(37,A_P_AL / A_P_CC)]
   
   # calculate the P-availability for arable systems, normalized to a scale with maximum around 6
-  dt[grepl("arable",crop_cat1), value := A_P_WA * 0.1]
+  dt[grepl("arable|cropland",crop_cat1), value := A_P_WA * 0.1]
   
   # calculate the P-availability for nature 
-  dt[grepl("nature",crop_cat1), value := 0]
+  dt[grepl("nature|forest|other",crop_cat1), value := 0]
   
   # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = value, b= dt.thresholds$osi_st_c1,x0 = dt.thresholds$osi_st_c2,v = dt.thresholds$osi_st_c3)]
+  dt[,value := osi_evaluate_logistic(x = value, b= 1.3,x0 = 1.3,v = 0.35)]
   
   # return value
   value <- dt[, value]
@@ -1227,7 +1320,7 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_no(A_P_AL = 50)
+#' osi_c_phosphor_no(B_LU = 'testcrop1', A_P_AL = 50)
 #' 
 #' @return 
 #' The phosphorus availability index in Norway estimated from extractable phosphorus. A numeric value.
@@ -1243,15 +1336,16 @@ osi_c_phosphor_no <- function(A_P_AL,B_LU = NA_character_) {
   # dt.crops <- as.data.table(euosi::osi_crops)
   # dt.crops <- dt.crops[osi_country=='PO']
   
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
   
   # get max length of inputs
   arg.length <- max(length(B_LU),length(A_P_AL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(A_P_AL = A_P_AL),
+               fname = 'osi_c_phoshor_no')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1296,7 +1390,7 @@ osi_c_phosphor_no <- function(A_P_AL,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_pl(A_P_DL = 45)
+#' osi_c_phosphor_pl(B_LU = 'testcrop1',A_P_DL = 45)
 #' 
 #' @return 
 #' The phosphorus availability index in Poland estimated from extractable phosphorus. A numeric value.
@@ -1312,15 +1406,16 @@ osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_) {
   # dt.crops <- as.data.table(euosi::osi_crops)
   # dt.crops <- dt.crops[osi_country=='PO']
   
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
   
   # get max length of inputs
   arg.length <- max(length(B_LU),length(A_P_DL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(A_P_DL = A_P_DL),
+               fname = 'osi_c_phoshor_pl')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1365,8 +1460,8 @@ osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_se(B_LU = 265,A_P_AL = 5)
-#' osi_c_phosphor_se(B_LU = c(265,1019),A_P_AL = c(3.5,5.5))
+#' osi_c_phosphor_se(B_LU = '3301061299',A_P_AL = 5)
+#' osi_c_phosphor_se(B_LU = c('3301061299','3301000000'),A_P_AL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in Sweden derived from extractable soil P fractions. A numeric value.
@@ -1375,7 +1470,20 @@ osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_) {
 osi_c_phosphor_se <- function(B_LU, A_P_AL) {
   
   # add visual binding
-  cropcat1 = NULL
+  crop_cat1 = osi_country = . = crop_code = crop_cat2 = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='SE']
+  
+  # Check length of desired input
+  arg.length <- max(length(B_LU),length(A_P_AL))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('SE',arg.length),
+                           B_LU = B_LU,
+                           A_P_AL = A_P_AL),
+               fname = 'osi_c_phoshor_se')
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -1383,22 +1491,30 @@ osi_c_phosphor_se <- function(B_LU, A_P_AL) {
                    A_P_AL = A_P_AL,
                    value = NA_real_)
   
-  # temporary fix for land uses
-  dt[grepl('maize|cere|whea',B_LU),cropcat1 := 'cereal']
-  dt[grepl('potato|sugar',B_LU),cropcat1 := 'potato']
-  dt[grepl('oil',B_LU),cropcat1 := 'oilcrop']
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1,crop_cat2)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # evaluation soil P status III for maize and cereals
-  dt[cropcat1=='cereal', value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
+  dt[grepl('maize|cere|whea',crop_cat2), value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
   
   # evaluation soil P status II for hostvete
   dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.60458, x0 = 2.8517965, v = 0.0256494)]
   
   # evaluation soil P status III for oil crops
-  dt[cropcat1=='oilcrop', value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
+  dt[grepl('oilcrops',crop_cat2), value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
   
   # evaluation soil P status IVA for potato and sugar beet
-  dt[cropcat1 =='potato', value := OBIC::evaluate_logistic(A_P_AL, b = 0.0695783, x0 = -27.867195, v = 0.0163328)]
+  dt[grepl('potato|beet',crop_cat2), value := OBIC::evaluate_logistic(A_P_AL, b = 0.0695783, x0 = -27.867195, v = 0.0163328)]
+  
+  # evaluation soil P status III for maize and cereals for all other crops as well
+  dt[grepl('arable|other|vegeta|fodd|legum|grass|fruit',crop_cat2), value := OBIC::evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
+  
+  # remaining score 1
+  dt[crop_cat2 %in% c('nature','fallow','nature'), value := 1]
   
   # select value and return
   value <- dt[,value]
@@ -1416,31 +1532,30 @@ osi_c_phosphor_se <- function(B_LU, A_P_AL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_sk(A_P_M3 = 45,B_TEXTURE_HYPRES = 'C')
+#' osi_c_phosphor_sk(B_LU = '3301010901', A_P_M3 = 45,B_TEXTURE_HYPRES = 'C')
 #' 
 #' @return 
 #' The phosphorus availability index in Slovak Republic estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_sk <- function(B_TEXTURE_HYPRES,A_P_M3,B_LU = NA_character_) {
+osi_c_phosphor_sk <- function(B_LU, B_TEXTURE_HYPRES,A_P_M3) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
-  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
   
   # crop data
-  # dt.crops <- as.data.table(euosi::osi_crops)
-  # dt.crops <- dt.crops[osi_country=='PO']
-  
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
-  # thresholds
-  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
-  
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='SE']
+ 
   # get max length of inputs
   arg.length <- max(length(B_LU),length(B_TEXTURE_HYPRES),length(A_P_M3))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('SK',arg.length),
+                           B_LU = B_LU,
+                           B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                           A_P_M3 = A_P_M3),
+               fname = 'osi_c_phoshor_sk')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1450,18 +1565,11 @@ osi_c_phosphor_sk <- function(B_TEXTURE_HYPRES,A_P_M3,B_LU = NA_character_) {
                    value = NA_real_)
   
   # merge crop properties
-  # dt <- merge(dt,
-  #             dt.crops[,.(crop_code,crop_cat1)],
-  #             by.x = 'B_LU', 
-  #             by.y = 'crop_code',
-  #             all.x=TRUE)
-  
-  # merge thresholds
-  # dt <- merge(dt,
-  #             dt.thresholds,
-  #             by.x = 'B_SOILTYPE_AGR',
-  #             by.y = 'osi_threshold_soilcat',
-  #             all.x = TRUE)
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # convert to the OSI score
   dt[B_TEXTURE_HYPRES %in% c('C'),value := osi_evaluate_logistic(x = A_P_M3, b= 0.07743388,x0 = -1.23994065,v = 0.00401143)]
@@ -1488,7 +1596,7 @@ osi_c_phosphor_sk <- function(B_TEXTURE_HYPRES,A_P_M3,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_sl(A_P_AL = 45)
+#' osi_c_phosphor_sl(B_LU = 'testcrop1',A_P_AL = 45)
 #' 
 #' @return 
 #' The phosphorus availability index in Slovenia estimated from extractable phosphorus. A numeric value.
@@ -1504,15 +1612,16 @@ osi_c_phosphor_sl <- function(A_P_AL,B_LU = NA_character_) {
   # dt.crops <- as.data.table(euosi::osi_crops)
   # dt.crops <- dt.crops[osi_country=='PO']
   
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
 
   # get max length of inputs
   arg.length <- max(length(B_LU),length(A_P_AL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(A_P_AL = A_P_AL),
+               fname = 'osi_c_phoshor_sl')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1560,8 +1669,8 @@ osi_c_phosphor_sl <- function(A_P_AL,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_uk(B_LU = 265,A_SOM_LOI = 3,A_P_OL = 5)
-#' osi_c_phosphor_uk(B_LU = c(265,1019),A_SOM_LOI = c(3,4),A_P_OL = c(3.5,5.5))
+#' osi_c_phosphor_uk(B_LU = 'testcrop1',A_SOM_LOI = 3,A_P_OL = 5)
+#' osi_c_phosphor_uk(B_LU = c('testcrop1','testcrop2'),A_SOM_LOI = c(3,4),A_P_OL = c(3.5,5.5))
 #' 
 #' @return 
 #' The phosphate availability index in United Kingdom derived from extractable soil P fractions. A numeric value.
@@ -1573,7 +1682,15 @@ osi_c_phosphor_uk <- function(B_LU, A_SOM_LOI,A_P_OL) {
   crop_name = crop_cat1 = BD = . = NULL
   
   # crop properties
-  dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  
+  # get max length of inputs
+  arg.length <- max(length(B_LU),length(A_P_OL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
+                           A_P_OL = A_P_OL),
+               fname = 'osi_c_phoshor_uk')
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
