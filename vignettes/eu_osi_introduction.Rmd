@@ -88,6 +88,7 @@ out <- euosi::osi_field(B_LU = dt$B_LU,
                         A_B_HW = dt$A_B_HW, 
                         A_ZN_CC = dt$A_ZN_CC, 
                         A_ZN_EDTA = NA_real_,
+                        A_ZN_RT = dt$A_ZN_RT,
                         ID = dt$ID, 
                         output = 'indicators')
 
