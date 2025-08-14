@@ -20,6 +20,6 @@ The potassium availability index in Poland estimated from extractable potassium.
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_pl(A_K_DL = 45,B_TEXTURE_HYPRES='C')
+osi_c_potassium_pl(B_LU = 'testcrop1',A_K_DL = 45,B_TEXTURE_HYPRES='C')
 
 }

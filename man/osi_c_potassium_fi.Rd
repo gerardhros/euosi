@@ -4,7 +4,7 @@
 \alias{osi_c_potassium_fi}
 \title{Calculate the potassium availability index in Finland}
 \usage{
-osi_c_potassium_fi(B_LU, B_TEXTURE_USDA, A_K_AAA, A_C_OF = 0)
+osi_c_potassium_fi(B_LU, B_TEXTURE_USDA, A_K_AAA, A_C_OF = 0.5)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -22,6 +22,6 @@ The potassium availability index in Finland estimated from extractable potassium
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_K_AAA = 45,A_C_OF = 15)
+osi_c_potassium_fi(B_LU = '1110', B_TEXTURE_USDA = 'Si',A_K_AAA = 45,A_C_OF = 15)
 
 }

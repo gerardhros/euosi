@@ -91,7 +91,6 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                            A_CLAY_MI = dt$A_CLAY_MI,
                            A_SAND_MI = dt$A_SAND_MI,
                            A_SILT_MI = dt$A_SILT_MI,
-                           B_COUNTRY = dt$B_COUNTRY,
                            A_SOM_LOI = dt$A_SOM_LOI,
                            A_C_OF = dt$A_C_OF,
                            A_CEC_CO = dt$A_CEC_CO,
@@ -220,7 +219,7 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
 #' The magnesium availability index in Austria estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_at <- function(A_MG_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
+osi_c_magnesium_at <- function(B_LU, A_MG_CC,B_TEXTURE_HYPRES) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL

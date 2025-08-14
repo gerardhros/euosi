@@ -30,6 +30,6 @@ The potassium availability index in Hungary estimated from extractable potassium
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_hu(A_K_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
+osi_c_potassium_hu(B_LU = 'testcrop',A_K_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
 
 }

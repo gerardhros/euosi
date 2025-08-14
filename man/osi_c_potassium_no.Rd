@@ -20,7 +20,7 @@ The potassium availability index in Norway derived from extractable soil K fract
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_no(B_LU = 265,A_K_AL = 5,A_CLAY_MI=5)
-osi_c_potassium_no(B_LU = c(265,1019),A_K_AL = c(3.5,5.5),A_CLAY_MI=c(3,5))
+osi_c_potassium_no(B_LU = 'testcrop1',A_K_AL = 5,A_CLAY_MI=5)
+osi_c_potassium_no(B_LU = c('testcrop1','testcrop2'),A_K_AL = c(3.5,5.5),A_CLAY_MI=c(3,5))
 
 }

@@ -20,6 +20,6 @@ The potassium availability index in Czech Republic estimated from extractable po
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_cz(A_K_M3 = 81,B_TEXTURE_HYPRES='C')
+osi_c_potassium_cz(B_LU = '3301000000',A_K_M3 = 81,B_TEXTURE_HYPRES='C')
 
 }

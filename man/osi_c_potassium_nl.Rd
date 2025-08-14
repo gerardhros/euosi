@@ -39,11 +39,11 @@ The capacity of the soil to supply and buffer potassium, evaluated given an opti
 This function calculates the K availability of a soil, using the agronomic index used in the Netherlands.
 }
 \examples{
-osi_c_potassium_nl(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',
+osi_c_potassium_nl(B_LU = '265', B_SOILTYPE_AGR = 'dekzand',
 A_SOM_LOI = 4, A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
 A_K_CO_PO = 8.5, A_K_CC = 145)
-osi_c_potassium_nl(265, 'dekzand',4, 11,5.4,  125,8.5, 145)
-osi_c_potassium_nl(c(265,1019), rep('dekzand',2),c(4,6), c(11,14),
+osi_c_potassium_nl('265', 'dekzand',4, 11,5.4,  125,8.5, 145)
+osi_c_potassium_nl(c('265','1019'), rep('dekzand',2),c(4,6), c(11,14),
 c(5.4,5.6),  c(125,145),c(8.5,3.5), c(145,180))
 
 }

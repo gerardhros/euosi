@@ -36,7 +36,7 @@ This function calculates the potassium availability.
 The function has two optional arguments soil type (B_SOILTYPE_AGR) and agricultural region (B_AER_FR). When these are unknown, then the soil type is estimated based on the pH value. Threshold values are then generalized for calcareous and non-calcareous soils.
 }
 \examples{
-osi_c_potassium_fr(B_LU = 'SOJ', A_K_AAA = 45,
+osi_c_potassium_fr(B_LU = 'SOJ', A_K_AAA = 45,B_TEXTURE_GEPPA ='SS',
 B_SOILTYPE_AGR = 'limons battants', B_AER_FR = 'nord picardie')
 
 }
