@@ -6,6 +6,7 @@
 * input argument checking in all euosi functions
 * `osi_conv_zinc` to estimate extractable Zn content from total Zn content
 * parameter `A_ZN_RT` as input variable for `osi_field` and `osi_c_zinc` functions.
+# add pmax based on `osi_parms` in osi_conv methods so that minimum value is always respected
 
 ## Changed
 * `osi_c_magnesium_x` is now accounting for B_LU for all countries in `osi_crop` 
@@ -17,7 +18,7 @@
 * `osi_p_crumbleability` add fixed crumbleability factor for crops missing that information
 * `osi_c_magnesium_ee` and `osi_c_magnesium_hu` for wrong filter on B_TEXTURE_USDA name rather than code
 * `osi_c_magnesium_nl` needed updated crop_cat1 due to IACS cropping codes
-
+* `osi_c_ph_de` was referring to a intermediate table and not final result
 
 # euosi 0.4.0 2025-08-12
 
