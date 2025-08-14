@@ -71,7 +71,7 @@ Umwelt und Wasserwirtschaft, 80 S that can be found [here](https://www.bmluk.gv.
 
 Note that the IACS crop codes codes have been added to the `osi_crops` package table in version 0.4.0. 
 
-Two examples are given, one for potato (3301090400), one for maize (3301030000) and one for grassland (3301090205). The optimum soil P threshold is around 60 mg P/kg and actually not different between both land uses. P deficiency symptoms start to occur when the P-CAL becomes lower than 30 mg P/kg.
+Three examples are given, one for potato (3301090400), one for maize (3301030000) and one for grassland (3301090205). The optimum soil P threshold is around 60 mg P/kg and actually not different between both land uses. P deficiency symptoms start to occur when the P-CAL becomes lower than 30 mg P/kg.
 
 ```{r example AT1, out.width="75%", fig.cap="Evaluation P-indicator for Austria.",dpi=300, echo = FALSE}
 

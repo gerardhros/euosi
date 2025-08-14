@@ -1061,7 +1061,7 @@ osi_c_magnesium_ie <- function(B_LU, A_SOM_LOI,A_MG_NaAAA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_magnesium_lv(A_MG_DL = 45,B_TEXTURE_USDA='sand')
+#' osi_c_magnesium_lv(B_LU = 'testcrop',A_MG_DL = 45,B_TEXTURE_USDA='sand')
 #' 
 #' @return 
 #' The magnesium availability index in Latvia estimated from extractable magnesium. A numeric value.
