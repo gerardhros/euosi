@@ -284,7 +284,7 @@ osi_c_magnesium_at <- function(A_MG_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_magnesium_ch(B_LU = 'da55', A_MG_AAA = 50,A_CLAY_MI=15)
+#' osi_c_magnesium_ch(B_LU = '8410', A_MG_AAA = 50,A_CLAY_MI=15)
 #' 
 #' @return 
 #' The potassium availability index in Switzerland estimated from extractable potassium. A numeric value.
@@ -714,6 +714,9 @@ osi_c_magnesium_fi <- function(B_LU, B_TEXTURE_USDA, A_MG_AAA,A_C_OF = 0.5) {
   # get max length of input data
   arg.length <- max(length(B_LU),length(B_TEXTURE_USDA), length(A_MG_AAA),
                     length(A_C_OF))
+  
+  # repeat A_C_OF if only one default is given
+  if(length(A_C_OF)==1 & arg.length > 1){A_C_OF <- rep(A_C_OF,arg.length)}
   
   # check inputs
   osi_checkvar(parm = list(B_COUNTRY = rep('FI',arg.length),

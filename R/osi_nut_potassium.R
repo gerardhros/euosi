@@ -725,6 +725,9 @@ osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0) {
   # get max length of input
   arg.length <- max(length(B_LU),length(B_TEXTURE_USDA),length(A_K_AAA),length(A_C_OF))
   
+  # repeat A_C_OF if only one default is given
+  if(length(A_C_OF)==1 & arg.length > 1){A_C_OF <- rep(A_C_OF,arg.length)}
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,

@@ -7,6 +7,8 @@
 * `osi_conv_zinc` to estimate extractable Zn content from total Zn content
 * parameter `A_ZN_RT` as input variable for `osi_field` and `osi_c_zinc` functions.
 * add pmax based on `osi_parms` in osi_conv methods so that minimum value is always respected
+* `osi_get_SOILTYPE_AGR` to get the agricultural soil type (classes in dutch)
+* `crop_p`, `crop_k` and `crop_n` properties to the new IACS cropping table
 
 ## Changed
 * `osi_c_magnesium_x` is now accounting for B_LU for all countries in `osi_crop` 
