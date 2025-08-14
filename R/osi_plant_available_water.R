@@ -23,13 +23,17 @@ osi_p_paw <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_C_OF) {
   # Load in the thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'EU' & osi_indicator == 'i_p_paw']
+  checkmate::assert_data_table(dt.thresholds,max.rows = 1, min.rows = 1)
+  
+  # length of arguments
+  arg.length <- max(length(A_CLAY_MI), length(A_SAND_MI),length(A_SILT_MI), length(A_C_OF))
   
   # Check inputs
-  arg.length <- max(length(A_CLAY_MI), length(A_SAND_MI),length(A_SILT_MI), length(A_C_OF))
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE)
-  checkmate::assert_numeric(A_SAND_MI, lower = 0, upper = 100, any.missing = FALSE)
-  checkmate::assert_numeric(A_SILT_MI, lower = 0, upper = 100, any.missing = FALSE)
-  checkmate::assert_data_table(dt.thresholds,max.rows = 1, min.rows = 1)
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI,
+                           A_SAND_MI = A_SAND_MI,
+                           A_SILT_MI = A_SILT_MI,
+                           A_C_OF = A_C_OF),
+               fname = 'osi_p_paw')
   
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
