@@ -18,6 +18,6 @@ The phosphorus availability index in Norway estimated from extractable phosphoru
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_no(A_P_AL = 50)
+osi_c_phosphor_no(B_LU = 'testcrop1', A_P_AL = 50)
 
 }

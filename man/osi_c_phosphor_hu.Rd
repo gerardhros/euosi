@@ -30,6 +30,6 @@ The phosphorus availability index in Hungary estimated from extractable phosphor
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_hu(A_P_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
+osi_c_phosphor_hu(B_LU = 'testcrop1',A_P_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
 
 }

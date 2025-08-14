@@ -4,12 +4,12 @@
 \alias{osi_c_phosphor_cz}
 \title{Calculate the phosphorus availability index in Czech Republic}
 \usage{
-osi_c_phosphor_cz(A_P_M3, B_LU = NA_character_)
+osi_c_phosphor_cz(B_LU, A_P_M3)
 }
 \arguments{
-\item{A_P_M3}{(numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)}
-
 \item{B_LU}{(character) The crop code}
+
+\item{A_P_M3}{(numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)}
 }
 \value{
 The phosphorus availability index in Czech Republic estimated from extractable phosphorus. A numeric value.
@@ -18,6 +18,6 @@ The phosphorus availability index in Czech Republic estimated from extractable p
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_cz(A_P_M3 = 81)
+osi_c_phosphor_cz(B_LU = '3303030100', A_P_M3 = 81)
 
 }

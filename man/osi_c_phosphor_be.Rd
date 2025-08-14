@@ -18,6 +18,6 @@ The phosphorus availability index in Belgium estimated from extractable phosphor
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_be(B_LU = 'SOJ', A_P_AL = 45)
+osi_c_phosphor_be(B_LU = '8410', A_P_AL = 45)
 
 }

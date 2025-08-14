@@ -20,6 +20,6 @@ The potassium availability index in Switzerland estimated from extractable potas
 This function calculates the magnesium availability.
 }
 \examples{
-osi_c_magnesium_ch(B_LU = 'da55', A_MG_AAA = 50,A_CLAY_MI=15)
+osi_c_magnesium_ch(B_LU = '8410', A_MG_AAA = 50,A_CLAY_MI=15)
 
 }

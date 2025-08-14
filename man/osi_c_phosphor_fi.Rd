@@ -4,7 +4,7 @@
 \alias{osi_c_phosphor_fi}
 \title{Calculate the phosphorus availability index in Finland}
 \usage{
-osi_c_phosphor_fi(B_LU, B_TEXTURE_USDA, A_P_AAA, A_C_OF = 0)
+osi_c_phosphor_fi(B_LU, B_TEXTURE_USDA, A_P_AAA, A_C_OF = 0.5)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -22,7 +22,7 @@ The phosphorus availability index in Finland estimated from extractable phosphor
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',
+osi_c_phosphor_fi(B_LU = '4010', B_TEXTURE_USDA = 'Si',
 A_P_AAA = 45,A_C_OF=1.5)
 
 }
