@@ -20,7 +20,7 @@ test_that("osi_p_whc works", {
       ptf = 'Wosten1999'
     ),
     expected = c(0.83,0.82,0.79,0.78,0.82,0.89,0.93),
-    tolerance = 1
+    tolerance = 0.01
   )
   expect_equal(
     osi_p_whc(
@@ -31,19 +31,19 @@ test_that("osi_p_whc works", {
       ptf = 'Wosten1999'
     ),
     expected = c(0.81,0.84,0.86,0.88,0.90,0.92,0.94),
-    tolerance = 1
+    tolerance = 0.01
   )
   
   expect_equal(
     osi_p_whc(
       A_CLAY_MI = rep(25,7), 
       A_SAND_MI = rep(70,7),
-      A_SOM_LOI = seq(1,80,length.out = 7),
+      A_SOM_LOI = seq(1,70,length.out = 7),
       type = 'plant available water',
       ptf = 'Wosten1999'
     ),
-    expected = c(0.76,0.78,0.86,0.9968,0.9999,0.065,0.065),
-    tolerance = 1
+    expected = c(0.765,0.794,0.806,0.977,1,0.065,0.065),
+    tolerance = 0.01
   )
   
   # test for ksat
@@ -56,20 +56,21 @@ test_that("osi_p_whc works", {
       ptf = 'Wosten1999'
     ),
     expected = c(0.176,0.134,0.113,0.094,0.075,0.057,0.041),
-    tolerance = 0.1
+    tolerance = 0.01
   )
   
   expect_equal(
     osi_p_whc(
       A_CLAY_MI = rep(25,7), 
       A_SAND_MI = rep(70,7),
-      A_SOM_LOI = seq(1,80,length.out = 7),
+      A_SOM_LOI = seq(1,75,length.out = 7),
       type = 'Ksat',
       ptf = 'Wosten1999'
     ),
-    expected = c(0.447,0.383,0.297,0.261,0.184,0.0699,0.0699),
-    tolerance = .1
+    expected = c(0.447,0.388,0.3057,0.264,0.2238,0.0212,0.0699),
+    tolerance = 0.01
   )
+  
   # water holding capacity
   expect_equal(
     osi_p_whc(
@@ -80,7 +81,7 @@ test_that("osi_p_whc works", {
       ptf = 'Wosten1999'
     ),
     expected = c(00.80,0.83,0.84,0.84,0.84,0.83,0.83),
-    tolerance = 1
+    tolerance = 0.01
   )
   
   expect_equal(
@@ -92,7 +93,7 @@ test_that("osi_p_whc works", {
       ptf = 'Wosten1999'
     ),
     expected = c(0.777,0.872,0.90,0.92,0.93,0.95,0.97),
-    tolerance = 1
+    tolerance = 0.01
   )
   
 })

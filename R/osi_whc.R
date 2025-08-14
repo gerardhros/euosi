@@ -36,17 +36,20 @@ osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SOM_LOI,type = 'whc', ptf = 'Wosten1
   # Load in the thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'EU' & osi_indicator %in%  c('i_p_whc','i_p_paw','i_p_ksat')]
+  checkmate::assert_data_table(dt.thresholds,max.rows = 3, min.rows = 3)
   
-  # Check inputs
+  # Check length of inputs
   arg.length <- max(length(A_CLAY_MI), length(A_SAND_MI),length(A_SOM_LOI))
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE)
-  checkmate::assert_numeric(A_SAND_MI, lower = 0, upper = 100, any.missing = FALSE)
-  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE)
+  
+  # check inputs
   checkmate::assert_character(type, any.missing = FALSE, min.len = 1, len = 1)
   checkmate::assert_subset(type, choices = c('water holding capacity','plant available water','Ksat','whc','paw','ksat'), empty.ok = FALSE)
   checkmate::assert_character(ptf, any.missing = FALSE, min.len = 1, len = 1)
   checkmate::assert_subset(ptf, choices = c('Wosten1999', 'Wosten2001', 'Klasse'), empty.ok = FALSE)
-  checkmate::assert_data_table(dt.thresholds,max.rows = 3, min.rows = 3)
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI,
+                           A_SAND_MI = A_SAND_MI,
+                           A_SOM_LOI = A_SOM_LOI),
+               fname = 'osi_p_whc')
   
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
