@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
                         <h4 data-toc-skip class="author">Gerard Ros
 &amp; Elise van Eynde</h4>
             
-            <h4 data-toc-skip class="date">2025-08-12</h4>
+            <h4 data-toc-skip class="date">2025-08-15</h4>
       
 
       <div class="d-none name"><code>eu_osi_for_phosphor.Rmd</code></div>
@@ -175,6 +175,10 @@ using published pedotransferfunctions, using the function
 <code>osi_conv_phosphor</code>. Similarly, helper functions are applied
 to estimate <code>A_C_OF</code>, <code>A_PH_KCL</code> and
 <code>A_PH_WA</code>.</p>
+<p>Note that the IACS crop codes codes have been added to the
+<code>osi_crops</code> package table from version 0.4.0 onwards. The
+crop codes are only present for the countries AT, BE, BG, CZ, DE, DK,
+ES, FI, FR, IT, NL, PT, SE, and SK.</p>
 <p>The wrapper function wraps country specific P assessment functions.
 These are illustrated and described in this vignette per country, sorted
 alphabetically.</p>
@@ -199,13 +203,13 @@ SACHGERECHTE DÜNGUNG, 2006: Anleitung zur Interpretation von
 Bodenuntersuchungsergebnissen in der Landwirtschaft. 6. Aufl.
 Bundesministerium für Land- und Forstwirtschaft, Umwelt und
 Wasserwirtschaft, 80 S that can be found <a href="https://www.bmluk.gv.at/dam/jcr:6e638ac4-6dd2-441d-8e51-9304966230cf/Richtlinien%20f%C3%BCr%20die%20sachgerechte%20D%C3%BCngung%20im%20Ackerbau%20und%20Gr%C3%BCnland_akt.pdf" class="external-link">here</a>.</p>
-<p>Note that the crop codes are not yet available in
-<code>osi_crops</code> package table. There is a temporary fix that B_LU
-codes with the string “grass” are considered as grassland whereas all
-others are considered cropland.</p>
-<p>The optimum soil P threshold is around 60 mg P/kg and actually not
-different between both land uses. P deficiency symptoms start to occur
-when the P-CAL becomes lower than 30 mg P/kg.</p>
+<p>Note that the IACS crop codes codes have been added to the
+<code>osi_crops</code> package table in version 0.4.0.</p>
+<p>Three examples are given, one for potato (3301090400), one for maize
+(3301030000) and one for grassland (3301090205). The optimum soil P
+threshold is around 60 mg P/kg and actually not different between both
+land uses. P deficiency symptoms start to occur when the P-CAL becomes
+lower than 30 mg P/kg.</p>
 <div class="figure">
 <img src="eu_osi_for_phosphor_files/figure-html/example%20AT1-1.png" alt="Evaluation P-indicator for Austria." width="75%"><p class="caption">
 Evaluation P-indicator for Austria.
@@ -291,8 +295,8 @@ sustainable crop production has been derived from Fotyma et al. (2008)
 who wrote a comprehensive overview of soil testing methods in Eastern
 Europe entitled “Soil testing methods and fertilizer recommendations in
 Central–Eastern European countries”.</p>
-<p>Note that the crop codes for Czech Republic are not yet available in
-<code>osi_crops</code> package table.</p>
+<p>Note that the IACS crop codes codes have been added to the
+<code>osi_crops</code> package table in version 0.4.0.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in P Mehlich-III. The optimum soil P threshold
 value for sustainable crop production is around 125 mg P/ kg, and the
@@ -327,7 +331,7 @@ distinghuises also between peaty and mineral soils. Information on the
 threshold values for P-CAL in view of sustainable crop production has
 been derived by the VDLUFA. In 2020 the threshold values have been
 updated. For more information, see <a href="https://www.lufa-nord-west.de/index.cfm/action/downloadcenter?file=08E6CC" class="external-link">here</a></p>
-<p>Note that the crop codes for Germany are not yet available in
+<p>Note that the IACS crop codes for Germany are available in
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in P-AL. The optimum soil P threshold value for
@@ -357,7 +361,7 @@ inputs:</p>
 <li>A_P_OL, being the extracted P content with Olsen, unit mg P
 /kg.</li>
 </ul>
-<p>Note that the crop codes for Denmark are not yet available in
+<p>Note that the IACS crop codes for Denmark are available in
 <code>osi_crops</code> package table.</p>
 <p>Below the same example but then visualised for a series of soils with
 a P-Olsen value ranging from 0 to 70 mg P per kg. The optimum soil P
@@ -390,7 +394,7 @@ production has been derived from Fotyma et al. (2008) who wrote a
 comprehensive overview of soil testing methods in Eastern Europe
 entitled “Soil testing methods and fertilizer recommendations in
 Central–Eastern European countries”.</p>
-<p>Note that the crop codes for Estonia are not yet available in
+<p>Note that the IACS crop codes for Estonia are not yet available in
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in P Mehlich-III. The optimum soil P threshold
@@ -422,7 +426,7 @@ soils. Information on the threshold values for P-Olsen in view of
 sustainable crop production has been derived by the fertilizer
 guidelines handbook entitled “PRÁCTICA DE LA FERTILIZACIÓN RACIONAL DE
 LOS CULTIVOS EN ESPAÑA”. This book is online available <a href="https://www.mapa.gob.es/dam/mapa/contenido/agricultura/publicaciones/01_fertilizacion-baja-.pdf" class="external-link">here</a>.</p>
-<p>Note that the crop codes for Spain are not yet available in
+<p>Note that IACS crop codes for Spain are available in
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in P-Olsen. The optimum soil P threshold value for
@@ -455,7 +459,7 @@ C/kg, to distinghuish between mineral and peat soils.</li>
 Based on the soil mineralogy (clay, sand and silt content) one can
 easily classify the USDA texture class using
 <code>osi_get_TEXTURE_USDA</code>.</p>
-<p>Note that the crop codes for Finland are not yet available in
+<p>Note that the crop codes for Finland are available in
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in P-AAA for four soil types. The differences
@@ -484,7 +488,10 @@ evaluation can be found <a href="https://comifer.asso.fr/wp-content/uploads/2015
 calculated with <code>osi_c_phosphor_fr</code>, requiring the following
 inputs:</p>
 <ul>
-<li>B_LU, being the French crop code, an unique code for each crop</li>
+<li>B_LU, being the French crop code, an unique code for each crop. Both
+original crop code and IACS codes are present in
+<code>osi_crops</code>
+</li>
 <li>A_P_OL, being the extracted P content with Olsen method, unit mg P
 /kg.</li>
 <li>A_PH_WA, being the soil acidity measured in water.</li>
@@ -741,7 +748,7 @@ uses. Information on the threshold values for P-Olsen in view of
 sustainable crop could not be retreived from Italian fertilizer
 guidelines (follow up action with Italian partners needed) and has been
 retreived from te paper of Steinfurth et al (2022) that can be found <a href="https://www.sciencedirect.com/science/article/pii/S0167880922000755" class="external-link">here</a>.</p>
-<p>Note that the crop codes for Italy are not yet available in
+<p>Note that IACS crop codes for Italy are available in
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in P-Olsen. The optimum soil P threshold value for
@@ -855,7 +862,7 @@ context).</li>
 a single soil is:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># show an example for maize crop</span></span>
-<span><span class="fu"><a href="../reference/osi_c_phosphor_nl.html">osi_c_phosphor_nl</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="fl">265</span>, A_P_AL <span class="op">=</span> <span class="fl">197</span>, A_P_CC <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/osi_c_phosphor_nl.html">osi_c_phosphor_nl</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="fl">265</span>, A_P_AL <span class="op">=</span> <span class="fl">197</span>, A_P_CC <span class="op">=</span> <span class="fl">2.5</span>,A_P_WA<span class="op">=</span><span class="fl">85</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0.9067799</span></span></code></pre>
 <p>Below the same example but then visualised for a series of soils with
 a single P-AL value (of 45 mg P2O5/100g) and a variable P-CaCl2 value
@@ -942,10 +949,8 @@ extraction, unit mg P /kg</li>
 values for optimum crop production were derived from the fertilizer
 guidelines <a href="https://webbutiken.jordbruksverket.se/sv/artiklar/jo219.html" class="external-link">“Rekommendationer
 för gödsling och kalkning 2025”</a>.</p>
-<p>Note that the crop codes for Sweden are not yet available in
-<code>osi_crops</code> package table. Currently a temporary fix has been
-added to read the B_LU and extract wether its a cereal crop, oil crop,
-potato or sugar beet crop.</p>
+<p>Note that IACS crop codes for Sweden are available in
+<code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in P-AL for three crops. The soil health
 assessment strongly varies with the highest optimum soil P threshold
@@ -980,7 +985,7 @@ for P-Mehlich in view of sustainable crop production has been derived
 from Fotyma et al. (2008) who wrote a comprehensive overview of soil
 testing methods in Eastern Europe entitled “Soil testing methods and
 fertilizer recommendations in Central–Eastern European countries”.</p>
-<p>Note that the crop codes for Slovak Republic are not yet available in
+<p>Note that IACS crop codes for Slovak Republic are available in
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in P-M3. The optimum soil P threshold value for

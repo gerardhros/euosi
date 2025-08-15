@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,8 @@
 <span>  A_P_AAA <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  A_P_AAA_EDTA <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  A_P_M3 <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
-<span>  A_PH_CC <span class="op">=</span> <span class="cn">NA_real_</span></span>
+<span>  B_SOILTYPE_AGR <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>  A_PH_CC <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -107,8 +108,12 @@
 <dd><p>(numeric) The P-content of the soil extracted with Mehlig 3</p></dd>
 
 
+<dt id="arg-b-soiltype-agr">B_SOILTYPE_AGR<a class="anchor" aria-label="anchor" href="#arg-b-soiltype-agr"></a></dt>
+<dd><p>(character) The agricultural type of soil.</p></dd>
+
+
 <dt id="arg-a-ph-cc">A_PH_CC<a class="anchor" aria-label="anchor" href="#arg-a-ph-cc"></a></dt>
-<dd><p>(numeric) The pH measured in cacl2</p></dd>
+<dd><p>(numeric) The pH measured in cacl2. If missing, then assume its agronomic common value of 5.</p></dd>
 
 </dl></div>
     <div class="section level2">

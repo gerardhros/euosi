@@ -13,7 +13,6 @@
 <url><loc>https://gerardhros.github.io/euosi/index.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/news/index.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/cf_ind_importance.html</loc></url>
-<url><loc>https://gerardhros.github.io/euosi/reference/checkvar.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/index.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/oci_c_magnesium_cz.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/oci_c_magnesium_ee.html</loc></url>
@@ -120,6 +119,7 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_zinc_nl.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_zinc_uk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_carbon.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_checkvar.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_clim.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_conv_hwb.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_conv_magnesium.html</loc></url>
@@ -128,6 +128,7 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_conv_phosphor.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_conv_potassium.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_conv_som.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_conv_zinc.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_countries.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_crops.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_erosion.html</loc></url>
@@ -137,6 +138,7 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_farm.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_field.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_field_dt.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_get_SOILTYPE_AGR.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_get_TEXTURE_BE.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_get_TEXTURE_GEPPA.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_get_TEXTURE_HYPRES.html</loc></url>
@@ -144,7 +146,6 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_gw_nleach.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_gw_nleach_be.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_gw_nleach_eu.html</loc></url>
-<url><loc>https://gerardhros.github.io/euosi/reference/osi_gw_nleach_fi.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_gw_nleach_fr.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_at.html</loc></url>

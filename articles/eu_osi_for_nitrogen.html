@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
                         <h4 data-toc-skip class="author">Gerard Ros
 &amp; Elise van Eynde</h4>
             
-            <h4 data-toc-skip class="date">2025-08-12</h4>
+            <h4 data-toc-skip class="date">2025-08-15</h4>
       
 
       <div class="d-none name"><code>eu_osi_for_nitrogen.Rmd</code></div>
@@ -145,12 +145,17 @@ Optional.</li>
 <li>B_COUNTRY (character) The country code</li>
 </ul>
 <p><br> The function <code>osi_b_pmn</code> requires the following
-inputs: * B_LU (character) The crop code * B_SOILTYPE_AGR (character)
-The soil type in a particular region * A_CLAY_MI (numeric) The clay
-content of the soil (%) * A_N_RT (numeric) The organic organic nitrogen
-content of the soil (mg N / kg) * A_N_PMN (numeric) The potentially
-mineralizable N pool (mg N / kg soil) * B_COUNTRY (character) The
-country code</p>
+inputs:</p>
+<ul>
+<li>B_LU (character) The crop code</li>
+<li>B_SOILTYPE_AGR (character) The soil type in a particular region</li>
+<li>A_CLAY_MI (numeric) The clay content of the soil (%)</li>
+<li>A_N_RT (numeric) The organic organic nitrogen content of the soil
+(mg N / kg)</li>
+<li>A_N_PMN (numeric) The potentially mineralizable N pool (mg N / kg
+soil)</li>
+<li>B_COUNTRY (character) The country code</li>
+</ul>
 <p>The wrapper function wraps country specific N assessment functions.
 In contrast to phosphorus and potassium are most of the existing N
 fertilizer systems based on a simple mass balance approach using
@@ -246,8 +251,8 @@ Europe.</p>
 <span></span>
 <span>  <span class="co"># estimate the soil health score for the N supplying capacity</span></span>
 <span>  <span class="va">dt.of</span><span class="op">[</span>, <span class="va">osi_c_n</span> <span class="op">:=</span> <span class="fu"><a href="../reference/osi_c_nitrogen_eu.html">osi_c_nitrogen_eu</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="va">B_LU</span>, A_CLAY_MI <span class="op">=</span> <span class="va">A_CLAY_MI</span>, </span>
-<span>                                       A_SAND_MI <span class="op">=</span> <span class="va">A_SAND_MI</span>,A_C_OF <span class="op">=</span> <span class="va">A_C_OF</span>, </span>
-<span>                                       A_N_RT <span class="op">=</span> <span class="va">A_N_RT</span><span class="op">)</span><span class="op">]</span></span>
+<span>                                       A_SAND_MI <span class="op">=</span> <span class="va">A_SAND_MI</span>,A_SOM_LOI <span class="op">=</span> <span class="va">A_SOM_LOI</span>, A_C_OF <span class="op">=</span> <span class="va">A_C_OF</span>, </span>
+<span>                                       A_N_RT <span class="op">=</span> <span class="va">A_N_RT</span>, B_COUNTRY <span class="op">=</span> <span class="va">B_COUNTRY</span><span class="op">)</span><span class="op">]</span></span>
 <span>  </span>
 <span>  <span class="co"># estimate the soil health score for microbial activity</span></span>
 <span>  <span class="co"># for this example, total N is reduced with 50% to see some variation in the boxplot</span></span>
@@ -264,7 +269,11 @@ Europe.</p>
 <span>  <span class="co"># plot a boxplot</span></span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">dt.melt</span>,<span class="fu">aes</span><span class="op">(</span>y<span class="op">=</span><span class="va">variable</span>,x<span class="op">=</span><span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>         <span class="fu">geom_boxplot</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">'#238b45'</span>,alpha <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">''</span><span class="op">)</span><span class="op">+</span><span class="fu">ylab</span><span class="op">(</span><span class="st">'shi score'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="eu_osi_for_nitrogen_files/figure-html/example%20EU3-1.png" width="700"></p>
+<div class="figure">
+<img src="eu_osi_for_nitrogen_files/figure-html/example%20EU3-1.png" alt="Evaluation N-indicator for Europe." width="75%"><p class="caption">
+Evaluation N-indicator for Europe.
+</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="austria-at">Austria (AT)<a class="anchor" aria-label="anchor" href="#austria-at"></a>
@@ -512,7 +521,7 @@ logistic curve with an optimum PMN value around 45 mg N / kg. Again, an
 example is illustrated below for a maize crop (crop code 265):</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co"># show an example for maize crop</span></span>
-<span>  <span class="fu"><a href="../reference/osi_b_pmn_nl.html">osi_b_pmn_nl</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="fl">265</span>, B_SOILTYPE_AGR <span class="op">=</span> <span class="st">'dekzand'</span>,A_N_PMN <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/osi_b_pmn_nl.html">osi_b_pmn_nl</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="st">'265'</span>, B_SOILTYPE_AGR <span class="op">=</span> <span class="st">'dekzand'</span>,A_N_PMN <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0.7183917</span></span></code></pre>
 <p>When applied to a series of soils with varying PMN levels, an now for
 potato and grassland, the soil health score looks as follows:</p>

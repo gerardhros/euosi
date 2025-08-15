@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
                         <h4 data-toc-skip class="author">Gerard H
 Ros</h4>
             
-            <h4 data-toc-skip class="date">2025-08-12</h4>
+            <h4 data-toc-skip class="date">2025-08-15</h4>
       
 
       <div class="d-none name"><code>eu_osi_introduction.Rmd</code></div>
@@ -154,7 +154,8 @@ separate vignette <code><a href="../articles/eu_osi_variables.html">vignette("eu
 <span><span class="co">##  [9] "B_TEMP_SUM"     "B_TEMP_WIN"     "A_SOM_LOI"      "A_CLAY_MI"     </span></span>
 <span><span class="co">## [13] "A_SAND_MI"      "A_PH_CC"        "A_CACO3_IF"     "A_CEC_CO"      </span></span>
 <span><span class="co">## [17] "A_C_OF"         "A_N_RT"         "A_N_PMN"        "A_P_OL"        </span></span>
-<span><span class="co">## [21] "A_K_AAA"        "A_B_HW"         "A_ZN_CC"        "A_MG_AAA"</span></span></code></pre>
+<span><span class="co">## [21] "A_K_AAA"        "A_B_HW"         "A_ZN_CC"        "A_ZN_RT"       </span></span>
+<span><span class="co">## [25] "A_MG_AAA"</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="calculate-soil-health-index-for-a-single-field">Calculate soil health index for a single field<a class="anchor" aria-label="anchor" href="#calculate-soil-health-index-for-a-single-field"></a>
@@ -199,6 +200,7 @@ to NA.</p>
 <span>                        A_B_HW <span class="op">=</span> <span class="va">dt</span><span class="op">$</span><span class="va">A_B_HW</span>, </span>
 <span>                        A_ZN_CC <span class="op">=</span> <span class="va">dt</span><span class="op">$</span><span class="va">A_ZN_CC</span>, </span>
 <span>                        A_ZN_EDTA <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>                        A_ZN_RT <span class="op">=</span> <span class="va">dt</span><span class="op">$</span><span class="va">A_ZN_RT</span>,</span>
 <span>                        ID <span class="op">=</span> <span class="va">dt</span><span class="op">$</span><span class="va">ID</span>, </span>
 <span>                        output <span class="op">=</span> <span class="st">'indicators'</span><span class="op">)</span></span>
 <span></span>
@@ -275,7 +277,7 @@ numerical input variables for euosi.
 </tr>
 <tr class="even">
 <td align="left">A_PH_CC</td>
-<td align="right">5.59</td>
+<td align="right">7.09</td>
 </tr>
 </tbody>
 </table>
@@ -289,7 +291,7 @@ numerical input variables for euosi.
 <tbody>
 <tr class="odd">
 <td align="left">A_CACO3_IF</td>
-<td align="right">0.02</td>
+<td align="right">3.50</td>
 </tr>
 <tr class="even">
 <td align="left">A_CEC_CO</td>
@@ -309,23 +311,23 @@ numerical input variables for euosi.
 </tr>
 <tr class="even">
 <td align="left">A_P_OL</td>
-<td align="right">18.69</td>
+<td align="right">22.69</td>
 </tr>
 <tr class="odd">
 <td align="left">A_K_AAA</td>
-<td align="right">66.42</td>
+<td align="right">91.42</td>
 </tr>
 <tr class="even">
 <td align="left">A_B_HW</td>
-<td align="right">0.39</td>
+<td align="right">0.49</td>
 </tr>
 <tr class="odd">
 <td align="left">A_ZN_CC</td>
 <td align="right">17.17</td>
 </tr>
 <tr class="even">
-<td align="left">A_MG_AAA</td>
-<td align="right">30.15</td>
+<td align="left">A_ZN_RT</td>
+<td align="right">57.06</td>
 </tr>
 </tbody>
 </table>
@@ -473,7 +475,7 @@ to the ability of soils to sustain crop production.</p>
 <td align="left">F1</td>
 <td align="left">s_euosi_ess_prod</td>
 <td align="left">ESS crop production</td>
-<td align="right">0.64</td>
+<td align="right">0.71</td>
 </tr>
 <tr class="odd">
 <td align="left">F1</td>
@@ -485,7 +487,7 @@ to the ability of soils to sustain crop production.</p>
 <td align="left">F1</td>
 <td align="left">s_euosi_prod_c</td>
 <td align="left">crop production chemistry</td>
-<td align="right">0.42</td>
+<td align="right">0.58</td>
 </tr>
 <tr class="odd">
 <td align="left">F1</td>
@@ -497,25 +499,25 @@ to the ability of soils to sustain crop production.</p>
 <td align="left">F1</td>
 <td align="left">s_euosi_nutcycle</td>
 <td align="left">ESS nutrient cycling</td>
-<td align="right">0.96</td>
+<td align="right">0.94</td>
 </tr>
 <tr class="odd">
 <td align="left">F1</td>
 <td align="left">s_euosi_prod_p</td>
 <td align="left">crop production physics</td>
-<td align="right">0.67</td>
+<td align="right">0.69</td>
 </tr>
 <tr class="even">
 <td align="left">F1</td>
 <td align="left">s_euosi_water</td>
 <td align="left">ESS water</td>
-<td align="right">0.90</td>
+<td align="right">0.92</td>
 </tr>
 <tr class="odd">
 <td align="left">F1</td>
 <td align="left">s_euosi_total</td>
 <td align="left">EUOSI total score</td>
-<td align="right">0.74</td>
+<td align="right">0.79</td>
 </tr>
 </tbody>
 </table>
@@ -525,20 +527,12 @@ to the ability of soils to sustain crop production.</p>
 <span>           <span class="st">'crop production\nchemistry'</span>,<span class="st">'crop production\nphysics'</span>,<span class="st">'crop production\nbiology'</span>,</span>
 <span>           <span class="st">'ESS climate\nmitigation'</span>,<span class="st">'ESS water'</span>,<span class="st">'ESS nutrient\ncycling'</span>,</span>
 <span>           <span class="st">'OSI total score'</span><span class="op">)</span></span>
-<span><span class="va">out.melt</span><span class="op">[</span>,<span class="va">psoil_ESD</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">soil_ESD</span>,levels <span class="op">=</span> <span class="va">plevel</span>,labels <span class="op">=</span> <span class="va">plabel</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">out.melt</span>, <span class="fu">aes</span><span class="op">(</span>x<span class="op">=</span> <span class="va">soil_ESD</span>, y<span class="op">=</span> <span class="va">shi</span><span class="op">*</span><span class="fl">10</span>, group <span class="op">=</span> <span class="va">soil_ESD</span>, color <span class="op">=</span> <span class="va">shi</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>      <span class="fu">geom_col</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">'grey'</span>, color <span class="op">=</span> <span class="cn">NA</span>, width <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>      <span class="fu">ylab</span><span class="op">(</span><span class="st">'OSI-score'</span><span class="op">)</span> <span class="op">+</span> <span class="fu">xlab</span><span class="op">(</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span></span>
-<span>      <span class="fu">theme_bw</span><span class="op">(</span><span class="fl">12</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">'none'</span>,</span>
-<span>                          panel.grid.major.x <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>                          panel.grid.major.y <span class="op">=</span> <span class="fu">element_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
-<span>                          panel.grid.minor.x <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>      <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>      <span class="fu">scale_fill_viridis_d</span><span class="op">(</span><span class="op">)</span><span class="op">+</span> <span class="fu">scale_color_viridis_c</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>      <span class="fu">ggtitle</span><span class="op">(</span><span class="st">'OSI soil quality assessment field 1'</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">p1</span></span></code></pre></div>
-<p><img src="eu_osi_introduction_files/figure-html/make-sim3-1.png" width="652.8" style="display: block; margin: auto;"></p>
+<span><span class="va">out.melt</span><span class="op">[</span>,<span class="va">psoil_ESD</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">soil_ESD</span>,levels <span class="op">=</span> <span class="va">plevel</span>,labels <span class="op">=</span> <span class="va">plabel</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<div class="figure">
+<img src="eu_osi_introduction_files/figure-html/example-1-1.png" alt="Soil health index Example for Europe." width="75%"><p class="caption">
+Soil health index Example for Europe.
+</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="reading-more">Reading more?<a class="anchor" aria-label="anchor" href="#reading-more"></a>

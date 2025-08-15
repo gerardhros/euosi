@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,49 @@
 
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.0" id="euosi-050-2025-08-25">euosi 0.5.0 2025-08-25<a class="anchor" aria-label="anchor" href="#euosi-050-2025-08-25"></a></h2>
+<div class="section level3">
+<h3 id="added-0-5-0">Added<a class="anchor" aria-label="anchor" href="#added-0-5-0"></a></h3>
+<ul><li>unit tests except for osi_nut_k</li>
+<li>
+<code>osi_checkvar</code> for input argument checking</li>
+<li>checks on input arguments in all euosi functions</li>
+<li>
+<code>osi_conv_zinc</code> to estimate extractable Zn content from total Zn content</li>
+<li>
+<code>A_ZN_RT</code> as input variable added for <code>osi_field</code> and <code>osi_c_zinc</code> functions.</li>
+<li>
+<code>osi_conv_magnesium</code>, <code>osi_conv_phosphor</code> and <code>osi_conv_potassium</code> includes cutoff to avoid that values go below the minimum as defined in <code>osi_parms</code>
+</li>
+<li>
+<code>osi_get_SOILTYPE_AGR</code> to get the agricultural soil type (classes in dutch)</li>
+<li>
+<code>crop_p</code>, <code>crop_k</code> and <code>crop_n</code> properties to the new IACS cropping table</li>
+<li>vignettes <code>eu_osi_for_nitrogen</code>,<code>eu_osi_for_phosphor</code> and <code>eu_osi_for_potassium</code> updated given IACS crops</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changed-0-5-0">Changed<a class="anchor" aria-label="anchor" href="#changed-0-5-0"></a></h3>
+<ul><li>all functions for country AT, CZ, IT, SE and SK are now using IACS crops from IACS crop table</li>
+<li>
+<code>osi_c_zinc_de</code> and <code>osi_c_boron_de</code> updated for new IACS crops</li>
+<li>
+<code>osi_farm</code> updated with acceptable ranges in soil properties</li>
+</ul></div>
+<div class="section level3">
+<h3 id="fixed-0-5-0">Fixed<a class="anchor" aria-label="anchor" href="#fixed-0-5-0"></a></h3>
+<ul><li>
+<code>osi_p_crumbleability</code> for forgotten setorder after merge</li>
+<li>
+<code>osi_p_crumbleability</code> add fixed crumbleability factor for crops missing that information</li>
+<li>
+<code>osi_c_magnesium_ee</code> and <code>osi_c_magnesium_hu</code> for wrong filter on B_TEXTURE_USDA name rather than code</li>
+<li>
+<code>osi_c_magnesium_nl</code> needed updated crop_cat1 due to IACS cropping codes</li>
+<li>
+<code>osi_c_ph_de</code> was referring to a intermediate table and not final result</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="euosi-040-2025-08-12">euosi 0.4.0 2025-08-12<a class="anchor" aria-label="anchor" href="#euosi-040-2025-08-12"></a></h2>
 <div class="section level3">

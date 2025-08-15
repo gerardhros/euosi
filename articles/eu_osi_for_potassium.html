@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
                         <h4 data-toc-skip class="author">Gerard Ros
 &amp; Elise van Eynde</h4>
             
-            <h4 data-toc-skip class="date">2025-08-12</h4>
+            <h4 data-toc-skip class="date">2025-08-15</h4>
       
 
       <div class="d-none name"><code>eu_osi_for_potassium.Rmd</code></div>
@@ -171,6 +171,10 @@ using published pedotransferfunctions, using the function
 <code>osi_conv_potassium</code>. Similarly, helper functions are applied
 to estimate <code>A_C_OF</code>,<code>A_PH_WA</code>, and
 <code>A_CEC_CO</code> when value is missing (i.e. NA_real_).</p>
+<p>Note that the IACS crop codes codes have been added to the
+<code>osi_crops</code> package table from version 0.4.0 onwards. The
+crop codes are only present for the countries AT, BE, BG, CZ, DE, DK,
+ES, FI, FR, IT, NL, PT, SE, and SK.</p>
 <p>The wrapper function wraps country specific K assessment functions.
 These are illustrated and described in this vignette per country, sorted
 alphabetically.</p>
@@ -199,8 +203,8 @@ article of Bohner et al. (2013), that can be downloaded <a href="https://raumbe
 with a reference to the publication entitled
 <code>RICHTLINIEN FÜR DIE SACHGERECHTE DÜNGUNG, 2006: Anleitung zur Interpretation von Bodenuntersuchungsergebnissen in der Landwirtschaft. 6. Aufl. Bundesministerium für Land- und Forstwirtschaft, Umwelt und Wasserwirtschaft, 80 S</code>
 that can be found <a href="https://www.bmluk.gv.at/dam/jcr:6e638ac4-6dd2-441d-8e51-9304966230cf/Richtlinien%20f%C3%BCr%20die%20sachgerechte%20D%C3%BCngung%20im%20Ackerbau%20und%20Gr%C3%BCnland_akt.pdf" class="external-link">here</a>.</p>
-<p>Note that the crop codes are not yet available in
-<code>osi_crops</code> package table.</p>
+<p>Note that the IACS crop codes codes have been added to the
+<code>osi_crops</code> package table in version 0.4.0.</p>
 <p>The optimum soil K threshold is around 150 mg K/kg whereas occurance
 of K deficiencies might vary depending on soil type. Potassium
 deficiency symptoms start to occur when the K-CAL becomes lower than 100
@@ -272,9 +276,9 @@ This document can be downloaded <a href="https://www.agroscope.admin.ch/agroscop
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in K-AAA. The optimum soil K threshold value for
-sustainable crop production is around 70 mg K/ kg, and the soil index
+sustainable crop production is around 150 mg K/ kg, and the soil index
 shows that K deficiency might occur when K-AAA values decreases down to
-20 mg K/kg.</p>
+60 mg K/kg.</p>
 <div class="figure">
 <img src="eu_osi_for_potassium_files/figure-html/example%20CH1-1.png" alt="Evaluation K-indicator for Switzerland." width="75%"><p class="caption">
 Evaluation K-indicator for Switzerland.
@@ -303,8 +307,8 @@ sustainable crop production has been derived from Fotyma et al. (2008)
 who wrote a comprehensive overview of soil testing methods in Eastern
 Europe entitled “Soil testing methods and fertilizer recommendations in
 Central–Eastern European countries”.</p>
-<p>Note that the crop codes for Czech Republic are not yet available in
-<code>osi_crops</code> package table.</p>
+<p>Note that the IACS crop codes codes have been added to the
+<code>osi_crops</code> package table in version 0.4.0.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in K Mehlich-III. The optimum soil K threshold
 value for sustainable crop production is around 200 mg K/ kg for the
@@ -339,10 +343,8 @@ distinghuises also between peaty and mineral soils, as well land use
 (i.e. grassland versus cropland). Information on the threshold values
 for K-CAL in view of sustainable crop production has been derived by the
 VDLUFA. For more information, see <a href="https://www.tll.de/www/daten/publikationen/schriftenreihe/dung0108.pdf" class="external-link">here</a></p>
-<p>Note that the crop codes for Germany are not yet available in
-<code>osi_crops</code> package table.For now, the B_LU code is used to
-differentiate between grassland and cropland (searching for “grass” in
-BLU).</p>
+<p>Note that the IACS crop codes for Germany are available in
+<code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in K-CAL for a cropland soil. The optimum soil K
 threshold value for sustainable crop production is around 350 mg P/ kg
@@ -372,7 +374,7 @@ inputs:</p>
 <li>A_K_AL, being the extracted P content with ammonium lactate, unit mg
 K /kg.</li>
 </ul>
-<p>Note that the crop codes for Denmark are not yet available in
+<p>Note that the IACS crop codes for Denmark are available in
 <code>osi_crops</code> package table.</p>
 <p>Below the same example but then visualised for a series of soils with
 a K-AL value ranging from 0 to 250 mg K per kg. The optimum soil K
@@ -406,7 +408,7 @@ for P-Mehlich in view of sustainable crop production has been derived
 from Fotyma et al. (2008) who wrote a comprehensive overview of soil
 testing methods in Eastern Europe entitled “Soil testing methods and
 fertilizer recommendations in Central–Eastern European countries”.</p>
-<p>Note that the crop codes for Estonia are not yet available in
+<p>Note that the IACS crop codes for Estonia are not yet available in
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in K Mehlich-III. The optimum soil K threshold
@@ -440,7 +442,7 @@ soils. Information on the threshold values for K-AAA in view of
 sustainable crop production has been derived by the fertilizer
 guidelines handbook entitled “PRÁCTICA DE LA FERTILIZACIÓN RACIONAL DE
 LOS CULTIVOS EN ESPAÑA”. This book is online available <a href="https://www.mapa.gob.es/dam/mapa/contenido/agricultura/publicaciones/01_fertilizacion-baja-.pdf" class="external-link">here</a>.</p>
-<p>Note that the crop codes for Spain are not yet available in
+<p>Note that IACS crop codes for Spain are available in
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in K-AAA. The optimum soil K threshold value for
@@ -473,7 +475,7 @@ C/kg, to distinghuish between mineral and peat soils.</li>
 Based on the soil mineralogy (clay, sand and silt content) one can
 easily classify the USDA texture class using
 <code>osi_get_TEXTURE_USDA</code>.</p>
-<p>Note that the crop codes for Finland are not yet available in
+<p>Note that the crop codes for Finland are available in
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in K-AAA for four soil types. The differences
@@ -664,8 +666,9 @@ illustrated below for potato (crop code PTC) and permanent grassland
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># show an example with regional information available</span></span>
 <span><span class="fu"><a href="../reference/osi_c_potassium_fr.html">osi_c_potassium_fr</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="st">'SOJ'</span>, A_K_AAA <span class="op">=</span> <span class="fl">100</span>, </span>
-<span>                  B_SOILTYPE_AGR <span class="op">=</span> <span class="st">'limons battants'</span>, </span>
-<span>                  B_AER_FR <span class="op">=</span> <span class="st">'nord picardie'</span><span class="op">)</span></span></code></pre></div>
+<span>                   B_TEXTURE_GEPPA <span class="op">=</span> <span class="st">'SS'</span>,</span>
+<span>                   B_SOILTYPE_AGR <span class="op">=</span> <span class="st">'limons battants'</span>, </span>
+<span>                   B_AER_FR <span class="op">=</span> <span class="st">'nord picardie'</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0.9704102</span></span></code></pre>
 <p>Below the same example but then visualised for various soil types
 with a K-AAA value ranging from 0 to 300 mg K per kg for a potato crop.
@@ -779,7 +782,7 @@ guidelines (follow up action with Italian partners needed). For now,
 optimum threshold values and the soil K status evaluationare taken from
 the IFA report entitled
 <code>POTASSIUM AND MAGNESIUM FERTILISER RECOMMENDATIONS IN SOME EUROPEAN COUNTRIES</code>.</p>
-<p>Note that the crop codes for Italy are not yet available in
+<p>Note that IACS crop codes for Italy are available in
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in K-AAA for three soil types (ie. clay, loam and
@@ -1003,7 +1006,7 @@ extraction, unit mg K /kg</li>
 values for optimum crop production were derived from the fertilizer
 guidelines <a href="https://webbutiken.jordbruksverket.se/sv/artiklar/jo219.html" class="external-link">“Rekommendationer
 för gödsling och kalkning 2025”</a>.</p>
-<p>Note that the crop codes for Sweden are not yet available in
+<p>Note that IACS crop codes for Sweden are available in
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in K-AL. The soil health assessment does not
@@ -1037,7 +1040,7 @@ for K-Mehlich in view of sustainable crop production has been derived
 from Fotyma et al. (2008) who wrote a comprehensive overview of soil
 testing methods in Eastern Europe entitled “Soil testing methods and
 fertilizer recommendations in Central–Eastern European countries”.</p>
-<p>Note that the crop codes for Slovak Republic are not yet available in
+<p>Note that IACS crop codes for Slovak Republic are available in
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in K-M3. The optimum soil K threshold value for
