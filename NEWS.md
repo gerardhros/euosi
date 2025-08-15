@@ -1,7 +1,7 @@
 # euosi 0.5.0 2025-08-25
 
 ## Added
-* unit tests
+* unit tests except for osi_nut_k
 * `osi_checkvar` for input argument checking
 * checks on input arguments in all euosi functions
 * `osi_conv_zinc` to estimate extractable Zn content from total Zn content
