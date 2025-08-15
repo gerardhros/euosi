@@ -483,7 +483,26 @@ test_that("osi_nut_p_pl works", {
   )
 })
 
-
+test_that("osi_nut_p_pt works", {
+  expect_equal(
+    osi_nut_p_pt(B_LU = '3301000000', 
+                      A_P_OL = 45),
+    expected = c(0.455),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_nut_p_pt(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                      A_P_OL = c(10,20,40,60)),
+    expected = c(0.9456603, 0.8730602, 0.5517760, 0.2255477),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_nut_p_pt(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                      A_P_OL = c(5,15,35,45)),
+    expected = c(0.9653914, 0.9160007, 0.6487710, 0.4553924),
+    tolerance = 0.01
+  )
+})
 
 test_that("osi_nut_p_se works", {
   expect_equal(
