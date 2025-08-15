@@ -1513,7 +1513,7 @@ osi_c_potassium_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC
   
   # subset and evaluate for arable peat soils
   dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'peat']
-  dt.arable[grepl('peat',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+  dt.arable[grepl('veen',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
   
   # subset and evaluate for arable clay soils
   dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'clay']
