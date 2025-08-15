@@ -534,6 +534,26 @@ test_that("osi_c_potassium_pl works", {
   )
 })
 
+test_that("osi_c_potassium_pt works", {
+  expect_equal(
+    osi_c_potassium_pt(B_LU = '3301000000', 
+                       A_K_AAA = 35),
+    expected = c(0.7176364),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_potassium_pt(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                       A_K_AAA = c(75,150,75,150)/2),
+    expected = c(0.7885881, 0.9984310, 0.7885881, 0.9984310),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_potassium_pt(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                       A_K_AAA = c(30,30,50,50)),
+    expected = c(0.5235276, 0.5235276, 0.9563832, 0.9563832),
+    tolerance = 0.01
+  )
+})
 
 test_that("osi_c_potassium_se works", {
   expect_equal(

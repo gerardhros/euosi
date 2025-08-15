@@ -180,8 +180,9 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_c
   dt[B_COUNTRY == 'SK', value := osi_c_potassium_sk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_K_M3 = A_K_M3)]
   dt[B_COUNTRY == 'SL', value := osi_c_potassium_sl(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_K_AL = A_K_AL)]
   
-  # Poland (PL), United Kingdom (UK)
+  # Poland (PL), Portugal (PT), and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_c_potassium_pl(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_K_DL = A_K_DL)]
+  dt[B_COUNTRY == 'PT', value := osi_c_potassium_pt(B_LU = B_LU, A_K_AAA = A_K_AAA)]
   dt[B_COUNTRY == 'UK', value := osi_c_potassium_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_K_AN = A_K_AN)]
   
   # select the output variable
@@ -1667,6 +1668,62 @@ osi_c_potassium_pl <- function(A_K_DL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
 }
 
+#' Calculate the potassium availability index in Portugal
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_K_AAA (numeric) The K-content of the soil extracted with acid ammonium acetate (mg K / kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_pt(B_LU = '3301061299',A_K_AAA = 50)
+#' osi_c_potassium_pt(B_LU =  c('3301061299','3301000000'),A_K_AAA = c(35,55))
+#' 
+#' @return 
+#' The potassium availability index in Portugal derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_c_potassium_pt <- function(B_LU, A_K_AAA) {
+  
+  # add visual binding
+  crop_cat1 = osi_country = . = crop_code = crop_cat2 = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='PT']
+  
+  # Check length of desired input
+  arg.length <- max(length(B_LU),length(A_K_AAA))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('PT',arg.length),
+                           B_LU = B_LU,
+                           A_K_AAA = A_K_AAA),
+               fname = 'osi_c_potassium_pt')
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_K_AAA = A_K_AAA * 1.205, # unit is mg K2O/ kg in fertilizer recommendation
+                   value = NA_real_)
+  
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1,crop_cat2)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
+  # evaluation soil K status
+  dt[, value := osi_evaluate_logistic(A_K_AAA, b = 0.111091036, x0 = -11.438986748, v = 0.007796498)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
+}
+
 #' Calculate the potassium availability index in Sweden
 #' 
 #' This function calculates the potassium availability. 
@@ -1716,7 +1773,7 @@ osi_c_potassium_se <- function(B_LU, A_K_AL) {
               all.x=TRUE)
   
   # evaluation soil K status
-  dt[, value := OBIC::evaluate_logistic(A_K_AL, b = 0.07362818 , x0 = 0.51818429 , v = 0.02380852)]
+  dt[, value := osi_evaluate_logistic(A_K_AL, b = 0.07362818 , x0 = 0.51818429 , v = 0.02380852)]
   
   # select value and return
   value <- dt[,value]
