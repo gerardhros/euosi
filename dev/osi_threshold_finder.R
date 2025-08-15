@@ -25,6 +25,84 @@ findoptvalue <- function(spool, spoolopt,p0 = NULL) {
   return(xpar)
 }
 
+# Portugal P-Olsen (mg P2O5/kg)
+# evaluation soil pool peat (A+, A, B, C, D, E)
+spool <- c(1,18,(18+34)/2,(35+56)/2,57,1.5*115)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Portugal K-AAA (mg K2O/kg)
+# evaluation soil pool peat (A+, A, B, C, D, E)
+spool <- c(1,25,(26+50)/2,(51+100)/2,101,1.5*200)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Portugal Mg-AAA (mg Mg/kg)
+# evaluation soil pool peat (A+, A, B, C, D, E)
+spool <- c(1,30,(31+60)/2,(61+90)/2,91,1.5*125)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# PortugalB_HW (mg B/kg)
+# evaluation soil pool peat (A+, A, B, C, D, E)
+spool <- c(1,0.2,(0.2+0.4)/2,(0.41+1)/2,1.1,1.5*2.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Portugal Zn-AAA (mg Zn/kg)
+# evaluation soil pool peat (A+, A, B, C, D, E)
+spool <- c(1,0.6,(0.7+1.4)/2,(1.5+3.5)/2,3.6,1*10)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Portugal Base Saturation
+# evaluation soil pool peat (A+, A, B, C, D, E)
+spool <- c(1,20,(21+40)/2,(41+60)/2,61,1.5*80)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Portugal CEC
+# evaluation soil pool peat (A+, A, B, C, D, E)
+spool <- c(1,5,(5+10)/2,(10+20)/2,21,1.5*40)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Portugal Ca-cohex
+# evaluation soil pool peat (A+, A, B, C, D, E)
+spool <- c(1,2,(2+5)/2,(5+10)/2,10.1,1.5*20)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Portugal Mg-cohex
+# evaluation soil pool peat (A+, A, B, C, D, E)
+spool <- c(0.1,0.5,(0.6+1)/2,(1.1+2.5)/2,2.6,0.8*5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Portugal K-cohex
+# evaluation soil pool peat (A+, A, B, C, D, E)
+spool <- c(0.01,0.05,(0.1+0.25)/2,(0.26+0.5)/2,0.51,1.5*1)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Portugal pH
+# evaluation soil pool peat (A+, A, B, C, D, E)
+spool <- c(1,4.5,(4.6+6.5)/2,(6.6+7.5)/2,7.6,9.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
 # Belgie PAL bouwland (mg P/kg)
 # evaluation soil pool (A+, A, B, C, D, E)
 spool <- c(1,5,9,18,30,75)
@@ -1493,6 +1571,8 @@ get_p_nut(pb= 0.1014425,px0 = -10.704884,pv = 0.00674754)
 get_p_nut(pb = 1.3,px0=1.3,pv=0.35,nx0=2.5)
 #norway
 get_p_nut(pb= 0.09801777,px0 = -20.28710038,pv = 0.0218218)
+# portugal
+get_p_nut(pb= 0.17869351 ,px0 = 3.01230206 ,pv = 0.03047017 )
 #sweden
 rbind(
 get_p_nut(pb = 0.126197, px0 = 14.6487, pv = 0.46202),
@@ -1628,8 +1708,10 @@ get_k_nut(pb= 0.07752183,px0 = 3.04311052,pv = 0.09679474,nx0=75)
 get_k_nut(pb= 0.07134238,px0 = 3.07588403,pv = 0.02805476)
 get_k_nut(pb= 0.070369841,px0 = 4.237044272,pv = 0.007390134)
 get_k_nut(pb= 0.070110090,px0 = 0.702553221,pv = 0.001352746)
-#sweden
+#portugal
 get_k_nut( pb = 0.07362818 , px0 = 0.51818429 , pv = 0.02380852)
+#sweden
+get_k_nut( pb = 0.111091036  , px0 = -11.438986748 , pv = 0.007796498)
 
 #SK
 get_k_nut(pb= 0.04569915,px0 = 2.78099169 ,pv = 0.00851402,nx0=100)
