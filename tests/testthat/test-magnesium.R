@@ -475,6 +475,27 @@ test_that("osi_c_magnesium_pl works", {
 })
 
 
+test_that("osi_c_magnesium_pt works", {
+  expect_equal(
+    osi_c_magnesium_pt(B_LU = '3301000000', 
+                       A_MG_AAA = 35),
+    expected = c(0.25),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_pt(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                       A_MG_AAA = c(40,70,80,100)),
+    expected = c(0.4107403, 0.9397339, 0.9747513, 0.9956818),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_pt(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                       A_MG_AAA = c(15,40,70,100)),
+    expected = c(0.0003538678, 0.4107402791, 0.9397338991, 0.9956818386),
+    tolerance = 0.01
+  )
+})
+
 test_that("osi_c_magnesium_se works", {
   expect_equal(
     osi_c_magnesium_se(B_LU = '3301000000', 
