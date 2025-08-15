@@ -150,8 +150,9 @@ osi_c_phosphor <- function(B_LU,
   dt[B_COUNTRY == 'SK', value := osi_c_phosphor_sk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_P_M3 = A_P_M3)]
   dt[B_COUNTRY == 'SL', value := osi_c_phosphor_sl(B_LU = B_LU, A_P_AL = A_P_AL)]
   
-  # Poland (PL), United Kingdom (UK)
+  # Poland (PL), Portugal (PT), and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_c_phosphor_pl(B_LU = B_LU, A_P_DL = A_P_DL)]
+  dt[B_COUNTRY == 'PT', value := osi_c_phosphor_pt(B_LU = B_LU, A_P_OL = A_P_OL)]
   dt[B_COUNTRY == 'IE', value := osi_c_phosphor_uk(B_LU = B_LU, A_P_OL = A_P_OL)]
   
   # sort data.table
@@ -1475,6 +1476,64 @@ osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_) {
   
   return(value)
   
+}
+
+#' Calculate the phosphate availability index in Portugal
+#' 
+#' This function calculates the phosphate availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_phosphor_pt(B_LU = '3301061299',A_P_OL = 5)
+#' osi_c_phosphor_pt(B_LU = c('3301061299','3301000000'),A_P_OL = c(3.5,5.5))
+#' 
+#' @return 
+#' The phosphate availability index in Portugal derived from extractable soil P fractions. A numeric value.
+#' 
+#' @export
+osi_c_phosphor_pt <- function(B_LU, A_P_OL) {
+  
+  # add visual bindings
+  osi_country = crop_code = crop_cat1 = . = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='PT']
+  
+  # Check length of desired input
+  arg.length <- max(length(B_LU),length(A_P_OL))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('PT',arg.length),
+                           B_LU = B_LU,
+                           A_P_AL = A_P_OL),
+               fname = 'osi_c_phoshor_pt')
+  
+  # internal data.table
+  dt <- data.table(id = 1: arg.length,
+                   B_LU = B_LU,
+                   A_P_OL = A_P_OL * 2.29,
+                   value = NA_real_)
+  
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
+  # P index derived following P-Olsen.
+  
+  # evaluation soil P status for grasslands and croplands
+  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.17869351 , x0 = 3.01230206 , v = 0.03047017 )]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
 }
 
 #' Calculate the phosphate availability index in Sweden
