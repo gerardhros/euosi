@@ -88,6 +88,7 @@ out <- euosi::osi_field(B_LU = dt$B_LU,
                         A_B_HW = dt$A_B_HW, 
                         A_ZN_CC = dt$A_ZN_CC, 
                         A_ZN_EDTA = NA_real_,
+                        A_ZN_RT = dt$A_ZN_RT,
                         ID = dt$ID, 
                         output = 'indicators')
 
@@ -196,7 +197,14 @@ plabel = c('ESS environment','ESS crop\nproduction',
            'ESS climate\nmitigation','ESS water','ESS nutrient\ncycling',
            'OSI total score')
 out.melt[,psoil_ESD := factor(soil_ESD,levels = plevel,labels = plabel)]
-p1 <- ggplot(out.melt, aes(x= soil_ESD, y= shi*10, group = soil_ESD, color = shi)) +
+
+```
+
+
+```{r example-1, out.width="75%", fig.cap="Soil health index Example for Europe.",dpi=300, echo = FALSE}
+
+# show plot
+ggplot(out.melt, aes(x= soil_ESD, y= shi*10, group = soil_ESD, color = shi)) +
       geom_col(fill = 'grey', color = NA, width = 0.05) + geom_point(size = 5) + 
       ylab('OSI-score') + xlab('') +
       theme_bw(12) + theme(legend.position = 'none',
@@ -207,8 +215,9 @@ p1 <- ggplot(out.melt, aes(x= soil_ESD, y= shi*10, group = soil_ESD, color = shi
       scale_fill_viridis_d()+ scale_color_viridis_c() + 
       ggtitle('OSI soil quality assessment field 1')
 
-p1
 ```
+
+
 
 ## Reading more?
 More vignettes will be made available regarding the derivation of all soil health indicators, the aggregation methods applied, the derivation of optimum land use given the current soil quality assessments, and the best management practices to be applied to improve the soil quality. Are you interested to contribute, please contact the author(s) of this R package. Enjoy!

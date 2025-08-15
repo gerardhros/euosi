@@ -20,7 +20,7 @@ The potassium excess index in Ireland derived from extractable soil K fractions.
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_ie(B_LU = 265,A_SOM_LOI = 2,A_K_NaAAA = 5)
-osi_nut_k_ie(B_LU = c(265,1019),A_SOM_LOI = c(2,4),A_K_NaAAA = c(3.5,5.5))
+osi_nut_k_ie(B_LU = 'testcrop',A_SOM_LOI = 2,A_K_NaAAA = 5)
+osi_nut_k_ie(B_LU = c('testcrop','testcrop2'),A_SOM_LOI = c(2,4),A_K_NaAAA = c(3.5,5.5))
 
 }

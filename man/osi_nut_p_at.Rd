@@ -18,6 +18,6 @@ The phosphorus excess index in Austria estimated from extractable phosphorus. A 
 This function calculates the phosphorus excess
 }
 \examples{
-osi_nut_p_at(A_P_CAL = 47)
+osi_nut_p_at(B_LU = '3301000000', A_P_CAL = 47)
 
 }

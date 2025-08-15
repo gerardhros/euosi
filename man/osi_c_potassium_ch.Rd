@@ -20,6 +20,6 @@ The potassium availability index in Switzerland estimated from extractable potas
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_ch(A_K_AAA = 50, A_CLAY_MI = 25)
+osi_c_potassium_ch(B_LU = '8410', A_K_AAA = 50, A_CLAY_MI = 25)
 
 }

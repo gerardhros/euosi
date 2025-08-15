@@ -1,3 +1,28 @@
+# euosi 0.5.0 2025-08-25
+
+## Added
+* unit tests except for osi_nut_k
+* `osi_checkvar` for input argument checking
+* checks on input arguments in all euosi functions
+* `osi_conv_zinc` to estimate extractable Zn content from total Zn content
+* `A_ZN_RT` as input variable added for `osi_field` and `osi_c_zinc` functions.
+* `osi_conv_magnesium`, `osi_conv_phosphor` and `osi_conv_potassium` includes cutoff to avoid that values go below the minimum as defined in `osi_parms`
+* `osi_get_SOILTYPE_AGR` to get the agricultural soil type (classes in dutch)
+* `crop_p`, `crop_k` and `crop_n` properties to the new IACS cropping table
+* vignettes `eu_osi_for_nitrogen`,`eu_osi_for_phosphor` and `eu_osi_for_potassium` updated given IACS crops
+
+## Changed
+* all functions for country AT, CZ, IT, SE and SK are now using IACS crops from IACS crop table
+* `osi_c_zinc_de` and `osi_c_boron_de` updated for new IACS crops
+* `osi_farm` updated with acceptable ranges in soil properties
+
+## Fixed
+* `osi_p_crumbleability` for forgotten setorder after merge
+* `osi_p_crumbleability` add fixed crumbleability factor for crops missing that information
+* `osi_c_magnesium_ee` and `osi_c_magnesium_hu` for wrong filter on B_TEXTURE_USDA name rather than code
+* `osi_c_magnesium_nl` needed updated crop_cat1 due to IACS cropping codes
+* `osi_c_ph_de` was referring to a intermediate table and not final result
+
 # euosi 0.4.0 2025-08-12
 
 ## Added

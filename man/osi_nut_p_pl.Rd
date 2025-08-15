@@ -18,6 +18,6 @@ The phosphorus excess index in Poland estimated from extractable phosphorus. A n
 This function calculates the phosphorus excess.
 }
 \examples{
-osi_nut_p_pl(A_P_DL = 45)
+osi_nut_p_pl(B_LU = 'testcrop1',A_P_DL = 45)
 
 }

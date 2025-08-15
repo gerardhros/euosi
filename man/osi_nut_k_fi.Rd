@@ -4,7 +4,7 @@
 \alias{osi_nut_k_fi}
 \title{Calculate the potassium excess index in Finland}
 \usage{
-osi_nut_k_fi(B_LU, B_TEXTURE_USDA, A_K_AAA, A_C_OF = 0)
+osi_nut_k_fi(B_LU, B_TEXTURE_USDA, A_K_AAA, A_C_OF = 0.5)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -22,6 +22,6 @@ The potassium excess index in Finland estimated from extractable potassium. A nu
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_K_AAA = 45)
+osi_nut_k_fi(B_LU = '1110', B_TEXTURE_USDA = 'Si',A_K_AAA = 45,A_C_OF = 15)
 
 }

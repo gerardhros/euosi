@@ -26,6 +26,6 @@ The boron availability index in Germany derived from extractable soil B fraction
 This function calculates the boron availability.
 }
 \examples{
-osi_c_boron_de(B_LU = 265,A_C_OF=25, A_CLAY_MI=5,A_SAND_MI=15,A_PH_CC = 4,A_B_HW = 50)
+osi_c_boron_de(B_LU = '3301061299',A_C_OF=25, A_CLAY_MI=5,A_SAND_MI=15,A_PH_CC = 4,A_B_HW = 50)
  
 }

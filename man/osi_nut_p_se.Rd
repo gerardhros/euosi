@@ -18,7 +18,7 @@ The phosphate excess index in Sweden derived from extractable soil P fractions. 
 This function calculates the phosphate excess.
 }
 \examples{
-osi_nut_p_se(B_LU = 265,A_P_AL = 5)
-osi_nut_p_se(B_LU = c(265,1019),A_P_AL = c(3.5,5.5))
+osi_nut_p_se(B_LU = '3301061299',A_P_AL = 5)
+osi_nut_p_se(B_LU = c('3301061299','3301000000'),A_P_AL = c(3.5,5.5))
 
 }

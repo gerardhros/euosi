@@ -18,7 +18,7 @@ The phosphate availability index in Denmark derived from extractable soil P frac
 This function calculates the phosphate availability.
 }
 \examples{
-osi_c_phosphor_dk(B_LU = '265',A_P_OL = 5)
-osi_c_phosphor_dk(B_LU = c('265','1019'),A_P_OL = c(3.5,5.5))
+osi_c_phosphor_dk(B_LU = '3301010399',A_P_OL = 5)
+osi_c_phosphor_dk(B_LU = c('3301010399','3301029800'),A_P_OL = c(3.5,5.5))
 
 }

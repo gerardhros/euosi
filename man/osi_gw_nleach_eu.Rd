@@ -12,7 +12,8 @@ osi_gw_nleach_eu(
   A_SAND_MI,
   B_PREC_Y = NA_real_,
   B_PET_Y = NA_real_,
-  B_TEMP_Y = NA_real_
+  B_TEMP_Y = NA_real_,
+  B_COUNTRY
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ osi_gw_nleach_eu(
 \item{B_PET_Y}{(numeric) Total potential evapotranspiration in year (mm)}
 
 \item{B_TEMP_Y}{(numeric) Mean year temperature (degrees Celcius)}
+
+\item{B_COUNTRY}{(character) The country code}
 }
 \value{
 The risk for N leaching
@@ -39,7 +42,7 @@ The risk for N leaching
 This function calculates the N leaching risks for the soil
 }
 \examples{
-osi_gw_nleach_eu(B_LU ='265',A_N_RT = 4100, A_C_OF = 22, A_CLAY_MI = 4.5, 
-A_SAND_MI = 15, B_PREC_Y = 900, B_PET_Y = 650,B_TEMP_Y = 4.5)
+osi_gw_nleach_eu(B_LU ='3301000000',A_N_RT = 4100, A_C_OF = 22, A_CLAY_MI = 4.5, 
+A_SAND_MI = 15, B_PREC_Y = 900, B_PET_Y = 650,B_TEMP_Y = 4.5, B_COUNTRY='ES')
 
 }

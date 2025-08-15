@@ -19,7 +19,7 @@ vignette: >
   options(rmarkdown.html_vignette.check_title = FALSE)
   setDTthreads(1)
 
-  # devtools::load_all()
+  #devtools::load_all()
 ```
 
 ## Introduction
@@ -55,7 +55,10 @@ In euso package has a wrapper function to assess the soil health index for the s
 
 Not all the inputs are mandatory. The function runs with the soil parameters being available for LUCAS. Other soil P extraction methods can be added, but when unknown, then these are estimated from P-Olsen using published pedotransferfunctions, using the function `osi_conv_phosphor`. Similarly, helper functions are applied to estimate `A_C_OF`, `A_PH_KCL` and `A_PH_WA`.
 
+Note that the IACS crop codes codes have been added to the `osi_crops` package table from version 0.4.0 onwards. The crop codes are only present for the countries AT, BE, BG, CZ, DE, DK, ES, FI, FR, IT, NL, PT, SE, and SK.
+
 The wrapper function wraps country specific P assessment functions. These are illustrated and described in this vignette per country, sorted alphabetically.
+
 
 ## Austria (AT)
 The phosphorus supply in view of soil health can be calculated using `osi_c_phosphor_at` using the following inputs:
@@ -66,19 +69,21 @@ The phosphorus supply in view of soil health can be calculated using `osi_c_phos
 The soil P threshold for optimum soil health is generic for all soil types but differs between arable land and grassland. The optimum threshold is set around 47-68 mg P/kg for grassland and around 47-111 mg P/kg for cropland. More information can be found in the article of Bohner et al. (2013), that can be downloaded [here](https://raumberg-gumpenstein.at/jdownloads/Forschungsberichte/Umweltressourcen_im_Gruenland/Naehrstoffe/2_2013_INTERREG_IV_Projekt_Abschlussbericht_gewaesserzukunft_Bohner.pdf) with a reference to the publication entitled RICHTLINIEN FÜR DIE SACHGERECHTE DÜNGUNG, 2006: Anleitung zur Interpretation von Bodenuntersuchungsergebnissen in der Landwirtschaft. 6. Aufl. Bundesministerium für Land- und Forstwirtschaft,
 Umwelt und Wasserwirtschaft, 80 S that can be found [here](https://www.bmluk.gv.at/dam/jcr:6e638ac4-6dd2-441d-8e51-9304966230cf/Richtlinien%20f%C3%BCr%20die%20sachgerechte%20D%C3%BCngung%20im%20Ackerbau%20und%20Gr%C3%BCnland_akt.pdf).
 
-Note that the crop codes are not yet available in `osi_crops` package table. There is a temporary fix that B_LU codes with the string "grass" are considered as grassland whereas all others are considered cropland. 
+Note that the IACS crop codes codes have been added to the `osi_crops` package table in version 0.4.0. 
 
-The optimum soil P threshold is around 60 mg P/kg and actually not different between both land uses. P deficiency symptoms start to occur when the P-CAL becomes lower than 30 mg P/kg.
+Three examples are given, one for potato (3301090400), one for maize (3301030000) and one for grassland (3301090205). The optimum soil P threshold is around 60 mg P/kg and actually not different between both land uses. P deficiency symptoms start to occur when the P-CAL becomes lower than 30 mg P/kg.
 
 ```{r example AT1, out.width="75%", fig.cap="Evaluation P-indicator for Austria.",dpi=300, echo = FALSE}
 
 # make an example with varying P-CAL content
-dt <- CJ(B_LU = c('grassland','potato'),
+dt <- CJ(B_LU = c('3301090400','3301030000','3301090208'),
          A_P_CAL = seq(1,100,5))
+dt[,landuse := fifelse(B_LU=='3301090400','mais',
+                       ifelse(B_LU == '3301030000','potato','grassland'))]
 dt[,osi_c_p := osi_c_phosphor_at(B_LU,A_P_CAL = A_P_CAL)]
 
 # show plot
-osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_CAL, xpar_label = 'P-CAL (mg P/kg)',pgroup = dt$B_LU)
+osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_CAL, xpar_label = 'P-CAL (mg P/kg)',pgroup = dt$landuse)
 
 ```
 
@@ -105,7 +110,7 @@ Below the same example but then visualised for a series of soils with a  P-AL va
 ```{r example BE2, out.width="75%", fig.cap="Evaluation P-indicator for the Belgium.",dpi=300, echo = FALSE}
 
 # make an example with varying P-AL content for two crops
-dt <- CJ(B_LU = c(91,60),
+dt <- CJ(B_LU = c('91','60'),
          A_P_AL = seq(1,300,10))
 dt[,landuse := fifelse(B_LU==91,'sugar beet','grassland')]
 dt[,osi_c_p := osi_c_phosphor_be(B_LU,A_P_AL = A_P_AL)]
@@ -149,15 +154,15 @@ The phosphorus supply in view of soil health for agricultural soils in Czech Rep
 
 Information on the threshold values for P-Mehlich in view of sustainable crop production has been derived from Fotyma et al. (2008) who wrote a comprehensive overview of soil testing methods in Eastern Europe entitled "Soil testing methods and fertilizer recommendations in Central–Eastern European countries". 
 
-Note that the crop codes for Czech Republic are not yet available in `osi_crops` package table.
+Note that the IACS crop codes codes have been added to the `osi_crops` package table in version 0.4.0. 
 
 Below an example is visualized how the soil health index varies in relation to variation in P Mehlich-III. The optimum soil P threshold value for sustainable crop production is around 125 mg P/ kg, and the soil index rapidly decreases to zero when P Mehlich-III values decreases down to 50 mg P/kg.
 
 
 ```{r example CZ1, out.width="75%", fig.cap="Evaluation P-indicator for Czech Republic.",dpi=300, echo = FALSE}
 
-# make an example with varying P-M3 content
-dt <- CJ(B_LU = c('cropland'),
+# make an example with varying P-M3 content of mrize
+dt <- CJ(B_LU = c('3301090400'),
          A_P_M3 = seq(1,200,5))
 dt[,osi_c_p := osi_c_phosphor_cz(B_LU,A_P_M3 = A_P_M3)]
 
@@ -178,7 +183,7 @@ The phosphorus supply in view of soil health for agricultural soils in Germany c
 
 The P supplying capacity differ for soils varying in clay content and distinghuises also between peaty and mineral soils. Information on the threshold values for P-CAL in view of sustainable crop production has been derived by the VDLUFA. In 2020 the threshold values have been updated. For more information, see [here](https://www.lufa-nord-west.de/index.cfm/action/downloadcenter?file=08E6CC) 
 
-Note that the crop codes for Germany are not yet available in `osi_crops` package table.
+Note that the IACS crop codes for Germany are available in `osi_crops` package table.
 
 Below an example is visualized how the soil health index varies in relation to variation in P-AL. The optimum soil P threshold value for sustainable crop production is around 60 mg P/ kg for peat soils and around 100 mg P/kg for mineral soils. The soil index decreases when P-AL values decreases down to 20 mg P/kg (peat soils) or 50 mg P/kg (mineral soils).
 
@@ -186,7 +191,7 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example DE1, out.width="75%", fig.cap="Evaluation P-indicator for Germany.",dpi=300, echo = FALSE}
 
 # make an example with varying P-CAL content for three soil types
-dt <- CJ(B_LU = c('cropland'),
+dt <- CJ(B_LU = c('3301090400'),
          A_SOM_LOI = c(5,10,20),
          A_P_CAL = seq(1,130,5))
 dt[A_SOM_LOI==5,A_CLAY_MI := 10]
@@ -210,7 +215,7 @@ In the euosi package the soil health score for P supply can be calculated with `
 * B_LU, being the crop code, an unique number for each crop
 * A_P_OL, being the extracted P content with Olsen, unit mg P /kg.
 
-Note that the crop codes for Denmark are not yet available in `osi_crops` package table.
+Note that the IACS crop codes for Denmark are available in `osi_crops` package table.
 
 Below the same example but then visualised for a series of soils with a  P-Olsen value ranging from 0 to 70 mg P per kg. The optimum soil P threshold value for sustainable crop production is around 50 mg P/ kg for all soils. The soil index decreases when P-Olsen values decreases down to 30 mg P/kg.
 
@@ -218,7 +223,7 @@ Below the same example but then visualised for a series of soils with a  P-Olsen
 ```{r example DK1, out.width="75%", fig.cap="Evaluation P-indicator for the Denmark.",dpi=300, echo = FALSE}
 
 # make an example with varying P-Olsen
-dt <- CJ(B_LU = c(91,60),
+dt <- CJ(B_LU = c('3301090400'),
          A_P_OL= seq(1,75,1))
 dt[,osi_c_p := osi_c_phosphor_dk(B_LU,A_P_OL = A_P_OL)]
 
@@ -237,7 +242,7 @@ The phosphorus supply in view of soil health for agricultural soils in Estonia c
 
 The P supplying capacity differs in soils with high humus content (>2%) and for soils with low humus content (<2%). Information on the threshold values for P-Mehlich in view of sustainable crop production has been derived from Fotyma et al. (2008) who wrote a comprehensive overview of soil testing methods in Eastern Europe entitled "Soil testing methods and fertilizer recommendations in Central–Eastern European countries". 
 
-Note that the crop codes for Estonia are not yet available in `osi_crops` package table.
+Note that the IACS crop codes for Estonia are not yet available in `osi_crops` package table.
 
 Below an example is visualized how the soil health index varies in relation to variation in P Mehlich-III. The optimum soil P threshold value for sustainable crop production is around 75 mg P/ kg for both soil types (low and high in soil organic matter), and the soil index rapidly decreases when P Mehlich-III values decreases down to 5 (humus rich soils) or 25 (humus poor soils) mg P/kg.
 
@@ -266,7 +271,7 @@ The phosphorus supply in view of soil health for agricultural soils in Spain can
 
 The P supplying capacity differ for soils varying in clay content, distinghuising sandy (Arenoso), loamy (Franco) and clayey (Arcilloso) soils. Information on the threshold values for P-Olsen in view of sustainable crop production has been derived by the fertilizer guidelines handbook entitled "PRÁCTICA DE LA FERTILIZACIÓN RACIONAL DE LOS CULTIVOS EN ESPAÑA". This book is online available [here](https://www.mapa.gob.es/dam/mapa/contenido/agricultura/publicaciones/01_fertilizacion-baja-.pdf).
 
-Note that the crop codes for Spain are not yet available in `osi_crops` package table.
+Note that IACS crop codes for Spain are available in `osi_crops` package table.
 
 Below an example is visualized how the soil health index varies in relation to variation in P-Olsen. The optimum soil P threshold value for sustainable crop production is around 40 mg P/ kg for the three soil types. The soil index decreases more stronger on the sandy soils, in particular when P-Olsen values decreases down to 18 mg P/kg. For the clay soil the P availability remains quite high down to 5 mg P/kg.
 
@@ -274,7 +279,7 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example ES1, out.width="75%", fig.cap="Evaluation P-indicator for Spain.",dpi=300, echo = FALSE}
 
 # make an example with varying P-OL content for three soil types
-dt <- CJ(B_LU = c('cropland'),
+dt <- CJ(B_LU = c('3301090400'),
          A_CLAY_MI = c(5,6,20),
          A_P_OL = seq(1,40,0.5))
 dt[A_CLAY_MI==5,A_SAND_MI := 10]
@@ -300,7 +305,7 @@ The phosphorus supply in view of soil health for agricultural soils in Finland c
 
 The P supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the USDA texture class using `osi_get_TEXTURE_USDA`.  
 
-Note that the crop codes for Finland are not yet available in `osi_crops` package table.
+Note that the crop codes for Finland are available in `osi_crops` package table.
 
 Below an example is visualized how the soil health index varies in relation to variation in P-AAA for four soil types. The differences between the soil types is rather small. The optimum soil P threshold value for sustainable crop production is around 25 mg P/ kg for the four soil types evaluated (clay, sand,loam and peat), and the soil index  decreases when P-AAA values decreases down to 5 mg P/kg.
 
@@ -308,7 +313,7 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example FI1, out.width="75%", fig.cap="Evaluation P-indicator for Finland.",dpi=300, echo = FALSE}
 
 # make an example with varying P-AA content for two soil types
-dt <- CJ(B_LU = c('cropland'),
+dt <- CJ(B_LU = c('3340'),
          B_TEXTURE_USDA = c('Sa','Lo','Cl','ClLo'),
          A_P_AAA = seq(1,40,0.5))
 dt[,stype := fifelse(B_TEXTURE_USDA=='Sa','sand',
@@ -328,7 +333,7 @@ In France, soil phosphorus status for crop production is determined by assessing
 
 The euosi package the soil health score for P supply can be calculated with `osi_c_phosphor_fr`, requiring the following inputs:
 
-* B_LU, being the French crop code, an unique code for each crop
+* B_LU, being the French crop code, an unique code for each crop. Both original crop code and IACS codes are present in `osi_crops`
 * A_P_OL, being the extracted P content with Olsen method, unit mg P /kg.
 * A_PH_WA, being the soil acidity measured in water. 
 
@@ -469,7 +474,7 @@ The phosphorus supply in view of soil health for agricultural soils in Italy can
 
 The evaluation of the P supply is similar for all soil types and land uses. Information on the threshold values for P-Olsen in view of sustainable crop could not be retreived from Italian fertilizer guidelines (follow up action with Italian partners needed) and has been retreived from te paper of Steinfurth et al (2022) that can be found [here](https://www.sciencedirect.com/science/article/pii/S0167880922000755).
 
-Note that the crop codes for Italy are not yet available in `osi_crops` package table. 
+Note that IACS crop codes for Italy are available in `osi_crops` package table. 
 
 Below an example is visualized how the soil health index varies in relation to variation in P-Olsen. The optimum soil P threshold value for sustainable crop production is around 10-15 mg P/ kg for both land uses. Phosphorus deficiency occurs when the P-OL value decreases below around 5 mg P/kg.
 
@@ -477,7 +482,7 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example IT1, out.width="75%", fig.cap="Evaluation P-indicator for Italy.",dpi=300, echo = FALSE}
 
 # make an example with varying P-OL content
-dt <- CJ(B_LU = c('cropland'),
+dt <- CJ(B_LU = c('3301090400'),
          A_P_OL = seq(1,25,0.1))
 dt[,osi_c_p := osi_c_phosphor_it(B_LU,A_P_OL = A_P_OL)]
 
@@ -560,7 +565,7 @@ An example is illustrated below for a maize crop (crop code 265) and a single so
 ```{r example NL1, echo = TRUE}
 
 # show an example for maize crop
-osi_c_phosphor_nl(B_LU = 265, A_P_AL = 197, A_P_CC = 2.5)
+osi_c_phosphor_nl(B_LU = 265, A_P_AL = 197, A_P_CC = 2.5,A_P_WA=85)
 
 ```
 
@@ -569,11 +574,11 @@ Below the same example but then visualised for a series of soils with a single P
 ```{r example NL2, out.width="75%", fig.cap="Evaluation P-indicator for the Netherlands.",dpi=300, echo = FALSE}
 
 # make an example with varying P-CaCl2 and a fixed P-AL
-dt <- CJ(B_LU = c(259,265),
+dt <- CJ(B_LU = c('259','265'),
          A_P_AL = 197, 
          A_P_WA = 15,
          A_P_CC = seq(0.1,4,0.05))
-dt[,landuse := fifelse(B_LU==259,'maize','grassland')]
+dt[,landuse := fifelse(B_LU=='259','maize','grassland')]
 dt[,osi_c_p := osi_c_phosphor_nl(B_LU,A_P_AL = A_P_AL,A_P_CC = A_P_CC,A_P_WA=A_P_WA)]
 
 # show plot
@@ -642,7 +647,7 @@ The phosphorus supply in view of soil health for agricultural soils in Sweden ca
 
 The P supplying capacity differs per land use type. The threshold values for optimum crop production were derived from the fertilizer guidelines ["Rekommendationer för gödsling och kalkning 2025"](https://webbutiken.jordbruksverket.se/sv/artiklar/jo219.html).
 
-Note that the crop codes for Sweden are not yet available in `osi_crops` package table. Currently a temporary fix has been added to read the B_LU and extract wether its a cereal crop, oil crop, potato or sugar beet crop.
+Note that IACS crop codes for Sweden are available in `osi_crops` package table. 
 
 Below an example is visualized how the soil health index varies in relation to variation in P-AL for three crops. The soil health assessment strongly varies with the highest optimum soil P threshold value ranging from around 90 mg P/kg for potato down to 25 mg P/kg for cereals. Phosphorus deficiency occurs when the P-AL values decrease below around 30 mg P/kg for potato and below 10 mg/kg for cereals. The response for oil crop is in between the other two crops.
 
@@ -650,11 +655,11 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example SE1, out.width="75%", fig.cap="Evaluation P-indicator for Sweden.",dpi=300, echo = FALSE}
 
 # make an example with varying P-AL content and three land uses
-dt <- CJ(B_LU = c('maize','potato','oil'),
+dt <- CJ(B_LU = c('3301090400','3301030000','3301060500'),
          A_P_AL = seq(1,100,0.1))
-dt[B_LU=='maize', landuse := 'cereal']
-dt[B_LU=='potato', landuse := 'potato']
-dt[B_LU=='oil', landuse := 'oil crop']
+dt[B_LU=='3301090400', landuse := 'cereal']
+dt[B_LU=='3301030000', landuse := 'potato']
+dt[B_LU=='3301060500', landuse := 'oil crop']
 dt[,osi_c_p := osi_c_phosphor_se(B_LU,A_P_AL = A_P_AL)]
 
 # show plot
@@ -673,7 +678,7 @@ The phosphorus supply in view of soil health for agricultural soils in Slovak Re
 
 The P supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the USDA texture class using `osi_get_TEXTURE_HYPRES`. Information on the threshold values for P-Mehlich in view of sustainable crop production has been derived from Fotyma et al. (2008) who wrote a comprehensive overview of soil testing methods in Eastern Europe entitled "Soil testing methods and fertilizer recommendations in Central–Eastern European countries". 
 
-Note that the crop codes for Slovak Republic are not yet available in `osi_crops` package table.
+Note that IACS crop codes for Slovak Republic are available in `osi_crops` package table.
 
 Below an example is visualized how the soil health index varies in relation to variation in P-M3. The optimum soil P threshold value for sustainable crop production is around 150 mg P/ kg for the three soil types evaluated (clay, sand and loam), and the soil index rapidly decreases when P-M3 values decreases down to 50-70 mg P/kg, with the quickest decline for the sandy soils (low in buffering capacity).
 
@@ -681,7 +686,7 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example SK1, out.width="75%", fig.cap="Evaluation P-indicator for Slovak Republic.",dpi=300, echo = FALSE}
 
 # make an example with varying P-M3 content for two soil types
-dt <- CJ(B_LU = c('cropland'),
+dt <- CJ(B_LU = c('3301090400'),
          B_TEXTURE_HYPRES = c('C','M','F'),
          A_P_M3 = seq(1,150,5))
 dt[,stype := fifelse(B_TEXTURE_HYPRES=='C','sand',

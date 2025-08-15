@@ -4,12 +4,12 @@
 \alias{osi_c_magnesium_es}
 \title{Calculate the magnesium availability index in Spain}
 \usage{
-osi_c_magnesium_es(A_MG_CO_PO, B_LU = NA_character_)
+osi_c_magnesium_es(B_LU, A_MG_CO_PO)
 }
 \arguments{
-\item{A_MG_CO_PO}{(numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)}
-
 \item{B_LU}{(character) The crop code}
+
+\item{A_MG_CO_PO}{(numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)}
 }
 \value{
 The magnesium availability index in Spain estimated from the magnesium occupation at CEC. A numeric value.
@@ -18,6 +18,6 @@ The magnesium availability index in Spain estimated from the magnesium occupatio
 This function calculates the magnesium availability.
 }
 \examples{
-osi_c_magnesium_es(A_MG_CO_PO = 4.5)
+osi_c_magnesium_es(B_LU = '3301000000' , A_MG_CO_PO = 4.5)
 
 }

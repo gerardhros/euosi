@@ -4,14 +4,14 @@
 \alias{osi_c_potassium_sk}
 \title{Calculate the potassium availability index in  Slovak Republic}
 \usage{
-osi_c_potassium_sk(B_TEXTURE_HYPRES, A_K_M3, B_LU = NA_character_)
+osi_c_potassium_sk(B_LU, B_TEXTURE_HYPRES, A_K_M3)
 }
 \arguments{
+\item{B_LU}{(character) The crop code}
+
 \item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
 
 \item{A_K_M3}{(numeric) The exchangeable K-content of the soil measured via Mehlich 3 extracton (mg K/ kg)}
-
-\item{B_LU}{(character) The crop code}
 }
 \value{
 The potassium availability index in Slovak Republic estimated from extractable potassium. A numeric value.
@@ -20,6 +20,6 @@ The potassium availability index in Slovak Republic estimated from extractable p
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_sk(A_K_M3 = 45,B_TEXTURE_HYPRES='C')
+osi_c_potassium_sk(B_LU = '3301010901', A_K_M3 = 45,B_TEXTURE_HYPRES='C')
 
 }

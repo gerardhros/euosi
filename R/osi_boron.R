@@ -22,6 +22,12 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   i_c_bo = A_SILT_MI = B_TEXTURE_USDA = B_TEXTURE_HYPRES = B_TEXTURE_GEPPA = B_TEXTURE_BE = NULL
   A_PH_WA = A_C_OF = NULL
   
+  # checkmate for inputs
+  osi_checkvar(list(B_COUNTRY = B_COUNTRY,B_LU = B_LU,
+                    A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,
+                    A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,
+                    A_B_HW = A_B_HW),fname='osi_c_boron')
+  
   # desired length of inputs
   arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),
                     length(A_SOM_LOI), length(A_PH_CC), 
@@ -52,6 +58,11 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
   dt[!is.na(A_PH_WA) & is.na(A_PH_CC), A_PH_CC := osi_conv_ph(element='A_PH_CC',A_PH_WA = A_PH_WA)]
   dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
+  
+  # do checks on the calculated variables
+  osi_checkvar(list(B_TEXTURE_USDA = dt$B_TEXTURE_USDA,B_TEXTURE_HYPRES = dt$B_TEXTURE_HYPRES,
+                    B_TEXTURE_BE = dt$B_TEXTURE_BE, B_TEXTURE_GEPPA = dt$B_TEXTURE_GEPPA,
+                    A_PH_WA = dt$A_PH_WA, A_C_OF = dt$A_C_OF),fname='osi_c_boron')
   
   # calculate the OSI score for boron
   
@@ -170,7 +181,7 @@ osi_c_boron_ch <- function(B_LU, A_B_HW) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_boron_de(B_LU = 265,A_C_OF=25, A_CLAY_MI=5,A_SAND_MI=15,A_PH_CC = 4,A_B_HW = 50)
+#' osi_c_boron_de(B_LU = '3301061299',A_C_OF=25, A_CLAY_MI=5,A_SAND_MI=15,A_PH_CC = 4,A_B_HW = 50)
 #'  
 #' @return 
 #' The boron availability index in Germany derived from extractable soil B fractions. A numeric value.
@@ -179,7 +190,7 @@ osi_c_boron_ch <- function(B_LU, A_B_HW) {
 osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
   
   # add visual bindings
-  A_SILT_MI = stype = . = crop_name = osi_country = crop_cat1 = id = NULL
+  A_SILT_MI = stype = . = crop_name = crop_code = osi_country = crop_cat1 = id = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -206,8 +217,9 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
   
   # merge with crop
   dt <- merge(dt,
-              dt.crops[,.(B_LU, crop_name, crop_cat1)],
-              by = 'B_LU',
+              dt.crops[,.(crop_code, crop_name, crop_cat1)],
+              by.x = 'B_LU',
+              by.y ='crop_code',
               all.x = TRUE)
   
   # evaluate A_B_HW for arable soils

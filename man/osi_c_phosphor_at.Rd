@@ -4,12 +4,12 @@
 \alias{osi_c_phosphor_at}
 \title{Calculate the phosphorus availability index in Austria}
 \usage{
-osi_c_phosphor_at(A_P_CAL, B_LU = NA_character_)
+osi_c_phosphor_at(B_LU, A_P_CAL)
 }
 \arguments{
-\item{A_P_CAL}{(numeric) The exchangeable P-content of the soil measured via Calcium Ammonium Lactate (mg P/ kg)}
-
 \item{B_LU}{(character) The crop code}
+
+\item{A_P_CAL}{(numeric) The exchangeable P-content of the soil measured via Calcium Ammonium Lactate (mg P/ kg)}
 }
 \value{
 The phosphorus availability index in Austria estimated from extractable phosphorus. A numeric value.
@@ -18,6 +18,6 @@ The phosphorus availability index in Austria estimated from extractable phosphor
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_at(A_P_CAL = 47)
+osi_c_phosphor_at(B_LU = '3301000000', A_P_CAL = 47)
 
 }

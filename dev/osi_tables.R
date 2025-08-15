@@ -68,9 +68,15 @@
   osi_crops2 <- fread('dev/osi_crops_iacs.csv',encoding = 'UTF-8',na.strings = c(NA_character_, "","NA"))
   
   # combine both
-  osi_crops <- rbind(osi_crops1[,.(osi_country,crop_code,crop_name,crop_cat1,crop_cat2,
-                                  crop_n,crop_p,crop_k,crop_c,crop_s,crop_crumbleability)],
-                     osi_crops2[,.(osi_country,crop_code,crop_name,crop_cat1,crop_cat2,
+  osi_crops <- rbind(osi_crops1[,.(osi_country,crop_code,
+                                   crop_name = tolower(crop_name),
+                                   crop_cat1 = tolower(crop_cat1),
+                                   crop_cat2 = tolower(crop_cat2),
+                                   crop_n,crop_p,crop_k,crop_c,crop_s,crop_crumbleability)],
+                     osi_crops2[,.(osi_country,crop_code,
+                                   crop_name = tolower(crop_name),
+                                   crop_cat1 = tolower(crop_cat1),
+                                   crop_cat2 = tolower(crop_cat2),
                                    crop_n,crop_p,crop_k,crop_c,crop_s,crop_crumbleability)])
   # save updated crop table
   usethis::use_data(osi_crops,overwrite = TRUE)

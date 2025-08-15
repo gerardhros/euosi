@@ -4,14 +4,14 @@
 \alias{osi_c_ph_at}
 \title{Calculate the pH index in Austria}
 \usage{
-osi_c_ph_at(A_PH_CC, B_TEXTURE_HYPRES, B_LU = NA_character_)
+osi_c_ph_at(B_LU, A_PH_CC, B_TEXTURE_HYPRES)
 }
 \arguments{
+\item{B_LU}{(character) The crop code}
+
 \item{A_PH_CC}{(numeric) The pH measured in cacl2}
 
 \item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
-
-\item{B_LU}{(character) The crop code}
 }
 \value{
 The pH index in Austria, depending on land use and soil type. A numeric value.
@@ -20,6 +20,6 @@ The pH index in Austria, depending on land use and soil type. A numeric value.
 This function calculates the soil acidity
 }
 \examples{
-osi_c_ph_at(A_PH_CC = 47,B_TEXTURE_HYPRES = 'C',B_LU='grass')
+osi_c_ph_at(B_LU = '3301000000', A_PH_CC = 4.7,B_TEXTURE_HYPRES = 'C')
 
 }

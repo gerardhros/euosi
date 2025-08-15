@@ -81,7 +81,7 @@ The capacity of the soil to supply and buffer potassium, evaluated given an opti
 This function calculates the potassium excess for all European countries (if available).
 }
 \examples{
-osi_nut_k(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4, 
+osi_nut_k(B_LU = '265', B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4, 
 A_CLAY_MI = 11,A_SAND = 24, A_PH_CC = 5.4, A_CEC_CO = 125, 
 A_K_AAA=346, A_K_CO_PO = 8.5, A_K_CC = 145,B_COUNTRY = 'NL')
 

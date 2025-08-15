@@ -24,6 +24,6 @@ The potassium excess index in Hungary estimated from extractable potassium. A nu
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_hu(A_K_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
+osi_nut_k_hu(B_LU = 'testcrop',A_K_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
 
 }

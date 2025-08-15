@@ -20,7 +20,6 @@ The potassium excess index in Spain derived from extractable soil K fractions. A
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_es(B_LU = '265',A_K_AAA = 5,B_TEXTURE_HYPRES='C')
-osi_nut_k_es(B_LU = c('265','1019'),A_K_AAA = c(3.5,5.5),B_TEXTURE_HYPRES=c('C','C'))
+osi_nut_k_es(B_LU = '3301000000',A_K_AAA = 5,B_TEXTURE_HYPRES='C')
 
 }

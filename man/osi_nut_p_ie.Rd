@@ -18,7 +18,7 @@ The phosphate excess index in Ireland derived from extractable soil P fractions.
 This function calculates the phosphate excess.
 }
 \examples{
-osi_nut_p_ie(B_LU = 265,A_P_OL = 5)
-osi_nut_p_ie(B_LU = c(265,1019),A_P_OL = c(3.5,5.5))
+osi_nut_p_ie(B_LU = 'testcrop1',A_P_OL = 5)
+osi_nut_p_ie(B_LU = c('testcrop1','testcrop2'),A_P_OL = c(3.5,5.5))
 
 }

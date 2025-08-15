@@ -20,6 +20,6 @@ The magnesium availability index in Latvia estimated from extractable magnesium.
 This function calculates the magnesium availability.
 }
 \examples{
-osi_c_magnesium_lv(A_MG_DL = 45,B_TEXTURE_USDA='sand')
+osi_c_magnesium_lv(B_LU = 'testcrop',A_MG_DL = 45,B_TEXTURE_USDA='sand')
 
 }

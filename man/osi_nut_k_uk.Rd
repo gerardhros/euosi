@@ -20,7 +20,7 @@ The potassium excess index in United Kingdom derived from extractable soil K fra
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_uk(B_LU = 265,A_SOM_LOI=3,A_K_AN = 50)
-osi_nut_k_uk(B_LU = c(265,1019),A_SOM_LOI = c(3,5),A_K_AN = c(35,55))
+osi_nut_k_uk(B_LU = 'testcrop1',A_SOM_LOI=3,A_K_AN = 50)
+osi_nut_k_uk(B_LU = c('testcrop1','testcrop2'),A_SOM_LOI = c(3,5),A_K_AN = c(35,55))
 
 }

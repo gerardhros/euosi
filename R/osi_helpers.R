@@ -4,19 +4,186 @@
 #' 
 #' This function selects the correct boundary values (min and max) or possible options for a given parameter
 #' 
-#' @param parm (numeric) The osi parameter
+#' @param parm (list) The osi parameter - value combination to be checked
+#' @param fname (character) The name of the function where the check is done
+#' @param na_allowed (character) Are NA allowed in categorial inputs (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
 #' @return 
-#' The min and max for the selected numeric parameter and options for categorial parameter
+#' warning or error messages when parameter value is beyond the allowed range
 #' 
 #' @export
-checkvar <- function(parm) {
+osi_checkvar <- function(parm,fname = NULL,na_allowed = FALSE) {
   
-  # load internal table
+  # add visual bindings
+  osi_parm_name = osi_parm_data_type = osi_parm_enum = osi_parm_options = NULL
+  osi_country = crop_code = osi_parm_min = osi_parm_max = NULL
   
-  return(NULL)
+  # load internal table for all euosi parameters
+  dt.parms <- as.data.table(euosi::osi_parms)
+  
+  # assess the length of all variables in the list
+  if(is.null(fname)){
+    checkmate::assert_true(length(unique(lengths(parm)))==1)
+  } else {
+    checkmate::assert_true(length(unique(lengths(parm)))==1,
+                           .var.name = paste0('not all arguments have same length in ',fname))
+  }
+ 
+  # check for each property
+  for(i in 1:length(parm)){
+    
+    # what is the parameter to be checked
+    parm.name <- names(parm[i])
+    
+    # what is the parameter value
+    parm.value <- unlist(parm[i])
+    
+    # location of the error
+    if(is.null(fname)){
+      parm.error <- parm.name
+    } else {
+      parm.error <- paste0(parm.name,' in ', fname)  
+    }
+    
+    # check if parameter is present
+    checkmate::assert_true(parm.name %in% dt.parms$osi_parm_name,
+                           .var.name = parm.error)
+    
+    # check the type of the parameter
+    parm.type <- dt.parms[osi_parm_name== parm.name,osi_parm_data_type]
+    
+    # check if enum is present
+    parm.enum <- dt.parms[osi_parm_name== parm.name,osi_parm_enum]
+      
+    # do separate check for land use, being country dependent
+    if(parm.name %in% c('B_LU')){
+      
+      # check if country is also present
+      checkmate::assert_true('B_COUNTRY' %in% names(parm),
+                             .var.name = 'to check B_LU also B_COUNTRY should be given')
+      
+      # check country first
+      b_country <- unique(unlist(parm['B_COUNTRY']))
+      parm.options <-  dt.parms[osi_parm_name== 'B_COUNTRY',osi_parm_options]
+      parm.options <- unlist(strsplit(parm.options,split="||",fixed=T))
+      parm.options <- gsub('^ +| +$','',parm.options)
+      checkmate::assert_character(b_country,
+                                  .var.name = paste0('B_COUNTRY is not character in ',fname))
+      checkmate::assert_subset(b_country,
+                               choices = parm.options,
+                               .var.name = paste0('B_COUNTRY has wrong inputs in ',fname))
+      
+      # subset the crop list
+      dt.crop <- euosi::osi_crops[osi_country %in% b_country]
+      
+      # check crop codes
+      b_crops <- unique(parm.value)
+      checkmate::assert_character(b_crops,
+                                  .var.name = paste0('B_LU is not character in ',fname))
+      checkmate::assert_subset(b_crops,
+                               choices = dt.crop[,crop_code],
+                               .var.name = paste0('B_LU has wrong crop codes in ',fname))
+      
+    }
+    
+    # check numeric example
+    if(parm.type=='num'){
+      checkmate::assert_numeric(parm.value,
+                                lower = dt.parms[osi_parm_name== parm.name,osi_parm_min],
+                                upper = dt.parms[osi_parm_name== parm.name,osi_parm_max],
+                                .var.name = parm.error)
+    }
+    
+    # check on soil mineralogy
+    if(sum(c('A_CLAY_MI','A_SAND_MI','A_SILT_MI') %in% names(parm))>=2){
+      
+      clay.value <- unlist(parm['A_CLAY_MI'])
+      sand.value <- unlist(parm['A_SAND_MI'])
+      silt.value <- unlist(parm['A_SILT_MI'])
+      arg.length <- max(length(clay.value),length(sand.value),length(silt.value))
+      
+      if(length(clay.value)==0){clay.value = rep(0,arg.length)}
+      if(length(sand.value)==0){sand.value = rep(0,arg.length)}
+      if(length(silt.value)==0){silt.value = rep(0,arg.length)}
+      
+      check.sum <- pmax(0,clay.value) + pmax(0,sand.value) + pmax(0,silt.value)
+      check.sum <- all(check.sum <= 105)
+      
+      if(!is.null(fname)){
+        checkmate::assert_true(check.sum,.var.name = paste0('total of clay, silt and sand exceeds 100% in ',fname),na.ok = TRUE)  
+      } else {
+        checkmate::assert_true(check.sum,na.ok = TRUE)
+      }
+      
+    }
+    
+    # check categories
+    if(parm.type=='char' & parm.enum == TRUE){
+      
+      # get the options as string
+      parm.options <-  dt.parms[osi_parm_name== parm.name,osi_parm_options]
+        
+      # split into vector
+      parm.options <- unlist(strsplit(parm.options,split="||",fixed=T))
+      
+      # remove dashes
+      parm.options <- gsub('^ +| +$','',parm.options)
+      
+      # allow NA
+      if(na_allowed){parm.options <- c(NA,parm.options)}
+      
+      # checkmates
+      checkmate::assert_character(parm.value,
+                                  .var.name = parm.error)
+      checkmate::assert_subset(parm.value,
+                               choices = parm.options,
+                               .var.name = parm.error)
+    }
+    
+    # check integer
+    if(parm.type=='int'){
+      
+      # check if integer is within range
+      checkmate::assert_integerish(parm.value,
+                                   lower = dt.parms[osi_parm_name== parm.name,osi_parm_min],
+                                   upper = dt.parms[osi_parm_name== parm.name,osi_parm_max],
+                                   .var.name = parm.error)
+      
+      # check if integer has prefixed options
+      if(parm.enum == TRUE) {
+      
+        # get the options as string
+        parm.options <-  dt.parms[osi_parm_name== parm.name,osi_parm_options]
+        
+        # split into vector
+        parm.options <- unlist(strsplit(parm.options,split="||",fixed=T))
+        
+        # remove dashes
+        parm.options <- gsub('^ +| +$','',parm.options)
+        
+        # convert to integer
+        parm.options <- as.integer(parm.options)
+        
+        # checkmates
+        checkmate::assert_subset(parm.value,
+                                 choices = parm.options,
+                                 .var.name = parm.error)  
+      }
+      
+    }
+    
+    # check boolean
+    if(parm.type =='bool'){
+      
+      checkmate::assert_logical(parm.value,
+                                .var.name = parm.error)
+    }
+    
+  }
+  
+  #return()
 }
 
 
@@ -325,9 +492,11 @@ osi_get_TEXTURE_USDA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type = 'code')
   cl = si = sa = tcode = tname = NULL
   
   # check inputs
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_character(type)
+  checkmate::assert_subset(type,choices = c('name','code'))
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI,
+                           A_SAND_MI = A_SAND_MI),
+               fname ='osi_get_TEXTURE_USDA')
   
   # set internal copies
   dt <- data.table(cl = A_CLAY_MI,
@@ -383,9 +552,11 @@ osi_get_TEXTURE_HYPRES <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code')
   cl = si = sa = tcode = tname = NULL
   
   # check inputs
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_character(type)
+  checkmate::assert_subset(type,choices = c('name','code'))
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI,
+                           A_SAND_MI = A_SAND_MI),
+               fname ='osi_get_TEXTURE_HYPRES')
   
   # set internal copies
   dt <- data.table(cl = A_CLAY_MI,
@@ -428,9 +599,11 @@ osi_get_TEXTURE_GEPPA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
   cl = si = sa = tcode = tname = cr1 = cr2 = cr3 = cr4 = cr5 = NULL
   
   # check inputs
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_character(type)
+  checkmate::assert_subset(type,choices = c('name','code'))
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI,
+                           A_SAND_MI = A_SAND_MI),
+               fname ='osi_get_TEXTURE_GEPPA')
   
   # set internal copies
   dt <- data.table(cl = round(A_CLAY_MI),
@@ -486,6 +659,9 @@ osi_get_TEXTURE_GEPPA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
   dt[,cr1 := 8 - si *(8-0)/50]
   dt[cl <= cr1  & si <= cr3 & sa > 71, c(cols) := list('SS','sable')]
   
+  # in exceptional cases, distinction between LAS and Lsa is overlooked
+  dt[is.na(tcode), c(cols) := list('LAS','limon argilo-sableux')]
+  
   # select soil texture HYPRES classification code or name
   if(type=='code'){value <- dt[,tcode]}
   if(type=='name'){value <- dt[,tname]}
@@ -512,9 +688,11 @@ osi_get_TEXTURE_BE <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
   cl = si = sa = tcode = tname = NULL
   
   # check inputs
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SILT_MI, lower = 0, any.missing = FALSE)
-  checkmate::assert_numeric(A_SAND_MI, lower = 0, any.missing = FALSE)
+  checkmate::assert_character(type)
+  checkmate::assert_subset(type,choices = c('name','code'))
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI, A_SILT_MI = A_SILT_MI,
+                           A_SAND_MI = A_SAND_MI),
+               fname ='osi_get_TEXTURE_BE')
   
   # set internal copies
   dt <- data.table(cl = A_CLAY_MI,
@@ -536,6 +714,51 @@ osi_get_TEXTURE_BE <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
   # select soil texture Belgium classification code or name
   if(type=='code'){value <- dt[,tcode]}
   if(type=='name'){value <- dt[,tname]}
+  
+  # return value
+  return(value)
+  
+}
+
+#' Estimate agricultural soil type classification used in the Netherlands
+#' 
+#' @param A_CLAY_MI (numeric) Clay content (\%)
+#' @param A_SAND_MI (numeric) Silt content (\%)
+#' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+#' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
+#' 
+#' @return agricultural soil type according to the Dutch classification system
+#' 
+#'
+#' @export 
+osi_get_SOILTYPE_AGR <- function(A_CLAY_MI, A_SAND_MI, A_SOM_LOI, A_PH_CC){
+  
+  # check inputs
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI, 
+                           A_SAND_MI = A_SAND_MI,
+                           A_SOM_LOI = A_SOM_LOI,
+                           A_PH_CC = A_PH_CC),
+               fname ='osi_get_SOILTYPE_AGR')
+  
+  # set internal copy
+  dt <- data.table(A_CLAY_MI = A_CLAY_MI,
+                   A_SAND_MI = A_SAND_MI,
+                   A_SILT_MI = pmax(0,100 - A_CLAY_MI - A_SAND_MI),
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_PH_CC = A_PH_CC,
+                   value = NA_character_)
+  
+  # estimate the agricultural soil type (expert judgement Gerard)
+  dt[A_SAND_MI > 80 & A_SOM_LOI <= 2 & A_PH_CC > 6, value := 'duinzand']
+  dt[A_CLAY_MI <= 20 & A_SAND_MI > 40, value := 'dekzand']
+  dt[A_CLAY_MI > 20, value := 'zeeklei']
+  dt[(100 - A_CLAY_MI - A_SAND_MI)> 70, value := 'loess']
+  dt[A_CLAY_MI <= 20 & A_SAND_MI > 40 & A_SOM_LOI > 10, value := 'dalgrond']
+  dt[A_CLAY_MI > 20 & A_SOM_LOI > 10, value := 'moerige_klei']
+  dt[A_SOM_LOI > 20, value := 'veen']
+  
+  # select estimated soil type
+  value <- dt[,value]
   
   # return value
   return(value)

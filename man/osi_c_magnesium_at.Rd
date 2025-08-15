@@ -4,14 +4,14 @@
 \alias{osi_c_magnesium_at}
 \title{Calculate the magnesium availability index in Austria}
 \usage{
-osi_c_magnesium_at(A_MG_CC, B_TEXTURE_HYPRES, B_LU = NA_character_)
+osi_c_magnesium_at(B_LU, A_MG_CC, B_TEXTURE_HYPRES)
 }
 \arguments{
+\item{B_LU}{(character) The crop code}
+
 \item{A_MG_CC}{(numeric) The exchangeable Mg-content of the soil measured via Calcium Chloride (mg Mg/ kg)}
 
 \item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
-
-\item{B_LU}{(character) The crop code}
 }
 \value{
 The magnesium availability index in Austria estimated from extractable magnesium. A numeric value.
@@ -20,6 +20,6 @@ The magnesium availability index in Austria estimated from extractable magnesium
 This function calculates the magnesium availability.
 }
 \examples{
-osi_c_magnesium_at(A_MG_CC = 47,B_TEXTURE_HYPRES = 'C')
+osi_c_magnesium_at(B_LU = '3301000000',A_MG_CC = 47,B_TEXTURE_HYPRES = 'C')
 
 }

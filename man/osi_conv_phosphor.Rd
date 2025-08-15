@@ -15,7 +15,8 @@ osi_conv_phosphor(
   A_P_AAA = NA_real_,
   A_P_AAA_EDTA = NA_real_,
   A_P_M3 = NA_real_,
-  A_PH_CC = NA_real_
+  B_SOILTYPE_AGR = NA_real_,
+  A_PH_CC = 5
 )
 }
 \arguments{
@@ -39,7 +40,9 @@ osi_conv_phosphor(
 
 \item{A_P_M3}{(numeric) The P-content of the soil extracted with Mehlig 3}
 
-\item{A_PH_CC}{(numeric) The pH measured in cacl2}
+\item{B_SOILTYPE_AGR}{(character) The agricultural type of soil.}
+
+\item{A_PH_CC}{(numeric) The pH measured in cacl2. If missing, then assume its agronomic common value of 5.}
 }
 \description{
 Estimate soil extractable phosphorus (-)

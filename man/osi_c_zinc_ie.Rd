@@ -22,6 +22,6 @@ The zinc availability index in Ireland estimated from extractable zinc and pH me
 This function calculates the Zn availability of a soil, using the agronomic index used in Ireland.
 }
 \examples{
-osi_c_zinc_ie(B_LU = 'SOJ', A_SOM_LOI = 4, A_ZN_EDTA = 45, A_PH_WA = 6.5)
+osi_c_zinc_ie(B_LU = 'testcrop', A_SOM_LOI = 4, A_ZN_EDTA = 45, A_PH_WA = 6.5)
 
 }

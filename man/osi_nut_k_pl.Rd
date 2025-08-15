@@ -20,6 +20,6 @@ The potassium excess index in Poland estimated from extractable potassium. A num
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_pl(A_K_DL = 45,B_TEXTURE_HYPRES='C')
+osi_nut_k_pl(B_LU = 'testcrop1',A_K_DL = 45,B_TEXTURE_HYPRES='C')
 
 }

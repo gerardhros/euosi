@@ -4,7 +4,7 @@
 \alias{osi_c_ph_fi}
 \title{Calculate the pH index for Finland}
 \usage{
-osi_c_ph_fi(B_LU, B_TEXTURE_USDA, A_PH_WA, A_C_OF = 0)
+osi_c_ph_fi(B_LU, B_TEXTURE_USDA, A_PH_WA, A_C_OF = 0.5)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -22,6 +22,6 @@ The pH index in Finland estimated from pH water. A numeric value.
 This function evaluates the pH index in Finland
 }
 \examples{
-osi_c_ph_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_PH_WA = 4.5)
+osi_c_ph_fi(B_LU = '1110', B_TEXTURE_USDA = 'Si',A_PH_WA = 4.5)
 
 }

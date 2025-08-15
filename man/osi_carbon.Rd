@@ -26,6 +26,6 @@ The carbon index. A numeric value.
 This function calculates a soil organic carbon index.
 }
 \examples{
-osi_carbon(B_LU = '165',A_C_OF = 25, B_BGZ = '4',A_CLAY_MI=5,A_SAND_MI=25,B_COUNTRY='DE')
+osi_carbon(B_LU = '172',A_C_OF = 25, B_BGZ = '4',A_CLAY_MI=5,A_SAND_MI=25,B_COUNTRY='NL')
 
 }

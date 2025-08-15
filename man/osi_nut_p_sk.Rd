@@ -4,14 +4,14 @@
 \alias{osi_nut_p_sk}
 \title{Calculate the phosphorus excess index in  Slovak Republic}
 \usage{
-osi_nut_p_sk(B_TEXTURE_HYPRES, A_P_M3, B_LU = NA_character_)
+osi_nut_p_sk(B_LU, B_TEXTURE_HYPRES, A_P_M3)
 }
 \arguments{
+\item{B_LU}{(character) The crop code}
+
 \item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
 
 \item{A_P_M3}{(numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)}
-
-\item{B_LU}{(character) The crop code}
 }
 \value{
 The phosphorus excess index in Slovak Republic estimated from extractable phosphorus. A numeric value.
@@ -20,6 +20,6 @@ The phosphorus excess index in Slovak Republic estimated from extractable phosph
 This function calculates the phosphorus excess.
 }
 \examples{
-osi_nut_p_sk(A_P_M3 = 45, B_TEXTURE_HYPRES = 'C')
+osi_nut_p_sk(B_LU = '3301010901', A_P_M3 = 45,B_TEXTURE_HYPRES = 'C')
 
 }

@@ -20,6 +20,6 @@ The potassium availability index in Latvia estimated from extractable potassium 
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_lv(A_K_DL = 45,B_TEXTURE_USDA='S')
+osi_c_potassium_lv(B_LU = 'testcrop',A_K_DL = 45,B_TEXTURE_USDA='Sa')
 
 }

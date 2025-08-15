@@ -18,6 +18,6 @@ The phosphorus excess index in Switzerland estimated from extractable phosphorus
 This function calculates the phosphorus excess
 }
 \examples{
-osi_nut_p_ch(A_P_AAA = 50)
+osi_nut_p_ch(B_LU = 'testcrop1',A_P_AAA = 50)
 
 }

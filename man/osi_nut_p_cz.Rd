@@ -18,6 +18,6 @@ The phosphorus excess index in Czech Republic estimated from extractable phospho
 This function calculates the phosphorus excess index
 }
 \examples{
-osi_nut_p_cz(A_P_M3 = 81)
+osi_nut_p_cz(B_LU = '3303030100', A_P_M3 = 81)
 
 }

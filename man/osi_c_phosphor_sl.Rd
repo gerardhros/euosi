@@ -18,6 +18,6 @@ The phosphorus availability index in Slovenia estimated from extractable phospho
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_sl(A_P_AL = 45)
+osi_c_phosphor_sl(B_LU = 'testcrop1',A_P_AL = 45)
 
 }

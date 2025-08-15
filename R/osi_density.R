@@ -25,12 +25,11 @@ osi_p_density <- function(A_SOM_LOI, A_CLAY_MI) {
   # Load in the thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'EU' & osi_indicator == 'i_p_dens']
+  checkmate::assert_data_table(dt.thresholds,max.rows = 1)
   
   # Check input
-  arg.length <- max(length(A_SOM_LOI), length(A_CLAY_MI))
-  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_data_table(dt.thresholds,max.rows = 1)
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,A_CLAY_MI = A_CLAY_MI), 
+                           fname = 'osi_p_density')
   
   # Collect data into a table
   dt <- data.table(A_SOM_LOI = A_SOM_LOI,

@@ -20,6 +20,6 @@ The magnesium availability index in Hungary estimated from extractable magnesium
 This function calculates the magnesium availability.
 }
 \examples{
-osi_c_magnesium_hu(A_MG_KCL = 45,B_TEXTURE_USDA = 'loam')
+osi_c_magnesium_hu(B_LU = 'testcrop',A_MG_KCL = 45,B_TEXTURE_USDA = 'loam')
 
 }

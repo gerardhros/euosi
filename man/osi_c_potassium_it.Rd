@@ -20,7 +20,8 @@ The potassium availability index in Italy derived from extractable soil K fracti
 This function calculates the potassium availability.
 }
 \examples{
-osi_c_potassium_it(B_LU = 265,A_K_AAA = 5,B_TEXTURE_HYPRES='C')
-osi_c_potassium_it(B_LU = c(265,1019),A_K_AAA = c(3.5,5.5),B_TEXTURE_HYPRES=c('C','C'))
+osi_c_potassium_it(B_LU = '3301000000',A_K_AAA = 5,B_TEXTURE_HYPRES='C')
+osi_c_potassium_it(B_LU = c('3301000000','3301010101'),
+A_K_AAA = c(3.5,5.5),B_TEXTURE_HYPRES=c('C','C'))
 
 }

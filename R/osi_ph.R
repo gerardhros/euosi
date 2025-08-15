@@ -45,8 +45,9 @@ osi_c_ph <- function(B_LU,
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
+                   B_COUNTRY = B_COUNTRY,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
-                   A_CLAY_MI=A_CLAY_MI,
+                   A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
                    A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
                    A_SOM_LOI = A_SOM_LOI,
@@ -61,6 +62,21 @@ osi_c_ph <- function(B_LU,
                    value = NA_real_  
                    )
   
+  # check the input parameters
+  osi_checkvar(parm = list(B_LU = dt$B_LU,
+                           B_COUNTRY = dt$B_COUNTRY,
+                           B_SOILTYPE_AGR = dt$B_SOILTYPE_AGR,
+                           A_CLAY_MI = dt$A_CLAY_MI,
+                           A_SAND_MI = dt$A_SAND_MI,
+                           A_SOM_LOI = dt$A_SOM_LOI,
+                           A_CA_CO_PO = dt$A_CA_CO_PO,
+                           A_MG_CO_PO = dt$A_MG_CO_PO,
+                           A_K_CO_PO = dt$A_K_CO_PO,
+                           A_NA_CO_PO = dt$A_NA_CO_PO,
+                           A_PH_CC = dt$A_PH_CC),
+               fname = 'osi_c_ph',
+               na_allowed = TRUE)
+  
   # estimate texture information
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
   dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
@@ -73,6 +89,17 @@ osi_c_ph <- function(B_LU,
   dt[is.na(A_PH_KCL), A_PH_KCL := osi_conv_ph(element='A_PH_KCL',A_PH_CC = A_PH_CC,A_PH_WA = A_PH_WA)]
   dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
   dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
+  
+  # check the input parameters after updates
+  osi_checkvar(parm = list(B_TEXTURE_USDA = dt$B_TEXTURE_USDA,
+                           B_TEXTURE_HYPRES = dt$B_TEXTURE_HYPRES,
+                           B_TEXTURE_BE = dt$B_TEXTURE_BE,
+                           B_TEXTURE_GEPPA = dt$B_TEXTURE_GEPPA,
+                           A_SOM_LOI = dt$A_SOM_LOI,
+                           A_C_OF = dt$A_C_OF,
+                           A_PH_WA = dt$A_PH_WA,
+                           A_PH_KCL = dt$A_PH_KCL),
+               fname = 'osi_c_ph')
   
   # evaluate OSI index for pH
   
@@ -131,30 +158,30 @@ osi_c_ph <- function(B_LU,
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_ph_at(A_PH_CC = 47,B_TEXTURE_HYPRES = 'C',B_LU='grass')
+#' osi_c_ph_at(B_LU = '3301000000', A_PH_CC = 4.7,B_TEXTURE_HYPRES = 'C')
 #' 
 #' @return 
 #' The pH index in Austria, depending on land use and soil type. A numeric value.
 #' 
 #' @export
-osi_c_ph_at <- function(A_PH_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
+osi_c_ph_at <- function(B_LU,A_PH_CC,B_TEXTURE_HYPRES) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
+  osi_country = osi_indicator = id = crop_cat1 = . = crop_code =  NULL
 
   # crop data
-  # dt.crops <- as.data.table(euosi::osi_crops)
-  # dt.crops <- dt.crops[osi_country=='PO']
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='AT']
   
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
-  # thresholds
-  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
-
   # get max length of input
   arg.length <- max(length(A_PH_CC), length(B_TEXTURE_HYPRES),length(B_LU))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('AT',arg.length),
+                           B_LU = B_LU,
+                           B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                           A_PH_CC = A_PH_CC),
+               fname = 'osi_c_ph_at')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -164,18 +191,11 @@ osi_c_ph_at <- function(A_PH_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
                    value = NA_real_)
   
   # merge crop properties
-  # dt <- merge(dt,
-  #             dt.crops[,.(crop_code,crop_cat1)],
-  #             by.x = 'B_LU', 
-  #             by.y = 'crop_code',
-  #             all.x=TRUE)
-  
-  # merge thresholds
-  # dt <- merge(dt,
-  #             dt.thresholds,
-  #             by.x = 'B_SOILTYPE_AGR',
-  #             by.y = 'osi_threshold_soilcat',
-  #             all.x = TRUE)
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # https://ooe.lko.at/das-abc-der-d%C3%BCngung-teil-3-kalk+2400+3417995
   
@@ -215,15 +235,12 @@ osi_c_ph_at <- function(A_PH_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 osi_c_ph_be <- function(B_LU, B_TEXTURE_BE, A_PH_KCL) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = B_SOILTYPE_AGR = NULL
+  osi_country = osi_indicator = id = crop_cat1 = NULL
   crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='BE']
-  
-  # parameters
-  dt.parms <- as.data.table(euosi::osi_parms)
   
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
@@ -231,6 +248,13 @@ osi_c_ph_be <- function(B_LU, B_TEXTURE_BE, A_PH_KCL) {
   
   # get the max length of inputs
   arg.length <- max(length(B_LU),length(B_TEXTURE_BE), length(A_PH_KCL))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('BE',arg.length),
+                           B_LU = B_LU,
+                           B_TEXTURE_BE = B_TEXTURE_BE,
+                           A_PH_KCL = A_PH_KCL),
+               fname = 'osi_c_ph_be')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -240,12 +264,6 @@ osi_c_ph_be <- function(B_LU, B_TEXTURE_BE, A_PH_KCL) {
                    B_SOILTYPE_AGR = NA_character_,
                    value = NA_real_)
   
-  # set soil type to categories
-  dt[B_TEXTURE_BE %in% c('S','Z'),B_SOILTYPE_AGR := 'zand']
-  dt[B_TEXTURE_BE %in% c('P','L'),B_SOILTYPE_AGR := 'zandleem']
-  dt[B_TEXTURE_BE %in% c('A'),B_SOILTYPE_AGR := 'leem']
-  dt[is.na(B_SOILTYPE_AGR), B_SOILTYPE_AGR := 'polder']
-  
   # merge crop properties
   dt <- merge(dt,
               dt.crops[,.(crop_code,crop_cat1)],
@@ -253,15 +271,23 @@ osi_c_ph_be <- function(B_LU, B_TEXTURE_BE, A_PH_KCL) {
               by.y = 'crop_code',
               all.x=TRUE)
   
-  # merge thresholds
-  dt <- merge(dt,
-              dt.thresholds,
-              by.x = c('B_SOILTYPE_AGR', 'crop_cat1'),
-              by.y = c('osi_threshold_soilcat','osi_threshold_cropcat'),
-              all.x = TRUE)
+  # add OSI score for "zand" soil types
+  dt[B_TEXTURE_BE %in% c('S','Z') & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(x = A_PH_KCL, b= 3.326,x0 = 4.60,v = 1)]
+  dt[B_TEXTURE_BE %in% c('S','Z') & crop_cat1 == 'grassland', value := osi_evaluate_logistic(x = A_PH_KCL, b= 5.702,x0 = 4.75,v = 1)]
   
-  # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = A_PH_KCL, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  # add OSI score for "zandleem" soil types
+  dt[B_TEXTURE_BE %in% c('P','L') & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(x = A_PH_KCL, b= 2.348,x0 = 5.35,v = 1)]
+  dt[B_TEXTURE_BE %in% c('P','L') & crop_cat1 == 'grassland', value := osi_evaluate_logistic(x = A_PH_KCL, b= 3.628,x0 = 5.15,v = 1)]
+  
+  # add OSI score for "leem" soil types 
+  dt[B_TEXTURE_BE %in% c('A') & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(x = A_PH_KCL, b= 2.348,x0 = 5.85,v = 1)]
+  dt[B_TEXTURE_BE %in% c('A') & crop_cat1 == 'grassland', value := osi_evaluate_logistic(x = A_PH_KCL, b= 3.628,x0 = 5.15,v = 1)]
+  
+  # add OSI score for "polder" soil types (clay and heavy clays)
+  dt[B_TEXTURE_BE %in% c('E','U') & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(x = A_PH_KCL, b= 1.814,x0 = 6.60,v = 1)]
+  dt[B_TEXTURE_BE %in% c('E','U') & crop_cat1 == 'grassland', value := osi_evaluate_logistic(x = A_PH_KCL, b= 4.989,x0 = 5.30,v = 1)]
+  
+  # add OSI score for "other" crops: nature, permanent, forest, other
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -298,11 +324,8 @@ osi_c_ph_ch <- function(B_LU, A_CLAY_MI = NA_real_,A_PH_WA = NA_real_,
   crop_code = BS = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   
   # crop data
-  dt.crops <- as.data.table(euosi::osi_crops)
-  dt.crops <- dt.crops[osi_country=='CH']
-  
-  # parameters
-  dt.parms <- as.data.table(euosi::osi_parms)
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='CH']
   
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
@@ -311,6 +334,15 @@ osi_c_ph_ch <- function(B_LU, A_CLAY_MI = NA_real_,A_PH_WA = NA_real_,
   arg.length <- max(length(B_LU),length(A_CLAY_MI),length(A_PH_WA),
                     length(A_CA_CO_PO),length(A_MG_CO_PO),length(A_K_CO_PO),
                     length(A_NA_CO_PO))
+  
+  # check inputs (not on B_LU yet)
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI,
+                           A_CA_CO_PO = A_CA_CO_PO, 
+                           A_MG_CO_PO = A_MG_CO_PO, 
+                           A_K_CO_PO = A_K_CO_PO,
+                           A_NA_CO_PO = A_NA_CO_PO,
+                           A_PH_WA = A_PH_WA),
+               fname = 'osi_c_ph_ch')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -387,6 +419,16 @@ osi_c_ph_de <- function(B_LU,A_SOM_LOI, A_C_OF, A_CLAY_MI,A_SAND_MI, A_PH_CC) {
   # get max length of input
   arg.length <- max(length(B_LU),length(A_SOM_LOI),length(A_C_OF),
                     length(A_CLAY_MI), length(A_SAND_MI), length(A_PH_CC))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('DE',arg.length),
+                           B_LU = B_LU,
+                           A_SOM_LOI = A_SOM_LOI,
+                           A_C_OF = A_C_OF,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_SAND_MI = A_SAND_MI,
+                           A_PH_CC = A_PH_CC),
+               fname = 'osi_c_ph_de')
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
@@ -484,10 +526,10 @@ osi_c_ph_de <- function(B_LU,A_SOM_LOI, A_C_OF, A_CLAY_MI,A_SAND_MI, A_PH_CC) {
                   )
   
   # set the order to the original inputs
-  setorder(dt, id)
+  setorder(dt.fin, id)
   
   # return value
-  value <- dt[, value]
+  value <- dt.fin[, value]
   
   # return value
   return(value)
@@ -517,22 +559,20 @@ osi_c_ph_fr <- function(B_LU,B_TEXTURE_GEPPA, A_PH_WA) {
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'FR']
   
-  # Load in the parameter set (to set min and max, to be done later)
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
   # load in thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country=='FR' & osi_indicator=='i_c_ph']
+  checkmate::assert_data_table(dt.thresholds,max.rows = 4)
   
   # Check length of desired input
   arg.length <- max(length(A_PH_WA),length(B_TEXTURE_GEPPA),length(B_LU))
   
-  # check the values (update the limits later via dt.parms)
-  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_subset(B_TEXTURE_GEPPA, choices =c("L","LL","Ls","Lsa","La","LAS","AA","A","As","Als","Al","Sa","Sal","S","SS","Sl","AS","SaI"), empty.ok = FALSE)
-  checkmate::assert_numeric(A_PH_WA, lower = 0, upper = 14, any.missing = TRUE, len = arg.length)
-  checkmate::assert_data_table(dt.thresholds,max.rows = 4)
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('FR',arg.length),
+                           B_LU = B_LU,
+                           B_TEXTURE_GEPPA = B_TEXTURE_GEPPA,
+                           A_PH_WA = A_PH_WA),
+               fname = 'osi_c_ph_fr')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -595,13 +635,13 @@ osi_c_ph_fr <- function(B_LU,B_TEXTURE_GEPPA, A_PH_WA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_ph_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_PH_WA = 4.5)
+#' osi_c_ph_fi(B_LU = '1110', B_TEXTURE_USDA = 'Si',A_PH_WA = 4.5)
 #' 
 #' @return 
 #' The pH index in Finland estimated from pH water. A numeric value.
 #' 
 #' @export
-osi_c_ph_fi <- function(B_LU, B_TEXTURE_USDA, A_PH_WA,A_C_OF = 0) {
+osi_c_ph_fi <- function(B_LU, B_TEXTURE_USDA, A_PH_WA,A_C_OF = 0.5) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -611,15 +651,20 @@ osi_c_ph_fi <- function(B_LU, B_TEXTURE_USDA, A_PH_WA,A_C_OF = 0) {
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='FI']
   
-  # parameters
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_ph']
   
   # get the max length of inputs
   arg.length <- max(length(B_LU),length(B_TEXTURE_USDA), length(A_PH_WA),length(A_C_OF))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('FI',arg.length),
+                           B_LU = B_LU,
+                           A_C_OF = A_C_OF,
+                           B_TEXTURE_USDA = B_TEXTURE_USDA,
+                           A_PH_WA = A_PH_WA),
+               fname = 'osi_c_ph_fi')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -673,8 +718,8 @@ osi_c_ph_fi <- function(B_LU, B_TEXTURE_USDA, A_PH_WA,A_C_OF = 0) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_ph_ie(B_LU = '265',A_PH_WA = 5, A_SOM_LOI = 3.5)
-#' osi_c_ph_ie(B_LU = c('265','1019'),A_PH_WA = c(3.5,5.5),A_SOM_LOI = c(3.5,6.5))
+#' osi_c_ph_ie(B_LU = 'testcrop',A_PH_WA = 5, A_SOM_LOI = 3.5)
+#' osi_c_ph_ie(B_LU = c('testcrop1','testcrop2'),A_PH_WA = c(3.5,5.5),A_SOM_LOI = c(3.5,6.5))
 #' 
 #' @return 
 #' The pH index in Ireland. A numeric value.
@@ -686,8 +731,16 @@ osi_c_ph_ie <- function(B_LU, A_PH_WA,A_SOM_LOI) {
   osi_country = . = crop_code = crop_cat1 = crop_name = id = NULL
   
   # crop data
-  dt.crops <- as.data.table(euosi::osi_crops)
-  dt.crops <- dt.crops[osi_country=='IE']
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='IE']
+  
+  # get the max length of inputs
+  arg.length <- max(length(B_LU),length(A_PH_WA),length(A_SOM_LOI))
+  
+  # check inputs
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
+                           A_PH_WA = A_PH_WA),
+               fname = 'osi_c_ph_ie')
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -697,11 +750,14 @@ osi_c_ph_ie <- function(B_LU, A_PH_WA,A_SOM_LOI) {
                    value = NA_real_)
   
   # merge crop properties
-  dt <- merge(dt,
-              dt.crops[,.(crop_code,crop_cat1,crop_name)],
-              by.x = 'B_LU', 
-              by.y = 'crop_code',
-              all.x=TRUE)
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1,crop_name)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # temporarily fix since no crop is available
+  dt[,crop_name := tolower(B_LU)]
   
   # pH evaluation for peat soils
   dt[A_SOM_LOI > 20, value := osi_evaluate_logistic(A_PH_WA, b = 8.2990603 , x0 = 4.8541180 , v = 0.1105874)]
@@ -758,16 +814,17 @@ osi_c_ph_nl <- function(ID,B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC) 
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'NL']
   
-  # Check inputs
+  # Check argument length
   arg.length <- max(length(A_PH_CC), length(B_SOILTYPE_AGR), length(A_SOM_LOI), length(A_CLAY_MI),
                     length(B_LU))
-  checkmate::assert_numeric(A_PH_CC, lower = 2, upper = 10, any.missing = FALSE, len = arg.length)
-  checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, len = arg.length)
-  checkmate::assert_subset(B_SOILTYPE_AGR, choices =euosi::osi_soiltype[osi_country=='NL',osi_soil_cat1])
-  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(euosi::osi_crops[osi_country=='NL',crop_code]), empty.ok = FALSE)
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('NL',arg.length),
+                           B_LU = B_LU,
+                           B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                           A_SOM_LOI = A_SOM_LOI,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_PH_CC = A_PH_CC),
+               fname = 'osi_c_ph_nl')
   
   # Collect information in table
   dt <- data.table(FIELD_ID = ID,
@@ -856,8 +913,9 @@ osi_c_ph_nl <- function(ID,B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC) 
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_ph_se(B_LU = 265,A_PH_WA = 5,A_CLAY_MI = 15, A_SOM_LOI = 2)
-#' osi_c_ph_se(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5), A_CLAY_MI = c(5,15),A_SOM_LOI = c(2,4))
+#' osi_c_ph_se(B_LU = '3301010901',A_PH_WA = 5,A_CLAY_MI = 15, A_SOM_LOI = 2)
+#' osi_c_ph_se(B_LU = c('3301010901','3304990000'),A_PH_WA = c(3.5,5.5),
+#' A_CLAY_MI = c(5,15),A_SOM_LOI = c(2,4))
 #' 
 #' @return 
 #' The pH index in Sweden. A numeric value.
@@ -866,28 +924,37 @@ osi_c_ph_nl <- function(ID,B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC) 
 osi_c_ph_se <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_PH_WA) {
   
   # add visual bindings
-  id = NULL
+  id = . = crop_code = crop_cat1 = crop_name = osi_country = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='SE']
   
   # get max length of inputs
   arg.length <- max(length(B_LU), length(A_SOM_LOI),length(A_CLAY_MI),length(A_PH_WA))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('SE',arg.length),
+                           B_LU = B_LU,
+                           A_SOM_LOI = A_SOM_LOI,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_PH_WA = A_PH_WA),
+               fname = 'osi_c_ph_se')
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
                    B_LU = B_LU,
                    A_SOM_LOI = A_SOM_LOI,
-                   A_CLAY_MI=A_CLAY_MI,
+                   A_CLAY_MI = A_CLAY_MI,
                    A_PH_WA = A_PH_WA,
                    value = NA_real_)
   
   # merge crop properties
-  # dt <- merge(dt,
-  #             dt.crops[,.(crop_code,crop_cat1,crop_name)],
-  #             by.x = 'B_LU', 
-  #             by.y = 'crop_code',
-  #             all.x=TRUE)
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1,crop_name)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # pH evaluation for peat soils
   dt[A_SOM_LOI > 20, value := osi_evaluate_logistic(A_PH_WA, b = 4.538515 , x0 = 1.518938 , v = 1.412605e-07)]
@@ -937,8 +1004,8 @@ osi_c_ph_se <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_PH_WA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_ph_uk(B_LU = '265',A_PH_WA = 5, A_SOM_LOI = 4)
-#' osi_c_ph_uk(B_LU = c('265','1019'),A_PH_WA = c(3.5,5.5), A_SOM_LOI = c(3.5,4))
+#' osi_c_ph_uk(B_LU = 'testcrop1',A_PH_WA = 5, A_SOM_LOI = 4)
+#' osi_c_ph_uk(B_LU = c('testcrop1','testcrop2'),A_PH_WA = c(3.5,5.5), A_SOM_LOI = c(3.5,4))
 #' 
 #' @return 
 #' The pH index in UK A numeric value.
@@ -950,11 +1017,16 @@ osi_c_ph_uk <- function(B_LU, A_PH_WA,A_SOM_LOI) {
   crop_code = crop_cat1 = crop_name = id = . = osi_country = NULL
   
   # crop data
-  dt.crops <- as.data.table(euosi::osi_crops)
-  dt.crops <- dt.crops[osi_country=='UK']
+  #dt.crops <- as.data.table(euosi::osi_crops)
+  #dt.crops <- dt.crops[osi_country=='UK']
   
   # get max length of inputs
   arg.length <- max(length(B_LU),length(A_PH_WA),length(A_SOM_LOI))
+  
+  # check inputs
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
+                           A_PH_WA = A_PH_WA),
+               fname = 'osi_c_ph_uk')
   
   # internal data.table
   dt <- data.table(id = 1:arg.length,
@@ -964,11 +1036,15 @@ osi_c_ph_uk <- function(B_LU, A_PH_WA,A_SOM_LOI) {
                    value = NA_real_)
   
   # merge crop properties
-  dt <- merge(dt,
-              dt.crops[,.(crop_code,crop_cat1,crop_name)],
-              by.x = 'B_LU', 
-              by.y = 'crop_code',
-              all.x=TRUE)
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1,crop_name)],
+  #             by.x = 'B_LU', 
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # add temporarily fix since no crop is present
+  dt[grepl('grass',tolower(B_LU)),crop_cat1 := 'grassland']
+  dt[!grepl('grass',tolower(B_LU)),crop_cat1 := 'arable']
   
   # pH evaluation for peat soils
   dt[A_SOM_LOI > 20 & crop_cat1=='arable' , 

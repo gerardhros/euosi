@@ -26,7 +26,7 @@ The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, c
 This function calculates the NSC (nitrogen supply capacity) for the soil
 }
 \examples{
-osi_c_nitrogen_be(B_LU = '772',A_N_RT = 1200, A_C_OF = 25, 
+osi_c_nitrogen_be(B_LU = '9823',A_N_RT = 1200, A_C_OF = 25, 
 A_CLAY_MI = 3.5, A_SAND_MI = 15,A_CACO3_IF = 0.8)
 
 }

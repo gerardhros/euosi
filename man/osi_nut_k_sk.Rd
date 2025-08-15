@@ -4,14 +4,14 @@
 \alias{osi_nut_k_sk}
 \title{Calculate the potassium excess index in  Slovak Republic}
 \usage{
-osi_nut_k_sk(B_TEXTURE_HYPRES, A_K_M3, B_LU = NA_character_)
+osi_nut_k_sk(B_LU, B_TEXTURE_HYPRES, A_K_M3)
 }
 \arguments{
+\item{B_LU}{(character) The crop code}
+
 \item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
 
 \item{A_K_M3}{(numeric) The exchangeable K-content of the soil measured via Mehlich 3 extracton (mg K/ kg)}
-
-\item{B_LU}{(character) The crop code}
 }
 \value{
 The potassium excess index in Slovak Republic estimated from extractable potassium. A numeric value.
@@ -20,6 +20,6 @@ The potassium excess index in Slovak Republic estimated from extractable potassi
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_sk(A_K_M3 = 45,B_TEXTURE_HYPRES='C')
+osi_nut_k_sk(B_LU = '3301010901', A_K_M3 = 45,B_TEXTURE_HYPRES='C')
 
 }

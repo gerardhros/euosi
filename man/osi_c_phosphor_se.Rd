@@ -18,7 +18,7 @@ The phosphate availability index in Sweden derived from extractable soil P fract
 This function calculates the phosphate availability.
 }
 \examples{
-osi_c_phosphor_se(B_LU = 265,A_P_AL = 5)
-osi_c_phosphor_se(B_LU = c(265,1019),A_P_AL = c(3.5,5.5))
+osi_c_phosphor_se(B_LU = '3301061299',A_P_AL = 5)
+osi_c_phosphor_se(B_LU = c('3301061299','3301000000'),A_P_AL = c(3.5,5.5))
 
 }

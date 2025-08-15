@@ -4,12 +4,12 @@
 \alias{osi_c_magnesium_se}
 \title{Calculate the magnesium availability index in Sweden}
 \usage{
-osi_c_magnesium_se(A_MG_AL, B_LU = NA_character_)
+osi_c_magnesium_se(B_LU, A_MG_AL)
 }
 \arguments{
-\item{A_MG_AL}{(numeric) The exchangeable Mg-content of the soil measured via ammonium lactate (mg K/kg)}
-
 \item{B_LU}{(character) The crop code}
+
+\item{A_MG_AL}{(numeric) The exchangeable Mg-content of the soil measured via ammonium lactate (mg K/kg)}
 }
 \value{
 The magnesium availability index in Sweden estimated from the Mg extracted soil pool. A numeric value.
@@ -18,6 +18,6 @@ The magnesium availability index in Sweden estimated from the Mg extracted soil 
 This function calculates the magnesium availability.
 }
 \examples{
-osi_c_magnesium_se(A_MG_AL = 45)
+osi_c_magnesium_se(B_LU = '3301010901',A_MG_AL = 45)
 
 }
