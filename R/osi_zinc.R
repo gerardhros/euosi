@@ -29,7 +29,7 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
                        A_ZN_EDTA = NA_real_,A_ZN_CC = NA_real_, B_COUNTRY) {
   
   # add visual bindings
-  value = A_SILT_MI = NULL
+  value = A_SILT_MI = A_ZN_AAA = NULL
   
   # desired length of inputs
   arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),length(A_C_OF),
@@ -71,6 +71,7 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
   # temporary fix: estimate missing A_ZN_CC (https://doi.org/10.1080/00103629509369501)
   dt[!is.na(A_ZN_RT) & is.na(A_ZN_CC), A_ZN_CC := osi_conv_zinc(element = 'A_ZN_CC',A_SOM_LOI = A_SOM_LOI, A_ZN_RT = A_ZN_RT,A_PH_CC = A_PH_CC)]
   dt[!is.na(A_ZN_RT) & is.na(A_ZN_EDTA), A_ZN_EDTA := osi_conv_zinc(element = 'A_ZN_EDTA',A_SOM_LOI = A_SOM_LOI, A_ZN_RT = A_ZN_RT,A_PH_CC = A_PH_CC)]
+  dt[!is.na(A_ZN_RT) & is.na(A_ZN_AAA), A_ZN_AAA := osi_conv_zinc(element = 'A_ZN_AAA',A_SOM_LOI = A_SOM_LOI, A_ZN_RT = A_ZN_RT,A_PH_CC = A_PH_CC)]
   
   # check updated soil properties
   osi_checkvar(parm = list(A_SOM_LOI = dt$A_SOM_LOI,
@@ -111,8 +112,9 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
   dt[B_COUNTRY == 'SK', value := NA_real_]
   dt[B_COUNTRY == 'SL', value := NA_real_]
   
-  # Poland (PL), United Kingdom (UK)
+  # Poland (PL), Portugal (PT), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
+  dt[B_COUNTRY == 'PT', value := osi_c_zinc_pt(B_LU = B_LU, A_ZN_AAA = A_ZN_AAA, A_PH_CC = A_PH_CC)]
   dt[B_COUNTRY == 'UK', value := osi_c_zinc_uk(B_LU = B_LU,A_PH_WA = A_PH_WA, A_ZN_EDTA = A_ZN_EDTA)]
   
   # select the output variable
@@ -422,6 +424,72 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
   
   # convert to OSI score
   dt[, value := osi_evaluate_parabolic(D_ZN,x.top = dt.thresholds$osi_st_c1)]
+  
+  # Sort the input in correct order
+  setorder(dt, id)
+  
+  # select and return OSI indicator
+  value <- dt[, value]
+  
+  return(value)
+}
+
+#' Calculate the Zn availability index for Portugal
+#' 
+#' This function calculates the availability of Zn for plant uptake
+#' 
+#' @param B_LU (numeric) A unique crop code
+#' @param A_ZN_AAA The plant available Zn content, extracted with ammonium acetate (mg Zn / kg)
+#' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-) 
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_zinc_pt(B_LU = '3301061299', A_ZN_AAA = 45,A_PH_CC = 4.5)
+#' 
+#' @return 
+#' The function of the soil to supply zinc (a numeric value).
+#' 
+#' @export
+osi_c_zinc_pt <- function(B_LU, A_ZN_AAA,A_PH_CC) {
+  
+  # set visual bindings
+  id = crop_code = soiltype = soiltype.n = crop_n = crop_category = D_ZN = NULL
+  osi_country = osi_indicator = crop_cat1 = NULL
+  
+  # Load in the datasets
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'PT']
+  
+  # Check input
+  arg.length <- max(length(B_LU), length(A_ZN_AAA))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_LU = B_LU,
+                           B_COUNTRY = rep('PT',arg.length),
+                           A_PH_CC = A_PH_CC,
+                           A_ZN_AAA = A_ZN_AAA),
+               fname = 'osi_c_zinc_pt')
+  
+  # Collect data in a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = as.character(B_LU),
+                   A_PH_CC = A_PH_CC,
+                   A_ZN_AAA = A_ZN_AAA,
+                   value = NA_real_ )
+  
+  # merge properties form crop category and soil type
+  dt <- merge(dt, 
+              dt.crops[, list(crop_code, crop_cat1)],
+              by.x = "B_LU", 
+              by.y = "crop_code",
+              all.x=TRUE)
+  
+  # convert to OSI score
+  dt[, value := osi_evaluate_logistic(A_ZN_AAA,b=9.34426, x0 = -1.074980e-03,v = 3.284924e-05)]
+  
+  # increase risk at high pH
+  dt[A_PH_CC > 7, value := value * 0.8]
   
   # Sort the input in correct order
   setorder(dt, id)
