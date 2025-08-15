@@ -235,7 +235,7 @@ osi_c_ph_at <- function(B_LU,A_PH_CC,B_TEXTURE_HYPRES) {
 osi_c_ph_be <- function(B_LU, B_TEXTURE_BE, A_PH_KCL) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = B_SOILTYPE_AGR = NULL
+  osi_country = osi_indicator = id = crop_cat1 = NULL
   crop_code = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   
   # crop data
@@ -264,12 +264,6 @@ osi_c_ph_be <- function(B_LU, B_TEXTURE_BE, A_PH_KCL) {
                    B_SOILTYPE_AGR = NA_character_,
                    value = NA_real_)
   
-  # set soil type to categories
-  dt[B_TEXTURE_BE %in% c('S','Z'),B_SOILTYPE_AGR := 'zand']
-  dt[B_TEXTURE_BE %in% c('P','L'),B_SOILTYPE_AGR := 'zandleem']
-  dt[B_TEXTURE_BE %in% c('A'),B_SOILTYPE_AGR := 'leem']
-  dt[is.na(B_SOILTYPE_AGR), B_SOILTYPE_AGR := 'polder']
-  
   # merge crop properties
   dt <- merge(dt,
               dt.crops[,.(crop_code,crop_cat1)],
@@ -277,15 +271,23 @@ osi_c_ph_be <- function(B_LU, B_TEXTURE_BE, A_PH_KCL) {
               by.y = 'crop_code',
               all.x=TRUE)
   
-  # merge thresholds
-  dt <- merge(dt,
-              dt.thresholds,
-              by.x = c('B_SOILTYPE_AGR', 'crop_cat1'),
-              by.y = c('osi_threshold_soilcat','osi_threshold_cropcat'),
-              all.x = TRUE)
+  # add OSI score for "zand" soil types
+  dt[B_TEXTURE_BE %in% c('S','Z') & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(x = A_PH_KCL, b= 3.326,x0 = 4.60,v = 1)]
+  dt[B_TEXTURE_BE %in% c('S','Z') & crop_cat1 == 'grassland', value := osi_evaluate_logistic(x = A_PH_KCL, b= 5.702,x0 = 4.75,v = 1)]
   
-  # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = A_PH_KCL, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  # add OSI score for "zandleem" soil types
+  dt[B_TEXTURE_BE %in% c('P','L') & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(x = A_PH_KCL, b= 2.348,x0 = 5.35,v = 1)]
+  dt[B_TEXTURE_BE %in% c('P','L') & crop_cat1 == 'grassland', value := osi_evaluate_logistic(x = A_PH_KCL, b= 3.628,x0 = 5.15,v = 1)]
+  
+  # add OSI score for "leem" soil types 
+  dt[B_TEXTURE_BE %in% c('A') & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(x = A_PH_KCL, b= 2.348,x0 = 5.85,v = 1)]
+  dt[B_TEXTURE_BE %in% c('A') & crop_cat1 == 'grassland', value := osi_evaluate_logistic(x = A_PH_KCL, b= 3.628,x0 = 5.15,v = 1)]
+  
+  # add OSI score for "polder" soil types (clay and heavy clays)
+  dt[B_TEXTURE_BE %in% c('E','U') & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(x = A_PH_KCL, b= 1.814,x0 = 6.60,v = 1)]
+  dt[B_TEXTURE_BE %in% c('E','U') & crop_cat1 == 'grassland', value := osi_evaluate_logistic(x = A_PH_KCL, b= 4.989,x0 = 5.30,v = 1)]
+  
+  # add OSI score for "other" crops: nature, permanent, forest, other
   
   # set the order to the original inputs
   setorder(dt, id)
