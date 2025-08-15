@@ -1,4 +1,20 @@
-# euosi 0.5.0 2025-08-25
+# euosi 0.6.0 2025-08-17
+
+## Added
+* all indicators for Portugal (PT): phosphor, potassium, magnesium, ph, zinc and boron
+* unit checks and argument checks for `osi_c_boron`
+* unit checks for `osi_c_potassium` and `osi_nut_k`
+* element `A_ZN_AAA` to osi_parms
+* add phosphorus and potassium examples to vignettes `eu_osi_for_potassium` and `eu_osi_for_phosphor` 
+
+## Fixed
+* `osi_c_ph_fr` updated hard coded sugar beet filter
+* `osi_c_potassium_nl` had filter on peat rather than on veen
+* `osi_nut_k_fr` for wrong filter on soil k classes
+
+## Changed
+
+# euosi 0.5.0 2025-08-15
 
 ## Added
 * unit tests except for osi_nut_k

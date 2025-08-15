@@ -152,8 +152,9 @@ osi_gw_nleach <- function(B_LU = NA_character_,
   dt[B_COUNTRY == 'SK', value := NA_real_]
   dt[B_COUNTRY == 'SL', value := NA_real_]
   
-  # Poland (PL), United Kingdom (UK)
+  # Poland (PL), Portugal (PT), and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
+  dt[B_COUNTRY == 'PT', value := NA_real_]
   dt[B_COUNTRY == 'UK', value := NA_real_]
   
   # when country specific data is missing,use then the EU template

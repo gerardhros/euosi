@@ -536,6 +536,7 @@ osi_conv_magnesium <- function(element,
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
 #' @param A_ZN_RT (numeric) The total Zn-content of the soil via XRF or Dumas (mg Zn/kg)
+#' @param A_ZN_AAA (numeric) The exchangeable Zn-content of the soil measured via acid amonium acetate (mg Zn/kg)
 #' @param A_ZN_CC (numeric) The exchangeable Zn-content of the soil measured via 0.01M CaCl2 (ug Zn/kg)
 #' @param A_ZN_CO (numeric) The exchangeable Zn-content of the soil measured via Cohex extraction (mg Zn/kg)
 #' @param A_ZN_DTPA (numeric) The exchangeable Zn-content of the soil measured via DTPA (mg Zn/kg)
@@ -545,7 +546,7 @@ osi_conv_magnesium <- function(element,
 #'  
 #' @export 
 osi_conv_zinc <- function(element, 
-                          A_SOM_LOI, A_ZN_RT,A_PH_CC,
+                          A_SOM_LOI,A_PH_CC, A_ZN_RT,A_ZN_AAA = NA_real_,
                           A_ZN_CC = NA_real_,A_ZN_CO = NA_real_,     
                           A_ZN_DTPA = NA_real_, A_ZN_EDTA = NA_real_,
                           A_ZN_M3 = NA_real_, A_ZN_WA = NA_real_){
@@ -554,7 +555,7 @@ osi_conv_zinc <- function(element,
   A_PH_WA = A_C_OF = NULL
   
   # check inputs
-  checkmate::assert_subset(element,choices = c('A_ZN_CC','A_ZN_CO', 'A_ZN_DTPA',
+  checkmate::assert_subset(element,choices = c('A_ZN_CC','A_ZN_CO', 'A_ZN_DTPA','A_ZN_AAA',
                                                'A_ZN_M3','A_ZN_WA','A_ZN_EDTA'),empty.ok = FALSE)
   
   # make internal table with inputs
@@ -563,6 +564,7 @@ osi_conv_zinc <- function(element,
                    A_ZN_RT = A_ZN_RT,
                    A_PH_CC = A_PH_CC,
                    A_PH_WA = NA_real_,
+                   A_ZN_AAA = A_ZN_AAA,
                    A_ZN_CC = A_ZN_CC,
                    A_ZN_CO = A_ZN_CO,
                    A_ZN_DTPA = A_ZN_DTPA,
@@ -575,8 +577,10 @@ osi_conv_zinc <- function(element,
                            A_ZN_CO = dt$A_ZN_CO,
                            A_ZN_DTPA = dt$A_ZN_DTPA,
                            A_ZN_M3 = dt$A_ZN_M3,
-                           A_ZN_WA = dt$A_ZN_WA
-                           ),fname ='osi_conv_zinc')
+                           A_ZN_WA = dt$A_ZN_WA,
+                           A_ZN_AAA = dt$A_ZN_AAA
+                           ),
+               fname ='osi_conv_zinc')
   
   # estimate Zn from other measurements (temporary, needs an update)
   
@@ -605,6 +609,9 @@ osi_conv_zinc <- function(element,
 
   # set EDTA equal to 5 times DTPA (rough estimate, Han et al., 2020) 
   dt[is.na(A_ZN_EDTA) & !is.na(A_ZN_DTPA), A_ZN_EDTA := 5 * A_ZN_DTPA]
+  
+  # set ammonium acetate extraction equal to M3 (for the moment)
+  dt[is.na(A_ZN_AAA) & !is.na(A_ZN_M3), A_ZN_AAA := A_ZN_M3]
   
   # select the requested element
   value <- dt[,get(element)]

@@ -8,6 +8,7 @@
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
+#' @param A_CEC_CO (numeric) The cation exchange capacity of the soil (mmol+ / kg), analyzed via Cobalt-hexamine extraction
 #' @param A_CA_CO_PO (numeric) The calcium occupation of the CEC (\%)
 #' @param A_MG_CO_PO (numeric) The magnesium occupation of the CEC (\%)
 #' @param A_K_CO_PO (numeric) The potassium occupation of the CEC (\%)
@@ -26,6 +27,7 @@
 osi_c_ph <- function(B_LU, 
                      B_SOILTYPE_AGR = NA_character_, A_CLAY_MI= NA_real_, A_SAND_MI = NA_real_,
                      A_SOM_LOI = NA_real_, A_C_OF = NA_real_,
+                     A_CEC_CO = NA_real_,
                      A_CA_CO_PO = NA_real_, A_MG_CO_PO = NA_real_,A_K_CO_PO = NA_real_, A_NA_CO_PO = NA_real_,
                      A_PH_WA = NA_real_, A_PH_CC= NA_real_, A_PH_KCL= NA_real_,
                      B_COUNTRY) {
@@ -90,11 +92,15 @@ osi_c_ph <- function(B_LU,
   dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
   dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
   
+  # pedotransfer of Helling (1964) when CEC is missing
+  dt[is.na(A_CEC_CO), A_CEC_CO := (0.44 * A_PH_WA + 3)* A_CLAY_MI + (5.1 * A_PH_WA - 5.9) * A_C_OF * 0.1]
+  
   # check the input parameters after updates
   osi_checkvar(parm = list(B_TEXTURE_USDA = dt$B_TEXTURE_USDA,
                            B_TEXTURE_HYPRES = dt$B_TEXTURE_HYPRES,
                            B_TEXTURE_BE = dt$B_TEXTURE_BE,
                            B_TEXTURE_GEPPA = dt$B_TEXTURE_GEPPA,
+                           A_CEC_CO = dt$A_CEC_CO,
                            A_SOM_LOI = dt$A_SOM_LOI,
                            A_C_OF = dt$A_C_OF,
                            A_PH_WA = dt$A_PH_WA,
@@ -135,8 +141,11 @@ osi_c_ph <- function(B_LU,
   dt[B_COUNTRY == 'SK', value := NA_real_]
   dt[B_COUNTRY == 'SL', value := NA_real_]
   
-  # Poland (PL), United Kingdom (UK)
+  # Poland (PL), Portugal (PT), and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
+  dt[B_COUNTRY == 'PT', value := osi_c_ph_pt(B_LU = B_LU, A_CEC_CO = A_CEC_CO,A_PH_WA = A_PH_WA,
+                                             A_CA_CO_PO = A_CA_CO_PO, A_MG_CO_PO= A_MG_CO_PO, 
+                                             A_K_CO_PO = A_K_CO_PO, A_NA_CO_PO= A_NA_CO_PO)]
   dt[B_COUNTRY == 'UK', value := osi_c_ph_uk(B_LU = B_LU, A_PH_WA = A_PH_WA, A_SOM_LOI = A_SOM_LOI)]
   
   # select the output variable
@@ -897,6 +906,104 @@ osi_c_ph_nl <- function(ID,B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC) 
   value <- dt[,i_c_ph]
   
   # return value
+  return(value)
+  
+}
+
+#' Calculate the pH index for Portugal 
+#' 
+#' This function evaluates the pH index in Portugal
+#' 
+#' @param B_LU (character) The crop type
+#' @param A_CEC_CO (numeric) The cation exchange capacity of the soil (mmol+ / kg), analyzed via Cobalt-hexamine extraction
+#' @param A_CA_CO_PO (numeric) The calcium occupation of the CEC (\%)
+#' @param A_MG_CO_PO (numeric) The magnesium occupation of the CEC (\%)
+#' @param A_K_CO_PO (numeric) The potassium occupation of the CEC (\%)
+#' @param A_NA_CO_PO (numeric) The sodium occupation of the CEC (\%)
+#' @param A_PH_WA (numeric) The pH measured in h2o
+#'  
+#' @import data.table
+#' 
+#' @return 
+#' The pH index in Portugal estimated from the base saturation with Ca, Mg and K. For soils with pH water below 5.9 the soil is extracted with HCL+H2SO4. Soils with higher pH are extracted with Bariumchloride.
+#' 
+#' @export
+osi_c_ph_pt <- function(B_LU, A_CEC_CO = NA_real_,A_PH_WA = NA_real_,
+                        A_CA_CO_PO = NA_real_, A_MG_CO_PO= NA_real_, 
+                        A_K_CO_PO= NA_real_,A_NA_CO_PO= NA_real_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  crop_code = BS = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  value_bs = value_cec = value_caco = A_CA_CO = value_kco = A_K_CO = value_ph = NULL
+  value_mgco = A_MG_CO = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='PT']
+
+  # get max length of input variables
+  arg.length <- max(length(B_LU),length(A_CEC_CO),length(A_PH_WA),
+                    length(A_CA_CO_PO),length(A_MG_CO_PO),length(A_K_CO_PO),
+                    length(A_NA_CO_PO))
+  
+  # repeat A_C_OF if only one default is given
+  if(length(A_CA_CO_PO)==1 & arg.length > 1){A_CA_CO_PO <- rep(A_CA_CO_PO,arg.length)}
+  if(length(A_MG_CO_PO)==1 & arg.length > 1){A_MG_CO_PO <- rep(A_MG_CO_PO,arg.length)}
+  if(length(A_K_CO_PO)==1 & arg.length > 1){A_K_CO_PO <- rep(A_K_CO_PO,arg.length)}
+  if(length(A_NA_CO_PO)==1 & arg.length > 1){A_NA_CO_PO <- rep(A_NA_CO_PO,arg.length)}
+  
+  # check inputs (not on B_LU yet)
+  osi_checkvar(parm = list(A_CEC_CO = A_CEC_CO,
+                           A_CA_CO_PO = A_CA_CO_PO, 
+                           A_MG_CO_PO = A_MG_CO_PO, 
+                           A_K_CO_PO = A_K_CO_PO,
+                           A_NA_CO_PO = A_NA_CO_PO,
+                           A_PH_WA = A_PH_WA),
+               fname = 'osi_c_ph_pt')
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_PH_WA = A_PH_WA,
+                   A_CEC_CO = A_CEC_CO * 0.1, # in cmol/kg
+                   A_CA_CO_PO = A_CA_CO_PO, 
+                   A_MG_CO_PO = A_MG_CO_PO, 
+                   A_K_CO_PO = A_K_CO_PO,
+                   A_NA_CO_PO = A_NA_CO_PO,
+                   A_CA_CO = A_CEC_CO * A_CA_CO_PO * 0.01 * 0.1, # in cmol/kg
+                   A_MG_CO = A_CEC_CO * A_MG_CO_PO * 0.01 * 0.1, # in cmol/kg
+                   A_K_CO = A_CEC_CO * A_K_CO_PO * 0.01 * 0.1, # in cmol/kg
+                   value = NA_real_)
+  
+  # calculate base saturation
+  dt[, BS:= A_CA_CO_PO + A_MG_CO_PO + A_K_CO_PO + A_NA_CO_PO]
+ 
+  # derive the OSI score for the Base Saturation, CEC, CA-CO,
+  dt[,value_bs := osi_evaluate_logistic(x = BS, b= 0.13085697, x0 = -8.49673237,v = 0.01107173)]
+  dt[,value_cec :=  osi_evaluate_logistic(x = A_CEC_CO, b= 0.58511083, x0 = -0.94366185,v = 0.01358944)]
+  dt[,value_caco := osi_evaluate_logistic(x = A_CA_CO, b= 0.92606114, x0 = -1.17984752,v = 0.02417989)]
+  dt[,value_mgco := osi_evaluate_logistic(x = A_MG_CO, b= 5.07941191, x0 = 0.10338961 ,v = 0.05524879)]
+  dt[,value_kco := osi_evaluate_logistic(x = A_K_CO, b= 9.492238, x0 = -1.043036, v = 1.573635e-05)]
+  dt[,value_ph := osi_evaluate_logistic(x = A_PH_WA, b= 1.384671967, x0 = 0.671804055, v = 0.002216815 )]
+  
+  # make weighted average
+  dt[,value := (cf_ind_importance(value_ph) * value_ph + cf_ind_importance(value_bs) * value_bs + 
+                cf_ind_importance(value_cec) * value_cec + cf_ind_importance(value_caco) * value_caco + 
+                cf_ind_importance(value_mgco) * value_mgco + cf_ind_importance(value_kco) * value_kco)/
+               (cf_ind_importance(value_ph) + cf_ind_importance(value_bs)+
+                cf_ind_importance(value_cec) + cf_ind_importance(value_caco) +
+                cf_ind_importance(value_mgco)+ cf_ind_importance(value_kco))]
+  
+  # if base saturation is missing, take then value_ph
+  dt[is.na(value), value:= value_ph]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
   return(value)
   
 }

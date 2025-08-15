@@ -18,7 +18,7 @@ The boron availability index in Switzerland derived from extractable soil B frac
 This function calculates the boron availability.
 }
 \examples{
-osi_c_boron_ch(B_LU = 265,A_B_HW = 50)
-osi_c_boron_ch(B_LU = c(265,1019),A_B_HW = c(35,55))
+osi_c_boron_ch(B_LU = 'testcrop1',A_B_HW = 50)
+osi_c_boron_ch(B_LU = c('testcrop1','3301000000'),A_B_HW = c(35,55))
 
 }

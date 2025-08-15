@@ -100,8 +100,9 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
   dt[B_COUNTRY == 'SK', value := NA_real_]
   dt[B_COUNTRY == 'SL', value := NA_real_]
   
-  # Poland (PL), United Kingdom (UK)
+  # Poland (PL), Portugal (PT) and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
+  dt[B_COUNTRY == 'PT', value := NA_real_]
   dt[B_COUNTRY == 'UK', value := NA_real_]
   
   # estimate N supply capacity for all soils without specific evaluation yet

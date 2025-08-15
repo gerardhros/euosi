@@ -190,8 +190,9 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   dt[B_COUNTRY == 'SK', value := osi_c_magnesium_sk(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_M3 = A_MG_M3)]
   dt[B_COUNTRY == 'SL', value := osi_c_magnesium_sl(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_AL = A_MG_AL)]
   
-  # Poland (PL), United Kingdom (UK)
+  # Poland (PL), Portugal, and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_c_magnesium_pl(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_CC = A_MG_CC)]
+  dt[B_COUNTRY == 'PT', value := osi_c_magnesium_pt(B_LU = B_LU, A_MG_AAA = A_MG_AAA)]
   dt[B_COUNTRY == 'UK', value := osi_c_magnesium_uk(B_LU = B_LU,A_SOM_LOI = A_SOM_LOI,A_MG_AN = A_MG_AN)]
   
   # select the output variable
@@ -1460,6 +1461,67 @@ osi_c_magnesium_pl <- function(A_MG_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
 }
 
+#' Calculate the magnesium availability index in Portugal
+#' 
+#' This function calculates the magnesium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_MG_AAA (numeric) The exchangeable Mg-content of the soil measured via ammonium acetate extraction (mg Mg / kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_magnesium_pt(B_LU = '3301010901',A_MG_AAA = 45)
+#' 
+#' @return 
+#' The magnesium availability index in Portugal estimated from the Mg extracted soil pool. A numeric value.
+#' 
+#' @export
+osi_c_magnesium_pt <- function(B_LU,A_MG_AAA) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='PT']
+  
+  # get max length of input variables
+  arg.length <- max(length(A_MG_AAA),length(B_LU))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('PT',arg.length),
+                           B_LU = B_LU,
+                           A_MG_AAA = A_MG_AAA),
+               fname = 'osi_c_magnesium_pt')
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_MG_AAA = A_MG_AAA,
+                   value = NA_real_)
+  
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
+  # convert to the OSI score
+  dt[,value := osi_evaluate_logistic(x = A_MG_AAA, b= 0.08883167 ,x0 = -14.53907863,v = 0.00880924 )]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
+
 #' Calculate the magnesium availability index in Sweden
 #' 
 #' This function calculates the magnesium availability. 
@@ -1679,8 +1741,8 @@ osi_c_magnesium_sl <- function(A_MG_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_magnesium_uk(B_LU = 265,A_SOM_LOI=3,A_MG_AN = 50)
-#' osi_c_magnesium_uk(B_LU = c(265,1019),A_SOM_LOI = c(3,5),A_MG_AN = c(35,55))
+#' osi_c_magnesium_uk(B_LU = 'testcrop1',A_SOM_LOI=3,A_MG_AN = 50)
+#' osi_c_magnesium_uk(B_LU = c('testcrop1','testcrop2'),A_SOM_LOI = c(3,5),A_MG_AN = c(35,55))
 #' 
 #' @return 
 #' The magnesium availability index in United Kingdom derived from extractable soil Mg fractions. A numeric value.

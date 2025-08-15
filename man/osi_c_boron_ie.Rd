@@ -18,7 +18,7 @@ The boron availability index in Ireland derived from extractable soil B fraction
 This function calculates the boron availability.
 }
 \examples{
-osi_c_boron_ie(B_LU = 265,A_B_HW = 50)
-osi_c_boron_ie(B_LU = c(265,1019),A_B_HW = c(35,55))
+osi_c_boron_ie(B_LU = 'testcrop',A_B_HW = 50)
+osi_c_boron_ie(B_LU = c('testcrop1','testcrop2'),A_B_HW = c(35,55))
 
 }

@@ -684,6 +684,31 @@ osi_plot_shi(shi = dt$osi_c_k, xpar = dt$A_K_DL, xpar_label = 'K-DL (mg K/kg)',p
 
 ```
 
+## Portugal (PT)
+The potassium supply in view of soil health for agricultural soils in Portugal can be calculated using `osi_c_potassium_pt` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_K_AAA, being the extracted K content with acid ammonium acetate, unit mg K /kg 
+
+Information on the threshold values for K-AAA in view of sustainable crop production has been derived from the Portugese fertilizer manual entitled `Manual de fertilização das culturas`, a document that can be downloaded [here](https://www.iniav.pt/images/publicacoes/livros-manuais/Manual_Fertilizacao_das_culturas.pdf).
+
+Note that IACS crop codes for Portugal are available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in K-AAA. The optimum soil K threshold value for sustainable crop production is around 60 mg K/ kg, and the soil index decreases when K_AAA values decreases down to 30 mg K/kg. There is no differntiation among soil types of land uses.
+
+
+```{r example PT1, out.width="75%", fig.cap="Evaluation P-indicator for Portugal.",dpi=300, echo = FALSE}
+
+# make an example with varying K-AAA
+dt <- CJ(B_LU = c('3301090400'),
+         A_K_AAA = seq(1,100,5))
+dt[,osi_c_k := osi_c_potassium_pt(B_LU,A_K_AAA = A_K_AAA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_k, xpar = dt$A_K_AAA, xpar_label = 'K-AAA (mg K/kg)',pgroup = NULL)
+
+```
+
 
 ## Sweden (SE)
 The potassium supply in view of soil health for agricultural soils in Sweden can be calculated using `osi_c_potassium_se` using the following inputs:
