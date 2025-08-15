@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,8 +51,9 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">osi_conv_zinc</span><span class="op">(</span></span>
 <span>  <span class="va">element</span>,</span>
 <span>  <span class="va">A_SOM_LOI</span>,</span>
-<span>  <span class="va">A_ZN_RT</span>,</span>
 <span>  <span class="va">A_PH_CC</span>,</span>
+<span>  <span class="va">A_ZN_RT</span>,</span>
+<span>  A_ZN_AAA <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  A_ZN_CC <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  A_ZN_CO <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  A_ZN_DTPA <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
@@ -74,12 +75,16 @@
 <dd><p>(numeric) The percentage organic matter in the soil (%)</p></dd>
 
 
+<dt id="arg-a-ph-cc">A_PH_CC<a class="anchor" aria-label="anchor" href="#arg-a-ph-cc"></a></dt>
+<dd><p>(numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)</p></dd>
+
+
 <dt id="arg-a-zn-rt">A_ZN_RT<a class="anchor" aria-label="anchor" href="#arg-a-zn-rt"></a></dt>
 <dd><p>(numeric) The total Zn-content of the soil via XRF or Dumas (mg Zn/kg)</p></dd>
 
 
-<dt id="arg-a-ph-cc">A_PH_CC<a class="anchor" aria-label="anchor" href="#arg-a-ph-cc"></a></dt>
-<dd><p>(numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)</p></dd>
+<dt id="arg-a-zn-aaa">A_ZN_AAA<a class="anchor" aria-label="anchor" href="#arg-a-zn-aaa"></a></dt>
+<dd><p>(numeric) The exchangeable Zn-content of the soil measured via acid amonium acetate (mg Zn/kg)</p></dd>
 
 
 <dt id="arg-a-zn-cc">A_ZN_CC<a class="anchor" aria-label="anchor" href="#arg-a-zn-cc"></a></dt>

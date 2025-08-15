@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -988,6 +988,34 @@ accordingly between 35 and 100 mg K/kg.</p>
 <div class="figure">
 <img src="eu_osi_for_potassium_files/figure-html/example%20PL1-1.png" alt="Evaluation K-indicator for Poland." width="75%"><p class="caption">
 Evaluation K-indicator for Poland.
+</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="portugal-pt">Portugal (PT)<a class="anchor" aria-label="anchor" href="#portugal-pt"></a>
+</h2>
+<p>The potassium supply in view of soil health for agricultural soils in
+Portugal can be calculated using <code>osi_c_potassium_pt</code> using
+the following inputs:</p>
+<ul>
+<li>B_LU, being the crop code, an unique number for each crop</li>
+<li>A_K_AAA, being the extracted K content with acid ammonium acetate,
+unit mg K /kg</li>
+</ul>
+<p>Information on the threshold values for K-AAA in view of sustainable
+crop production has been derived from the Portugese fertilizer manual
+entitled <code>Manual de fertilização das culturas</code>, a document
+that can be downloaded <a href="https://www.iniav.pt/images/publicacoes/livros-manuais/Manual_Fertilizacao_das_culturas.pdf" class="external-link">here</a>.</p>
+<p>Note that IACS crop codes for Portugal are available in
+<code>osi_crops</code> package table.</p>
+<p>Below an example is visualized how the soil health index varies in
+relation to variation in K-AAA. The optimum soil K threshold value for
+sustainable crop production is around 60 mg K/ kg, and the soil index
+decreases when K_AAA values decreases down to 30 mg K/kg. There is no
+differntiation among soil types of land uses.</p>
+<div class="figure">
+<img src="eu_osi_for_potassium_files/figure-html/example%20PT1-1.png" alt="Evaluation P-indicator for Portugal." width="75%"><p class="caption">
+Evaluation P-indicator for Portugal.
 </p>
 </div>
 </div>
