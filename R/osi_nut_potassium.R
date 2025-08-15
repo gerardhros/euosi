@@ -961,9 +961,9 @@ osi_nut_k_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_, B_SOILT
               all.x = TRUE)
   
   # convert to the OSI score (to be update for each individual optie)
-  dt[osi_threshold_cropcat =='moderate',value := osi_evaluate_logistic(x = A_K_AAA,b = -0.02221, x0 = 148.42, v = 1.8025 )]
-  dt[osi_threshold_cropcat =='high',value := osi_evaluate_logistic(x = A_K_AAA, b = -0.01012, x0 = 300.95, v = 0.8066)]
-  dt[osi_threshold_cropcat =='low',value := osi_evaluate_logistic(x = A_K_AAA,b = -0.02602, x0 = 112.04, v = 1.1065 )]
+  dt[crop_k =='moderate',value := osi_evaluate_logistic(x = A_K_AAA,b = -0.02221, x0 = 148.42, v = 1.8025 )]
+  dt[crop_k =='high',value := osi_evaluate_logistic(x = A_K_AAA, b = -0.01012, x0 = 300.95, v = 0.8066)]
+  dt[crop_k =='low',value := osi_evaluate_logistic(x = A_K_AAA,b = -0.02602, x0 = 112.04, v = 1.1065 )]
   
   # set the order to the original inputs
   setorder(dt, id)
