@@ -639,6 +639,31 @@ osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_DL, xpar_label = 'P-DL (mg P/kg)',p
 ```
 
 
+## Portugal (PT)
+The phosphorus supply in view of soil health for agricultural soils in Portugal can be calculated using `osi_c_phosphor_pt` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_P_OL, being the extracted P content with the Olsen method, unit mg P /kg.
+
+Information on the threshold values for P-OL in view of sustainable crop production has been derived from the Portugese fertilizer manual entitled `Manual de fertilização das culturas`, a document that can be downloaded [here](https://www.iniav.pt/images/publicacoes/livros-manuais/Manual_Fertilizacao_das_culturas.pdf).
+
+Note that IACS crop codes for Portugal are available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in P-OL. The optimum soil P threshold value for sustainable crop production is around 18 mg P/ kg, and the soil index decreases when P-DL values decreases down to 10 mg P/kg. There is no differntiation among soil types of land uses.
+
+
+```{r example PT1, out.width="75%", fig.cap="Evaluation P-indicator for Portugal.",dpi=300, echo = FALSE}
+
+# make an example with varying P-DL
+dt <- CJ(B_LU = c('3301090400'),
+         A_P_OL = seq(1,30,1))
+dt[,osi_c_p := osi_c_phosphor_pt(B_LU,A_P_OL = A_P_OL)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_OL, xpar_label = 'P-OL (mg P/kg)',pgroup = NULL)
+
+```
+
 ## Sweden (SE)
 The phosphorus supply in view of soil health for agricultural soils in Sweden can be calculated using `osi_c_phosphor_se` using the following inputs:
 
