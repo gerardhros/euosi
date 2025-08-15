@@ -4,7 +4,7 @@
 \alias{osi_nut_k_de}
 \title{Calculate the potassium excess index in Germany}
 \usage{
-osi_nut_k_de(B_LU, A_C_OF, A_CLAY_MI, A_SAND_MI, A_K_AAA)
+osi_nut_k_de(B_LU, A_C_OF, A_CLAY_MI, A_SAND_MI, A_K_CAL)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -15,7 +15,7 @@ osi_nut_k_de(B_LU, A_C_OF, A_CLAY_MI, A_SAND_MI, A_K_AAA)
 
 \item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
 
-\item{A_K_AAA}{(numeric) The potassium content extracted with AA (g / kg)}
+\item{A_K_CAL}{(numeric) The potassium content extracted with calcium ammonium lactate (g / kg)}
 }
 \value{
 The potassium excess index in Germany derived from extractable soil K fractions. A numeric value.

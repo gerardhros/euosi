@@ -20,6 +20,6 @@ The potassium excess index in Estonia estimated from extractable potassium. A nu
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_ee(A_K_M3 = 45,B_TEXTURE_USDA = 'clay')
+osi_nut_k_ee(B_LU = 'testcrop',A_K_M3 = 45,B_TEXTURE_USDA = 'clay')
 
 }

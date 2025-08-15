@@ -18,7 +18,7 @@ The potassium excess index in Sweden derived from extractable soil K fractions. 
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_se(B_LU = 265,A_K_AL = 5)
-osi_nut_k_se(B_LU = c(265,1019),A_K_AL = c(3.5,5.5))
+osi_nut_k_se(B_LU = '3301061299',A_K_AL = 5)
+osi_nut_k_se(B_LU =  c('3301061299','3301000000'),A_K_AL = c(3.5,5.5))
 
 }

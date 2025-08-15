@@ -20,6 +20,6 @@ The potassium excess index in Switzerland estimated from extractable potassium. 
 This function calculates the potassium excess.
 }
 \examples{
-osi_nut_k_ch(A_K_AAA = 50, A_CLAY_MI = 4.5)
+osi_nut_k_ch(B_LU = '8410',A_K_AAA = 50, A_CLAY_MI = 4.5)
 
 }

@@ -28,7 +28,7 @@
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4, 
+#' osi_nut_k(B_LU = '265', B_SOILTYPE_AGR = 'dekzand',A_SOM_LOI = 4, 
 #' A_CLAY_MI = 11,A_SAND = 24, A_PH_CC = 5.4, A_CEC_CO = 125, 
 #' A_K_AAA=346, A_K_CO_PO = 8.5, A_K_CC = 145,B_COUNTRY = 'NL')
 #' 
@@ -85,6 +85,22 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_charact
                    value = NA_real_
   )
   
+  # check required inputs
+  osi_checkvar(parm = list(B_COUNTRY = dt$B_COUNTRY, B_LU = dt$B_LU,
+                           B_SOILTYPE_AGR = dt$B_SOILTYPE_AGR,
+                           A_CLAY_MI = dt$A_CLAY_MI,
+                           A_SAND_MI = dt$A_SAND_MI,
+                           A_SILT_MI = dt$A_SILT_MI,
+                           A_SOM_LOI = dt$A_SOM_LOI,
+                           A_C_OF = dt$A_C_OF,
+                           A_CEC_CO = dt$A_CEC_CO,
+                           A_PH_CC = dt$A_PH_CC,
+                           A_CACO3_IF = dt$A_CACO3_IF,
+                           A_K_AAA = dt$A_K_AAA
+                           ),
+               fname='osi_nut_k',
+               na_allowed = TRUE)
+  
   # estimate texture information
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
   dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
@@ -111,6 +127,26 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_charact
   dt[,A_K_NaAAA := osi_conv_potassium(element='A_K_NaAAA',A_K_AAA = A_K_AAA)]
   dt[,A_K_WA := osi_conv_potassium(element='A_K_WA',A_K_AAA = A_K_AAA)]
   
+  #check required calculated inputs
+  osi_checkvar(parm = list(B_TEXTURE_USDA = dt$B_TEXTURE_USDA, 
+                           B_TEXTURE_HYPRES = dt$B_TEXTURE_HYPRES,
+                           B_TEXTURE_BE = dt$B_TEXTURE_BE,
+                           B_TEXTURE_GEPPA = dt$B_TEXTURE_GEPPA,
+                           A_PH_WA = dt$A_PH_WA,
+                           A_SOM_LOI = dt$A_SOM_LOI,
+                           A_C_OF = dt$A_C_OF,
+                           A_CEC_CO = dt$A_CEC_CO,
+                           A_K_CC = dt$A_K_CC,
+                           A_K_CO_PO = dt$A_K_CO_PO,
+                           A_K_AL = dt$A_K_AL,
+                           A_K_AN = dt$A_K_AN,
+                           A_K_CAL = dt$A_K_CAL,
+                           A_K_DL = dt$A_K_DL,
+                           A_K_M3 = dt$A_K_M3,
+                           A_K_NaAAA = dt$A_K_NaAAA,
+                           A_K_WA = dt$A_K_WA),
+               fname='oci_nut_k')
+  
   # calculate the OSI score per country
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
@@ -118,7 +154,7 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_charact
   dt[B_COUNTRY == 'BE', value := osi_nut_k_be(B_LU = B_LU, B_TEXTURE_BE = B_TEXTURE_BE,A_K_AAA  = A_K_AAA )]
   dt[B_COUNTRY == 'CH', value := osi_nut_k_ch(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_K_AAA = A_K_AAA)]
   dt[B_COUNTRY == 'CZ', value := osi_nut_k_cz(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_K_M3 = A_K_M3)]
-  dt[B_COUNTRY == 'DE', value := osi_nut_k_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_K_AAA = A_K_AAA)]
+  dt[B_COUNTRY == 'DE', value := osi_nut_k_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_K_CAL = A_K_CAL)]
   
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := osi_nut_k_dk(B_LU = B_LU, A_K_AL = A_K_AL)]
@@ -169,7 +205,7 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_charact
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_at(A_K_CAL = 47,B_TEXTURE_HYPRES = 'C')
+#' osi_nut_k_at(B_LU = '3301000000',A_K_CAL = 47,B_TEXTURE_HYPRES = 'C')
 #' 
 #' @return 
 #' The potassium excess index in Austria estimated from extractable potassium. A numeric value.
@@ -178,22 +214,21 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_charact
 osi_nut_k_at <- function(A_K_CAL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
-  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
   
   # crop data
-  # dt.crops <- as.data.table(euosi::osi_crops)
-  # dt.crops <- dt.crops[osi_country=='PO']
-  
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
-  # thresholds
-  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='AT']
   
   # get max length of input variables
   arg.length <- max(length(A_K_CAL),length(B_TEXTURE_HYPRES),length(B_LU))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('AT',arg.length),
+                           B_LU = B_LU,
+                           B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                           A_K_CAL = A_K_CAL),
+               fname = 'oci_nut_k_at')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -203,19 +238,12 @@ osi_nut_k_at <- function(A_K_CAL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
                    value = NA_real_)
   
   # merge crop properties
-  # dt <- merge(dt,
-  #             dt.crops[,.(crop_code,crop_cat1)],
-  #             by.x = 'B_LU', 
-  #             by.y = 'crop_code',
-  #             all.x=TRUE)
-  
-  # merge thresholds
-  # dt <- merge(dt,
-  #             dt.thresholds,
-  #             by.x = 'B_SOILTYPE_AGR',
-  #             by.y = 'osi_threshold_soilcat',
-  #             all.x = TRUE)
-  
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+
   # calculate the OSI score light textured soils
   dt[B_TEXTURE_HYPRES %in% c('C'),
      value := osi_evaluate_logistic(x = A_K_CAL, b = -0.01212, x0 = 300.44, v = 0.6033)]
@@ -247,7 +275,7 @@ osi_nut_k_at <- function(A_K_CAL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_be(B_LU = 'SOJ',B_TEXTURE_BE ='S', A_K_AAA = 45)
+#' osi_nut_k_be(B_LU = '8410',B_TEXTURE_BE ='S', A_K_AAA = 45)
 #' 
 #' @return 
 #' The potassium excess index in Belgium estimated from extractable potassium. A numeric value.
@@ -263,16 +291,20 @@ osi_nut_k_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_) {
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='BE']
-  
-  # parameters
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
+ 
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'BE' & osi_indicator =='i_c_k']
   
   # get max length of input arguments
   arg.length <- max(length(B_LU),length(B_TEXTURE_BE),length(A_K_AAA))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('BE',arg.length),
+                           B_LU = B_LU,
+                           B_TEXTURE_BE = B_TEXTURE_BE,
+                           A_K_AAA = A_K_AAA),
+               fname = 'oci_nut_k_be')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -325,7 +357,7 @@ osi_nut_k_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_ch(A_K_AAA = 50, A_CLAY_MI = 4.5)
+#' osi_nut_k_ch(B_LU = '8410',A_K_AAA = 50, A_CLAY_MI = 4.5)
 #' 
 #' @return 
 #' The potassium excess index in Switzerland estimated from extractable potassium. A numeric value.
@@ -350,6 +382,11 @@ osi_nut_k_ch <- function(A_K_AAA,A_CLAY_MI,B_LU = NA_character_) {
   
   # get max length of input variables
   arg.length <- max(length(A_K_AAA),length(A_CLAY_MI),length(B_LU))
+  
+  # check inputs
+  osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI,
+                           A_K_AAA = A_K_AAA),
+               fname = 'osi_nut_k_ch')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -403,7 +440,7 @@ osi_nut_k_ch <- function(A_K_AAA,A_CLAY_MI,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_cz(B_LU = '165', A_K_M3 = 81, B_TEXTURE_HYPRES='C')
+#' osi_nut_k_cz(B_LU = '3301000000', A_K_M3 = 81, B_TEXTURE_HYPRES='C')
 #' 
 #' @return 
 #' The potassium excess index in Czech Republic estimated from extractable potassium. A numeric value.
@@ -411,23 +448,22 @@ osi_nut_k_ch <- function(A_K_AAA,A_CLAY_MI,B_LU = NA_character_) {
 #' @export
 osi_nut_k_cz <- function(A_K_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
-  # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
-  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  # # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
   
   # crop data
-  # dt.crops <- as.data.table(euosi::osi_crops)
-  # dt.crops <- dt.crops[osi_country=='PO']
-  
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
-  # thresholds
-  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='CZ']
   
   # get max length of input variables
-  arg.length <- max(length(A_K_M3),length(B_TEXTURE_HYPRES),length(B_LU))
+  arg.length <- max(length(B_LU),length(B_TEXTURE_HYPRES),length(A_K_M3))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('CZ',arg.length),
+                           B_LU = B_LU,
+                           B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                           A_K_M3 = A_K_M3),
+               fname = 'osi_nut_k_cz')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -437,18 +473,11 @@ osi_nut_k_cz <- function(A_K_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
                    value = NA_real_)
   
   # merge crop properties
-  # dt <- merge(dt,
-  #             dt.crops[,.(crop_code,crop_cat1)],
-  #             by.x = 'B_LU', 
-  #             by.y = 'crop_code',
-  #             all.x=TRUE)
-  
-  # merge thresholds
-  # dt <- merge(dt,
-  #             dt.thresholds,
-  #             by.x = 'B_SOILTYPE_AGR',
-  #             by.y = 'osi_threshold_soilcat',
-  #             all.x = TRUE)
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # convert to the OSI score
   dt[B_TEXTURE_HYPRES %in% c('C'),
@@ -476,7 +505,7 @@ osi_nut_k_cz <- function(A_K_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @param A_C_OF (numeric) The carbon content of the soil layer (g/ kg)
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
-#' @param A_K_AAA (numeric) The potassium content extracted with AA (g / kg)
+#' @param A_K_CAL (numeric) The potassium content extracted with calcium ammonium lactate (g / kg)
 #' 
 #' @import data.table
 #' 
@@ -484,10 +513,28 @@ osi_nut_k_cz <- function(A_K_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' The potassium excess index in Germany derived from extractable soil K fractions. A numeric value.
 #' 
 #' @export
-osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AAA) {
+osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_CAL) {
   
   # add visual bindings
-  A_SILT_MI = stype = B_LU_CAT = NULL
+  A_SILT_MI = A_K_CAL2 = stype = B_LU_CAT = NULL
+  crop_code = crop_cat1 = osi_country = . = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='DE']
+  
+  # get max length of input variables
+  arg.length <- max(length(B_LU),length(A_C_OF),length(A_CLAY_MI),length(A_SAND_MI),length(A_K_CAL))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('DE',arg.length),
+                           B_LU = B_LU,
+                           A_C_OF = A_C_OF,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_SAND_MI = A_SAND_MI,
+                           A_K_CAL = A_K_CAL),
+               fname = 'osi_nut_k_de')
+  
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
@@ -495,8 +542,16 @@ osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AAA) {
                    A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
                    A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
-                   A_K_AAA = A_K_AAA,
+                   A_K_CAL = A_K_CAL* 0.1, # in mg K/100g,
+                   A_K_CAL2 = A_K_CAL * ((1 / (0.02525 * (A_C_OF*2*0.1) + 0.6541))/10), #in mg K/100ml
                    value = NA_real_)
+  
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # add soil type
   dt[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
@@ -507,22 +562,69 @@ osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AAA) {
   dt[ A_C_OF >= 150,  stype := "BG6"]
   
   # evaluate A_K_AAA for arable soils
-  dt[stype=='BG1' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AAA, b = -0.10391, x0 = 31.43, v = 1.7684)]
-  dt[stype=='BG2' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AAA, b = -0.08953, x0 = 36.28, v = 1.7474)]
-  dt[stype=='BG3' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AAA, b = -0.07638, x0 = 42.55, v = 1.7511)]
-  dt[stype=='BG4' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AAA, b = -0.07024, x0 = 46.9, v = 1.7988)]
-  dt[stype=='BG5' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AAA, b = -0.05202, x0 = 63.81, v = 1.8263)]
-  dt[stype=='BG6' & B_LU_CAT=='arable', value := osi_evaluate_logistic(A_K_AAA, b = -0.07217, x0 = 45.45, v = 1.7838)]
+  dt[stype=='BG1' & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(A_K_CAL, b = -0.10391, x0 = 31.43, v = 1.7684)]
+  dt[stype=='BG2' & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(A_K_CAL, b = -0.08953, x0 = 36.28, v = 1.7474)]
+  dt[stype=='BG3' & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(A_K_CAL, b = -0.07638, x0 = 42.55, v = 1.7511)]
+  dt[stype=='BG4' & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(A_K_CAL, b = -0.07024, x0 = 46.9, v = 1.7988)]
+  dt[stype=='BG5' & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(A_K_CAL, b = -0.05202, x0 = 63.81, v = 1.8263)]
+  dt[stype=='BG6' & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(A_K_CAL2, b = -0.07217, x0 = 45.45, v = 1.7838)]
   
   # evaluate A_K_AAA for grassland soils
-  dt[stype=='BG1' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AAA, b = -0.19519, x0 = 17.78, v = 0.7916)]
-  dt[stype=='BG2' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AAA, b = -0.21371, x0 = 43.48, v = 0.0062)]
-  dt[stype=='BG3' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AAA, b = -0.16233, x0 = 45.88, v = 0.0296)]
-  dt[stype=='BG4' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AAA, b = -0.1343, x0 = 28.03, v = 2.2603)]
-  dt[stype=='BG5' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AAA, b = -0.12803, x0 = 29.48, v = 2.269)]
-  dt[stype=='BG6' & B_LU_CAT=='grassland', value := osi_evaluate_logistic(A_K_AAA, b = -0.1343, x0 = 28.03, v = 2.2603)]
+  dt[stype=='BG1' & crop_cat1 %in% c('grassland'), value := osi_evaluate_logistic(A_K_CAL, b = -0.19519, x0 = 17.78, v = 0.7916)]
+  dt[stype=='BG2' & crop_cat1 %in% c('grassland'), value := osi_evaluate_logistic(A_K_CAL, b = -0.21371, x0 = 43.48, v = 0.0062)]
+  dt[stype=='BG3' & crop_cat1 %in% c('grassland'), value := osi_evaluate_logistic(A_K_CAL, b = -0.16233, x0 = 45.88, v = 0.0296)]
+  dt[stype=='BG4' & crop_cat1 %in% c('grassland'), value := osi_evaluate_logistic(A_K_CAL, b = -0.1343, x0 = 28.03, v = 2.2603)]
+  dt[stype=='BG5' & crop_cat1 %in% c('grassland'), value := osi_evaluate_logistic(A_K_CAL, b = -0.12803, x0 = 29.48, v = 2.269)]
+  dt[stype=='BG6' & crop_cat1 %in% c('grassland'), value := osi_evaluate_logistic(A_K_CAL2, b = -0.1343, x0 = 28.03, v = 2.2603)]
+  
+  # all other cases get value 1
+  dt[crop_cat1 %in% c('forest','other','permanent'), value := 1]
   
   # select value and return
+  value <- dt[,value]
+  
+  # return value
+  return(value)
+}
+
+#' Calculate the potassium excess index in Denmark
+#' 
+#' This function calculates the potassium excess. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_K_AL (numeric) The K-content of the soil extracted with ammonium lactate (mg K / kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_nut_k_dk(B_LU = '3301000000',A_K_AL = 5)
+#' osi_nut_k_dk(B_LU = c('3301000000','3301061299'),A_K_AL = c(3.5,5.5))
+#' 
+#' @return 
+#' The potassium excess index in Denmark derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_nut_k_dk <- function(B_LU, A_K_AL) {
+  
+  # length of arguments
+  arg.length <- max(length(B_LU),length(A_K_AL))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('DK',arg.length),
+                           B_LU = B_LU,
+                           A_K_AL = A_K_AL),
+               fname = 'osi_nut_k_dk')
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_K_AL = A_K_AL,
+                   value = NA_real_)
+  
+  # evaluation soil K status, only threshold at optimum level is given (IFS, Ristimaki et al. (2007))
+  dt[, value := OBIC::evaluate_logistic(A_K_AL, b = -0.01074, x0 = 293.55, v = 1.6325)]
+  
+  # select value 
   value <- dt[,value]
   
   # return value
@@ -540,7 +642,7 @@ osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_AAA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_ee(A_K_M3 = 45,B_TEXTURE_USDA = 'clay')
+#' osi_nut_k_ee(B_LU = 'testcrop',A_K_M3 = 45,B_TEXTURE_USDA = 'clay')
 #' 
 #' @return 
 #' The potassium excess index in Estonia estimated from extractable potassium. A numeric value.
@@ -565,6 +667,11 @@ osi_nut_k_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
   
   # get max length of input variables
   arg.length <- max(length(A_K_M3),length(B_TEXTURE_USDA),length(B_LU))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_TEXTURE_USDA = B_TEXTURE_USDA,
+                           A_K_M3 = A_K_M3),
+               fname = 'osi_nut_k_ee')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -593,7 +700,7 @@ osi_nut_k_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
   dt[B_TEXTURE_USDA %in% c('SaLo'),value := osi_evaluate_logistic(x = A_K_M3, b = -0.0146, x0 = 225.33, v = 1.7932)]
   dt[B_TEXTURE_USDA %in% c('Lo','SaCl','SaCL'),
      value := osi_evaluate_logistic(x = A_K_M3, b = -0.01124, x0 = 289.69, v = 1.7577)]
-  dt[B_TEXTURE_USDA %in% c('Cl','ClLo','SiCL','SiClLo','SiLo','Si'),
+  dt[B_TEXTURE_USDA %in% c('Cl','ClLo','SiCL','SiClLo','SiLo','Si','SiCl'),
      value := osi_evaluate_logistic(x = A_K_M3, b = -0.00836, x0 = 397.81, v = 1.8353)]
   
   # set the order to the original inputs
@@ -606,40 +713,6 @@ osi_nut_k_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
   
 }
 
-#' Calculate the potassium excess index in Denmark
-#' 
-#' This function calculates the potassium excess. 
-#' 
-#' @param B_LU (numeric) The crop code
-#' @param A_K_AL (numeric) The K-content of the soil extracted with ammonium lactate (mg K / kg)
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_nut_k_dk(B_LU = 265,A_K_AL = 5)
-#' osi_nut_k_dk(B_LU = c(265,1019),A_K_AL = c(3.5,5.5))
-#' 
-#' @return 
-#' The potassium excess index in Denmark derived from extractable soil K fractions. A numeric value.
-#' 
-#' @export
-osi_nut_k_dk <- function(B_LU, A_K_AL) {
-  
-  # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
-                   B_LU = B_LU,
-                   A_K_AL = A_K_AL,
-                   value = NA_real_)
-  
-  # evaluation soil K status, only threshold at optimum level is given (IFS, Ristimaki et al. (2007))
-  dt[, value := OBIC::evaluate_logistic(A_K_AL, b = -0.01074, x0 = 293.55, v = 1.6325)]
-  
-  # select value 
-  value <- dt[,value]
-  
-  # return value
-  return(value)
-}
 
 #' Calculate the potassium excess index in Spain
 #' 
@@ -652,14 +725,29 @@ osi_nut_k_dk <- function(B_LU, A_K_AL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_es(B_LU = '265',A_K_AAA = 5,B_TEXTURE_HYPRES='C')
-#' osi_nut_k_es(B_LU = c('265','1019'),A_K_AAA = c(3.5,5.5),B_TEXTURE_HYPRES=c('C','C'))
+#' osi_nut_k_es(B_LU = '3301000000',A_K_AAA = 5,B_TEXTURE_HYPRES='C')
 #' 
 #' @return 
 #' The potassium excess index in Spain derived from extractable soil K fractions. A numeric value.
 #' 
 #' @export
 osi_nut_k_es <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='ES']
+  
+  # get max length of input variables
+  arg.length <- max(length(A_K_AAA),length(B_LU))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('ES',arg.length),
+                           B_LU = B_LU,
+                           A_K_AAA = A_K_AAA),
+               fname = 'osi_nut_k_es')
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -699,13 +787,13 @@ osi_nut_k_es <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_fi(B_LU = 'SOJ', B_TEXTURE_USDA = 'Si',A_K_AAA = 45)
+#' osi_nut_k_fi(B_LU = '1110', B_TEXTURE_USDA = 'Si',A_K_AAA = 45,A_C_OF = 15)
 #' 
 #' @return 
 #' The potassium excess index in Finland estimated from extractable potassium. A numeric value.
 #' 
 #' @export
-osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0) {
+osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0.5) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = B_SOILTYPE_AGR = NULL
@@ -728,6 +816,14 @@ osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0) {
   # repeat A_C_OF if only one default is given
   if(length(A_C_OF)==1 & arg.length > 1){A_C_OF <- rep(A_C_OF,arg.length)}
   
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('FI',arg.length),
+                           B_LU = B_LU,
+                           B_TEXTURE_USDA = B_TEXTURE_USDA,
+                           A_C_OF = A_C_OF,
+                           A_K_AAA = A_K_AAA),
+               fname = 'osi_nut_k_fi')
+  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
@@ -745,7 +841,7 @@ osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0) {
   
   # set agricultural soiltype
   dt[A_C_OF > 200, B_SOILTYPE_AGR := 'organic']
-  dt[grepl('^Cl$|^SiCL$|^SaCL$',B_TEXTURE_USDA), B_SOILTYPE_AGR := 'clay']  
+  dt[grepl('^Cl$|^SiCL$|^SaCL$|^SiCl$',B_TEXTURE_USDA), B_SOILTYPE_AGR := 'clay']  
   dt[grepl('^ClLo$|^SiClLo$|^Lo$|^SiLo$|^LoSa$|^Si$|^SaClLo$',B_TEXTURE_USDA), B_SOILTYPE_AGR := 'loam']
   dt[is.na(B_SOILTYPE_AGR),B_SOILTYPE_AGR := 'sand']
   
@@ -804,10 +900,7 @@ osi_nut_k_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_, B_SOILT
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='FR']
-  
-  # parameters
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
+
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'FR' & osi_indicator =='i_c_k']
@@ -826,12 +919,12 @@ osi_nut_k_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_, B_SOILT
   arg.length <- max(length(B_LU),length(B_TEXTURE_GEPPA),length(B_SOILTYPE_AGR),
                     length(B_AER_FR),length(A_K_AAA))
   
-  # check the values (update the limits later via dt.parms)
-  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_subset(B_TEXTURE_GEPPA, choices =c("L","LL","Ls","Lsa","La","LAS","AA","A","As",
-                                                       "Als","Al","Sa","Sal","S","SS","Sl",'AS','SaI',NA_character_), empty.ok = FALSE)
-  checkmate::assert_numeric(A_K_AAA, lower = 1, upper = 250, any.missing = TRUE, len = arg.length)
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('FR',arg.length),
+                           B_LU = B_LU,
+                           B_TEXTURE_GEPPA = B_TEXTURE_GEPPA,
+                           A_K_AAA = A_K_AAA),
+               fname = 'osi_nut_k_fr')
   
   # check optional parameters 
   if(sum(!is.na(B_SOILTYPE_AGR))>0){
@@ -896,7 +989,7 @@ osi_nut_k_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_, B_SOILT
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_hu(A_K_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
+#' osi_nut_k_hu(B_LU = 'testcrop',A_K_AL = 45,A_CACO3_IF = 5,A_CLAY_MI = 5,A_SOM_LOI = 5)
 #' 
 #' @return 
 #' The potassium excess index in Hungary estimated from extractable potassium. A numeric value.
@@ -921,6 +1014,13 @@ osi_nut_k_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_K_AL,B_LU = NA_charact
   
   # get max length of input variables
   arg.length <- max(length(A_K_AL),length(A_SOM_LOI),length(A_CLAY_MI),length(A_CACO3_IF),length(B_LU))
+  
+  # check inputs (no check on B_LU since crops codes are not in osi_crop)
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_CACO3_IF = A_CACO3_IF,
+                           A_K_AL = A_K_AL),
+               fname = 'osi_nut_k_hu')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -984,8 +1084,8 @@ osi_nut_k_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_K_AL,B_LU = NA_charact
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_ie(B_LU = 265,A_SOM_LOI = 2,A_K_NaAAA = 5)
-#' osi_nut_k_ie(B_LU = c(265,1019),A_SOM_LOI = c(2,4),A_K_NaAAA = c(3.5,5.5))
+#' osi_nut_k_ie(B_LU = 'testcrop',A_SOM_LOI = 2,A_K_NaAAA = 5)
+#' osi_nut_k_ie(B_LU = c('testcrop','testcrop2'),A_SOM_LOI = c(2,4),A_K_NaAAA = c(3.5,5.5))
 #' 
 #' @return 
 #' The potassium excess index in Ireland derived from extractable soil K fractions. A numeric value.
@@ -995,6 +1095,11 @@ osi_nut_k_ie <- function(B_LU, A_SOM_LOI,A_K_NaAAA) {
   
   # add visual bindings
   BDS = NULL
+  
+  # check inputs
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
+                           A_K_NaAAA = A_K_NaAAA),
+               fname = 'osi_nut_k_ie')
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -1031,14 +1136,31 @@ osi_nut_k_ie <- function(B_LU, A_SOM_LOI,A_K_NaAAA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_it(B_LU = 265,A_K_AAA = 5,B_TEXTURE_HYPRES='C')
-#' osi_nut_k_it(B_LU = c(265,1019),A_K_AAA = c(3.5,5.5),B_TEXTURE_HYPRES=c('C','C'))
+#' osi_nut_k_it(B_LU = '3301000000',A_K_AAA = 5,B_TEXTURE_HYPRES='C')
+#' osi_nut_k_it(B_LU = c('3301000000','3301010101'),
+#' A_K_AAA = c(3.5,5.5),B_TEXTURE_HYPRES=c('C','C'))
 #' 
 #' @return 
 #' The potassium excess index in Italy derived from extractable soil K fractions. A numeric value.
 #' 
 #' @export
 osi_nut_k_it <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='IT']
+  
+  # get max length of input data
+  arg.length <- max(length(B_LU),length(B_TEXTURE_HYPRES),length(A_K_AAA))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('IT',arg.length),
+                           B_LU = B_LU,
+                           A_K_AAA = A_K_AAA),
+               fname = 'osi_nut_k_it')
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -1077,7 +1199,7 @@ osi_nut_k_it <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_lv(A_K_DL = 45,B_TEXTURE_USDA='S')
+#' osi_nut_k_lv(B_LU = 'testcrop',A_K_DL = 45,B_TEXTURE_USDA='Sa')
 #' 
 #' @return 
 #' The potassium excess index in Latvia estimated from extractable potassium A numeric value.
@@ -1093,15 +1215,17 @@ osi_nut_k_lv <- function(A_K_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
   # dt.crops <- as.data.table(euosi::osi_crops)
   # dt.crops <- dt.crops[osi_country=='PO']
   
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
   # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
   
   # get max length of input variables
   arg.length <- max(length(A_K_DL),length(B_TEXTURE_USDA),length(B_LU))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_TEXTURE_USDA = B_TEXTURE_USDA,
+                           A_K_DL = A_K_DL),
+               fname = 'osi_nut_k_lv')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1125,13 +1249,13 @@ osi_nut_k_lv <- function(A_K_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
   #             all.x = TRUE)
   
   # convert to the OSI score
-  dt[B_TEXTURE_USDA == 'S',
+  dt[B_TEXTURE_USDA == 'Sa',
      value := osi_evaluate_logistic(x = A_K_DL, -0.02732, x0 = 117.62, v = 1.7064)]
   dt[B_TEXTURE_USDA %in% c('LoSa','SaLo'),
      value := osi_evaluate_logistic(x = A_K_DL, b = -0.02077, x0 = 154.34, v = 1.6996)]
   dt[B_TEXTURE_USDA %in% c('Lo','SaCl','SaCL'),
      value := osi_evaluate_logistic(x = A_K_DL, b = -0.01828, x0 = 175.18, v = 1.6953)]
-  dt[B_TEXTURE_USDA %in% c('Cl','ClLo', 'SiCL','SiClLo', 'SiLo','Si'),
+  dt[B_TEXTURE_USDA %in% c('Cl','ClLo', 'SiCL','SiClLo', 'SiLo','Si','SiCl'),
      value := osi_evaluate_logistic(x = A_K_DL,b = -0.01675, x0 = 192.05, v = 1.7127)]
   
   # set the order to the original inputs
@@ -1164,14 +1288,11 @@ osi_nut_k_lv <- function(A_K_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
 osi_nut_k_lt <- function(A_K_AL,A_SOM_LOI,B_LU = NA_character_) {
   
   # set visual bindings
-  id = NULL
+  osi_country = osi_indicator = id = crop_cat1 = NULL
   
   # crop data
   # dt.crops <- as.data.table(euosi::osi_crops)
   # dt.crops <- dt.crops[osi_country=='PO']
-  
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
   
   # thresholds
   # dt.thresholds <- as.data.table(euosi::osi_thresholds)
@@ -1179,6 +1300,11 @@ osi_nut_k_lt <- function(A_K_AL,A_SOM_LOI,B_LU = NA_character_) {
   
   # get max length of input variables
   arg.length <- max(length(A_K_AL),length(A_SOM_LOI),length(B_LU))
+  
+  # check inputs
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
+                           A_K_AL = A_K_AL),
+               fname = 'osi_nut_k_lt')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1217,44 +1343,6 @@ osi_nut_k_lt <- function(A_K_AL,A_SOM_LOI,B_LU = NA_character_) {
 
 
 
-#' Calculate the potassium excess index in Norway
-#' 
-#' This function calculates the potassium excess. 
-#' 
-#' @param B_LU (numeric) The crop code
-#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' @param A_K_AL (numeric) The K-content of the soil extracted with ammonium lactate (mg K / kg)
-#' 
-#' @import data.table
-#' 
-#' @examples 
-#' osi_nut_k_no(B_LU = 265,A_K_AL = 5,A_CLAY_MI=5)
-#' osi_nut_k_no(B_LU = c(265,1019),A_K_AL = c(3.5,5.5),A_CLAY_MI=c(3,5))
-#' 
-#' @return 
-#' The potassium excess index in Norway derived from extractable soil K fractions. A numeric value.
-#' 
-#' @export
-osi_nut_k_no <- function(B_LU, A_K_AL,A_CLAY_MI) {
-  
-  # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
-                   B_LU = B_LU,
-                   A_CLAY_MI = A_CLAY_MI,
-                   A_K_AL = A_K_AL,
-                   value = NA_real_)
-  
-  # evaluation soil K status
-  # https://www.nibio.no/tema/jord/gjodslingshandbok/korreksjonstabeller/kaliumkorreksjon-til-eng
-  # https://www.nibio.no/tema/jord/gjodslingshandbok/korreksjonstabeller/kalium--korn-oljevekster-potet-og-gronnsaker
-  dt[, value := OBIC::evaluate_logistic(A_K_AL,b = -0.01291, x0 = 250.2, v = 1.7261 )]
-  
-  # select value 
-  value <- dt[,value]
-  
-  # return value
-  return(value)
-}
 #' Calculate the K excess index for the Netherlands 
 #' 
 #' This function calculates the K excess of a soil, using the agronomic index used in the Netherlands.
@@ -1271,11 +1359,11 @@ osi_nut_k_no <- function(B_LU, A_K_AL,A_CLAY_MI) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_nl(B_LU = 265, B_SOILTYPE_AGR = 'dekzand',
+#' osi_nut_k_nl(B_LU = '265', B_SOILTYPE_AGR = 'dekzand',
 #' A_SOM_LOI = 4, A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
 #' A_K_CO_PO = 8.5, A_K_CC = 145)
-#' osi_nut_k_nl(265, 'dekzand',4, 11,5.4,  125,8.5, 145)
-#' osi_nut_k_nl(c(265,1019), rep('dekzand',2),c(4,6), c(11,14),
+#' osi_nut_k_nl('265', 'dekzand',4, 11,5.4,  125,8.5, 145)
+#' osi_nut_k_nl(c('265','1019'), rep('dekzand',2),c(4,6), c(11,14),
 #' c(5.4,5.6),  c(125,145),c(8.5,3.5), c(145,180))
 #' 
 #' @return
@@ -1302,6 +1390,7 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   # Load in the thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country == 'NL' & osi_indicator == 'i_c_k']
+  checkmate::assert_data_table(dt.thresholds,max.rows = 6, min.rows = 6)
   
   # convert B_LU to integer
   B_LU <- as.character(B_LU)
@@ -1310,17 +1399,18 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   arg.length <- max(length(A_PH_CC), length(A_SOM_LOI), length(A_CEC_CO), length(A_K_CO_PO), 
                     length(A_K_CC), length(A_CLAY_MI), length(B_SOILTYPE_AGR), length(B_LU))
   
-  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_character(B_SOILTYPE_AGR, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_SOILTYPE_AGR, choices = unique(dt.soils$osi_soil_cat1), empty.ok = FALSE)
-  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_PH_CC, lower = 3, upper = 10, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_K_CC, lower = 0, upper = 800, any.missing = FALSE, len = arg.length)
-  #checkmate::assert_numeric(A_K_CO_PO, lower = 0.1, upper = 50, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_CEC_CO, lower = 1, upper = 1000, any.missing = FALSE, len = arg.length)
-  checkmate::assert_data_table(dt.thresholds,max.rows = 6, min.rows = 6)
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('NL',arg.length),
+                           B_LU = B_LU,
+                           B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_SOM_LOI = A_SOM_LOI,
+                           A_K_CC = A_K_CC,
+                           A_PH_CC = A_PH_CC,
+                           A_CEC_CO = A_CEC_CO,
+                           A_K_CO_PO = A_K_CO_PO),
+               fname = 'osi_nut_k_nl')
+  
   
   # Collect the data
   dt <- data.table(id = 1:arg.length,
@@ -1332,8 +1422,7 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
                    A_CEC_CO = A_CEC_CO,
                    A_K_CO_PO = A_K_CO_PO,
                    A_K_CC = A_K_CC,
-                   value = NA_real_
-  )
+                   value = NA_real_)
   
   # merge with crop and soil classification tables
   dt <- merge(dt, dt.crops[, list(crop_code, crop_cat1)], 
@@ -1444,6 +1533,54 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   return(out)
 }
 
+
+#' Calculate the potassium excess index in Norway
+#' 
+#' This function calculates the potassium excess. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
+#' @param A_K_AL (numeric) The K-content of the soil extracted with ammonium lactate (mg K / kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_nut_k_no(B_LU = 'testcrop1',A_K_AL = 5,A_CLAY_MI=5)
+#' osi_nut_k_no(B_LU = c('testcrop1','testcrop2'),A_K_AL = c(3.5,5.5),A_CLAY_MI=c(3,5))
+#' 
+#' @return 
+#' The potassium excess index in Norway derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_nut_k_no <- function(B_LU, A_K_AL,A_CLAY_MI) {
+  
+  #get max length of inputs
+  arg.length <- max(length(B_LU),length(A_K_AL),length(A_CLAY_MI))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(A_K_AL = A_K_AL,
+                           A_CLAY_MI = A_CLAY_MI),
+               fname = 'osi_nut_k_no')
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_CLAY_MI = A_CLAY_MI,
+                   A_K_AL = A_K_AL,
+                   value = NA_real_)
+  
+  # evaluation soil K status
+  # https://www.nibio.no/tema/jord/gjodslingshandbok/korreksjonstabeller/kaliumkorreksjon-til-eng
+  # https://www.nibio.no/tema/jord/gjodslingshandbok/korreksjonstabeller/kalium--korn-oljevekster-potet-og-gronnsaker
+  dt[, value := OBIC::evaluate_logistic(A_K_AL,b = -0.01291, x0 = 250.2, v = 1.7261 )]
+  
+  # select value 
+  value <- dt[,value]
+  
+  # return value
+  return(value)
+}
+
 #' Calculate the potassium excess index in Poland
 #' 
 #' This function calculates the potassium excess. 
@@ -1455,7 +1592,7 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_pl(A_K_DL = 45,B_TEXTURE_HYPRES='C')
+#' osi_nut_k_pl(B_LU = 'testcrop1',A_K_DL = 45,B_TEXTURE_HYPRES='C')
 #' 
 #' @return 
 #' The potassium excess index in Poland estimated from extractable potassium. A numeric value.
@@ -1479,6 +1616,11 @@ osi_nut_k_pl <- function(A_K_DL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
   # get max length of input variables
   arg.length <- max(length(A_K_DL),length(B_TEXTURE_HYPRES),length(B_LU))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                           A_K_DL = A_K_DL),
+               fname = 'osi_nut_k_pl')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1534,8 +1676,8 @@ osi_nut_k_pl <- function(A_K_DL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_se(B_LU = 265,A_K_AL = 5)
-#' osi_nut_k_se(B_LU = c(265,1019),A_K_AL = c(3.5,5.5))
+#' osi_nut_k_se(B_LU = '3301061299',A_K_AL = 5)
+#' osi_nut_k_se(B_LU =  c('3301061299','3301000000'),A_K_AL = c(3.5,5.5))
 #' 
 #' @return 
 #' The potassium excess index in Sweden derived from extractable soil K fractions. A numeric value.
@@ -1543,11 +1685,34 @@ osi_nut_k_pl <- function(A_K_DL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @export
 osi_nut_k_se <- function(B_LU, A_K_AL) {
   
+  # add visual binding
+  crop_cat1 = osi_country = . = crop_code = crop_cat2 = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='SE']
+  
+  # Check length of desired input
+  arg.length <- max(length(B_LU),length(A_K_AL))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('SE',arg.length),
+                           B_LU = B_LU,
+                           A_K_AL = A_K_AL),
+               fname = 'osi_nut_k_se')
+  
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
                    A_K_AL = A_K_AL,
                    value = NA_real_)
+  
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1,crop_cat2)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # evaluation soil K status
   dt[, value := OBIC::evaluate_logistic(A_K_AL,b = -0.01225, x0 = 300.51, v = 0.5419)]
@@ -1568,31 +1733,33 @@ osi_nut_k_se <- function(B_LU, A_K_AL) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_sk(A_K_M3 = 45,B_TEXTURE_HYPRES='C')
+#' osi_nut_k_sk(B_LU = '3301010901', A_K_M3 = 45,B_TEXTURE_HYPRES='C')
 #' 
 #' @return 
 #' The potassium excess index in Slovak Republic estimated from extractable potassium. A numeric value.
 #' 
 #' @export
-osi_nut_k_sk <- function(B_TEXTURE_HYPRES,A_K_M3,B_LU = NA_character_) {
+osi_nut_k_sk <- function(B_LU, B_TEXTURE_HYPRES,A_K_M3) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
-  #crop_code = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
   
   # crop data
-  # dt.crops <- as.data.table(euosi::osi_crops)
-  # dt.crops <- dt.crops[osi_country=='PO']
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='SE']
   
-  # parameters
-  # dt.parms <- as.data.table(euosi::osi_parms)
-  
-  # thresholds
-  # dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  # dt.thresholds <- dt.thresholds[osi_country == 'FI' & osi_indicator =='i_c_p']
+  # get max length of inputs
+  arg.length <- max(length(B_LU),length(B_TEXTURE_HYPRES),length(A_K_M3))
   
   # get max length of input variables
-  arg.length <- max(length(A_K_M3),length(B_TEXTURE_HYPRES),length(B_LU))
+  arg.length <- max(length(B_LU),length(B_TEXTURE_HYPRES),length(A_K_M3))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('SK',arg.length),
+                           B_LU = B_LU,
+                           B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                           A_K_M3 = A_K_M3),
+               fname = 'osi_nut_k_sk')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1602,18 +1769,11 @@ osi_nut_k_sk <- function(B_TEXTURE_HYPRES,A_K_M3,B_LU = NA_character_) {
                    value = NA_real_)
   
   # merge crop properties
-  # dt <- merge(dt,
-  #             dt.crops[,.(crop_code,crop_cat1)],
-  #             by.x = 'B_LU', 
-  #             by.y = 'crop_code',
-  #             all.x=TRUE)
-  
-  # merge thresholds
-  # dt <- merge(dt,
-  #             dt.thresholds,
-  #             by.x = 'B_SOILTYPE_AGR',
-  #             by.y = 'osi_threshold_soilcat',
-  #             all.x = TRUE)
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # convert to the OSI score
   dt[B_TEXTURE_HYPRES %in% c('C'),
@@ -1644,7 +1804,7 @@ osi_nut_k_sk <- function(B_TEXTURE_HYPRES,A_K_M3,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_sl(A_K_AL = 45 ,B_TEXTURE_HYPRES = 'C')
+#' osi_nut_k_sl(B_LU = 'testcrop1',A_K_AL = 45 ,B_TEXTURE_HYPRES = 'C')
 #' 
 #' @return 
 #' The potassium excess index in Slovenia estimated from extractable potassium. A numeric value.
@@ -1669,6 +1829,11 @@ osi_nut_k_sl <- function(A_K_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   
   # get max length of input variables
   arg.length <- max(length(A_K_AL),length(B_TEXTURE_HYPRES),length(B_LU))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                           A_K_AL = A_K_AL),
+               fname = 'osi_nut_k_sl')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1718,8 +1883,8 @@ osi_nut_k_sl <- function(A_K_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_nut_k_uk(B_LU = 265,A_SOM_LOI=3,A_K_AN = 50)
-#' osi_nut_k_uk(B_LU = c(265,1019),A_SOM_LOI = c(3,5),A_K_AN = c(35,55))
+#' osi_nut_k_uk(B_LU = 'testcrop1',A_SOM_LOI=3,A_K_AN = 50)
+#' osi_nut_k_uk(B_LU = c('testcrop1','testcrop2'),A_SOM_LOI = c(3,5),A_K_AN = c(35,55))
 #' 
 #' @return 
 #' The potassium excess index in United Kingdom derived from extractable soil K fractions. A numeric value.
@@ -1731,8 +1896,14 @@ osi_nut_k_uk <- function(B_LU, A_SOM_LOI,A_K_AN) {
   crop_name = . = crop_cat1 = osi_country = BDS = NULL
   
   # crop properties
-  dt.crops <- as.data.table(euosi::osi_crops)
-  dt.crops <- dt.crops[osi_country=='UK']
+  #dt.crops <- as.data.table(euosi::osi_crops)
+  #dt.crops <- dt.crops[osi_country=='UK']
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
+                           A_K_AN = A_K_AN),
+               fname = 'osi_nut_k_uk')
+  
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -1742,10 +1913,13 @@ osi_nut_k_uk <- function(B_LU, A_SOM_LOI,A_K_AN) {
                    value = NA_real_)
   
   # merge with crop
-  dt <- merge(dt,
-              dt.crops[,.(B_LU, crop_name, crop_cat1)],
-              by = 'B_LU',
-              all.x = TRUE)
+  # dt <- merge(dt,
+  #             dt.crops[,.(B_LU, crop_name, crop_cat1)],
+  #             by = 'B_LU',
+  #             all.x = TRUE)
+  
+  # temporary fix
+  dt[,crop_name := B_LU]
   
   # convert from mg / kg to mg / liter sample volume
   dt[, BDS := (1/(0.02525 * A_SOM_LOI + 0.6541))]
