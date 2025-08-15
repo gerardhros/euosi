@@ -95,8 +95,9 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   dt[B_COUNTRY == 'SK', value := NA_real_]
   dt[B_COUNTRY == 'SL', value := NA_real_]
   
-  # Poland (PL), United Kingdom (UK)
+  # Poland (PL), Portugal (PT), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
+  dt[B_COUNTRY == 'PT', value := osi_c_boron_pt(B_LU = B_LU, A_B_HW = A_B_HW)]
   dt[B_COUNTRY == 'UK', value := osi_c_boron_uk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,A_B_HW = A_B_HW)]
   
   # select the output variable
@@ -117,8 +118,8 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_boron_ch(B_LU = 265,A_B_HW = 50)
-#' osi_c_boron_ch(B_LU = c(265,1019),A_B_HW = c(35,55))
+#' osi_c_boron_ch(B_LU = 'testcrop1',A_B_HW = 50)
+#' osi_c_boron_ch(B_LU = c('testcrop1','3301000000'),A_B_HW = c(35,55))
 #' 
 #' @return 
 #' The boron availability index in Switzerland derived from extractable soil B fractions. A numeric value.
@@ -130,11 +131,15 @@ osi_c_boron_ch <- function(B_LU, A_B_HW) {
   crop_name = . = crop_cat1 = osi_country = senscrop = id = NULL
   
   # crop properties
-  dt.crops <- as.data.table(euosi::osi_crops)
-  dt.crops <- dt.crops[osi_country == 'CH']
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country == 'CH']
   
   # get max length of inputs
   arg.length <- max(length(B_LU),length(A_B_HW))
+  
+  # check inputs
+  osi_checkvar(parm = list(A_B_HW = A_B_HW),
+               fname = 'osi_c_boron_ch')
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
@@ -143,10 +148,14 @@ osi_c_boron_ch <- function(B_LU, A_B_HW) {
                    value = NA_real_)
   
   # merge with crop
-  dt <- merge(dt,
-              dt.crops[,.(B_LU, crop_name, crop_cat1)],
-              by = 'B_LU',
-              all.x = TRUE)
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU',
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # temporary fix
+  dt[,crop_name := tolower(B_LU)]
   
   # evaluate risk based OSI
   dt[,value := osi_evaluate_logistic(x = A_B_HW, b = 3.12505457, x0 = -0.24198833, v = 0.03220845)]
@@ -196,8 +205,22 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'DE']
   
+  # get max length of input variables
+  arg.length <- max(length(B_LU),length(A_C_OF),length(A_CLAY_MI),length(A_SAND_MI),
+                    length(A_PH_CC),length(A_B_HW))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('DE',arg.length),
+                           B_LU = B_LU,
+                           A_C_OF = A_C_OF,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_SAND_MI = A_SAND_MI,
+                           A_PH_CC = A_PH_CC,
+                           A_B_HW = A_B_HW),
+               fname = 'osi_c_boron_de')
+  
   # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
+  dt <- data.table(id = 1: arg.length,
                    B_LU = B_LU,
                    A_C_OF= A_C_OF,
                    A_CLAY_MI = A_CLAY_MI,
@@ -223,15 +246,15 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
               all.x = TRUE)
   
   # evaluate A_B_HW for arable soils
-  dt[stype=='BG1' & crop_cat1=='arable', value := osi_evaluate_logistic(A_B_HW, b = 8.341249, x0 = -1.551311, v = 1.144485e-06)]
-  dt[stype=='BG2' & crop_cat1=='arable', value := osi_evaluate_logistic(A_B_HW, b = 26.0637369, x0 = 0.1613828  , v = 0.7724603 )]
-  dt[stype=='BG3' & crop_cat1=='arable', value := osi_evaluate_logistic(A_B_HW, b = 14.316871145, x0 = -0.261544761, v = 0.001656784 )]
-  dt[stype=='BG4' & crop_cat1=='arable', value := osi_evaluate_logistic(A_B_HW, b = 5.394509, x0 = -2.323976, v = 1.053392e-06)]
-  dt[stype=='BG5' & crop_cat1=='arable', value := osi_evaluate_logistic(A_B_HW, b = 5.394509, x0 = -2.323976, v = 1.053392e-06)]
-  dt[stype=='BG6' & crop_cat1=='arable', value := osi_evaluate_logistic(A_B_HW, b = 16.953310497 , x0 = -0.225954413  , v = 0.003793037 )]
+  dt[stype=='BG1' & crop_cat1 %in% c('maize','arable'), value := osi_evaluate_logistic(A_B_HW, b = 8.341249, x0 = -1.551311, v = 1.144485e-06)]
+  dt[stype=='BG2' & crop_cat1 %in% c('maize','arable'), value := osi_evaluate_logistic(A_B_HW, b = 26.0637369, x0 = 0.1613828  , v = 0.7724603 )]
+  dt[stype=='BG3' & crop_cat1 %in% c('maize','arable'), value := osi_evaluate_logistic(A_B_HW, b = 14.316871145, x0 = -0.261544761, v = 0.001656784 )]
+  dt[stype=='BG4' & crop_cat1 %in% c('maize','arable'), value := osi_evaluate_logistic(A_B_HW, b = 5.394509, x0 = -2.323976, v = 1.053392e-06)]
+  dt[stype=='BG5' & crop_cat1 %in% c('maize','arable'), value := osi_evaluate_logistic(A_B_HW, b = 5.394509, x0 = -2.323976, v = 1.053392e-06)]
+  dt[stype=='BG6' & crop_cat1 %in% c('maize','arable'), value := osi_evaluate_logistic(A_B_HW, b = 16.953310497 , x0 = -0.225954413  , v = 0.003793037 )]
   
   # evalute A_B_HW for grassland (no richtwerte existieren)
-  dt[crop_cat1 != 'arable', value := 1]
+  dt[!crop_cat1 %in% c('maize','arable'), value := 1]
   
   # setorder
   setorder(dt,id)
@@ -253,8 +276,8 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_boron_ie(B_LU = 265,A_B_HW = 50)
-#' osi_c_boron_ie(B_LU = c(265,1019),A_B_HW = c(35,55))
+#' osi_c_boron_ie(B_LU = 'testcrop',A_B_HW = 50)
+#' osi_c_boron_ie(B_LU = c('testcrop1','testcrop2'),A_B_HW = c(35,55))
 #' 
 #' @return 
 #' The boron availability index in Ireland derived from extractable soil B fractions. A numeric value.
@@ -263,11 +286,15 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
 osi_c_boron_ie <- function(B_LU, A_B_HW) {
   
   # add visual bindings
-  id = . = crop_cat1 = crop_name = osi_country = senscrop = NULL
+  id = . = crop_cat1 = crop_name = osi_country = crop_code = senscrop = NULL
   
   # crop properties
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'IE']
+  
+  # check inputs
+  osi_checkvar(parm = list(A_B_HW = A_B_HW),
+               fname = 'osi_c_boron_ie')
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -277,9 +304,10 @@ osi_c_boron_ie <- function(B_LU, A_B_HW) {
   
   # merge with crop
   dt <- merge(dt,
-              dt.crops[,.(B_LU, crop_name, crop_cat1)],
-              by = 'B_LU',
-              all.x = TRUE)
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # evaluate risk based OSI
   dt[,value := osi_evaluate_logistic(x = A_B_HW, b = 3.7254881, x0 = 0.3723286 , v = 0.4226000 )]
@@ -317,36 +345,41 @@ osi_c_boron_ie <- function(B_LU, A_B_HW) {
 osi_c_boron_fr <- function(B_LU,A_CLAY_MI, A_B_HW) {
   
   # set visual bindings
-  i_c_bo = osi_country = osi_indicator = id = crop_cat1 = NULL
+  i_c_bo = osi_country = osi_indicator = id = crop_cat1 = . = crop_code = NULL
   soil_cat_bo = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'FR']
   
-  # Load in parms dataset (to be used later for upper and lowe rlimits)
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
-  # load the threshold values
+   # load the threshold values
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country=='FR' & osi_indicator=='i_c_b']
+  checkmate::assert_data_table(dt.thresholds,max.rows = 2)
   
   # Check length of desired input
   arg.length <- max(length(A_CLAY_MI),length(A_B_HW),length(B_LU))
   
-  # check the values (update the limits later via dt.parms)
-  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_numeric(A_B_HW, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
-  checkmate::assert_data_table(dt.thresholds,max.rows = 2)
-  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('FR',arg.length),
+                           B_LU = B_LU,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_B_HW = A_B_HW),
+               fname = 'osi_c_boron_fr')
+
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    A_B_HW = A_B_HW,
                    A_CLAY_MI = A_CLAY_MI,
                    value = NA_real_)
+  
+  # merge with crop
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # set soil class for merging with threshold
   dt[, soil_cat_bo := fifelse(A_CLAY_MI > 50,'clay','other')]
@@ -362,7 +395,7 @@ osi_c_boron_fr <- function(B_LU,A_CLAY_MI, A_B_HW) {
   dt[, value := evaluate_logistic(x = A_B_HW, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
   
   # exlcude other crops that a subset
-  dt[!B_LU %in% c('DFV','TRN','FVL'), value := 1]
+  dt[!B_LU %in% c('DFV','TRN','FVL','3301020100','3301060500'), value := 1]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -374,6 +407,72 @@ osi_c_boron_fr <- function(B_LU,A_CLAY_MI, A_B_HW) {
   
 }
 
+#' Calculate the boron availability index in Portugal
+#' 
+#' This function calculates the boron availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_B_HW (numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water 
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_boron_pt(B_LU = '3301010901',A_B_HW = 50)
+#' osi_c_boron_pt(B_LU = c('3301010901','3304990000'),A_B_HW = c(35,55))
+#' 
+#' @return 
+#' The boron availability index in Portugal derived from extractable soil B fractions. A numeric value.
+#' 
+#' @export
+osi_c_boron_pt <- function(B_LU, A_B_HW) {
+  
+  # add visual bindings
+  id = . = crop_cat1 = crop_name = osi_country = crop_code = senscrop = NULL
+  
+  # crop properties
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'PT']
+  
+  # get max length of input variables
+  arg.length <- max(length(A_B_HW),length(B_LU))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('PT',arg.length),
+                           B_LU = B_LU,
+                           A_B_HW = A_B_HW),
+               fname = 'osi_c_boron_pt')
+  
+  # internal data.table
+  dt <- data.table(id = 1: length(B_LU),
+                   B_LU = B_LU,
+                   A_B_HW = A_B_HW,
+                   value = NA_real_)
+  
+  # merge with crop
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
+  # evaluate risk based OSI
+  dt[,value := osi_evaluate_logistic(x = A_B_HW, b = 1.16763287, x0 = -2.75664117 , v = 0.03016244  )]
+  
+  # set risk cases for specific cases
+  # dt[, senscrop := fifelse(grepl('swedes|turnip|rape|beet|mangel|celery|carrot|brassica|radish|cabbage|cauliflo|broccol|sprout',tolower(crop_name)),'yes','no')]
+  
+  # OSI score only for bron sensitive crops, others no issue
+  # dt[senscrop=='no',value := 1]
+  
+  # setorder
+  setorder(dt,id)
+  
+  # select value
+  value <- dt[,value]
+  
+  # return value
+  return(value)
+}
 #' Calculate the B availability index for agricultural soils in the Netherlands 
 #' 
 #' This function calculates the B availability of a soil, using the agronomic index used in France
@@ -400,23 +499,21 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'NL']
   
-  # Load in parms dataset (to be used later for upper and lowe rlimits)
-  dt.parms <- as.data.table(euosi::osi_parms)
-  
   # load the threshold values
   dt.thresholds <- as.data.table(euosi::osi_thresholds)
   dt.thresholds <- dt.thresholds[osi_country=='NL' & osi_indicator=='i_c_b']
+  checkmate::assert_data_table(dt.thresholds,max.rows = 2)
   
   # Check length of desired input
   arg.length <- max(length(A_CLAY_MI),length(A_B_HW),length(B_LU))
   
-  # check the values (update the limits later via dt.parms)
-  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
-  checkmate::assert_numeric(A_SOM_LOI, lower = 0, upper = 100, any.missing = FALSE, len = arg.length)
-  checkmate::assert_numeric(A_B_HW, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0.001, upper = 100, any.missing = TRUE, len = arg.length)
-  checkmate::assert_data_table(dt.thresholds,max.rows = 2)
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('NL',arg.length),
+                           B_LU = B_LU,
+                           A_SOM_LOI = A_SOM_LOI,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_B_HW = A_B_HW),
+               fname = 'osi_c_boron_nl')
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -428,9 +525,10 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
   
   # merge with crop
   dt <- merge(dt,
-              dt.crops[,.(B_LU = crop_code, crop_cat1)],
-              by = 'B_LU',
-              all.x = TRUE)
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # set soil class for merging with threshold
   dt[, soil_cat_bo := fifelse(A_CLAY_MI > 50,'clay','other')]
@@ -465,8 +563,8 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_boron_se(B_LU = 265,A_PH_WA = 5.0)
-#' osi_c_boron_se(B_LU = c(265,1019),A_PH_WA = c(3.5,5.5))
+#' osi_c_boron_se(B_LU = '3301010901',A_PH_WA = 5.0)
+#' osi_c_boron_se(B_LU = c('3301010901','3301061299'),A_PH_WA = c(3.5,5.5))
 #' 
 #' @return 
 #' The boron availability index in Sweden depends primarily on pH. A numeric value.
@@ -474,24 +572,34 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
 #' @export
 osi_c_boron_se <- function(B_LU, A_PH_WA) {
   
-  # add visual bindings
-  osi_country = NULL
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
   
-  # crop properties
+  # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
-  dt.crops <- dt.crops[osi_country == 'SE']
+  dt.crops <- dt.crops[osi_country=='SE']
+  
+  # get max length of input variables
+  arg.length <- max(length(A_PH_WA),length(B_LU))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep('SE',arg.length),
+                           B_LU = B_LU,
+                           A_PH_WA = A_PH_WA),
+               fname = 'osi_c_boron_se')
   
   # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
+  dt <- data.table(id = 1: arg.length,
                    B_LU = B_LU,
                    A_PH_WA = A_PH_WA,
                    value = NA_real_)
   
   # merge with crop
-  # dt <- merge(dt,
-  #             dt.crops[,.(B_LU, crop_name, crop_cat1)],
-  #             by = 'B_LU',
-  #             all.x = TRUE)
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # evaluate risk based OSI
   dt[,value := osi_evaluate_logistic(x = A_PH_WA, b = 3.675897945, x0 = 3.750990339, v = 0.001025269)]
@@ -516,9 +624,9 @@ osi_c_boron_se <- function(B_LU, A_PH_WA) {
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_boron_uk(B_LU = '265',B_TEXTURE_HYPRES='C',A_SOM_LOI=3,
+#' osi_c_boron_uk(B_LU = 'testcrop1',B_TEXTURE_HYPRES='C',A_SOM_LOI=3,
 #' A_PH_CC = 4,A_B_HW = 50)
-#' osi_c_boron_uk(B_LU = c('265','1019'),B_TEXTURE_HYPRES = c('C','F'),
+#' osi_c_boron_uk(B_LU = c('testcrop1','testcrop2'),B_TEXTURE_HYPRES = c('C','F'),
 #' A_SOM_LOI = c(3,3),A_PH_CC = c(4,6),A_B_HW = c(35,55))
 #' 
 #' @return 
@@ -534,6 +642,13 @@ osi_c_boron_uk <- function(B_LU, B_TEXTURE_HYPRES,A_SOM_LOI,A_PH_CC,A_B_HW) {
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country == 'UK']
   
+  # check inputs
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
+                           B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                           A_B_HW = A_B_HW,
+                           A_PH_CC = A_PH_CC),
+               fname = 'osi_c_boron_uk')
+  
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = as.character(B_LU),
@@ -546,9 +661,10 @@ osi_c_boron_uk <- function(B_LU, B_TEXTURE_HYPRES,A_SOM_LOI,A_PH_CC,A_B_HW) {
   
   # merge with crop
   dt <- merge(dt,
-              dt.crops[,.(B_LU = crop_code, crop_name, crop_cat1)],
-              by = 'B_LU',
-              all.x = TRUE)
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
   
   # convert from mg / kg to mg / liter sample volume
   dt[, BDS := (1/(0.02525 * A_SOM_LOI + 0.6541))]
