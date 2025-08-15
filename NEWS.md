@@ -1,3 +1,12 @@
+# euosi 0.6.0 UNRELEASED
+
+## Added
+
+## Fixed
+* `osi_c_ph_fr` updated hard coded sugar beet filter
+
+## Changed
+
 # euosi 0.5.0 2025-08-25
 
 ## Added
