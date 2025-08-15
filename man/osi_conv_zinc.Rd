@@ -7,8 +7,9 @@
 osi_conv_zinc(
   element,
   A_SOM_LOI,
-  A_ZN_RT,
   A_PH_CC,
+  A_ZN_RT,
+  A_ZN_AAA = NA_real_,
   A_ZN_CC = NA_real_,
   A_ZN_CO = NA_real_,
   A_ZN_DTPA = NA_real_,
@@ -22,9 +23,11 @@ osi_conv_zinc(
 
 \item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil (\%)}
 
+\item{A_PH_CC}{(numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)}
+
 \item{A_ZN_RT}{(numeric) The total Zn-content of the soil via XRF or Dumas (mg Zn/kg)}
 
-\item{A_PH_CC}{(numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)}
+\item{A_ZN_AAA}{(numeric) The exchangeable Zn-content of the soil measured via acid amonium acetate (mg Zn/kg)}
 
 \item{A_ZN_CC}{(numeric) The exchangeable Zn-content of the soil measured via 0.01M CaCl2 (ug Zn/kg)}
 

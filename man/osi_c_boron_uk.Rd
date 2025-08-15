@@ -24,9 +24,9 @@ The boron availability index in UK derived from extractable soil B fractions. A 
 This function calculates the boron availability.
 }
 \examples{
-osi_c_boron_uk(B_LU = '265',B_TEXTURE_HYPRES='C',A_SOM_LOI=3,
+osi_c_boron_uk(B_LU = 'testcrop1',B_TEXTURE_HYPRES='C',A_SOM_LOI=3,
 A_PH_CC = 4,A_B_HW = 50)
-osi_c_boron_uk(B_LU = c('265','1019'),B_TEXTURE_HYPRES = c('C','F'),
+osi_c_boron_uk(B_LU = c('testcrop1','testcrop2'),B_TEXTURE_HYPRES = c('C','F'),
 A_SOM_LOI = c(3,3),A_PH_CC = c(4,6),A_B_HW = c(35,55))
 
 }

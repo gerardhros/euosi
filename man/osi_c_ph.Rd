@@ -11,6 +11,7 @@ osi_c_ph(
   A_SAND_MI = NA_real_,
   A_SOM_LOI = NA_real_,
   A_C_OF = NA_real_,
+  A_CEC_CO = NA_real_,
   A_CA_CO_PO = NA_real_,
   A_MG_CO_PO = NA_real_,
   A_K_CO_PO = NA_real_,
@@ -33,6 +34,8 @@ osi_c_ph(
 \item{A_SOM_LOI}{(numeric) The organic matter content of the soil (\%)}
 
 \item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
+
+\item{A_CEC_CO}{(numeric) The cation exchange capacity of the soil (mmol+ / kg), analyzed via Cobalt-hexamine extraction}
 
 \item{A_CA_CO_PO}{(numeric) The calcium occupation of the CEC (\%)}
 

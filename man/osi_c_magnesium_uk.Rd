@@ -20,7 +20,7 @@ The magnesium availability index in United Kingdom derived from extractable soil
 This function calculates the magnesium availability.
 }
 \examples{
-osi_c_magnesium_uk(B_LU = 265,A_SOM_LOI=3,A_MG_AN = 50)
-osi_c_magnesium_uk(B_LU = c(265,1019),A_SOM_LOI = c(3,5),A_MG_AN = c(35,55))
+osi_c_magnesium_uk(B_LU = 'testcrop1',A_SOM_LOI=3,A_MG_AN = 50)
+osi_c_magnesium_uk(B_LU = c('testcrop1','testcrop2'),A_SOM_LOI = c(3,5),A_MG_AN = c(35,55))
 
 }
