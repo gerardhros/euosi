@@ -101,9 +101,10 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
   dt[B_COUNTRY == 'CZ', value := NA_real_]
   dt[B_COUNTRY == 'DE', value := osi_c_zinc_de(B_LU = B_LU,A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_ZN_EDTA = A_ZN_EDTA)]
   
-  # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
+  # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
   dt[B_COUNTRY == 'EE', value := NA_real_]
+  dt[B_COUNTRY == 'EL', value := NA_real_]
   dt[B_COUNTRY == 'ES', value := NA_real_]
   dt[B_COUNTRY == 'FR', value := osi_c_zinc_fr(B_LU = B_LU,A_PH_WA = A_PH_WA,A_ZN_EDTA = A_ZN_EDTA)]
   dt[B_COUNTRY == 'FI', value := NA_real_]

@@ -73,9 +73,10 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   dt[B_COUNTRY == 'CZ', value := NA_real_]
   dt[B_COUNTRY == 'DE', value := osi_c_boron_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_PH_CC = A_PH_CC, A_B_HW = A_B_HW)]
   
-  # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
+  # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
   dt[B_COUNTRY == 'EE', value := NA_real_]
+  dt[B_COUNTRY == 'EL', value := NA_real_]
   dt[B_COUNTRY == 'ES', value := NA_real_]
   dt[B_COUNTRY == 'FR', value := osi_c_boron_fr(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_B_HW = A_B_HW)]
   dt[B_COUNTRY == 'FI', value := NA_real_]

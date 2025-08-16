@@ -84,6 +84,27 @@ test_that("osi_c_magnesium_at works", {
   )
 })
 
+test_that("osi_c_magnesium_be works", {
+  expect_equal(
+    osi_c_magnesium_be(A_MG_CC = 47,
+                       B_LU = '3301000000'),
+    expected = c(0.9916),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_be(A_MG_CC = rep(47,4),
+                       B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected = rep(0.9916,4),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_be(A_MG_CC = c(5,10,20,40),
+                       B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected = c(0.08891171, 0.18163437, 0.54086819, 0.97281577),
+    tolerance = 0.01
+  )
+})
+
 test_that("osi_c_magnesium_ch works", {
   expect_equal(
     osi_c_magnesium_ch(B_LU = 'testcrop', A_MG_AAA = 50, A_CLAY_MI=15),
@@ -446,6 +467,28 @@ test_that("osi_c_magnesium_nl works", {
                        A_MG_CC = c(15,25,30,50),
                        A_K_CC = c(20,40,60,80)),
     expected = c(0.075,0.1788,0.2694,0.8801),
+    tolerance = 0.01
+  )
+})
+
+
+test_that("osi_c_magnesium_no works", {
+  expect_equal(
+    osi_c_magnesium_no(A_MG_AL = 47,
+                       B_LU = '3301000000'),
+    expected = c(0.9909),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_no(A_MG_AL = rep(47,4),
+                       B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected = rep(0.9909823,4),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_no(A_MG_AL = c(5,10,20,40),
+                       B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected = c(0.09185132, 0.15394335, 0.40575098, 0.96294923),
     tolerance = 0.01
   )
 })

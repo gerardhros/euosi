@@ -43,6 +43,42 @@ findoptvalue <- function(spool, spoolopt,p0 = NULL) {
 # indicate a high, medium, and low probability of Mg deficiency.
 # https://www.icpa.ro/documente/coduri/Evaluarea_continutului_de_nutrienti_din_sol.pdf
 
+# Belgium Magnesium, optimum 45 (mg Mg/kg) 
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(1,2.5,10,(10+20)/2,21,1.5*20)*45/21
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Norway Magnesium, optimum 45 (mg Mg/kg) 
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(1,5,25,(25+45)/2,45,1.5*45)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Greece soil pH-water sand
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(1,4,4.5,5.5,6.1,7)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+    
+# Greece soil pH-water others textures
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(1,4,4.5,5.5,6.6,7.6)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Greece soilESP evaluation
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(15,12,(6+15)/2,8,6.6,1)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
 # Greece phosphours P-Olsen (mg P/kg) 
 # evaluation soil (A+, A, B, C, D, E)  
 spool <- c(1,2.5,10,(10+20)/2,21,1.5*20)
