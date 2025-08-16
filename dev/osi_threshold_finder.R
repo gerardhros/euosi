@@ -25,6 +25,37 @@ findoptvalue <- function(spool, spoolopt,p0 = NULL) {
   return(xpar)
 }
 
+# Romenia K-AL (mg K/kg)
+# evaluation soil (A+, A, B, C, D, E) sand
+spool <- c(1,50,(50),100,150,200)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# evaluation soil (A+, A, B, C, D, E) loamy sand
+spool <- c(1,50,(100),150,200,1.5*200)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# evaluation soil (A+, A, B, C, D, E) loamy sand
+spool <- c(1,66,(66+132)/2,(132+200)/2,201,1.5*265)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+# evaluation soil (A+, A, B, C, D, E) F and VF
+spool <- c(1,80,(80+160)/2,(160+240)/2,241,1.5*320)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Romenia P-PAL (mg P/kg)
+# evaluation soil (A+, A, B, C, D, E)
+spool <- c(1,2,(8+18)/2,(18+36)/2,37,1.5*72)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
 # Portugal P-Olsen (mg P2O5/kg)
 # evaluation soil pool peat (A+, A, B, C, D, E)
 spool <- c(1,18,(18+34)/2,(35+56)/2,57,1.5*115)
@@ -1573,6 +1604,8 @@ get_p_nut(pb = 1.3,px0=1.3,pv=0.35,nx0=2.5)
 get_p_nut(pb= 0.09801777,px0 = -20.28710038,pv = 0.0218218)
 # portugal
 get_p_nut(pb= 0.17869351 ,px0 = 3.01230206 ,pv = 0.03047017 )
+# romenai
+get_p_nut(pb= 0.1387092   ,px0 = -18.0674770 ,pv = 0.0252298 )
 #sweden
 rbind(
 get_p_nut(pb = 0.126197, px0 = 14.6487, pv = 0.46202),
@@ -1710,6 +1743,12 @@ get_k_nut(pb= 0.070369841,px0 = 4.237044272,pv = 0.007390134)
 get_k_nut(pb= 0.070110090,px0 = 0.702553221,pv = 0.001352746)
 #portugal
 get_k_nut( pb = 0.07362818 , px0 = 0.51818429 , pv = 0.02380852)
+# romenia
+get_k_nut( pb= 0.04691703,px0 = 3.13861224,pv = 0.10035566)
+get_k_nut( pb= 0.03211084,px0 = 3.42618554,pv = 0.08696479)
+get_k_nut( pb= 0.04247343,px0 = 3.02608975,pv = 0.03096234)
+get_k_nut( pb= 0.03502668,px0 = 3.35427054,pv = 0.03066438)
+
 #sweden
 get_k_nut( pb = 0.111091036  , px0 = -11.438986748 , pv = 0.007796498)
 
