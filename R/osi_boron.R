@@ -98,6 +98,7 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   # Poland (PL), Portugal (PT), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
   dt[B_COUNTRY == 'PT', value := osi_c_boron_pt(B_LU = B_LU, A_B_HW = A_B_HW)]
+  dt[B_COUNTRY == 'RO', value := NA_real_]
   dt[B_COUNTRY == 'UK', value := osi_c_boron_uk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,A_B_HW = A_B_HW)]
   
   # select the output variable

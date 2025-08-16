@@ -193,6 +193,7 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   # Poland (PL), Portugal, and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_c_magnesium_pl(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_CC = A_MG_CC)]
   dt[B_COUNTRY == 'PT', value := osi_c_magnesium_pt(B_LU = B_LU, A_MG_AAA = A_MG_AAA)]
+  dt[B_COUNTRY == 'RO', value := NA_real_]
   dt[B_COUNTRY == 'UK', value := osi_c_magnesium_uk(B_LU = B_LU,A_SOM_LOI = A_SOM_LOI,A_MG_AN = A_MG_AN)]
   
   # select the output variable

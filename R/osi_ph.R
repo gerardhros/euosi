@@ -141,11 +141,12 @@ osi_c_ph <- function(B_LU,
   dt[B_COUNTRY == 'SK', value := NA_real_]
   dt[B_COUNTRY == 'SL', value := NA_real_]
   
-  # Poland (PL), Portugal (PT), and United Kingdom (UK)
+  # Poland (PL), Portugal (PT), Romenia (RO) and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
   dt[B_COUNTRY == 'PT', value := osi_c_ph_pt(B_LU = B_LU, A_CEC_CO = A_CEC_CO,A_PH_WA = A_PH_WA,
                                              A_CA_CO_PO = A_CA_CO_PO, A_MG_CO_PO= A_MG_CO_PO, 
                                              A_K_CO_PO = A_K_CO_PO, A_NA_CO_PO= A_NA_CO_PO)]
+  dt[B_COUNTRY == 'RO', value := NA_real_]
   dt[B_COUNTRY == 'UK', value := osi_c_ph_uk(B_LU = B_LU, A_PH_WA = A_PH_WA, A_SOM_LOI = A_SOM_LOI)]
   
   # select the output variable
