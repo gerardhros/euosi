@@ -112,9 +112,10 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
   dt[B_COUNTRY == 'SK', value := NA_real_]
   dt[B_COUNTRY == 'SL', value := NA_real_]
   
-  # Poland (PL), Portugal (PT), United Kingdom (UK)
+  # Poland (PL), Portugal (PT), Romania (RO), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
   dt[B_COUNTRY == 'PT', value := osi_c_zinc_pt(B_LU = B_LU, A_ZN_AAA = A_ZN_AAA, A_PH_CC = A_PH_CC)]
+  dt[B_COUNTRY == 'RO', value := NA_real_]
   dt[B_COUNTRY == 'UK', value := osi_c_zinc_uk(B_LU = B_LU,A_PH_WA = A_PH_WA, A_ZN_EDTA = A_ZN_EDTA)]
   
   # select the output variable
