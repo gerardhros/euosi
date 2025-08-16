@@ -193,7 +193,8 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   # Poland (PL), Portugal, and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_c_magnesium_pl(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_CC = A_MG_CC)]
   dt[B_COUNTRY == 'PT', value := osi_c_magnesium_pt(B_LU = B_LU, A_MG_AAA = A_MG_AAA)]
-  dt[B_COUNTRY == 'RO', value := NA_real_]
+  dt[B_COUNTRY == 'RO', value := osi_c_magnesium_ro(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_CEC_CO = A_CEC_CO,
+                                                    A_MG_CC = A_MG_CC, A_MG_CO_PO = A_MG_CO_PO,A_K_CO_PO = A_K_CO_PO, A_PH_WA = 5)]
   dt[B_COUNTRY == 'UK', value := osi_c_magnesium_uk(B_LU = B_LU,A_SOM_LOI = A_SOM_LOI,A_MG_AN = A_MG_AN)]
   
   # select the output variable
@@ -1522,6 +1523,95 @@ osi_c_magnesium_pt <- function(B_LU,A_MG_AAA) {
   
 }
 
+#' Calculate the magnesium availability index in Romenia
+#' 
+#' This function calculates the magnesium availability index 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#' @param A_CEC_CO (numeric) is the Cation exhange capacity in mmol+/kg 
+#' @param A_MG_CC (numeric) The plant available content of Mg in the soil (mg  Mg per kg) extracted by 0.01M CaCl2
+#' @param A_MG_CO_PO (numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+#' @param A_K_CO_PO (numeric) The exchangeable K-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+#' @param A_PH_WA (numeric) The pH measured in water
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_magnesium_ro(B_LU = 'testcrop1',B_TEXTURE_HYPRES ='M', A_CEC_CO = 140,
+#' A_MG_CC = 60, A_MG_CO_PO = 8,A_K_CO_PO = 12, A_PH_WA = 5)
+#' 
+#' @return 
+#' The Mg index in Romenia. A numeric value.
+#' 
+#' @export
+osi_c_magnesium_ro <- function(B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_CEC_CO, A_MG_CC,A_MG_CO_PO,A_K_CO_PO,A_PH_WA) {
+  
+  # add visual bindings
+  crop_code = v1 = v2 = crop_cat1 = crop_name = id = . = osi_country = NULL
+  ICMG = A_K_CO = A_MG_CO = NULL
+  
+  # crop data
+  #dt.crops <- as.data.table(euosi::osi_crops)
+  #dt.crops <- dt.crops[osi_country=='UK']
+  
+  # get max length of inputs
+  arg.length <- max(length(B_LU),length(A_PH_WA),length(A_MG_CC),
+                    length(A_CEC_CO),length(A_MG_CO_PO),length(A_K_CO_PO))
+  
+  # check inputs
+  osi_checkvar(parm = list(A_PH_WA = A_PH_WA,
+                           A_CEC_CO = A_CEC_CO,
+                           A_MG_CO_PO = A_MG_CO_PO,
+                           A_K_CO_PO = A_K_CO_PO,
+                           A_MG_CC = A_MG_CC),
+               fname = 'osi_c_magnesium_ro')
+  
+  # internal data.table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = as.character(B_LU),
+                   A_MG_CC = A_MG_CC,
+                   A_CEC_CO = A_CEC_CO,
+                   A_MG_CO_PO = A_MG_CO_PO,
+                   A_K_CO_PO = A_K_CO_PO,
+                   A_PH_WA = A_PH_WA,
+                   value = NA_real_)
+  
+  # convert exchnageable cations to mg/kg
+  dt[,A_MG_CO := A_CEC_CO * A_MG_CO_PO * 24.305 * 0.5]
+  dt[,A_K_CO := A_CEC_CO * A_K_CO_PO * 39.098]
+  
+  # estimate the ICMg ratio conrom te Borlan (în Lăcătuşu, 2000)
+  dt[, ICMG := A_MG_CO  * (1.1 ^ (-0.555 * (A_PH_WA - 4))) / A_K_CO] 
+  
+  # https://agil.ase.ro/wp-content/uploads/2025/02/3_Monitorizarea_caltatii_mediului.pdf
+  # https://www.icpa.ro/documente/coduri/Evaluarea_continutului_de_nutrienti_din_sol.pdf
+  
+  # convert MG availability to the OSI score
+  dt[B_TEXTURE_HYPRES %in% c('C'),
+     v1 := osi_evaluate_logistic(x = A_MG_CC, b= 0.08905224, x0 = 2.84842622,v = 0.25877337)]
+  dt[B_TEXTURE_HYPRES %in% c('MF','M'),
+     v1 := osi_evaluate_logistic(x = A_MG_CC, b= 0.1088578, x0 = 34.9119749,v = 1.3515142)]
+  dt[B_TEXTURE_HYPRES %in% c('F','VF'),
+     v1 := osi_evaluate_logistic(x = A_MG_CC, b= 0.07968356, x0 = 66.91305622,v = 1.97228574 )]
+  
+  # asses the K-Mg index as well
+  dt[, v2 := osi_evaluate_logistic(ICMG, b = 7.042036, x0 = -1.619893, v = 3.578662e-06)]
+  
+  # select or combine both indices
+  dt[is.na(v2), value := v1]
+  dt[!is.na(v2), value := (cf_ind_importance(v1)*v1 + cf_ind_importance(v2) * v2)/
+                          (cf_ind_importance(v1) + cf_ind_importance(v2))]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # select value
+  value <- dt[, value]
+  
+  # return
+  return(value)
+}
 
 #' Calculate the magnesium availability index in Sweden
 #' 

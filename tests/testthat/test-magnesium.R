@@ -496,6 +496,43 @@ test_that("osi_c_magnesium_pt works", {
   )
 })
 
+
+test_that("osi_c_magnesium_ro works", {
+  expect_equal(
+    osi_c_magnesium_ro(B_LU = 'testcrop', 
+                       B_TEXTURE_HYPRES ='M', 
+                       A_CEC_CO = 140,
+                       A_MG_CC = 60, 
+                       A_MG_CO_PO = 8,
+                       A_K_CO_PO = 12, 
+                       A_PH_WA = 5),
+    expected = c(0.6392354),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_ro(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                       B_TEXTURE_HYPRES = rep('M',4), 
+                       A_CEC_CO = rep(140,4),
+                       A_MG_CC = c(20,40,60,80), 
+                       A_MG_CO_PO = rep(8,4),
+                       A_K_CO_PO = c(2,3,4,5) ,
+                       A_PH_WA = rep(5,4)),
+    expected = c(0.4684300, 0.8334871, 0.9533450, 0.9420577),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_ro(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                       B_TEXTURE_HYPRES = rep('M',4), 
+                       A_CEC_CO = rep(140,4),
+                       A_MG_CC = rep(40,4), 
+                       A_MG_CO_PO = c(2,3,4,5),
+                       A_K_CO_PO = c(2,3,4,5) ,
+                       A_PH_WA = rep(5,4)),
+    expected = c(0.6956271, 0.6956271, 0.6956271, 0.6956271),
+    tolerance = 0.01
+  )
+})
+
 test_that("osi_c_magnesium_se works", {
   expect_equal(
     osi_c_magnesium_se(B_LU = '3301000000', 
