@@ -151,6 +151,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                              A_SOM_LOI = A_SOM_LOI, A_C_OF = A_C_OF,
                              A_PH_WA = NA_real_, A_PH_CC = A_PH_CC,
                              A_ZN_EDTA = NA_real_,A_ZN_CC = A_ZN_CC, A_ZN_RT=A_ZN_RT,
+                             A_P_OL = A_P_OL,
                              B_COUNTRY = B_COUNTRY)]
     
     # calculate OSI indicator for soil pH

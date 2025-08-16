@@ -8,6 +8,7 @@
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
 #' @param A_C_OF (numeric) The carbon content of the soil layer (g/ kg)
 #' @param A_PH_WA (numeric) The acidity of the soil, measured in water (-)
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P / kg)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-) 
 #' @param A_ZN_EDTA (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by EDTA 
 #' @param A_ZN_CC (numeric) The plant available content of Zn in the soil (ug  Zn per kg) extracted by 0.01M CaCl2
@@ -26,15 +27,18 @@
 #' @export
 osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = NA_real_,
                        A_SOM_LOI = NA_real_,A_PH_WA = NA_real_,A_PH_CC = NA_real_,A_ZN_RT = NA_real_,
-                       A_ZN_EDTA = NA_real_,A_ZN_CC = NA_real_, B_COUNTRY) {
+                       A_ZN_EDTA = NA_real_,A_ZN_CC = NA_real_, A_P_OL = NA_real_, B_COUNTRY) {
   
   # add visual bindings
-  value = A_SILT_MI = A_ZN_AAA = NULL
+  value = A_SILT_MI = A_ZN_AAA = A_P_AL = NULL
   
   # desired length of inputs
   arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),length(A_C_OF),
                     length(A_SOM_LOI), length(A_PH_WA), length(A_PH_CC),length(A_ZN_RT), 
                     length(A_ZN_EDTA), length(A_ZN_CC))
+  
+  # repeat A_P_OL if only one default is given
+  if(length(A_P_OL)==1 & arg.length > 1){A_P_OL <- rep(A_P_OL,arg.length)}
   
   # check inputs
   osi_checkvar(parm = list(B_LU = B_LU,
@@ -42,6 +46,7 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
                            A_CLAY_MI = A_CLAY_MI,
                            A_SAND_MI = A_SAND_MI,
                            A_SOM_LOI = A_SOM_LOI,
+                           A_P_OL = A_P_OL,
                            A_PH_CC = A_PH_CC,
                            A_ZN_RT = A_ZN_RT),
                fname ='osi_c_zinc')
@@ -57,6 +62,7 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
                    B_COUNTRY = B_COUNTRY,
                    A_PH_WA = A_PH_WA,
                    A_PH_CC = A_PH_CC,
+                   A_P_AL = A_P_AL,
                    A_ZN_RT = A_ZN_RT,
                    A_ZN_EDTA = A_ZN_EDTA,
                    A_ZN_CC = A_ZN_CC,
@@ -73,10 +79,14 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
   dt[!is.na(A_ZN_RT) & is.na(A_ZN_EDTA), A_ZN_EDTA := osi_conv_zinc(element = 'A_ZN_EDTA',A_SOM_LOI = A_SOM_LOI, A_ZN_RT = A_ZN_RT,A_PH_CC = A_PH_CC)]
   dt[!is.na(A_ZN_RT) & is.na(A_ZN_AAA), A_ZN_AAA := osi_conv_zinc(element = 'A_ZN_AAA',A_SOM_LOI = A_SOM_LOI, A_ZN_RT = A_ZN_RT,A_PH_CC = A_PH_CC)]
   
+  # estimate A_P_AL from A_P_OL
+  dt[is.na(A_P_AL) & !is.na(A_P_OL), A_P_AL := osi_conv_phosphor(element='A_P_AL',A_P_OL = A_P_OL,A_PH_CC = A_PH_CC)]
+  
   # check updated soil properties
   osi_checkvar(parm = list(A_SOM_LOI = dt$A_SOM_LOI,
                            A_C_OF = dt$A_C_OF,
                            A_PH_WA = dt$A_PH_WA,
+                           A_P_AL = dt$A_P_AL,
                            A_PH_CC = dt$A_PH_CC,
                            A_ZN_CC = dt$A_ZN_CC,
                            A_ZN_EDTA = dt$A_ZN_EDTA),
@@ -523,6 +533,7 @@ osi_c_zinc_ro <- function(B_LU, A_PH_WA, A_P_AL, A_ZN_EDTA) {
   
   # set visual bindings
   value = osi_country = osi_indicator = id = crop_cat1 = . = osi_crops = v1 = v2 = NULL
+  fr = irpm = iczn = NULL
   
   # Load in the datasets
   # dt.crops <- as.data.table(euosi::osi_crops)

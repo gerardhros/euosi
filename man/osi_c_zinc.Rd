@@ -15,6 +15,7 @@ osi_c_zinc(
   A_ZN_RT = NA_real_,
   A_ZN_EDTA = NA_real_,
   A_ZN_CC = NA_real_,
+  A_P_OL = NA_real_,
   B_COUNTRY
 )
 }
@@ -38,6 +39,8 @@ osi_c_zinc(
 \item{A_ZN_EDTA}{(numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by EDTA}
 
 \item{A_ZN_CC}{(numeric) The plant available content of Zn in the soil (ug  Zn per kg) extracted by 0.01M CaCl2}
+
+\item{A_P_OL}{(numeric) The P-content of the soil extracted with Olsen (mg P / kg)}
 
 \item{B_COUNTRY}{(character) The country code}
 }
