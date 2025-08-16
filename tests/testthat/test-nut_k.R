@@ -238,6 +238,28 @@ test_that("osi_nut_k_ee works", {
   )
 })
 
+
+test_that("osi_nut_k_el works", {
+  expect_equal(
+    osi_nut_k_el(B_LU = '3301000000', 
+                       A_K_AAA = 350),
+    expected = c(0.8571),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_nut_k_el(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                       A_K_AAA = c(75,150,75,150)*2),
+    expected = c(0.9529806, 0.8899939, 0.9529806, 0.8899939),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_nut_k_el(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                       A_K_AAA = c(30,60,120,240)*2),
+    expected = c( 0.9725934, 0.9606539, 0.9209229, 0.7385767),
+    tolerance = 0.01
+  )
+})
+
 test_that("osi_nut_k_es works", {
   expect_equal(
     osi_nut_k_es(B_LU = '3301000000', 

@@ -153,9 +153,10 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_c
   dt[B_COUNTRY == 'CZ', value := osi_c_potassium_cz(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_K_M3 = A_K_M3)]
   dt[B_COUNTRY == 'DE', value := osi_c_potassium_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_K_CAL = A_K_CAL)]
   
-  # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
+  # Denmark (DK), Estonia (EE), Greece (EL),  Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := osi_c_potassium_dk(B_LU = B_LU, A_K_AL = A_K_AL)]
   dt[B_COUNTRY == 'EE', value := osi_c_potassium_ee(B_LU = B_LU,B_TEXTURE_USDA = B_TEXTURE_USDA,A_K_M3 = A_K_M3)]
+  dt[B_COUNTRY == 'EL', value := osi_c_potassium_el(B_LU = B_LU, A_K_AAA = A_K_AAA)]
   dt[B_COUNTRY == 'ES', value := osi_c_potassium_es(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_K_AAA = A_K_AAA)]
   dt[B_COUNTRY == 'FR', value := osi_c_potassium_fr(B_LU = B_LU, B_TEXTURE_GEPPA  = B_TEXTURE_GEPPA, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
                                                     A_PH_WA = A_PH_WA,
@@ -717,6 +718,61 @@ osi_c_potassium_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
   
   return(value)
   
+}
+
+#' Calculate the potassium availability index in Greece
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_K_AAA (numeric) The K-content of the soil extracted with ammonium acetate (mg K/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_el(B_LU = '3301061299',A_K_AAA = 50)
+#' osi_c_potassium_el(B_LU = c('3301061299','3301000000'),A_K_AAA = c(5,15))
+#' 
+#' @return 
+#' The potassium availability index in Greece derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_c_potassium_el <- function(B_LU, A_K_AAA) {
+  
+  # add visual bindings
+  osi_country = crop_code = crop_cat1 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='EL']
+  
+  # Check length of desired input
+  arg.length <- max(length(B_LU),length(A_K_AAA))
+  
+  # check inputs (crop code is not yet in osi_crops, so no check)
+  osi_checkvar(parm = list(A_K_AAA = A_K_AAA),
+               fname = 'osi_c_potassium_el')
+  
+  # internal data.table
+  dt <- data.table(id = 1: arg.length,
+                   B_LU = B_LU,
+                   A_K_AAA = A_K_AAA,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU',
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # evaluation soil K status for grasslands and croplands
+  # source ChatGPT, PhD thesis from https://ikee.lib.auth.gr/record/292420/files/GRI-2017-19713.pdf
+  dt[, value := osi_evaluate_logistic(A_K_AAA, b = 0.03390581, x0 = 232.24412487, v = 2.67687384)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
 }
 
 #' Calculate the potassium availability index in Spain

@@ -268,7 +268,7 @@ The phosphorus supply in view of soil health for agricultural soils in Greece ca
 * B_LU, being the crop code, an unique number for each crop
 * A_P_OL, being the extracted P content with the Olsen method, unit mg P /kg 
 
-The evaluation of the P supply is similar for all soil types and land uses. Fertilizer manuals have not been foudn yet, but askign ChatGPT hinted to the study of the univeristy of Thessaly from 1990 who distinghuises low, medium and high soil P fertility classes.  This study was published [here](https://ir.lib.uth.gr/xmlui/bitstream/handle/11615/1729/P0001729.pdf).
+The evaluation of the P supply is similar for all soil types and land uses. Fertilizer manuals have not been found yet, but asking ChatGPT hinted to the study of the university of Thessaly from 1990 who distinghuises low, medium and high soil P fertility classes.  This study was published [here](https://ir.lib.uth.gr/xmlui/bitstream/handle/11615/1729/P0001729.pdf).
 
 Note that the crop codes for Greece are not yet available in `osi_crops` package table. 
 

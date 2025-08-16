@@ -44,8 +44,15 @@ findoptvalue <- function(spool, spoolopt,p0 = NULL) {
 # https://www.icpa.ro/documente/coduri/Evaluarea_continutului_de_nutrienti_din_sol.pdf
 
 # Greece phosphours P-Olsen (mg P/kg) 
-# evaluation soil (A+, A, B, C, D, E) sand 
+# evaluation soil (A+, A, B, C, D, E)  
 spool <- c(1,2.5,10,(10+20)/2,21,1.5*20)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Greece phosphours Potassium K-AAA (mg K/kg) 
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(1,50,200,(250+300)/2,301,1.5*300)
 spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
 p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
 findoptvalue(spool,spoolopt,p0)
@@ -1766,6 +1773,9 @@ get_k_nut(pb= 0.0429129,px0 = 1.37161548,pv = 0.001844779,nx0=150)
 
 #denmark
 get_k_nut(pb = 0.03892854   , px0 = 0.55628171   , pv = 0.08602831,nx0=150)
+
+#greece
+get_k_nut(pb = 0.03390581, px0 = 232.24412487, pv = 2.67687384,nx0=300)
 
 # spain
 get_k_nut(pb= 0.02948845,px0 = 23.21207454,pv = 0.25785455,nx0=100)

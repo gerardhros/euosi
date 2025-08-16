@@ -283,6 +283,30 @@ osi_plot_shi(shi = dt$osi_c_k, xpar = dt$A_K_M3, xpar_label = 'K-M3 (mg K/kg)',p
 
 ```
 
+## Greece (EL)
+The potassium supply in view of soil health for agricultural soils in Greece can be calculated using `osi_c_potassium_el` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_K_AAA, being the extracted K content with acid ammonium acetate, unit mg K /kg 
+
+The evaluation of the K supply is similar for all soil types and land uses. Fertilizer manuals have not been found yet, but asking ChatGPT hinted to a study of Bilias doing K tests with Cate-Nelson method to derive optimum. Teaching/extension practice (lab manual used in Greek soil labs): sufficiency threshold often cited around 250–300 mg/kg exchangeable K. No working reference was provided.
+
+Note that crop codes for Greece are not yet available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in K-AAA. The optimum soil K threshold value for sustainable crop production is around 275 mg K/ kg, and the soil index decreases when K_AAA values decreases down to 30 mg K/kg. There is no differntiation among soil types of land uses.
+
+
+```{r example EL1, out.width="75%", fig.cap="Evaluation K-indicator for Greece.",dpi=300, echo = FALSE}
+
+# make an example with varying K-AAA
+dt <- CJ(B_LU = c('3301090400'),
+         A_K_AAA = seq(1,500,5))
+dt[,osi_c_k := osi_c_potassium_el(B_LU,A_K_AAA = A_K_AAA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_k, xpar = dt$A_K_AAA, xpar_label = 'K-AAA (mg K/kg)',pgroup = NULL)
+
+```
 
 ## Spain (ES)
 The potassium supply in view of soil health for agricultural soils in Spain can be calculated using `osi_c_potassium_es` using the following inputs:
@@ -708,6 +732,7 @@ dt[,osi_c_k := osi_c_potassium_pt(B_LU,A_K_AAA = A_K_AAA)]
 osi_plot_shi(shi = dt$osi_c_k, xpar = dt$A_K_AAA, xpar_label = 'K-AAA (mg K/kg)',pgroup = NULL)
 
 ```
+
 ## Romenia (RO)
 The potassium supply in view of soil health for agricultural soils in Romenia can be calculated using `osi_c_potassium_ro` using the following inputs:
 
