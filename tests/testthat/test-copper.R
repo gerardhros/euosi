@@ -77,3 +77,26 @@ test_that("osi_c_copper_fr works", {
   
 })
 
+
+test_that("osi_c_copper_ro works", {
+  expect_equal(
+    osi_c_copper_ro(B_LU = 'ORP',
+                    A_CU_EDTA = 0.650),
+    expected = c(0.7471),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_copper_ro(B_LU = 'ORP',
+                    A_CU_EDTA = 0.85),
+    expected = c(0.973),
+    tolerance = 0.01
+  )
+  
+  expect_equal(
+    osi_c_copper_ro(B_LU = c('ORP','BTA','CIT','3301010102','3306990000'),
+                    A_CU_EDTA = c(0.25,0.5,0.8,1.0,2.0)),
+    expected = c(0.0001760755, 0.2264734428, 0.9515767846, 0.9955068136, 0.9999999732),
+    tolerance = 0.01
+  )
+  
+})

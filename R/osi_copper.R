@@ -56,6 +56,7 @@ osi_c_copper <- function(B_LU,A_CLAY_MI = NA_real_,B_CF= NA_real_,A_SOM_LOI= NA_
                                                  B_CF = B_CF,
                                                  A_SOM_LOI=A_SOM_LOI,
                                                  A_CU_EDTA = A_CU_EDTA)]
+  dt[B_COUNTRY == 'RO',value := osi_c_copper_ro(B_LU = B_LU, A_CU_EDTA = 45)]
   
   # select the output variable
   value <- dt[,value]
@@ -135,6 +136,54 @@ osi_c_copper_fr <- function(B_LU,A_CLAY_MI,B_CF, A_SOM_LOI,A_CU_EDTA) {
   
   # select and return value
   value <- dt[,value]
+  
+  return(value)
+  
+}
+
+
+#' Calculate the Cu availability index for agricultural soils in Romania 
+#' 
+#' This function calculates the Cu availability of a soil, using the agronomic index used in Romania
+#' 
+#' @param B_LU  (character) crop type 
+#' @param A_CU_EDTA (numeric) Cu content measured in EDTA (mg / kg)
+#'
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_copper_ro(B_LU = 'testcrop', A_CU_EDTA = 45)
+#' 
+#' @return 
+#' The copper availability index in Romania estimated from extractable Cu with 0.05M Na2EDTA, a numeric value.
+#' 
+#' @export
+osi_c_copper_ro <- function(B_LU,A_CU_EDTA) {
+  
+  # set visual bindings
+  value = osi_country = osi_indicator = id = crop_cat1 = . = NULL
+  
+  # Check length of desired input
+  arg.length <- max(length(B_LU),length(A_CU_EDTA))
+  
+  # check inputs
+  osi_checkvar(parm = list(A_CU_EDTA = A_CU_EDTA),
+               fname = 'osi_c_copper_ro')
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_CU_EDTA = A_CU_EDTA,
+                   value = NA_real_)
+  
+  # set OSI score
+  dt[, value := osi_evaluate_logistic(A_CU_EDTA,b = 12.0314372,x0 = 0.4462216,v = 0.2835275)]
+  
+  # Sort the input in correct order
+  setorder(dt, id)
+  
+  # select and return OSI indicator
+  value <- dt[, value]
   
   return(value)
   
