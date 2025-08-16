@@ -160,14 +160,15 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
   dt[B_COUNTRY == 'AT', value := osi_c_magnesium_at(B_LU=B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_MG_CC = A_MG_CC)]
-  dt[B_COUNTRY == 'BE', value := NA_real_]
-  dt[B_COUNTRY == 'CH', value := osi_c_magnesium_ch(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI, A_MG_AAA = A_MG_AAA)]
+  dt[B_COUNTRY == 'BE', value := osi_c_magnesium_be(B_LU = B_LU, A_MG_CC = A_MG_CC)]
+  dt[B_COUNTRY == 'CH', value := osi_c_magnesium_ch(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_MG_AAA = A_MG_AAA)]
   dt[B_COUNTRY == 'CZ', value := oci_c_magnesium_cz(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_M3 = A_MG_M3)]
   dt[B_COUNTRY == 'DE', value := osi_c_magnesium_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_MG_CC = A_MG_CC)]
   
-  # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
+  # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := osi_c_magnesium_dk(B_LU = B_LU, A_MG_AL = A_MG_AL)]
   dt[B_COUNTRY == 'EE', value := oci_c_magnesium_ee(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA,A_MG_M3 = A_MG_M3)]
+  dt[B_COUNTRY == 'EL', value := NA_real_]
   dt[B_COUNTRY == 'ES', value := osi_c_magnesium_es(B_LU = B_LU,A_MG_CO_PO = A_MG_CO_PO)]
   dt[B_COUNTRY == 'FR', value := osi_c_magnesium_fr(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI,A_CEC_CO = A_CEC_CO, 
                                                     A_MG_AAA = A_MG_AAA,A_CACO3_IF = A_CACO3_IF)]
@@ -185,7 +186,7 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                                                     A_SOM_LOI = A_SOM_LOI,A_CLAY_MI = A_CLAY_MI,
                                                     A_PH_CC = A_PH_CC, A_CEC_CO = A_CEC_CO,
                                                     A_K_CO_PO = A_K_CO_PO,A_MG_CC = A_MG_CC,A_K_CC = A_K_CC)]
-  dt[B_COUNTRY == 'NO', value := NA_real_]
+  dt[B_COUNTRY == 'NO', value := osi_c_magnesium_no(B_LU = B_LU, A_MG_AL = A_MG_AL)]
   dt[B_COUNTRY == 'SE', value := osi_c_magnesium_se(B_LU = B_LU, A_MG_AL = A_MG_AL)]
   dt[B_COUNTRY == 'SK', value := osi_c_magnesium_sk(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_M3 = A_MG_M3)]
   dt[B_COUNTRY == 'SL', value := osi_c_magnesium_sl(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_AL = A_MG_AL)]
@@ -265,6 +266,62 @@ osi_c_magnesium_at <- function(B_LU, A_MG_CC,B_TEXTURE_HYPRES) {
   dt[B_TEXTURE_HYPRES %in% c('F','VF'),
      value := osi_evaluate_logistic(x = A_MG_CC, b= 0.08246231,x0 = 3.16282481,v = 0.02204703)]
   
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
+
+#' Calculate the magnesium availability index in Belgium
+#' 
+#' This function calculates the magnesium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_MG_CC (numeric) The exchangeable Mg-content of the soil measured via calcium chloride extracton (mg Mg/ kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_magnesium_be(B_LU = '8410',A_MG_CC = 45)
+#' 
+#' @return 
+#' The magnesium availability index in Belgium estimated from extractable magnesium. A numeric value.
+#' 
+#' @export
+osi_c_magnesium_be <- function(B_LU,A_MG_CC) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = rop_code = . = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='BE']
+  
+  # get max length of input variables
+  arg.length <- max(length(A_MG_CC),length(B_LU))
+  
+  # check inputs
+  osi_checkvar(parm = list(B_COUNTRY = rep("BE",arg.length),
+                           B_LU = B_LU,
+                           A_MG_CC = A_MG_CC),
+               fname = 'osi_c_magnesium_be')
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_MG_CC = A_MG_CC,
+                   value = NA_real_)
+  
+  # calculate the OSI score 
+  # according to ChatGPT uses Flanders the recommendation of the Netherlands with optimum around 45 mg /kg
+  # https://lv.vlaanderen.be/sites/default/files/attachments/praktijkgids-bemesting-meststoffen-groenbedekkers_1.pdf
+  # for NL is information derived from handboekbodemenbemesting.nl
+  dt[,value := evaluate_logistic(A_MG_CC, b = 0.1717292, x0 = 19.5341702, v = 1.0640583)]
+ 
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -1377,6 +1434,59 @@ osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
   return(value)
 }
 
+#' Calculate the magnesium availability index in Norway
+#' 
+#' This function calculates the magnesium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param A_MG_AL (numeric) The exchangeable Mg-content of the soil measured via ammonium lactate (mg K/kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_magnesium_no(B_LU = '8410',A_MG_AL = 45)
+#' 
+#' @return 
+#' The magnesium availability index in Norway estimated from extractable magnesium. A numeric value.
+#' 
+#' @export
+osi_c_magnesium_no <- function(B_LU,A_MG_AL) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = rop_code = . = NULL
+  
+  # crop data
+  #dt.crops <- as.data.table(euosi::osi_crops)
+  #dt.crops <- dt.crops[osi_country=='BE']
+  
+  # get max length of input variables
+  arg.length <- max(length(A_MG_AL),length(B_LU))
+  
+  # check inputs (not yet crop since not available in osi_crops)
+  osi_checkvar(parm = list(A_MG_AL = A_MG_AL),
+               fname = 'osi_c_magnesium_no')
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_MG_AL = A_MG_AL,
+                   value = NA_real_)
+  
+  # calculate the OSI score 
+  # according to ChatGPT optimum is around 25-45 mg/kg
+  # https://www.nlr.no/kunnskap/fagartikler/grovfor/ostlandet/magnesium
+  # https://www.statsforvalteren.no/siteassets/fm-rogaland/bilder-fmro/landbruk/skogbruk/dokumenter/lonnsomme-juletrar-122014-publisert-versjon-2b-small.pdf
+  dt[,value := evaluate_logistic(A_MG_AL, b = 0.2080099, x0 = 27.7202550, v = 1.9831178)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
 #' Calculate the magnesium availability index in Poland
 #' 
 #' This function calculates the magnesium availability. 
