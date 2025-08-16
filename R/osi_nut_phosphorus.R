@@ -151,10 +151,11 @@ osi_nut_p <- function(B_LU,
   dt[B_COUNTRY == 'SK', value := osi_nut_p_sk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_P_M3 = A_P_M3)]
   dt[B_COUNTRY == 'SL', value := osi_nut_p_sl(B_LU = B_LU, A_P_AL = A_P_AL)]
   
-  # Poland (PL), United Kingdom (UK)
+  # Poland (PL), Portugal (PT), Romenia (RO) and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_nut_p_pl(B_LU = B_LU, A_P_DL = A_P_DL)]
   dt[B_COUNTRY == 'PT', value := osi_nut_p_pt(B_LU = B_LU, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'IE', value := osi_nut_p_uk(B_LU = B_LU, A_P_OL = A_P_OL)]
+  dt[B_COUNTRY == 'RO', value := osi_nut_p_ro(B_LU = B_LU, A_P_AL = A_P_AL)]
+  dt[B_COUNTRY == 'UK', value := osi_nut_p_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_OL = A_P_OL)]
   
   # select the output variable
   value <- dt[,value]
@@ -1501,6 +1502,52 @@ osi_nut_p_pt <- function(B_LU, A_P_OL) {
   
   # evaluation soil P status for grasslands and croplands
   dt[, value := OBIC::evaluate_logistic(A_P_OL, b = -0.04188751 , x0 = 77.36111528 , v = 1.74093923)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
+}
+
+#' Calculate the phosphate excess index index in Romenia
+#' 
+#' This function calculates the phosphate excess index. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_P_AL (numeric) The P-content of the soil extracted with Acetate Lactate (mg/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_phosphor_ro(B_LU = 'testcrop1',A_P_AL = 5)
+#' osi_c_phosphor_ro(B_LU = c('testcrop1','testcrop2'),A_P_AL = c(3.5,5.5))
+#' 
+#' @return 
+#' The phosphate availability index in Romenia derived from extractable soil P fractions. A numeric value.
+#' 
+#' @export
+osi_nut_p_ro <- function(B_LU, A_P_AL) {
+  
+  # add visual binding
+  cropcat1 = NULL
+  
+  # length of inputs
+  arg.length <- max(length(B_LU),length(A_P_AL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(A_P_AL = A_P_AL),
+               fname = 'osi_nut_p_ro')
+  
+  # internal data.table
+  dt <- data.table(id = 1: arg.length,
+                   B_LU = B_LU,
+                   A_P_AL = A_P_AL,
+                   value = NA_real_)
+  
+  # P index derived following P-AL
+  
+  # evaluation soil P status
+  # https://icpa.ro/site_vechi/documente/coduri/Planuri_de_fertilizare.pdf
+  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = -1.781695 , x0 = 56.737743, v = 69.979745)]
   
   # select value and return
   value <- dt[,value]
