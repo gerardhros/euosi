@@ -179,6 +179,33 @@ test_that("osi_c_ph_de works", {
   )
 })
 
+test_that("osi_c_ph_el works", {
+  expect_equal(
+    osi_c_ph_el(A_PH_WA = 4.7,
+                B_TEXTURE_HYPRES = 'C',
+                A_NA_CO_PO = 4.5,
+                B_LU = '3301000000'),
+    expected = c(0.84825),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_ph_el(A_PH_WA = rep(4.7,4),
+                B_TEXTURE_HYPRES = rep('C',4),
+                A_NA_CO_PO = rep(4.5,4),
+                B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected = rep(0.8482531,4),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_ph_el(A_PH_WA = c(4.5,5.5,6.5,7.5),
+                B_TEXTURE_HYPRES = rep('C',4),
+                A_NA_CO_PO = c(2,2,8,14),
+                B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected = c(0.7453641, 0.9828756, 0.9875845, 0.1460518),
+    tolerance = 0.01
+  )
+})
+
 test_that("osi_c_ph_fr works", {
   expect_equal(
     osi_c_ph_fr(A_PH_WA = 4.7,

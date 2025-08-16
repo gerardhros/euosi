@@ -119,9 +119,10 @@ osi_c_ph <- function(B_LU,
   dt[B_COUNTRY == 'DE', value := osi_c_ph_de(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_C_OF = A_C_OF, 
                                              A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_PH_CC = A_PH_CC)]
   
-  # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
+  # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
   dt[B_COUNTRY == 'EE', value := NA_real_]
+  dt[B_COUNTRY == 'EL', value := osi_c_ph_el(B_LU = B_LU,A_PH_WA = A_PH_WA,A_NA_CO_PO = A_NA_CO_PO,B_TEXTURE_HYPRES=B_TEXTURE_HYPRES)]
   dt[B_COUNTRY == 'ES', value := NA_real_]
   dt[B_COUNTRY == 'FR', value := osi_c_ph_fr(B_LU = B_LU,B_TEXTURE_GEPPA = B_TEXTURE_GEPPA,A_PH_WA = A_PH_WA)]
   dt[B_COUNTRY == 'FI', value := osi_c_ph_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_PH_WA = A_PH_WA, A_C_OF = A_C_OF)]
@@ -542,6 +543,79 @@ osi_c_ph_de <- function(B_LU,A_SOM_LOI, A_C_OF, A_CLAY_MI,A_SAND_MI, A_PH_CC) {
   value <- dt.fin[, value]
   
   # return value
+  return(value)
+}
+
+#' Calculate the pH index in Greece
+#' 
+#' This function calculates the pH index 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_PH_WA (numeric) The pH measured in water
+#' @param A_NA_CO_PO (numeric) The sodium occupation of the CEC (\%)
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_ph_el(B_LU = 'testcrop1',A_PH_WA = 5,A_NA_CO_PO = 3,B_TEXTURE_HYPRES='C')
+#' osi_c_ph_el(B_LU = c('testcrop1','testcrop2'),A_PH_WA = c(3.5,5.5),
+#' A_NA_CO_PO = c(1,6),B_TEXTURE_HYPRES=c('C','M'))
+#' 
+#' @return 
+#' The pH index in Greece. A numeric value.
+#' 
+#' @export
+osi_c_ph_el <- function(B_LU, A_PH_WA,A_NA_CO_PO, B_TEXTURE_HYPRES) {
+  
+  # add visual bindings
+  crop_code = crop_cat1 = crop_name = id = . = osi_country = v1 = v2 = NULL
+  
+  # crop data
+  #dt.crops <- as.data.table(euosi::osi_crops)
+  #dt.crops <- dt.crops[osi_country=='EL']
+  
+  # get max length of inputs
+  arg.length <- max(length(B_LU),length(A_PH_WA),length(B_TEXTURE_HYPRES),length(A_NA_CO_PO))
+  
+  # check inputs
+  osi_checkvar(parm = list(A_PH_WA = A_PH_WA,
+                           A_NA_CO_PO = A_NA_CO_PO,
+                           B_TEXTURE_HYPRES = B_TEXTURE_HYPRES),
+               fname = 'osi_c_ph_el')
+  
+  # internal data.table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = as.character(B_LU),
+                   A_PH_WA = A_PH_WA,
+                   A_NA_CO_PO = A_NA_CO_PO,
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                   value = NA_real_)
+  
+  # Answer from ChatGPT: Greek university guides say liming is used to raise acidic soils toward ~pH 6.5, with the exact target adjusted for soil texture and crop; sandy soils often use a lower target (~pH 6.0).
+  # https://eclass.hmu.gr/modules/document/file.php/TGH188/%CE%92%CE%99%CE%92%CE%9B%CE%99%CE%91/Diaxeirisi_edafwn_ODIGOS.pdf
+  
+  # pH evaluation for acidic soils
+  dt[, v1 := osi_evaluate_logistic(A_PH_WA, b = 2.75162973  , x0 = 2.70012955  , v = 0.01288747 )]
+  
+  # pH evaluation for more sandy soils soils, having slightly lower pH
+  dt[B_TEXTURE_HYPRES == "C", v1 := osi_evaluate_logistic(A_PH_WA, b = 2.76737928 , x0 = 2.68944973 , v = 0.01219519)]
+  
+  # second indicator is exchangeable sodium
+  dt[,v2 := osi_evaluate_logistic(A_NA_CO_PO, b = -1.3449085 , x0 = 11.1528331, v = 0.6283938 )]
+  
+  # calculate the weighted mean
+  dt[!is.na(v1) & !is.na(v2),value := (cf_ind_importance(v1) * v1 + cf_ind_importance(v2) * v2)/(cf_ind_importance(v1) + cf_ind_importance(v2))]
+  dt[!is.na(v1) & is.na(v2),value := v1]
+  dt[is.na(v1) & !is.na(v2),value := v1]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # select value
+  value <- dt[, value]
+  
+  # return
   return(value)
 }
 
