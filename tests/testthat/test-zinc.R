@@ -134,6 +134,33 @@ test_that("osi_c_zinc_nl works", {
   )
 })
 
+test_that("osi_c_zinc_ro works", {
+  expect_equal(
+    osi_c_zinc_ro(B_LU = 'testcrop',
+                  A_PH_WA = 6.5, 
+                  A_P_AL = 45,
+                  A_ZN_EDTA = 0.150),
+    expected = c(0.2042037),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_zinc_ro(B_LU = c('testcrop1','testcrop2','testcrop3','3301010699'),
+                  A_PH_WA = c(4,5,6,7), 
+                  A_P_AL = rep(45,4),
+                  A_ZN_EDTA = rep(0.5,4)),
+    expected = c(0.9081472, 0.9989704, 0.9997297, 0.9981355),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_zinc_ro(B_LU = c('testcrop1','3301010699','3301061299','3304990000'),
+                  A_PH_WA = rep(5.6,4),
+                  A_P_AL = rep(25,4),
+                  A_ZN_EDTA = c(0.5,0.8,1.6,3.5)/10),
+    expected = c(0.1562884, 0.2012715, 0.8510877, 0.9999937),
+    tolerance = 0.01
+  )
+})
+
 test_that("osi_c_zinc_uk works", {
   expect_equal(
     osi_c_zinc_uk(B_LU = 'testcrop',
