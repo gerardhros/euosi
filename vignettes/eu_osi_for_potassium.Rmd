@@ -708,6 +708,34 @@ dt[,osi_c_k := osi_c_potassium_pt(B_LU,A_K_AAA = A_K_AAA)]
 osi_plot_shi(shi = dt$osi_c_k, xpar = dt$A_K_AAA, xpar_label = 'K-AAA (mg K/kg)',pgroup = NULL)
 
 ```
+## Romenia (RO)
+The potassium supply in view of soil health for agricultural soils in Romenia can be calculated using `osi_c_potassium_ro` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* B_TEXTURE_HYPRES, being the soil texture class according to HYPRES classification system
+* A_K_AL, being the extracted K content with Ammonium Acetate Lacate, unit mg K /kg.
+
+The K supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the HYPRES texture class using `osi_get_TEXTURE_HYPRES`.Information on the threshold values for K-AL in view of sustainable crop production has been derived from the Romenia document entitled `SISTEME DE CULTURI ŞI PLANURI DE FERTILIZARE`, a document that can be downloaded [here](https://www.icpa.ro/documente/coduri/Planuri_de_fertilizare.pdf).
+
+Note that the crop codes for Romenia are not yet available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in K-AL. The optimum soil K threshold value for sustainable crop production is around 200 mg K/ kg, and the soil index decreases when K-AL values decreases. Potassium deficiency occurs when K-AL is below 100 mg /kg for the clay soil and below the 50 mg K/kg for the sandy soil. There is no differentiation among land uses.
+
+
+```{r example RO1, out.width="75%", fig.cap="Evaluation P-indicator for Romenia.",dpi=300, echo = FALSE}
+
+# make an example with varying K-AL
+dt <- CJ(B_LU = c('3301090400'),
+         B_TEXTURE_HYPRES= c('C','F','M'),
+         A_K_AL = seq(1,200,1))
+dt[,stype:=fifelse(B_TEXTURE_HYPRES=='C', 'sand',
+                   fifelse(B_TEXTURE_HYPRES=='F','clay','loam'))]
+dt[,osi_c_k := osi_c_potassium_ro(B_LU,A_K_AL = A_K_AL, B_TEXTURE_HYPRES=B_TEXTURE_HYPRES)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_k, xpar = dt$A_K_AL, xpar_label = 'K-AL (mg K/kg)',pgroup = dt$stype)
+
+```
 
 
 ## Sweden (SE)
