@@ -153,7 +153,8 @@ osi_c_phosphor <- function(B_LU,
   # Poland (PL), Portugal (PT), and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_c_phosphor_pl(B_LU = B_LU, A_P_DL = A_P_DL)]
   dt[B_COUNTRY == 'PT', value := osi_c_phosphor_pt(B_LU = B_LU, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'IE', value := osi_c_phosphor_uk(B_LU = B_LU, A_P_OL = A_P_OL)]
+  dt[B_COUNTRY == 'RO', value := osi_c_phosphor_ro(B_LU = B_LU, A_P_AL = A_P_AL)]
+  dt[B_COUNTRY == 'UK', value := osi_c_phosphor_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_OL = A_P_OL)]
   
   # sort data.table
   setorder(dt,id)
@@ -1530,6 +1531,52 @@ osi_c_phosphor_pt <- function(B_LU, A_P_OL) {
   
   # evaluation soil P status for grasslands and croplands
   dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.17869351 , x0 = 3.01230206 , v = 0.03047017 )]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
+}
+
+#' Calculate the phosphate availability index in Romenia
+#' 
+#' This function calculates the phosphate availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_P_AL (numeric) The P-content of the soil extracted with Acetate Lactate (mg/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_phosphor_ro(B_LU = 'testcrop1',A_P_AL = 5)
+#' osi_c_phosphor_ro(B_LU = c('testcrop1','testcrop2'),A_P_AL = c(3.5,5.5))
+#' 
+#' @return 
+#' The phosphate availability index in Romenia derived from extractable soil P fractions. A numeric value.
+#' 
+#' @export
+osi_c_phosphor_ro <- function(B_LU, A_P_AL) {
+  
+  # add visual binding
+  cropcat1 = NULL
+  
+  # length of inputs
+  arg.length <- max(length(B_LU),length(A_P_AL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(A_P_AL = A_P_AL),
+               fname = 'osi_c_phoshor_ro')
+  
+  # internal data.table
+  dt <- data.table(id = 1: arg.length,
+                   B_LU = B_LU,
+                   A_P_AL = A_P_AL,
+                   value = NA_real_)
+  
+  # P index derived following P-AL
+  
+  # evaluation soil P status
+  # https://icpa.ro/site_vechi/documente/coduri/Planuri_de_fertilizare.pdf
+  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.1387092 , x0 = -18.0674770, v = 0.0252298)]
   
   # select value and return
   value <- dt[,value]

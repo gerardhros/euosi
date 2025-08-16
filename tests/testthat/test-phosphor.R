@@ -508,6 +508,27 @@ test_that("osi_c_phosphor_pt works", {
 })
 
 
+test_that("osi_c_phosphor_ro works", {
+  expect_equal(
+    osi_c_phosphor_ro(B_LU = 'testcrop1',
+                      A_P_AL = 5),
+    expected = c(0.2051),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_phosphor_ro(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                      A_P_AL = c(1,2,4,8)),
+    expected = c(0.06591730, 0.09278344, 0.16292502, 0.34926133),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_phosphor_ro(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                      A_P_AL = c(5,6,10,15)),
+    expected = c(0.2051349, 0.2509624, 0.4494902, 0.6691964),
+    tolerance = 0.01
+  )
+})
+
 test_that("osi_c_phosphor_se works", {
   expect_equal(
     osi_c_phosphor_se(B_LU = '3301000000', 
