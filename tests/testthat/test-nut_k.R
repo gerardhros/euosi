@@ -555,6 +555,31 @@ test_that("osi_nut_k_pt works", {
     tolerance = 0.01
   )
 })
+
+test_that("osi_nut_k_ro works", {
+  expect_equal(
+    osi_nut_k_ro(A_K_AL = 150,
+                       B_TEXTURE_HYPRES = 'C',
+                       B_LU = '3301000000'),
+    expected = c(0.8514),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_nut_k_ro(A_K_AL = rep(425,4),
+                       B_TEXTURE_HYPRES = c('M','C','F','VF'),
+                       B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected =c( 0.5524721, 0.2245681, 0.6131377, 0.6131377),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_nut_k_ro(A_K_AL = c(65,85,125,150)*3,
+                       B_TEXTURE_HYPRES = rep('C',4),
+                       B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected = c(0.7688326, 0.6235956, 0.3184966, 0.1869643),
+    tolerance = 0.01
+  )
+})
+
 test_that("osi_nut_k_se works", {
   expect_equal(
     osi_nut_k_se(B_LU = '3301000000', 

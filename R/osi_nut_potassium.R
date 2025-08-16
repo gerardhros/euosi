@@ -185,6 +185,7 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_charact
   # Poland (PL), Portugal (PT) United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_nut_k_pl(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_K_DL = A_K_DL)]
   dt[B_COUNTRY == 'PT', value := osi_nut_k_pt(B_LU = B_LU, A_K_AAA = A_K_AAA)]
+  dt[B_COUNTRY == 'RO', value := osi_nut_k_ro(B_LU = B_LU, A_K_AL = A_K_AL,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES)]
   dt[B_COUNTRY == 'UK', value := osi_nut_k_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_K_AN = A_K_AN)]
   
   # select the output variable
@@ -1777,6 +1778,63 @@ osi_nut_k_se <- function(B_LU, A_K_AL) {
   # select value and return
   value <- dt[,value]
   return(value)
+}
+
+#' Calculate thepotassium excess index in Romenia
+#' 
+#' This function calculates the potassium excess index 
+#' 
+#' @param B_LU (character) The crop code
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#' @param A_K_AL (numeric) The exchangeable K-content of the soil measured via ammonium lactate extracton (mg K/ kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_nut_k_ro(B_LU = 'testcrop1',A_K_AL = 45,B_TEXTURE_HYPRES='M')
+#' 
+#' @return 
+#' The potassium excess index in Romenia estimated from extractable potassium. A numeric value.
+#' 
+#' @export
+osi_nut_k_ro <- function(A_K_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  
+  # get max length of input variables
+  arg.length <- max(length(B_LU),length(B_TEXTURE_HYPRES),length(A_K_AL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                           A_K_AL = A_K_AL),
+               fname = 'osi_nut_k_ro')
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                   A_K_AL = A_K_AL,
+                   value = NA_real_)
+  
+  # evaluate the OSI score for Light sandy and loamy soils, Lower values for sandy soils, higher values for loamy-sandy soils 
+  dt[B_TEXTURE_HYPRES %in% c('C'), value := osi_evaluate_logistic(x = A_K_AL, b = -0.01287, x0 = 244.16, v = 1.6206)]
+  dt[B_TEXTURE_HYPRES %in% c('M'), value := osi_evaluate_logistic(x = A_K_AL, b = -0.12669, x0 = 301.21, v = 26.4311)]
+  
+  # evaluate the OSI score for Medium clayey-sandy and loamy soils. Averaged conditions.
+  dt[B_TEXTURE_HYPRES %in% c('MF'), value := osi_evaluate_logistic(x = A_K_AL, b = -0.23822, x0 = 262.04, v = 43.2289)]
+  
+  # evaluate the OSI score for Heavy clayey-sandy and loamy soils. Averaged conditions.  
+  dt[B_TEXTURE_HYPRES %in% c('F','VF'), value := osi_evaluate_logistic(x = A_K_AL, b = -0.14281, x0 = 317.5, v = 31.3842)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
 }
 
 #' Calculate the potassium excess index in  Slovak Republic
