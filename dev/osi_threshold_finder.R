@@ -25,6 +25,61 @@ findoptvalue <- function(spool, spoolopt,p0 = NULL) {
   return(xpar)
 }
 
+
+# The level of magnesium supply in the soil, extracted in 0.025n CaCl2 solution, is
+# determined according to the soil texture. 
+# Thus, in sandy soils with a content of less than 2.5 mg/100 g soil, the Mg supply level is low, 
+# between 2.5 and 5.0 mg/100 g soil it is medium, and above 5.0 mg/100 g soil it is high. 
+# In loamy soils, the three levels are: < 3.5 mg/100 g soil, between 3.6 and 7.0 mg/100 g soil, and above 7.00 mg/100 g soil, 
+# while in soils with clay texture, the ranges are < 6.0 mg/100 g soil, 6.1–12.0 mg/100 g soil, above 12.0
+# mg/100 g soil.
+# The probability of Mg deficiency can be determined using the Mg deficiency index
+# (ICMg), developed by Borlan (in Lăcătuşu, 2000). This is calculated using the following formula:
+# ICMG = MG x Fr / K = (A_MG_CO 24.305 * 0.5) * (1.1 ^ (-0.555 * (A_PH_WA - 4))) / (A_K_CO * 39.098)
+# Values of this index lower than 0.15 indicate a very high probability of Mg deficiency,
+# while values higher than 12 indicate a very low probability of
+# the phenomenon occurring. Between these two limits, with increments of 0.15, 0.30, and 0.60, there are intervals that
+# indicate a high, medium, and low probability of Mg deficiency.
+# https://www.icpa.ro/documente/coduri/Evaluarea_continutului_de_nutrienti_din_sol.pdf
+
+# Romenia magnesium (mg M/kg) in CaCl2
+# evaluation soil (A+, A, B, C, D, E) sand 
+spool <- c(1,5,25,(25+50),55,1.5*50)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+# evaluation soil (A+, A, B, C, D, E) loam 
+spool <- c(1,5,35,(37+70),75,1.5*70)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+# evaluation soil (A+, A, B, C, D, E) clay 
+spool <- c(1,5,60,(61+120),125,1.5*120)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# evaluation soil (A+, A, B, C, D, E) clay , KMg index
+spool <- c(0.01,0.08,(0.15+0.3)/2,(0.3+0.6),0.6,2*0.6)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Romenia pH
+# evaluation soil (A+, A, B, C, D, E) sand 
+spool <- c(1,1.5,5,5.8,5.9,6.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Romenia A_NA_CO_PO
+# evaluation soil (A+, A, B, C, D, E) sand
+spool <- c(14,7,5.2,5,4,1.5,1.1,0.9)
+spoolopt <- c(0,0.01,0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
 # Romenia K-AL (mg K/kg)
 # evaluation soil (A+, A, B, C, D, E) sand
 spool <- c(1,50,(50),100,150,200)
