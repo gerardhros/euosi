@@ -65,6 +65,22 @@ spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
 p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
 findoptvalue(spool,spoolopt,p0)
 
+# romenia
+# Zn deficiency occurs in soils where the IRPM and ICZn values are lower than 0.384 and 1.7, respectively.
+spool <- c(0.01,0.1,0.3,0.384,0.42,1.6)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+spool <- c(0.01,0.4,0.6,1.7,1.8,2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# romenia copper
+spool <- c(0.01,0.15,0.6,.75,0.85,1.3)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
 
 # Romenia pH
 # evaluation soil (A+, A, B, C, D, E) sand 
