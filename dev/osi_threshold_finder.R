@@ -26,6 +26,7 @@ findoptvalue <- function(spool, spoolopt,p0 = NULL) {
 }
 
 
+# text for romenai
 # The level of magnesium supply in the soil, extracted in 0.025n CaCl2 solution, is
 # determined according to the soil texture. 
 # Thus, in sandy soils with a content of less than 2.5 mg/100 g soil, the Mg supply level is low, 
@@ -41,6 +42,13 @@ findoptvalue <- function(spool, spoolopt,p0 = NULL) {
 # the phenomenon occurring. Between these two limits, with increments of 0.15, 0.30, and 0.60, there are intervals that
 # indicate a high, medium, and low probability of Mg deficiency.
 # https://www.icpa.ro/documente/coduri/Evaluarea_continutului_de_nutrienti_din_sol.pdf
+
+# Greece phosphours P-Olsen (mg P/kg) 
+# evaluation soil (A+, A, B, C, D, E) sand 
+spool <- c(1,2.5,10,(10+20)/2,21,1.5*20)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
 
 # Romenia magnesium (mg M/kg) in CaCl2
 # evaluation soil (A+, A, B, C, D, E) sand 
@@ -1644,6 +1652,8 @@ get_p_nut(pb = 0.1743, px0 = 2.92395, pv = 0.096079,nx0=150)
 get_p_nut(pb = 0.226612, px0 = 30.137321,pv = 1.247315)
 # ee
 get_p_nut(pb= 0.1078429,px0 = -17.16723,pv = 0.0153443)
+# EL GReece
+get_p_nut(pb = 0.3677886, px0 = 9.1132506,pv =  1.0632264 )
 # spain
 get_p_nut(pb = 0.47947, px0 = -1.94363, pv = 0.074075,nx0=40)
 get_p_nut(pb = 0.27155, px0 = 2.81733, pv = 0.154671,nx0=40)

@@ -262,6 +262,32 @@ osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_M3, xpar_label = 'P-M3 (mg P/kg)',p
 ```
 
 
+## Greece (EL)
+The phosphorus supply in view of soil health for agricultural soils in Greece can be calculated using `osi_c_phosphor_el` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_P_OL, being the extracted P content with the Olsen method, unit mg P /kg 
+
+The evaluation of the P supply is similar for all soil types and land uses. Fertilizer manuals have not been foudn yet, but askign ChatGPT hinted to the study of the univeristy of Thessaly from 1990 who distinghuises low, medium and high soil P fertility classes.  This study was published [here](https://ir.lib.uth.gr/xmlui/bitstream/handle/11615/1729/P0001729.pdf).
+
+Note that the crop codes for Greece are not yet available in `osi_crops` package table. 
+
+Below an example is visualized how the soil health index varies in relation to variation in P-Olsen. The optimum soil P threshold value for sustainable crop production is around 15 mg P/ kg for both land uses. Phosphorus deficiency occurs when the P-OL value decreases below around 8 mg P/kg.
+
+
+```{r example EL1, out.width="75%", fig.cap="Evaluation P-indicator for Greece.",dpi=300, echo = FALSE}
+
+# make an example with varying P-OL content for two land uses
+dt <- CJ(B_LU = c('cropland'),
+         A_P_OL = seq(1,30,0.1))
+dt[,osi_c_p := osi_c_phosphor_el(B_LU,A_P_OL = A_P_OL)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_OL, xpar_label = 'P-OL (mg P/kg)',pgroup = NULL)
+
+```
+
+
 ## Spain (ES)
 The phosphorus supply in view of soil health for agricultural soils in Spain can be calculated using `osi_c_phosphor_es` using the following inputs:
 
