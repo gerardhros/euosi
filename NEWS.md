@@ -1,3 +1,8 @@
+# euosi 0.7.0 UNRELEASED
+
+# Added
+
+
 # euosi 0.6.0 2025-08-17
 
 ## Added
@@ -12,7 +17,6 @@
 * `osi_c_potassium_nl` had filter on peat rather than on veen
 * `osi_nut_k_fr` for wrong filter on soil k classes
 
-## Changed
 
 # euosi 0.5.0 2025-08-15
 
