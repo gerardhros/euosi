@@ -145,41 +145,7 @@ test_that("osi_c_ph_ch works", {
   )
 })
 
-test_that("osi_c_ph_pt works", {
-  expect_equal(
-    osi_c_ph_pt(A_PH_WA = 4.7,
-                A_CEC_CO = 7.5,
-                A_CA_CO_PO = 80, 
-                A_MG_CO_PO = 8,
-                A_K_CO_PO = 5, 
-                A_NA_CO_PO = 2,
-                B_LU = '3301000000'),
-    expected = c(0.07667),
-    tolerance = 0.01
-  )
-  expect_equal(
-    osi_c_ph_pt(A_PH_WA = rep(4.7,5),
-                A_CEC_CO = rep(7.5,5),
-                A_CA_CO_PO = c(60,65,70,75,80), 
-                A_MG_CO_PO = c(10,5,3,2,2),
-                A_K_CO_PO = c(10,5,3,2,2), 
-                A_NA_CO_PO = c(5,5,3,2,2),
-                B_LU = c('testcrop1','3301000000','3301010901','3301061299','3304990000')),
-    expected = c(0.08727666, 0.07655451, 0.07199826, 0.06981598, 0.06986265),
-    tolerance = 0.01
-  )
-  expect_equal(
-    osi_c_ph_pt(A_PH_WA = c(3,3.5,4,4.5,5),
-                A_CEC_CO = rep(7.5,5),
-                A_CA_CO_PO = c(60,65,70,75,80)/2, 
-                A_MG_CO_PO = c(10,5,3,2,2),
-                A_K_CO_PO = c(10,5,3,2,2), 
-                A_NA_CO_PO = c(5,5,3,2,2),
-                B_LU = c('testcrop1','3301000000','3301010901','3301061299','3304990000')),
-    expected = c(0.05761967, 0.04871134, 0.04743586, 0.06118419, 0.07792056),
-    tolerance = 0.01
-  )
-})
+
 test_that("osi_c_ph_de works", {
   expect_equal(
     osi_c_ph_de(B_LU = '3301000000', 
@@ -324,6 +290,65 @@ test_that("osi_c_ph_nl works", {
   )
 })
 
+test_that("osi_c_ph_pt works", {
+  expect_equal(
+    osi_c_ph_pt(A_PH_WA = 4.7,
+                A_CEC_CO = 7.5,
+                A_CA_CO_PO = 80, 
+                A_MG_CO_PO = 8,
+                A_K_CO_PO = 5, 
+                A_NA_CO_PO = 2,
+                B_LU = '3301000000'),
+    expected = c(0.07667),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_ph_pt(A_PH_WA = rep(4.7,5),
+                A_CEC_CO = rep(7.5,5),
+                A_CA_CO_PO = c(60,65,70,75,80), 
+                A_MG_CO_PO = c(10,5,3,2,2),
+                A_K_CO_PO = c(10,5,3,2,2), 
+                A_NA_CO_PO = c(5,5,3,2,2),
+                B_LU = c('testcrop1','3301000000','3301010901','3301061299','3304990000')),
+    expected = c(0.08727666, 0.07655451, 0.07199826, 0.06981598, 0.06986265),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_ph_pt(A_PH_WA = c(3,3.5,4,4.5,5),
+                A_CEC_CO = rep(7.5,5),
+                A_CA_CO_PO = c(60,65,70,75,80)/2, 
+                A_MG_CO_PO = c(10,5,3,2,2),
+                A_K_CO_PO = c(10,5,3,2,2), 
+                A_NA_CO_PO = c(5,5,3,2,2),
+                B_LU = c('testcrop1','3301000000','3301010901','3301061299','3304990000')),
+    expected = c(0.05761967, 0.04871134, 0.04743586, 0.06118419, 0.07792056),
+    tolerance = 0.01
+  )
+})
+
+test_that("osi_c_ph_ro works", {
+  expect_equal(
+    osi_c_ph_ro(A_PH_WA = 5.7,
+                A_NA_CO_PO = 2,
+                B_LU = '3301000000'),
+    expected = c(0.92429),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_ph_ro(A_PH_WA = rep(4.7,5),
+                A_NA_CO_PO = c(5,5,3,2,2),
+                B_LU = c('testcrop1','3301000000','3301010901','3301061299','3304990000')),
+    expected = c(0.3233039, 0.3233039, 0.3233039, 0.3233039, 0.3233039),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_ph_ro(A_PH_WA = c(4.5,5.5,6.5,7.3,7.3),
+                A_NA_CO_PO = c(1,1.5,2,2.5,3.5),
+                B_LU = c('testcrop1','3301000000','3301010901','3301061299','3304990000')),
+    expected = c(0.1510825, 0.8739327, 0.9909176, 0.9430865, 0.7753691),
+    tolerance = 0.01
+  )
+})
 test_that("osi_c_ph_se works", {
   expect_equal(
     osi_c_ph_se(B_LU = '3301000000', 

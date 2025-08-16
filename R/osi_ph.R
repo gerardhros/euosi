@@ -146,7 +146,7 @@ osi_c_ph <- function(B_LU,
   dt[B_COUNTRY == 'PT', value := osi_c_ph_pt(B_LU = B_LU, A_CEC_CO = A_CEC_CO,A_PH_WA = A_PH_WA,
                                              A_CA_CO_PO = A_CA_CO_PO, A_MG_CO_PO= A_MG_CO_PO, 
                                              A_K_CO_PO = A_K_CO_PO, A_NA_CO_PO= A_NA_CO_PO)]
-  dt[B_COUNTRY == 'RO', value := NA_real_]
+  dt[B_COUNTRY == 'RO', value := osi_c_ph_ro(B_LU = B_LU, A_PH_WA = A_PH_WA,A_NA_CO_PO = A_NA_CO_PO)]
   dt[B_COUNTRY == 'UK', value := osi_c_ph_uk(B_LU = B_LU, A_PH_WA = A_PH_WA, A_SOM_LOI = A_SOM_LOI)]
   
   # select the output variable
@@ -1008,6 +1008,71 @@ osi_c_ph_pt <- function(B_LU, A_CEC_CO = NA_real_,A_PH_WA = NA_real_,
   return(value)
   
 }
+
+#' Calculate the pH index in Romenia
+#' 
+#' This function calculates the pH index 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_PH_WA (numeric) The pH measured in water
+#' @param A_NA_CO_PO (numeric) The sodium occupation of the CEC (\%)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_ph_ro(B_LU = 'testcrop1',A_PH_WA = 5,A_NA_CO_PO=3)
+#' osi_c_ph_ro(B_LU = c('testcrop1','testcrop2'),A_PH_WA = c(3.5,5.5),A_NA_CO_PO=c(1,3))
+#' 
+#' @return 
+#' The pH index in Romenia. A numeric value.
+#' 
+#' @export
+osi_c_ph_ro <- function(B_LU, A_PH_WA,A_NA_CO_PO) {
+  
+  # add visual bindings
+  crop_code = crop_cat1 = crop_name = id = . = osi_country = NULL
+  
+  # crop data
+  #dt.crops <- as.data.table(euosi::osi_crops)
+  #dt.crops <- dt.crops[osi_country=='UK']
+  
+  # get max length of inputs
+  arg.length <- max(length(B_LU),length(A_PH_WA),length(A_NA_CO_PO))
+  
+  # check inputs
+  osi_checkvar(parm = list(A_PH_WA = A_PH_WA,
+                           A_NA_CO_PO = A_NA_CO_PO),
+               fname = 'osi_c_ph_ro')
+  
+  # internal data.table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = as.character(B_LU),
+                   A_PH_WA = A_PH_WA,
+                   A_NA_CO_PO = A_NA_CO_PO,
+                   value = NA_real_)
+  
+  # Acidic soils are corrected with limestone amendments (CaCO₃) if
+  # the pH falls below 5.8 or the exchangeable aluminum exceeds 0.15 me/100 g soil.
+  # Alkaline soils are corrected with gypsum (CaSO₄) to reduce exchangeable sodium below 5%.
+  # https://agil.ase.ro/wp-content/uploads/2025/02/3_Monitorizarea_caltatii_mediului.pdf
+  
+  # assessment of A_NA_CO_PO for calcareous soils
+  dt[A_PH_WA > 7.2, value := osi_evaluate_logistic(A_NA_CO_PO, b = -1.47225709, x0 = 6.60352175, v = 0.04053624)]
+  
+  # pH evaluation for acidic soils (and apply also calcareous when A_NA_CO_PO is not available)
+  dt[A_PH_WA <= 7.2 | is.na(value), value := osi_evaluate_logistic(A_PH_WA, b = 2.69648225, x0 = 3.73132614, v = 0.06271802)]
+  
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # select value
+  value <- dt[, value]
+  
+  # return
+  return(value)
+}
+
 
 #' Calculate the pH index in Sweden
 #' 
