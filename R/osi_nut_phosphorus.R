@@ -133,6 +133,7 @@ osi_nut_p <- function(B_LU,
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := osi_nut_p_dk(B_LU = B_LU, A_P_OL = A_P_OL)]
   dt[B_COUNTRY == 'EE', value := osi_nut_p_ee(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_M3 = A_P_M3)]
+  dt[B_COUNTRY == 'EL', value := osi_nut_p_el(B_LU = B_LU, A_P_OL = A_P_OL)]
   dt[B_COUNTRY == 'ES', value := osi_nut_p_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_P_OL = A_P_OL)]
   dt[B_COUNTRY == 'FR', value := osi_nut_p_fr(B_LU = B_LU, A_P_OL = A_P_OL,A_PH_WA = A_PH_WA)]
   dt[B_COUNTRY == 'FI', value := osi_nut_p_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_AAA = A_P_AAA, A_C_OF = A_C_OF )]
