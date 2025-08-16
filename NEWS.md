@@ -1,6 +1,7 @@
 # euosi 0.7.0 UNRELEASED
 
-# Added
+## Added
+* all indicators for Portugal (PT): phosphor, potassium
 
 
 # euosi 0.6.0 2025-08-17
