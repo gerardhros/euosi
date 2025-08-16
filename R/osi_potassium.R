@@ -183,6 +183,7 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_c
   # Poland (PL), Portugal (PT), and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_c_potassium_pl(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_K_DL = A_K_DL)]
   dt[B_COUNTRY == 'PT', value := osi_c_potassium_pt(B_LU = B_LU, A_K_AAA = A_K_AAA)]
+  dt[B_COUNTRY == 'RO', value := osi_c_potassium_ro(B_LU = B_LU, A_K_AL = A_K_AL,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES)]
   dt[B_COUNTRY == 'UK', value := osi_c_potassium_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_K_AN = A_K_AN)]
   
   # select the output variable
@@ -1724,6 +1725,62 @@ osi_c_potassium_pt <- function(B_LU, A_K_AAA) {
   return(value)
 }
 
+#' Calculate the potassium availability index in Romenia
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#' @param A_K_AL (numeric) The exchangeable K-content of the soil measured via ammoniuml lactate extracton (mg K/ kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_ro(B_LU = 'testcrop1',A_K_AL = 45,B_TEXTURE_HYPRES='M')
+#' 
+#' @return 
+#' The potassium availability index in Romenia estimated from extractable potassium. A numeric value.
+#' 
+#' @export
+osi_c_potassium_ro <- function(A_K_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  
+  # get max length of input variables
+  arg.length <- max(length(B_LU),length(B_TEXTURE_HYPRES),length(A_K_AL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                           A_K_AL = A_K_AL),
+               fname = 'osi_c_potassium_ro')
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                   A_K_AL = A_K_AL,
+                   value = NA_real_)
+  
+  # evaluate the OSI score for Light sandy and loamy soils, Lower values for sandy soils, higher values for loamy-sandy soils 
+  dt[B_TEXTURE_HYPRES %in% c('C'), value := osi_evaluate_logistic(x = A_K_AL, b= 0.04691703,x0 = 3.13861224,v = 0.10035566)]
+  dt[B_TEXTURE_HYPRES %in% c('M'), value := osi_evaluate_logistic(x = A_K_AL, b= 0.03211084,x0 = 3.42618554,v = 0.08696479)]
+  
+  # evaluate the OSI score for Medium clayey-sandy and loamy soils. Averaged conditions.
+  dt[B_TEXTURE_HYPRES %in% c('MF'), value := osi_evaluate_logistic(x = A_K_AL, b= 0.04247343,x0 = 3.02608975,v = 0.03096234)]
+  
+  # evaluate the OSI score for Heavy clayey-sandy and loamy soils. Averaged conditions.  
+  dt[B_TEXTURE_HYPRES %in% c('F','VF'), value := osi_evaluate_logistic(x = A_K_AL, b= 0.03502668,x0 = 3.35427054,v = 0.03066438)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
 #' Calculate the potassium availability index in Sweden
 #' 
 #' This function calculates the potassium availability. 
