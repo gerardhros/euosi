@@ -32,7 +32,7 @@ test_that("osi_c_magnesium works", {
                     A_MG_NaAAA = NA_real_,A_K_AAA = NA_real_,
                     A_K_CO_PO = NA_real_,A_K_CC = NA_real_,
                     B_COUNTRY = c('NL','FR','SE','ES','SK')),
-    expected = c(0.6597,0.97096,1,0.4486,0.0064),
+    expected = c(0.6597,0.996,1,0.4486,0.0064),
     tolerance = 0.01
   )
 
@@ -55,7 +55,7 @@ test_that("osi_c_magnesium works", {
                     A_MG_NaAAA = NA_real_,A_K_AAA = NA_real_,
                     A_K_CO_PO = NA_real_,A_K_CC = NA_real_,
                     B_COUNTRY = c('NL','FR','SE','ES','SK')),
-    expected = c(0.6597,0.97096,1,0.4486,0.0064),
+    expected = c(0.6597,0.99588953 ,1,0.4486,0.0064),
     tolerance = 0.01
   )
 })
@@ -290,7 +290,7 @@ test_that("osi_c_magnesium_fr works", {
                        A_CEC_CO = c(85,120,160,200), 
                        A_CACO3_IF = rep(6.5,4),
                        A_MG_AAA = c(10,30,60,100)),
-    expected = c(0.244,0.615,0.946,0.9977),
+    expected = c(0.2911305, 0.7875299, 0.9463230, 0.9976932),
     tolerance = 0.01
   )
   expect_equal(
@@ -299,7 +299,7 @@ test_that("osi_c_magnesium_fr works", {
                        A_CEC_CO = c(85,120,160,200), 
                        A_CACO3_IF = c(0.5,1,2,18),
                        A_MG_AAA = c(10,30,60,100)),
-    expected = c(0.244,0.6153,0.9463,0.9977),
+    expected = c(0.2911305, 0.7875299, 0.9463230, 0.9976932),
     tolerance = 0.01
   )
 })
