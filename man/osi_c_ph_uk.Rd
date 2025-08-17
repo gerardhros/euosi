@@ -4,7 +4,7 @@
 \alias{osi_c_ph_uk}
 \title{Calculate the pH index in United Kingdom}
 \usage{
-osi_c_ph_uk(B_LU, A_PH_WA, A_SOM_LOI)
+osi_c_ph_uk(B_LU, A_PH_WA, A_SOM_LOI, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -12,6 +12,8 @@ osi_c_ph_uk(B_LU, A_PH_WA, A_SOM_LOI)
 \item{A_PH_WA}{(numeric) The pH measured in water}
 
 \item{A_SOM_LOI}{(numeric) The organic matter content of soil in percentage}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The pH index in UK A numeric value.

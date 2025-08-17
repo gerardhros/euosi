@@ -4,7 +4,7 @@
 \alias{osi_nut_p_fr}
 \title{Calculate the phosphorus excess index in France}
 \usage{
-osi_nut_p_fr(B_LU, A_P_OL, A_PH_WA = NA_real_)
+osi_nut_p_fr(B_LU, A_P_OL, A_PH_WA = NA_real_, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -12,6 +12,8 @@ osi_nut_p_fr(B_LU, A_P_OL, A_PH_WA = NA_real_)
 \item{A_P_OL}{(numeric) The P-content of the soil extracted with Olsen}
 
 \item{A_PH_WA}{(numeric) The pH measured in water.}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphate excess index in France estimated from extractable soil P Olsen (a numeric value).

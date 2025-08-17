@@ -4,12 +4,14 @@
 \alias{osi_c_potassium_pt}
 \title{Calculate the potassium availability index in Portugal}
 \usage{
-osi_c_potassium_pt(B_LU, A_K_AAA)
+osi_c_potassium_pt(B_LU, A_K_AAA, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_K_AAA}{(numeric) The K-content of the soil extracted with acid ammonium acetate (mg K / kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The potassium availability index in Portugal derived from extractable soil K fractions. A numeric value.

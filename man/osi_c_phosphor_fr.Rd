@@ -9,7 +9,8 @@ osi_c_phosphor_fr(
   A_P_OL,
   B_SOILTYPE_AGR = NA_character_,
   B_AER_FR = NA_character_,
-  A_PH_WA = NA_real_
+  A_PH_WA = NA_real_,
+  unitcheck = TRUE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ osi_c_phosphor_fr(
 \item{B_AER_FR}{(character) An agroeconomic region in France. Optional.}
 
 \item{A_PH_WA}{(numeric) The pH measured in water.}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphate availability index in France estimated from extractable soil P Olsen (a numeric value).

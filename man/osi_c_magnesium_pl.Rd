@@ -4,7 +4,12 @@
 \alias{osi_c_magnesium_pl}
 \title{Calculate the magnesium availability index in Poland}
 \usage{
-osi_c_magnesium_pl(A_MG_CC, B_TEXTURE_HYPRES, B_LU = NA_character_)
+osi_c_magnesium_pl(
+  A_MG_CC,
+  B_TEXTURE_HYPRES,
+  B_LU = NA_character_,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{A_MG_CC}{(numeric) The exchangeable Mg-content of the soil measured via calcium chloride extracton (mg Mg/ kg)}
@@ -12,6 +17,8 @@ osi_c_magnesium_pl(A_MG_CC, B_TEXTURE_HYPRES, B_LU = NA_character_)
 \item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
 
 \item{B_LU}{(character) The crop code}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The magnesium availability index in Poland estimated from extractable magnesium. A numeric value.

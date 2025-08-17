@@ -4,7 +4,7 @@
 \alias{osi_c_boron_fr}
 \title{Calculate the B availability index for agricultural soils in France}
 \usage{
-osi_c_boron_fr(B_LU, A_CLAY_MI, A_B_HW)
+osi_c_boron_fr(B_LU, A_CLAY_MI, A_B_HW, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(character) The crop type}
@@ -12,6 +12,8 @@ osi_c_boron_fr(B_LU, A_CLAY_MI, A_B_HW)
 \item{A_CLAY_MI}{(numeric) The clay content (\%)}
 
 \item{A_B_HW}{(numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The boron availability index in France estimated from extractable boron, clay, A numeric value.

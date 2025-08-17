@@ -4,12 +4,14 @@
 \alias{osi_c_phosphor_ch}
 \title{Calculate the phosphorus availability index in Switzerland}
 \usage{
-osi_c_phosphor_ch(A_P_AAA, B_LU = NA_character_)
+osi_c_phosphor_ch(A_P_AAA, B_LU = NA_character_, unitcheck = TRUE)
 }
 \arguments{
 \item{A_P_AAA}{(numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction (mg P/ kg)}
 
 \item{B_LU}{(character) The crop code}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphorus availability index in Switzerland estimated from extractable phosphorus. A numeric value.

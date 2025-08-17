@@ -4,12 +4,14 @@
 \alias{osi_c_boron_se}
 \title{Calculate the boron availability index in Sweden}
 \usage{
-osi_c_boron_se(B_LU, A_PH_WA)
+osi_c_boron_se(B_LU, A_PH_WA, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_PH_WA}{(numeric) The pH measured in water}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The boron availability index in Sweden depends primarily on pH. A numeric value.

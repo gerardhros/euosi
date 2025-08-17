@@ -4,7 +4,7 @@
 \alias{osi_c_ph_ro}
 \title{Calculate the pH index in Romenia}
 \usage{
-osi_c_ph_ro(B_LU, A_PH_WA, A_NA_CO_PO)
+osi_c_ph_ro(B_LU, A_PH_WA, A_NA_CO_PO, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -12,6 +12,8 @@ osi_c_ph_ro(B_LU, A_PH_WA, A_NA_CO_PO)
 \item{A_PH_WA}{(numeric) The pH measured in water}
 
 \item{A_NA_CO_PO}{(numeric) The sodium occupation of the CEC (\%)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The pH index in Romenia. A numeric value.

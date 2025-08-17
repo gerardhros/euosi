@@ -4,7 +4,12 @@
 \alias{osi_c_potassium_cz}
 \title{Calculate the potassium availability index in Czech Republic}
 \usage{
-osi_c_potassium_cz(A_K_M3, B_TEXTURE_HYPRES, B_LU = NA_character_)
+osi_c_potassium_cz(
+  A_K_M3,
+  B_TEXTURE_HYPRES,
+  B_LU = NA_character_,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{A_K_M3}{(numeric) The exchangeable K-content of the soil measured via Mehlich 3 extracton (mg K/ kg)}
@@ -12,6 +17,8 @@ osi_c_potassium_cz(A_K_M3, B_TEXTURE_HYPRES, B_LU = NA_character_)
 \item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
 
 \item{B_LU}{(character) The crop code}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The potassium availability index in Czech Republic estimated from extractable potassium. A numeric value.

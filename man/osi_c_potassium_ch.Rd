@@ -4,7 +4,7 @@
 \alias{osi_c_potassium_ch}
 \title{Calculate the potassium availability index in Switzerland}
 \usage{
-osi_c_potassium_ch(A_K_AAA, A_CLAY_MI, B_LU = NA_character_)
+osi_c_potassium_ch(A_K_AAA, A_CLAY_MI, B_LU = NA_character_, unitcheck = TRUE)
 }
 \arguments{
 \item{A_K_AAA}{(numeric) The exchangeable K-content of the soil measured via acid ammonium acetate extraction (mg K/ kg)}
@@ -12,6 +12,8 @@ osi_c_potassium_ch(A_K_AAA, A_CLAY_MI, B_LU = NA_character_)
 \item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
 
 \item{B_LU}{(character) The crop code}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The potassium availability index in Switzerland estimated from extractable potassium. A numeric value.

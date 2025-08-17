@@ -4,7 +4,7 @@
 \alias{osi_c_ph_at}
 \title{Calculate the pH index in Austria}
 \usage{
-osi_c_ph_at(B_LU, A_PH_CC, B_TEXTURE_HYPRES)
+osi_c_ph_at(B_LU, A_PH_CC, B_TEXTURE_HYPRES, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -12,6 +12,8 @@ osi_c_ph_at(B_LU, A_PH_CC, B_TEXTURE_HYPRES)
 \item{A_PH_CC}{(numeric) The pH measured in cacl2}
 
 \item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The pH index in Austria, depending on land use and soil type. A numeric value.

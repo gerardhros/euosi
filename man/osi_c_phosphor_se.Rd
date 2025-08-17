@@ -4,12 +4,14 @@
 \alias{osi_c_phosphor_se}
 \title{Calculate the phosphate availability index in Sweden}
 \usage{
-osi_c_phosphor_se(B_LU, A_P_AL)
+osi_c_phosphor_se(B_LU, A_P_AL, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_P_AL}{(numeric) The P-content of the soil extracted with ammonium lactate (mg P / kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphate availability index in Sweden derived from extractable soil P fractions. A numeric value.

@@ -4,7 +4,12 @@
 \alias{osi_c_magnesium_hu}
 \title{Calculate the magnesium availability index in Hungary}
 \usage{
-osi_c_magnesium_hu(B_TEXTURE_USDA, A_MG_KCL, B_LU = NA_character_)
+osi_c_magnesium_hu(
+  B_TEXTURE_USDA,
+  A_MG_KCL,
+  B_LU = NA_character_,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{B_TEXTURE_USDA}{(character) The soil texture according to USDA classification system}
@@ -12,6 +17,8 @@ osi_c_magnesium_hu(B_TEXTURE_USDA, A_MG_KCL, B_LU = NA_character_)
 \item{A_MG_KCL}{(numeric) The exchangeable Mg-content of the soil measured via KCL extracton (mg Mg/ kg)}
 
 \item{B_LU}{(character) The crop code}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The magnesium availability index in Hungary estimated from extractable magnesium. A numeric value.

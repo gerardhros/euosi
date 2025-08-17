@@ -12,7 +12,8 @@ osi_nut_k_nl(
   A_PH_CC,
   A_CEC_CO,
   A_K_CO_PO,
-  A_K_CC
+  A_K_CC,
+  unitcheck = TRUE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ osi_nut_k_nl(
 \item{A_K_CO_PO}{(numeric) The occupation of the CEC with potassium (\%)}
 
 \item{A_K_CC}{(numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg / kg),}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The capacity of the soil to supply and buffer potassium, evaluated given an optimum threshold for yield. A numeric value.

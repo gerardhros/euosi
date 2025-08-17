@@ -4,12 +4,14 @@
 \alias{osi_c_potassium_se}
 \title{Calculate the potassium availability index in Sweden}
 \usage{
-osi_c_potassium_se(B_LU, A_K_AL)
+osi_c_potassium_se(B_LU, A_K_AL, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_K_AL}{(numeric) The K-content of the soil extracted with ammonium lactate (mg K / kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The potassium availability index in Sweden derived from extractable soil K fractions. A numeric value.

@@ -9,7 +9,8 @@ osi_c_phosphor_hu(
   A_CLAY_MI,
   A_CACO3_IF,
   A_P_AL,
-  B_LU = NA_character_
+  B_LU = NA_character_,
+  unitcheck = TRUE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ osi_c_phosphor_hu(
 \item{A_P_AL}{(numeric) The exchangeable P-content of the soil measured via Ammonium Lactate extracton (mg P/ kg)}
 
 \item{B_LU}{(character) The crop code}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphorus availability index in Hungary estimated from extractable phosphorus. A numeric value.

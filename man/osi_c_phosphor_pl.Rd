@@ -4,12 +4,14 @@
 \alias{osi_c_phosphor_pl}
 \title{Calculate the phosphorus availability index in Poland}
 \usage{
-osi_c_phosphor_pl(A_P_DL, B_LU = NA_character_)
+osi_c_phosphor_pl(A_P_DL, B_LU = NA_character_, unitcheck = TRUE)
 }
 \arguments{
 \item{A_P_DL}{(numeric) The exchangeable P-content of the soil measured via ammonium double lactate extracton (mg P/ kg)}
 
 \item{B_LU}{(character) The crop code}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphorus availability index in Poland estimated from extractable phosphorus. A numeric value.

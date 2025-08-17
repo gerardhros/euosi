@@ -4,7 +4,7 @@
 \alias{osi_c_ph_fi}
 \title{Calculate the pH index for Finland}
 \usage{
-osi_c_ph_fi(B_LU, B_TEXTURE_USDA, A_PH_WA, A_C_OF = 0.5)
+osi_c_ph_fi(B_LU, B_TEXTURE_USDA, A_PH_WA, A_C_OF = 0.5, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -14,6 +14,8 @@ osi_c_ph_fi(B_LU, B_TEXTURE_USDA, A_PH_WA, A_C_OF = 0.5)
 \item{A_PH_WA}{(numeric) The pH values determined via water extract}
 
 \item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The pH index in Finland estimated from pH water. A numeric value.

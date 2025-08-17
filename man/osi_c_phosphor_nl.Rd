@@ -9,7 +9,8 @@ osi_c_phosphor_nl(
   A_P_AL = NA_real_,
   A_P_CC = NA_real_,
   A_P_WA = NA_real_,
-  B_SOILTYPE_AGR = NA_real_
+  B_SOILTYPE_AGR = NA_real_,
+  unitcheck = TRUE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ osi_c_phosphor_nl(
 \item{A_P_WA}{(numeric) The P-content of the soil extracted with water (mg P/ kg)}
 
 \item{B_SOILTYPE_AGR}{(character) The soil type in a particular region}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphate availability index in the Netherlands estimated from extractable soil P fractions. A numeric value.

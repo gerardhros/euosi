@@ -4,12 +4,14 @@
 \alias{osi_c_magnesium_dk}
 \title{Calculate the magnesium availability index in Denmark}
 \usage{
-osi_c_magnesium_dk(B_LU, A_MG_AL)
+osi_c_magnesium_dk(B_LU, A_MG_AL, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_MG_AL}{(numeric) The Mg-content of the soil extracted with ammonium lactate (mg Mg / kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The magnesium availability index in Denmark derived from extractable soil Mg fractions. A numeric value.

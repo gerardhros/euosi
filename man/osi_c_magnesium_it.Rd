@@ -4,7 +4,7 @@
 \alias{osi_c_magnesium_it}
 \title{Calculate the magnesium availability index in Italy}
 \usage{
-osi_c_magnesium_it(B_LU, A_MG_CO_PO, A_K_CO_PO)
+osi_c_magnesium_it(B_LU, A_MG_CO_PO, A_K_CO_PO, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -12,6 +12,8 @@ osi_c_magnesium_it(B_LU, A_MG_CO_PO, A_K_CO_PO)
 \item{A_MG_CO_PO}{(numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)}
 
 \item{A_K_CO_PO}{(numeric) The exchangeable K-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The magnesium availability index in Italy estimated from the Mg extracted soil pool, expressed as occupation of the CEC. A numeric value.

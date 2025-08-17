@@ -13,7 +13,8 @@ osi_c_magnesium_nl(
   A_CEC_CO,
   A_K_CO_PO,
   A_MG_CC,
-  A_K_CC
+  A_K_CC,
+  unitcheck = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ osi_c_magnesium_nl(
 \item{A_MG_CC}{(numeric) The plant available content of Mg in the soil (mg  Mg per kg) extracted by 0.01M CaCl2}
 
 \item{A_K_CC}{(numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg per kg),}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 An index representing the availability of Magnesium in a soil. A numeric value.

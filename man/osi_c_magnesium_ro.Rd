@@ -11,7 +11,8 @@ osi_c_magnesium_ro(
   A_MG_CC,
   A_MG_CO_PO,
   A_K_CO_PO,
-  A_PH_WA
+  A_PH_WA,
+  unitcheck = TRUE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ osi_c_magnesium_ro(
 \item{A_K_CO_PO}{(numeric) The exchangeable K-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)}
 
 \item{A_PH_WA}{(numeric) The pH measured in water}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The Mg index in Romenia. A numeric value.

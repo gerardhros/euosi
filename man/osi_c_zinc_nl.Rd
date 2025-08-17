@@ -4,7 +4,7 @@
 \alias{osi_c_zinc_nl}
 \title{Calculate the Zn availability index for the Netherlands}
 \usage{
-osi_c_zinc_nl(B_LU, A_PH_CC, A_ZN_CC)
+osi_c_zinc_nl(B_LU, A_PH_CC, A_ZN_CC, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code from the BRP}
@@ -12,6 +12,8 @@ osi_c_zinc_nl(B_LU, A_PH_CC, A_ZN_CC)
 \item{A_PH_CC}{(numeric) The acidity of the soil, determined in 0.01M CaCl2 (-)}
 
 \item{A_ZN_CC}{The plant available Zn content, extracted with 0.01M CaCl2 (mg / kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The function of the soil to supply zinc (a numeric value).
