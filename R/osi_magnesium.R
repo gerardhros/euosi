@@ -870,13 +870,13 @@ osi_c_magnesium_fr <- function(B_LU,A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AAA) {
   dt <- data.table(id = 1:arg.length,
                    A_MG_AAA = A_MG_AAA,
                    A_CLAY_MI = A_CLAY_MI,
-                   A_CEC_CO = A_CEC_CO,
+                   A_CEC_CO = A_CEC_CO/10,
                    A_CACO3_IF = A_CACO3_IF,
                    value = NA_real_)
   
   # add soil category based in CEC and CACO3
-  dt[, soil_cat_mg := fifelse(A_CEC_CO < 7,'sand',
-                              fifelse(A_CEC_CO > 7 & A_CEC_CO < 12,'loam',
+  dt[, soil_cat_mg := fifelse(A_CEC_CO <= 7,'sand',
+                              fifelse(A_CEC_CO > 7 & A_CEC_CO <= 12,'loam',
                                  fifelse(A_CACO3_IF>0, 'clay calcareous', 'clay')))]
   
   # merge with threshold

@@ -29,7 +29,7 @@ ffective management of potassium (K) nutrition begins with understanding the amo
 
 Potassium in the soil solution is the only mobile and immediately available form for plants, representing roughly 0.02% to 2% of the total soil K. Exchangeable K, while not mobile, can be released from cation exchange sites into the soil solution, making up about 1% to 3% of total K. The vast majority—around 95% to 98%—exists in insoluble forms bound within soil minerals, making it unavailable to plants. Over long periods, weathering gradually releases K from these minerals into more available forms. Certain microorganisms can also enhance K availability from the mineral pool by producing organic acids that solubilize mineral-bound K, increasing its accessibility for plant uptake.
 
-The [European Open Soil Index](https://gerardhros.github.io/euosi/) assesses the soil function for P supply using the agronomic knowledge base as being used in the various EU countries. The soil P supply is transformed into an unitless indicator score ranging between zero (poor quality) and one (optimum quality). This indicator score reflects the ‘distance to target’ (i.e. difference between the current and optimum situation, while ensuring that other soil functions are not limiting). The further it deviates from score 1, the poorer the soil function works. An indicator value of 0.5 approximately corresponds to the lower threshold level of the fertilization guidelines under which (additional) fertilization is recommended (given the ‘buildup and maintenance’ approach as being implemented in fertilizer recommendation systems). Overall, the indicator value can be interpreted as good (>0.75), sufficient (0.5-0.75), and poor (<0.5).
+The [European Open Soil Index](https://gerardhros.github.io/euosi/) assesses the soil function for K supply using the agronomic knowledge base as being used in the various EU countries. The soil K supply is transformed into an unitless indicator score ranging between zero (poor quality) and one (optimum quality). This indicator score reflects the ‘distance to target’ (i.e. difference between the current and optimum situation, while ensuring that other soil functions are not limiting). The further it deviates from score 1, the poorer the soil function works. An indicator value of 0.5 approximately corresponds to the lower threshold level of the fertilization guidelines under which (additional) fertilization is recommended (given the ‘buildup and maintenance’ approach as being implemented in fertilizer recommendation systems). Overall, the indicator value can be interpreted as good (>0.75), sufficient (0.5-0.75), and poor (<0.5).
 
 ## The soil K wrapper function
 In euosi package has a wrapper function to assess the soil health index for the soil K supply in agricultural soils across Europe. The wrapper function is `osi_c_potassium` and has the following inputs:
@@ -73,7 +73,7 @@ The potassium supply in view of soil health can be calculated using `osi_c_potas
 
 The K supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the HYPRES texture class using `osi_get_TEXTURE_HYPRES`.
 
-The soil K threshold for optimum soil health is in Austria generic for all soil types but differs between arable land and grassland. The optimum threshold is set around 47-68 mg P/kg for grassland and around 47-111 mg P/kg for cropland. More information can be found in the article of Bohner et al. (2013), that can be downloaded [here](https://raumberg-gumpenstein.at/jdownloads/Forschungsberichte/Umweltressourcen_im_Gruenland/Naehrstoffe/2_2013_INTERREG_IV_Projekt_Abschlussbericht_gewaesserzukunft_Bohner.pdf) with a reference to the publication entitled `RICHTLINIEN FÜR DIE SACHGERECHTE DÜNGUNG, 2006: Anleitung zur Interpretation von Bodenuntersuchungsergebnissen in der Landwirtschaft. 6. Aufl. Bundesministerium für Land- und Forstwirtschaft,
+The soil K threshold for optimum soil health is in Austria generic for all soil types but differs between arable land and grassland. The optimum threshold is set around 47-68 mg K/kg for grassland and around 47-111 mg K/kg for cropland. More information can be found in the article of Bohner et al. (2013), that can be downloaded [here](https://raumberg-gumpenstein.at/jdownloads/Forschungsberichte/Umweltressourcen_im_Gruenland/Naehrstoffe/2_2013_INTERREG_IV_Projekt_Abschlussbericht_gewaesserzukunft_Bohner.pdf) with a reference to the publication entitled `RICHTLINIEN FÜR DIE SACHGERECHTE DÜNGUNG, 2006: Anleitung zur Interpretation von Bodenuntersuchungsergebnissen in der Landwirtschaft. 6. Aufl. Bundesministerium für Land- und Forstwirtschaft,
 Umwelt und Wasserwirtschaft, 80 S` that can be found [here](https://www.bmluk.gv.at/dam/jcr:6e638ac4-6dd2-441d-8e51-9304966230cf/Richtlinien%20f%C3%BCr%20die%20sachgerechte%20D%C3%BCngung%20im%20Ackerbau%20und%20Gr%C3%BCnland_akt.pdf).
 
 Note that the IACS crop codes codes have been added to the `osi_crops` package table in version 0.4.0. 
@@ -206,7 +206,7 @@ The K supplying capacity differ for soils varying in clay content and distinghui
 
 Note that the IACS crop codes for Germany are available in `osi_crops` package table.
 
-Below an example is visualized how the soil health index varies in relation to variation in K-CAL for a cropland soil. The optimum soil K threshold value for sustainable crop production is around 350 mg P/ kg for peat soils and around 200 mg K/kg for mineral soils. The soil index decreases when K-CAL values decreases down to 200 mg P/kg (peat soils) or 75-100 mg K/kg (mineral soils).
+Below an example is visualized how the soil health index varies in relation to variation in K-CAL for a cropland soil. The optimum soil K threshold value for sustainable crop production is around 350 mg K/ kg for peat soils and around 200 mg K/kg for mineral soils. The soil index decreases when K-CAL values decreases down to 200 mg K/kg (peat soils) or 75-100 mg K/kg (mineral soils).
 
 
 ```{r example DE1, out.width="75%", fig.cap="Evaluation K-indicator for Germany.",dpi=300, echo = FALSE}
@@ -234,7 +234,7 @@ The potassium supply in Denmark is based on the K level in soil being extracted 
 In the euosi package the soil health score for K supply can be calculated with `osi_c_potassium_dk`, requiring the following inputs:
 
 * B_LU, being the crop code, an unique number for each crop
-* A_K_AL, being the extracted P content with ammonium lactate, unit mg K /kg.
+* A_K_AL, being the extracted K content with ammonium lactate, unit mg K /kg.
 
 Note that the IACS crop codes for Denmark are available in `osi_crops` package table.
 
@@ -319,7 +319,7 @@ The K supplying capacity differ for soils varying in clay content, and the soil 
 
 Note that IACS crop codes for Spain are available in `osi_crops` package table.
 
-Below an example is visualized how the soil health index varies in relation to variation in K-AAA. The optimum soil K threshold value for sustainable crop production is around 300 mg K/ kg for the three soil types. The soil index decreases more stronger on the clay soils, in particular when K-AAA values drop down to 140 mg K/kg. For the sande soil the P availability remains quite high down to 75 mg K/kg.
+Below an example is visualized how the soil health index varies in relation to variation in K-AAA. The optimum soil K threshold value for sustainable crop production is around 300 mg K/ kg for the three soil types. The soil index decreases more stronger on the clay soils, in particular when K-AAA values drop down to 140 mg K/kg. For the sand soil the K availability remains quite high down to 75 mg K/kg.
 
 
 ```{r example ES1, out.width="75%", fig.cap="Evaluation K-indicator for Spain.",dpi=300, echo = FALSE}
@@ -350,7 +350,7 @@ The K supplying capacity differs in soils with varying textures. Based on the so
 
 Note that the crop codes for Finland are available in `osi_crops` package table.
 
-Below an example is visualized how the soil health index varies in relation to variation in K-AAA for four soil types. The differences between the loeamy and peaty soil types is rather small, whereas the biggest difference is foudn for the sandy and clay soil. The optimum soil P threshold value for sustainable crop production is around 275 mg K/ kg for the clay soil and around 175 mg K/kg for the other three soil types evaluated (i.e. sand,loam and peat). Deficiencies occur when K-AAA decreased down to 150 mg K/kg (clay) and 60-80 mg K/kg (the other soil types).
+Below an example is visualized how the soil health index varies in relation to variation in K-AAA for four soil types. The differences between the loeamy and peaty soil types is rather small, whereas the biggest difference is foudn for the sandy and clay soil. The optimum soil K threshold value for sustainable crop production is around 275 mg K/ kg for the clay soil and around 175 mg K/kg for the other three soil types evaluated (i.e. sand,loam and peat). Deficiencies occur when K-AAA decreased down to 150 mg K/kg (clay) and 60-80 mg K/kg (the other soil types).
 
 
 ```{r example FI1, out.width="75%", fig.cap="Evaluation K-indicator for Finland.",dpi=300, echo = FALSE}
@@ -858,7 +858,7 @@ The potassium supply in view of soil health for agricultural soils in United Kin
 * A_K_AN, being the extracted K content with ammonium nitrate, unit mg K /kg 
 * A_SOM_LOI, being the organic matter content, unit in percentage (\%), being used to convert the A_K_AN to the K-index classification system used in the UK.
 
-The P supplying capacity differs among soil textures, but in the UK the evaluation of the P supply is similar for all soil types but it varies for grassland and crop land.  Information on the threshold values for P-Olsen in view of sustainable crop production can be found on [the website of AHDB](https://ahdb.org.uk/knowledge-library/rb209-section-1-principles-of-nutrient-management-and-fertiliser-use). A more detailed table can be found [here](https://www.alsenvironmental.co.uk/media-uk/pdf/datasheets/contaminated-land/defra-index-scale_td_uk_2017.pdf)
+The K supplying capacity differs among soil textures, but in the UK the evaluation of the K supply is similar for all soil types but it varies for grassland and crop land.  Information on the threshold values for K-AN in view of sustainable crop production can be found on [the website of AHDB](https://ahdb.org.uk/knowledge-library/rb209-section-1-principles-of-nutrient-management-and-fertiliser-use). A more detailed table can be found [here](https://www.alsenvironmental.co.uk/media-uk/pdf/datasheets/contaminated-land/defra-index-scale_td_uk_2017.pdf)
 
 Note that the crop codes for the UK are not yet available in `osi_crops` package table. For now, the B_LU code is used to differentiate between vegetables and non-vegetables.
 
@@ -879,3 +879,6 @@ osi_plot_shi(shi = dt$osi_c_k, xpar = dt$A_K_AN, xpar_label = 'K-AN (mg K/kg)',p
 
 ```
 
+
+# Reading more?
+More vignettes will be made available regarding the derivation of all soil health indicators, the aggregation methods applied, the derivation of optimum land use given the current soil quality assessments, and the best management practices to be applied to improve the soil quality. See for example the vignettes `vignette("eu_osi_for_magnesium")` and the general introduction in `vignette("eu_osi_introduction")`. Are you interested to contribute, please contact the author(s) of this R package. Enjoy!
