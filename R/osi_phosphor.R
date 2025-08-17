@@ -88,7 +88,8 @@ osi_c_phosphor <- function(B_LU,
                            A_P_OL = dt$A_P_OL,
                            A_P_CC = dt$A_P_CC),
                fname='oci_c_phosphor',
-               na_allowed = TRUE)
+               na_allowed = TRUE,
+               unitcheck = TRUE)
   
   # estimate texture information
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
@@ -118,44 +119,45 @@ osi_c_phosphor <- function(B_LU,
                            A_P_M3 = dt$A_P_M3,
                            A_P_WA = dt$A_P_WA,
                            A_P_CC = dt$A_P_CC),
-               fname='oci_c_phosphor')
+               fname='oci_c_phosphor',
+               unitcheck = TRUE)
   
   # calculate the OSI score per country
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
-  dt[B_COUNTRY == 'AT', value := osi_c_phosphor_at(B_LU = B_LU, A_P_CAL = A_P_CAL)]
-  dt[B_COUNTRY == 'BE', value := osi_c_phosphor_be(B_LU = B_LU, A_P_AL = A_P_AL)]
-  dt[B_COUNTRY == 'CH', value := osi_c_phosphor_ch(B_LU = B_LU, A_P_AAA = A_P_AAA)]
-  dt[B_COUNTRY == 'CZ', value := osi_c_phosphor_cz(B_LU = B_LU, A_P_M3 = A_P_M3)]
-  dt[B_COUNTRY == 'DE', value := osi_c_phosphor_de(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI,A_P_CAL = A_P_CAL, A_P_DL = A_P_DL)]
+  dt[B_COUNTRY == 'AT', value := osi_c_phosphor_at(B_LU = B_LU, A_P_CAL = A_P_CAL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'BE', value := osi_c_phosphor_be(B_LU = B_LU, A_P_AL = A_P_AL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'CH', value := osi_c_phosphor_ch(B_LU = B_LU, A_P_AAA = A_P_AAA, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'CZ', value := osi_c_phosphor_cz(B_LU = B_LU, A_P_M3 = A_P_M3, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'DE', value := osi_c_phosphor_de(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI,A_P_CAL = A_P_CAL, A_P_DL = A_P_DL, unitcheck = FALSE)]
   
   # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
-  dt[B_COUNTRY == 'DK', value := osi_c_phosphor_dk(B_LU = B_LU, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'EE', value := osi_c_phosphor_ee(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_M3 = A_P_M3)]
-  dt[B_COUNTRY == 'EL', value := osi_c_phosphor_el(B_LU = B_LU, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'ES', value := osi_c_phosphor_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'FR', value := osi_c_phosphor_fr(B_LU = B_LU, B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_P_OL= A_P_OL,A_PH_WA=A_PH_WA)]
-  dt[B_COUNTRY == 'FI', value := osi_c_phosphor_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_AAA = A_P_AAA, A_C_OF = A_C_OF )]
+  dt[B_COUNTRY == 'DK', value := osi_c_phosphor_dk(B_LU = B_LU, A_P_OL = A_P_OL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'EE', value := osi_c_phosphor_ee(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_M3 = A_P_M3, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'EL', value := osi_c_phosphor_el(B_LU = B_LU, A_P_OL = A_P_OL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'ES', value := osi_c_phosphor_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_P_OL = A_P_OL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'FR', value := osi_c_phosphor_fr(B_LU = B_LU, B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_P_OL= A_P_OL,A_PH_WA=A_PH_WA, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'FI', value := osi_c_phosphor_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_AAA = A_P_AAA, A_C_OF = A_C_OF, unitcheck = FALSE)]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
-  dt[B_COUNTRY == 'HU', value := osi_c_phosphor_hu(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI, A_CACO3_IF = A_CACO3_IF,A_P_AL = A_P_AL )]
-  dt[B_COUNTRY == 'IE', value := osi_c_phosphor_ie(B_LU = B_LU, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'IT', value := osi_c_phosphor_it(B_LU = B_LU, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'LV', value := osi_c_phosphor_lv(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_DL = A_P_DL)]
-  dt[B_COUNTRY == 'LT', value := osi_c_phosphor_lt(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_AL = A_P_AL)]
+  dt[B_COUNTRY == 'HU', value := osi_c_phosphor_hu(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI, A_CACO3_IF = A_CACO3_IF,A_P_AL = A_P_AL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'IE', value := osi_c_phosphor_ie(B_LU = B_LU, A_P_OL = A_P_OL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'IT', value := osi_c_phosphor_it(B_LU = B_LU, A_P_OL = A_P_OL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'LV', value := osi_c_phosphor_lv(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_DL = A_P_DL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'LT', value := osi_c_phosphor_lt(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_AL = A_P_AL, unitcheck = FALSE)]
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
-  dt[B_COUNTRY == 'NL', value := osi_c_phosphor_nl(B_LU = B_LU, A_P_AL = A_P_AL, A_P_CC = A_P_CC, A_P_WA = A_P_WA, B_SOILTYPE_AGR = B_SOILTYPE_AGR)]
-  dt[B_COUNTRY == 'NO', value := osi_c_phosphor_no(B_LU = B_LU, A_P_AL = A_P_AL)]
-  dt[B_COUNTRY == 'SE', value := osi_c_phosphor_se(B_LU = B_LU, A_P_AL = A_P_AL)]
-  dt[B_COUNTRY == 'SK', value := osi_c_phosphor_sk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_P_M3 = A_P_M3)]
-  dt[B_COUNTRY == 'SL', value := osi_c_phosphor_sl(B_LU = B_LU, A_P_AL = A_P_AL)]
+  dt[B_COUNTRY == 'NL', value := osi_c_phosphor_nl(B_LU = B_LU, A_P_AL = A_P_AL, A_P_CC = A_P_CC, A_P_WA = A_P_WA, B_SOILTYPE_AGR = B_SOILTYPE_AGR, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'NO', value := osi_c_phosphor_no(B_LU = B_LU, A_P_AL = A_P_AL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'SE', value := osi_c_phosphor_se(B_LU = B_LU, A_P_AL = A_P_AL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'SK', value := osi_c_phosphor_sk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_P_M3 = A_P_M3, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'SL', value := osi_c_phosphor_sl(B_LU = B_LU, A_P_AL = A_P_AL, unitcheck = FALSE)]
   
   # Poland (PL), Portugal (PT), and United Kingdom (UK)
-  dt[B_COUNTRY == 'PL', value := osi_c_phosphor_pl(B_LU = B_LU, A_P_DL = A_P_DL)]
-  dt[B_COUNTRY == 'PT', value := osi_c_phosphor_pt(B_LU = B_LU, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'RO', value := osi_c_phosphor_ro(B_LU = B_LU, A_P_AL = A_P_AL)]
-  dt[B_COUNTRY == 'UK', value := osi_c_phosphor_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_OL = A_P_OL)]
+  dt[B_COUNTRY == 'PL', value := osi_c_phosphor_pl(B_LU = B_LU, A_P_DL = A_P_DL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'PT', value := osi_c_phosphor_pt(B_LU = B_LU, A_P_OL = A_P_OL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'RO', value := osi_c_phosphor_ro(B_LU = B_LU, A_P_AL = A_P_AL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'UK', value := osi_c_phosphor_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_OL = A_P_OL, unitcheck = FALSE)]
   
   # sort data.table
   setorder(dt,id)
@@ -174,6 +176,7 @@ osi_c_phosphor <- function(B_LU,
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_P_CAL (numeric) The exchangeable P-content of the soil measured via Calcium Ammonium Lactate (mg P/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -184,7 +187,7 @@ osi_c_phosphor <- function(B_LU,
 #' The phosphorus availability index in Austria estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_at <- function(B_LU, A_P_CAL) {
+osi_c_phosphor_at <- function(B_LU, A_P_CAL,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -201,7 +204,8 @@ osi_c_phosphor_at <- function(B_LU, A_P_CAL) {
   osi_checkvar(parm = list(B_COUNTRY = rep('AT',arg.length),
                            B_LU = B_LU,
                            A_P_CAL = A_P_CAL),
-               fname = 'osi_c_phosphor_at')
+               fname = 'osi_c_phosphor_at',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -236,7 +240,8 @@ osi_c_phosphor_at <- function(B_LU, A_P_CAL) {
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_P_AL (numeric) The exchangeable P-content of the soil measured via ammonium lactate extraction (mg P/ kg)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -246,7 +251,7 @@ osi_c_phosphor_at <- function(B_LU, A_P_CAL) {
 #' The phosphorus availability index in Belgium estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_be <- function(B_LU, A_P_AL) {
+osi_c_phosphor_be <- function(B_LU, A_P_AL,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -267,7 +272,8 @@ osi_c_phosphor_be <- function(B_LU, A_P_AL) {
   osi_checkvar(parm = list(B_COUNTRY = rep('BE',arg.length),
                            B_LU = B_LU,
                            A_P_AL = A_P_AL),
-               fname = 'osi_c_phoshor_be')
+               fname = 'osi_c_phoshor_be',
+               unitcheck = unitcheck)
   
   # Collect the data into a table, convert from mg P/kg to units being used in Belgium (mg P/100g)
   dt <- data.table(id = 1:arg.length,
@@ -309,6 +315,7 @@ osi_c_phosphor_be <- function(B_LU, A_P_AL) {
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction (mg P/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -319,7 +326,7 @@ osi_c_phosphor_be <- function(B_LU, A_P_AL) {
 #' The phosphorus availability index in Switzerland estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_ch <- function(A_P_AAA,B_LU = NA_character_) {
+osi_c_phosphor_ch <- function(A_P_AAA,B_LU = NA_character_,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -341,7 +348,8 @@ osi_c_phosphor_ch <- function(A_P_AAA,B_LU = NA_character_) {
   
   # check inputs
   osi_checkvar(parm = list(A_P_AAA = A_P_AAA),
-               fname = 'osi_c_phoshor_ch')
+               fname = 'osi_c_phoshor_ch',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -382,6 +390,7 @@ osi_c_phosphor_ch <- function(A_P_AAA,B_LU = NA_character_) {
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_P_M3 (numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -392,7 +401,7 @@ osi_c_phosphor_ch <- function(A_P_AAA,B_LU = NA_character_) {
 #' The phosphorus availability index in Czech Republic estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_cz <- function(B_LU, A_P_M3) {
+osi_c_phosphor_cz <- function(B_LU, A_P_M3,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -409,7 +418,8 @@ osi_c_phosphor_cz <- function(B_LU, A_P_M3) {
   osi_checkvar(parm = list(B_COUNTRY = rep('CZ',arg.length),
                            B_LU = B_LU,
                            A_P_M3 = A_P_M3),
-               fname = 'osi_c_phoshor_cz')
+               fname = 'osi_c_phoshor_cz',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -446,7 +456,8 @@ osi_c_phosphor_cz <- function(B_LU, A_P_M3) {
 #' @param A_P_DL (numeric) The P-content of the soil extracted with double lactate (mg P / kg)
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -458,7 +469,7 @@ osi_c_phosphor_cz <- function(B_LU, A_P_M3) {
 #' The phosphate availability index in Germany stimated from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL, A_P_DL = NA_real_) {
+osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL, A_P_DL = NA_real_,unitcheck = TRUE) {
   
   # add visual bindings
   value1 = value2 = A_P_CAL2 = NULL
@@ -474,7 +485,8 @@ osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL, A_P_DL = NA_rea
   osi_checkvar(parm = list(B_COUNTRY = rep('DE',arg.length),
                            B_LU = B_LU,
                            A_P_CAL = A_P_CAL),
-               fname = 'osi_c_phoshor_de')
+               fname = 'osi_c_phoshor_de',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
@@ -490,7 +502,8 @@ osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL, A_P_DL = NA_rea
   # check calculated inputs
   osi_checkvar(parm = list(A_P_CAL = A_P_CAL,
                            A_P_DL = A_P_DL),
-               fname = 'osi_c_phoshor_de')
+               fname = 'osi_c_phoshor_de',
+               unitcheck = TRUE)
   
   # evaluation conform VDLUFA for cropland and soil types
   # with updated VDLUFA thresholds in 2020
@@ -518,6 +531,7 @@ osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL, A_P_DL = NA_rea
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #'  
 #' @import data.table
 #' 
@@ -529,7 +543,7 @@ osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL, A_P_DL = NA_rea
 #' The phosphate availability index in Denmark derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_dk <- function(B_LU, A_P_OL) {
+osi_c_phosphor_dk <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   
   # get argument length
   arg.length <- max(length(B_LU),length(A_P_OL))
@@ -538,7 +552,8 @@ osi_c_phosphor_dk <- function(B_LU, A_P_OL) {
   osi_checkvar(parm = list(B_COUNTRY = rep('DK',arg.length),
                            B_LU = B_LU,
                            A_P_OL = A_P_OL),
-               fname = 'osi_c_phoshor_dk')
+               fname = 'osi_c_phoshor_dk',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
@@ -560,7 +575,8 @@ osi_c_phosphor_dk <- function(B_LU, A_P_OL) {
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P/kg)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -571,7 +587,7 @@ osi_c_phosphor_dk <- function(B_LU, A_P_OL) {
 #' The phosphate availability index in Greece derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_el <- function(B_LU, A_P_OL) {
+osi_c_phosphor_el <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   
   # add visual bindings
   osi_country = crop_code = crop_cat1 = . = NULL
@@ -585,7 +601,8 @@ osi_c_phosphor_el <- function(B_LU, A_P_OL) {
   
   # check inputs (crop code is not yet in osi_crops, so no check)
   osi_checkvar(parm = list(A_P_OL = A_P_OL),
-               fname = 'osi_c_phosphor_el')
+               fname = 'osi_c_phosphor_el',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
@@ -618,7 +635,8 @@ osi_c_phosphor_el <- function(B_LU, A_P_OL) {
 #' @param B_LU (character) The crop code
 #' @param A_P_M3 (numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -628,7 +646,7 @@ osi_c_phosphor_el <- function(B_LU, A_P_OL) {
 #' The phosphorus availability index in Estonia estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_) {
+osi_c_phosphor_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -651,7 +669,8 @@ osi_c_phosphor_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_) {
   # check inputs (no check on crop type due to missing crop codes)
   osi_checkvar(parm = list(A_P_M3 = A_P_M3,
                            A_SOM_LOI = A_SOM_LOI),
-               fname = 'osi_c_phoshor_ee')
+               fname = 'osi_c_phoshor_ee',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -696,7 +715,8 @@ osi_c_phosphor_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_) {
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -708,7 +728,7 @@ osi_c_phosphor_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_) {
 #' The phosphate availability index in Spain derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL) {
+osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL,unitcheck = TRUE) {
   
   # get max length of input
   arg.length <- max(length(B_LU),length(A_CLAY_MI),length(A_SAND_MI),length(A_P_OL))
@@ -719,7 +739,8 @@ osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL) {
                            A_CLAY_MI = A_CLAY_MI,
                            A_SAND_MI = A_SAND_MI,
                            A_P_OL = A_P_OL),
-               fname = 'osi_c_phoshor_es')
+               fname = 'osi_c_phoshor_es',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -751,7 +772,8 @@ osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL) {
 #' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -762,7 +784,7 @@ osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL) {
 #' The phosphorus availability index in Finland estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0.5) {
+osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0.5,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -789,7 +811,8 @@ osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0.5) {
                            B_TEXTURE_USDA = B_TEXTURE_USDA,
                            A_C_OF = A_C_OF,
                            A_P_AAA = A_P_AAA),
-               fname = 'osi_c_phoshor_fi')
+               fname = 'osi_c_phoshor_fi',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -842,6 +865,7 @@ osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0.5) {
 #' @param B_AER_FR (character) An agroeconomic region in France. Optional.
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P/ kg)
 #' @param A_PH_WA (numeric) The pH measured in water.
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -856,7 +880,8 @@ osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0.5) {
 #' The phosphate availability index in France estimated from extractable soil P Olsen (a numeric value). 
 #' 
 #' @export
-osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_PH_WA = NA_real_) {
+osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, 
+                              A_PH_WA = NA_real_,unitcheck = TRUE) {
   
   # set visual bindings
   value = osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -894,7 +919,8 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
                            B_LU = B_LU,
                            A_PH_WA = A_PH_WA,
                            A_P_OL = A_P_OL),
-               fname = 'osi_c_phoshor_fr')
+               fname = 'osi_c_phoshor_fr',
+               unitcheck = unitcheck)
   
   # check optional parameters 
   if(sum(!is.na(B_SOILTYPE_AGR))>0){
@@ -956,6 +982,7 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_CACO3_IF (numeric) the percentage of CaCO3 (\%)
 #' @param A_P_AL (numeric) The exchangeable P-content of the soil measured via Ammonium Lactate extracton (mg P/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -966,7 +993,8 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
 #' The phosphorus availability index in Hungary estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,B_LU = NA_character_) {
+osi_c_phosphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,
+                              B_LU = NA_character_,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -988,7 +1016,8 @@ osi_c_phosphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,B_LU = NA_ch
                            A_CLAY_MI = A_CLAY_MI,
                            A_CACO3_IF = A_CACO3_IF,
                            A_P_AL = A_P_AL),
-               fname = 'osi_c_phoshor_hu')
+               fname = 'osi_c_phoshor_hu',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1041,6 +1070,7 @@ osi_c_phosphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,B_LU = NA_ch
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #'  
 #' @import data.table
 #' 
@@ -1052,7 +1082,7 @@ osi_c_phosphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,B_LU = NA_ch
 #' The phosphate availability index in Ireland derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_ie <- function(B_LU, A_P_OL) {
+osi_c_phosphor_ie <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   
   # add visual binding
   cropcat1 = NULL
@@ -1062,7 +1092,8 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL) {
   
   # check inputs (not for B_LU since these are not in osi_crops)
   osi_checkvar(parm = list(A_P_OL = A_P_OL),
-               fname = 'osi_c_phoshor_ie')
+               fname = 'osi_c_phoshor_ie',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
@@ -1094,7 +1125,8 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL) {
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -1105,7 +1137,7 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL) {
 #' The phosphate availability index in Italy derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_it <- function(B_LU, A_P_OL) {
+osi_c_phosphor_it <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   
   # add visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
@@ -1121,7 +1153,8 @@ osi_c_phosphor_it <- function(B_LU, A_P_OL) {
   osi_checkvar(parm = list(B_COUNTRY = rep('IT',arg.length),
                            B_LU = B_LU,
                            A_P_OL = A_P_OL),
-               fname = 'osi_c_phoshor_it')
+               fname = 'osi_c_phoshor_it',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -1151,7 +1184,8 @@ osi_c_phosphor_it <- function(B_LU, A_P_OL) {
 #' @param B_LU (character) The crop code
 #' @param A_P_DL (numeric) The exchangeable P-content of the soil measured via Double Lactate extraction (mg P/ kg)
 #' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -1161,7 +1195,7 @@ osi_c_phosphor_it <- function(B_LU, A_P_OL) {
 #' The phosphorus availability index in Latvia estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
+osi_c_phosphor_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1181,7 +1215,8 @@ osi_c_phosphor_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
   # check inputs (not for B_LU since these are not in osi_crops)
   osi_checkvar(parm = list(B_TEXTURE_USDA = B_TEXTURE_USDA,
                            A_P_DL = A_P_DL),
-               fname = 'osi_c_phoshor_lv')
+               fname = 'osi_c_phoshor_lv',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1230,7 +1265,8 @@ osi_c_phosphor_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
 #' @param B_LU (character) The crop code
 #' @param A_P_AL (numeric) The exchangeable P-content of the soil measured via Ammonium Lactate extraction (mg P/ kg)
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -1240,7 +1276,7 @@ osi_c_phosphor_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
 #' The phosphorus availability index in Lithuania estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
+osi_c_phosphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1260,7 +1296,8 @@ osi_c_phosphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
   # check inputs (not for B_LU since these are not in osi_crops)
   osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
                            A_P_AL = A_P_AL),
-               fname = 'osi_c_phoshor_lt')
+               fname = 'osi_c_phoshor_lt',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1305,6 +1342,7 @@ osi_c_phosphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
 #' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate (mg P/ kg)
 #' @param A_P_CC (numeric) The P-content of the soil extracted with CaCl2 (mg P/ kg)
 #' @param A_P_WA (numeric) The P-content of the soil extracted with water (mg P/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -1318,7 +1356,7 @@ osi_c_phosphor_lt <- function(A_P_AL,A_SOM_LOI,B_LU = NA_character_) {
 #' 
 #' @export
 osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_,
-                              B_SOILTYPE_AGR = NA_real_) {
+                              B_SOILTYPE_AGR = NA_real_,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = NULL
@@ -1353,7 +1391,8 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
                            A_P_CC = A_P_CC,
                            A_P_WA = A_P_WA),
                fname = 'osi_c_phoshor_nl',
-               na_allowed = TRUE)
+               na_allowed = TRUE,
+               unitcheck = unitcheck)
   
   # Collect the data into a table, convert to Dutch units
   # assume 3.5% organic matter for the calculation of bulk density
@@ -1403,6 +1442,7 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_P_AL (numeric) The exchangeable P-content of the soil measured via Ammonium Lactate (mg P/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -1413,7 +1453,7 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
 #' The phosphorus availability index in Norway estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_no <- function(A_P_AL,B_LU = NA_character_) {
+osi_c_phosphor_no <- function(A_P_AL,B_LU = NA_character_,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1432,7 +1472,8 @@ osi_c_phosphor_no <- function(A_P_AL,B_LU = NA_character_) {
   
   # check inputs (not for B_LU since these are not in osi_crops)
   osi_checkvar(parm = list(A_P_AL = A_P_AL),
-               fname = 'osi_c_phoshor_no')
+               fname = 'osi_c_phoshor_no',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1473,6 +1514,7 @@ osi_c_phosphor_no <- function(A_P_AL,B_LU = NA_character_) {
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_P_DL (numeric) The exchangeable P-content of the soil measured via ammonium double lactate extracton (mg P/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -1483,7 +1525,7 @@ osi_c_phosphor_no <- function(A_P_AL,B_LU = NA_character_) {
 #' The phosphorus availability index in Poland estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_) {
+osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1502,7 +1544,8 @@ osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_) {
   
   # check inputs (not for B_LU since these are not in osi_crops)
   osi_checkvar(parm = list(A_P_DL = A_P_DL),
-               fname = 'osi_c_phoshor_pl')
+               fname = 'osi_c_phoshor_pl',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1543,7 +1586,8 @@ osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_) {
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P/kg)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -1554,7 +1598,7 @@ osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_) {
 #' The phosphate availability index in Portugal derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_pt <- function(B_LU, A_P_OL) {
+osi_c_phosphor_pt <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   
   # add visual bindings
   osi_country = crop_code = crop_cat1 = . = NULL
@@ -1570,7 +1614,8 @@ osi_c_phosphor_pt <- function(B_LU, A_P_OL) {
   osi_checkvar(parm = list(B_COUNTRY = rep('PT',arg.length),
                            B_LU = B_LU,
                            A_P_OL = A_P_OL),
-               fname = 'osi_c_phoshor_pt')
+               fname = 'osi_c_phoshor_pt',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
@@ -1601,7 +1646,8 @@ osi_c_phosphor_pt <- function(B_LU, A_P_OL) {
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_P_AL (numeric) The P-content of the soil extracted with Acetate Lactate (mg/kg)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -1612,7 +1658,7 @@ osi_c_phosphor_pt <- function(B_LU, A_P_OL) {
 #' The phosphate availability index in Romenia derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_ro <- function(B_LU, A_P_AL) {
+osi_c_phosphor_ro <- function(B_LU, A_P_AL,unitcheck = TRUE) {
   
   # add visual binding
   cropcat1 = NULL
@@ -1622,7 +1668,8 @@ osi_c_phosphor_ro <- function(B_LU, A_P_AL) {
   
   # check inputs (not for B_LU since these are not in osi_crops)
   osi_checkvar(parm = list(A_P_AL = A_P_AL),
-               fname = 'osi_c_phoshor_ro')
+               fname = 'osi_c_phoshor_ro',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
@@ -1647,7 +1694,8 @@ osi_c_phosphor_ro <- function(B_LU, A_P_AL) {
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate (mg P / kg)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -1658,7 +1706,7 @@ osi_c_phosphor_ro <- function(B_LU, A_P_AL) {
 #' The phosphate availability index in Sweden derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_se <- function(B_LU, A_P_AL) {
+osi_c_phosphor_se <- function(B_LU, A_P_AL,unitcheck = TRUE) {
   
   # add visual binding
   crop_cat1 = osi_country = . = crop_code = crop_cat2 = NULL
@@ -1674,7 +1722,8 @@ osi_c_phosphor_se <- function(B_LU, A_P_AL) {
   osi_checkvar(parm = list(B_COUNTRY = rep('SE',arg.length),
                            B_LU = B_LU,
                            A_P_AL = A_P_AL),
-               fname = 'osi_c_phoshor_se')
+               fname = 'osi_c_phoshor_se',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -1719,6 +1768,7 @@ osi_c_phosphor_se <- function(B_LU, A_P_AL) {
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
 #' @param A_P_M3 (numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -1729,7 +1779,7 @@ osi_c_phosphor_se <- function(B_LU, A_P_AL) {
 #' The phosphorus availability index in Slovak Republic estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_sk <- function(B_LU, B_TEXTURE_HYPRES,A_P_M3) {
+osi_c_phosphor_sk <- function(B_LU, B_TEXTURE_HYPRES,A_P_M3,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
@@ -1746,7 +1796,8 @@ osi_c_phosphor_sk <- function(B_LU, B_TEXTURE_HYPRES,A_P_M3) {
                            B_LU = B_LU,
                            B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                            A_P_M3 = A_P_M3),
-               fname = 'osi_c_phoshor_sk')
+               fname = 'osi_c_phoshor_sk',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1783,6 +1834,7 @@ osi_c_phosphor_sk <- function(B_LU, B_TEXTURE_HYPRES,A_P_M3) {
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_P_AL (numeric) The exchangeable P-content of the soil measured via ammoniuml lactate extracton (mg P/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -1793,7 +1845,7 @@ osi_c_phosphor_sk <- function(B_LU, B_TEXTURE_HYPRES,A_P_M3) {
 #' The phosphorus availability index in Slovenia estimated from extractable phosphorus. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_sl <- function(A_P_AL,B_LU = NA_character_) {
+osi_c_phosphor_sl <- function(A_P_AL,B_LU = NA_character_,unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1812,7 +1864,8 @@ osi_c_phosphor_sl <- function(A_P_AL,B_LU = NA_character_) {
   
   # check inputs (not for B_LU since these are not in osi_crops)
   osi_checkvar(parm = list(A_P_AL = A_P_AL),
-               fname = 'osi_c_phoshor_sl')
+               fname = 'osi_c_phoshor_sl',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1856,7 +1909,8 @@ osi_c_phosphor_sl <- function(A_P_AL,B_LU = NA_character_) {
 #' @param B_LU (numeric) The crop code
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P /kg)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -1867,7 +1921,7 @@ osi_c_phosphor_sl <- function(A_P_AL,B_LU = NA_character_) {
 #' The phosphate availability index in United Kingdom derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_uk <- function(B_LU, A_SOM_LOI,A_P_OL) {
+osi_c_phosphor_uk <- function(B_LU, A_SOM_LOI,A_P_OL,unitcheck = TRUE) {
   
   # set visual bindings
   crop_name = crop_cat1 = BD = . = NULL
@@ -1881,7 +1935,8 @@ osi_c_phosphor_uk <- function(B_LU, A_SOM_LOI,A_P_OL) {
   # check inputs (not for B_LU since these are not in osi_crops)
   osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
                            A_P_OL = A_P_OL),
-               fname = 'osi_c_phoshor_uk')
+               fname = 'osi_c_phoshor_uk',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
