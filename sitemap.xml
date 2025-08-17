@@ -3,6 +3,7 @@
 <url><loc>https://gerardhros.github.io/euosi/LICENSE-text.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/articles/description_osi_crops_table.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/articles/eu_osi_aggregation.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/articles/eu_osi_for_magnesium.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/articles/eu_osi_for_nitrogen.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/articles/eu_osi_for_phosphor.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/articles/eu_osi_for_potassium.html</loc></url>
@@ -31,8 +32,10 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_boron_uk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_copper.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_copper_fr.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_c_copper_ro.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_at.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_be.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_ch.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_de.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_dk.html</loc></url>
@@ -45,8 +48,10 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_lt.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_lv.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_nl.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_no.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_pl.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_pt.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_ro.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_se.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_sk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_magnesium_sl.html</loc></url>
@@ -62,11 +67,13 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_ph_be.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_ph_ch.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_ph_de.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_c_ph_el.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_ph_fi.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_ph_fr.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_ph_ie.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_ph_nl.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_ph_pt.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_c_ph_ro.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_ph_se.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_ph_uk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor.html</loc></url>
@@ -77,6 +84,7 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_de.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_dk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_ee.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_el.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_es.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_fi.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_fr.html</loc></url>
@@ -89,6 +97,7 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_no.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_pl.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_pt.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_ro.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_se.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_sk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_phosphor_sl.html</loc></url>
@@ -101,6 +110,7 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_de.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_dk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_ee.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_el.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_es.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_fi.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_fr.html</loc></url>
@@ -113,6 +123,7 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_no.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_pl.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_pt.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_ro.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_se.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_sk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_potassium_sl.html</loc></url>
@@ -123,6 +134,7 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_zinc_ie.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_zinc_nl.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_zinc_pt.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_c_zinc_ro.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_c_zinc_uk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_carbon.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_checkvar.html</loc></url>
@@ -161,6 +173,7 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_de.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_dk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_ee.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_el.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_es.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_fi.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_fr.html</loc></url>
@@ -173,6 +186,7 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_no.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_pl.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_pt.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_ro.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_se.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_sk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_k_sl.html</loc></url>
@@ -185,6 +199,7 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_de.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_dk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_ee.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_el.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_es.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_fi.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_fr.html</loc></url>
@@ -197,6 +212,7 @@
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_no.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_pl.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_pt.html</loc></url>
+<url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_ro.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_se.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_sk.html</loc></url>
 <url><loc>https://gerardhros.github.io/euosi/reference/osi_nut_p_sl.html</loc></url>

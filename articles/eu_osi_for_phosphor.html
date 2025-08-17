@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/description_osi_crops_table.html">Description of osi_crops table</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_aggregation.html">EU OSI aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_for_magnesium.html">EU OSI for magnesium</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_nitrogen.html">EU OSI for nitrogen</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_phosphor.html">EU OSI for phosphor</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_potassium.html">EU OSI for potassium</a></li>
@@ -65,7 +66,7 @@
                         <h4 data-toc-skip class="author">Gerard Ros
 &amp; Elise van Eynde</h4>
             
-            <h4 data-toc-skip class="date">2025-08-15</h4>
+            <h4 data-toc-skip class="date">2025-08-17</h4>
       
 
       <div class="d-none name"><code>eu_osi_for_phosphor.Rmd</code></div>
@@ -405,6 +406,35 @@ rich soils) or 25 (humus poor soils) mg P/kg.</p>
 <div class="figure">
 <img src="eu_osi_for_phosphor_files/figure-html/example%20EE1-1.png" alt="Evaluation P-indicator for Estonia." width="75%"><p class="caption">
 Evaluation P-indicator for Estonia.
+</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="greece-el">Greece (EL)<a class="anchor" aria-label="anchor" href="#greece-el"></a>
+</h2>
+<p>The phosphorus supply in view of soil health for agricultural soils
+in Greece can be calculated using <code>osi_c_phosphor_el</code> using
+the following inputs:</p>
+<ul>
+<li>B_LU, being the crop code, an unique number for each crop</li>
+<li>A_P_OL, being the extracted P content with the Olsen method, unit mg
+P /kg</li>
+</ul>
+<p>The evaluation of the P supply is similar for all soil types and land
+uses. Fertilizer manuals have not been found yet, but asking ChatGPT
+hinted to the study of the university of Thessaly from 1990 who
+distinghuises low, medium and high soil P fertility classes. This study
+was published <a href="https://ir.lib.uth.gr/xmlui/bitstream/handle/11615/1729/P0001729.pdf" class="external-link">here</a>.</p>
+<p>Note that the crop codes for Greece are not yet available in
+<code>osi_crops</code> package table.</p>
+<p>Below an example is visualized how the soil health index varies in
+relation to variation in P-Olsen. The optimum soil P threshold value for
+sustainable crop production is around 15 mg P/ kg for both land uses.
+Phosphorus deficiency occurs when the P-OL value decreases below around
+8 mg P/kg.</p>
+<div class="figure">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20EL1-1.png" alt="Evaluation P-indicator for Greece." width="75%"><p class="caption">
+Evaluation P-indicator for Greece.
 </p>
 </div>
 </div>
@@ -954,11 +984,39 @@ that can be downloaded <a href="https://www.iniav.pt/images/publicacoes/livros-m
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in P-OL. The optimum soil P threshold value for
 sustainable crop production is around 18 mg P/ kg, and the soil index
-decreases when P-DL values decreases down to 10 mg P/kg. There is no
-differntiation among soil types of land uses.</p>
+decreases when P-OL values decreases down to 10 mg P/kg. There is no
+differentiation among soil types of land uses.</p>
 <div class="figure">
 <img src="eu_osi_for_phosphor_files/figure-html/example%20PT1-1.png" alt="Evaluation P-indicator for Portugal." width="75%"><p class="caption">
 Evaluation P-indicator for Portugal.
+</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="romenia-ro">Romenia (RO)<a class="anchor" aria-label="anchor" href="#romenia-ro"></a>
+</h2>
+<p>The phosphorus supply in view of soil health for agricultural soils
+in Romenia can be calculated using <code>osi_c_phosphor_ro</code> using
+the following inputs:</p>
+<ul>
+<li>B_LU, being the crop code, an unique number for each crop</li>
+<li>A_P_AL, being the extracted P content with Ammonium Acetate Lacate,
+unit mg P /kg.</li>
+</ul>
+<p>Information on the threshold values for P-AL in view of sustainable
+crop production has been derived from the Romenia document entitled
+<code>SISTEME DE CULTURI ŞI PLANURI DE FERTILIZARE</code>, a document
+that can be downloaded <a href="https://www.icpa.ro/documente/coduri/Planuri_de_fertilizare.pdf" class="external-link">here</a>.</p>
+<p>Note that the crop codes for Romenia are not yet available in
+<code>osi_crops</code> package table.</p>
+<p>Below an example is visualized how the soil health index varies in
+relation to variation in P-AL. The optimum soil P threshold value for
+sustainable crop production is around 35 mg P/ kg, and the soil index
+decreases when P-AL values decreases down to 10 mg P/kg. There is no
+differentiation among soil types of land uses.</p>
+<div class="figure">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20RO1-1.png" alt="Evaluation P-indicator for Romenia." width="75%"><p class="caption">
+Evaluation P-indicator for Romenia.
 </p>
 </div>
 </div>

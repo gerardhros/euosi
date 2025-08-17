@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/description_osi_crops_table.html">Description of osi_crops table</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_aggregation.html">EU OSI aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_for_magnesium.html">EU OSI for magnesium</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_nitrogen.html">EU OSI for nitrogen</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_phosphor.html">EU OSI for phosphor</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_potassium.html">EU OSI for potassium</a></li>
@@ -65,7 +66,7 @@
                         <h4 data-toc-skip class="author">Gerard Ros
 &amp; Elise van Eynde</h4>
             
-            <h4 data-toc-skip class="date">2025-08-15</h4>
+            <h4 data-toc-skip class="date">2025-08-17</h4>
       
 
       <div class="d-none name"><code>eu_osi_for_potassium.Rmd</code></div>
@@ -73,9 +74,9 @@
 
     
     
-<div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h2>
+<div class="section level3">
+<h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h3>
 <p>Potassium (K) is a vital macronutrient for both soil health and plant
 nutrition. In soil, it plays a role in nutrient availability and water
 retention, while in plants, it’s crucial for numerous physiological
@@ -106,8 +107,8 @@ available forms. Certain microorganisms can also enhance K availability
 from the mineral pool by producing organic acids that solubilize
 mineral-bound K, increasing its accessibility for plant uptake.</p>
 <p>The <a href="https://gerardhros.github.io/euosi/">European Open Soil
-Index</a> assesses the soil function for P supply using the agronomic
-knowledge base as being used in the various EU countries. The soil P
+Index</a> assesses the soil function for K supply using the agronomic
+knowledge base as being used in the various EU countries. The soil K
 supply is transformed into an unitless indicator score ranging between
 zero (poor quality) and one (optimum quality). This indicator score
 reflects the ‘distance to target’ (i.e. difference between the current
@@ -120,9 +121,9 @@ maintenance’ approach as being implemented in fertilizer recommendation
 systems). Overall, the indicator value can be interpreted as good
 (&gt;0.75), sufficient (0.5-0.75), and poor (&lt;0.5).</p>
 </div>
-<div class="section level2">
-<h2 id="the-soil-k-wrapper-function">The soil K wrapper function<a class="anchor" aria-label="anchor" href="#the-soil-k-wrapper-function"></a>
-</h2>
+<div class="section level3">
+<h3 id="the-soil-k-wrapper-function">The soil K wrapper function<a class="anchor" aria-label="anchor" href="#the-soil-k-wrapper-function"></a>
+</h3>
 <p>In euosi package has a wrapper function to assess the soil health
 index for the soil K supply in agricultural soils across Europe. The
 wrapper function is <code>osi_c_potassium</code> and has the following
@@ -179,9 +180,9 @@ ES, FI, FR, IT, NL, PT, SE, and SK.</p>
 These are illustrated and described in this vignette per country, sorted
 alphabetically.</p>
 </div>
-<div class="section level2">
-<h2 id="austria-at">Austria (AT)<a class="anchor" aria-label="anchor" href="#austria-at"></a>
-</h2>
+<div class="section level3">
+<h3 id="austria-at">Austria (AT)<a class="anchor" aria-label="anchor" href="#austria-at"></a>
+</h3>
 <p>The potassium supply in view of soil health can be calculated using
 <code>osi_c_potassium_at</code> using the following inputs:</p>
 <ul>
@@ -197,8 +198,8 @@ easily classify the HYPRES texture class using
 <code>osi_get_TEXTURE_HYPRES</code>.</p>
 <p>The soil K threshold for optimum soil health is in Austria generic
 for all soil types but differs between arable land and grassland. The
-optimum threshold is set around 47-68 mg P/kg for grassland and around
-47-111 mg P/kg for cropland. More information can be found in the
+optimum threshold is set around 47-68 mg K/kg for grassland and around
+47-111 mg K/kg for cropland. More information can be found in the
 article of Bohner et al. (2013), that can be downloaded <a href="https://raumberg-gumpenstein.at/jdownloads/Forschungsberichte/Umweltressourcen_im_Gruenland/Naehrstoffe/2_2013_INTERREG_IV_Projekt_Abschlussbericht_gewaesserzukunft_Bohner.pdf" class="external-link">here</a>
 with a reference to the publication entitled
 <code>RICHTLINIEN FÜR DIE SACHGERECHTE DÜNGUNG, 2006: Anleitung zur Interpretation von Bodenuntersuchungsergebnissen in der Landwirtschaft. 6. Aufl. Bundesministerium für Land- und Forstwirtschaft, Umwelt und Wasserwirtschaft, 80 S</code>
@@ -216,9 +217,9 @@ Evaluation K-indicator for Austria.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="belgium-flanders">Belgium (Flanders)<a class="anchor" aria-label="anchor" href="#belgium-flanders"></a>
-</h2>
+<div class="section level3">
+<h3 id="belgium-flanders">Belgium (Flanders)<a class="anchor" aria-label="anchor" href="#belgium-flanders"></a>
+</h3>
 <p>The potassium supply in Belgium is based on the K level in soil being
 extracted with acid ammonium acetate There is also a distinction between
 cropland or grassland with a higher optimum threshold value for
@@ -257,9 +258,9 @@ Evaluation K-indicator for the Belgium.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="switzerland-ch">Switzerland (CH)<a class="anchor" aria-label="anchor" href="#switzerland-ch"></a>
-</h2>
+<div class="section level3">
+<h3 id="switzerland-ch">Switzerland (CH)<a class="anchor" aria-label="anchor" href="#switzerland-ch"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Switzerland can be calculated using <code>osi_c_potassium_ch</code>
 using the following inputs:</p>
@@ -285,9 +286,9 @@ Evaluation K-indicator for Switzerland.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="czech-republic-cz">Czech Republic (CZ)<a class="anchor" aria-label="anchor" href="#czech-republic-cz"></a>
-</h2>
+<div class="section level3">
+<h3 id="czech-republic-cz">Czech Republic (CZ)<a class="anchor" aria-label="anchor" href="#czech-republic-cz"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Czech Republic can be calculated using <code>osi_c_potassium_cz</code>
 using the following inputs:</p>
@@ -322,9 +323,9 @@ Evaluation K-indicator for Czech Republic.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="germany-de">Germany (DE)<a class="anchor" aria-label="anchor" href="#germany-de"></a>
-</h2>
+<div class="section level3">
+<h3 id="germany-de">Germany (DE)<a class="anchor" aria-label="anchor" href="#germany-de"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Germany can be calculated using <code>osi_c_potassium_de</code> using
 the following inputs:</p>
@@ -347,9 +348,9 @@ VDLUFA. For more information, see <a href="https://www.tll.de/www/daten/publikat
 <code>osi_crops</code> package table.</p>
 <p>Below an example is visualized how the soil health index varies in
 relation to variation in K-CAL for a cropland soil. The optimum soil K
-threshold value for sustainable crop production is around 350 mg P/ kg
+threshold value for sustainable crop production is around 350 mg K/ kg
 for peat soils and around 200 mg K/kg for mineral soils. The soil index
-decreases when K-CAL values decreases down to 200 mg P/kg (peat soils)
+decreases when K-CAL values decreases down to 200 mg K/kg (peat soils)
 or 75-100 mg K/kg (mineral soils).</p>
 <div class="figure">
 <img src="eu_osi_for_potassium_files/figure-html/example%20DE1-1.png" alt="Evaluation K-indicator for Germany." width="75%"><p class="caption">
@@ -357,9 +358,9 @@ Evaluation K-indicator for Germany.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="denmark-dk">Denmark (DK)<a class="anchor" aria-label="anchor" href="#denmark-dk"></a>
-</h2>
+<div class="section level3">
+<h3 id="denmark-dk">Denmark (DK)<a class="anchor" aria-label="anchor" href="#denmark-dk"></a>
+</h3>
 <p>The potassium supply in Denmark is based on the K level in soil being
 extracted with ammonium lactate. There is no distinction between
 cropland or grassland or between soil types. More information of the
@@ -371,7 +372,7 @@ calculated with <code>osi_c_potassium_dk</code>, requiring the following
 inputs:</p>
 <ul>
 <li>B_LU, being the crop code, an unique number for each crop</li>
-<li>A_K_AL, being the extracted P content with ammonium lactate, unit mg
+<li>A_K_AL, being the extracted K content with ammonium lactate, unit mg
 K /kg.</li>
 </ul>
 <p>Note that the IACS crop codes for Denmark are available in
@@ -387,9 +388,9 @@ Evaluation K-indicator for the Denmark.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="estonia-ee">Estonia (EE)<a class="anchor" aria-label="anchor" href="#estonia-ee"></a>
-</h2>
+<div class="section level3">
+<h3 id="estonia-ee">Estonia (EE)<a class="anchor" aria-label="anchor" href="#estonia-ee"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Estonia can be calculated using <code>osi_c_potassium_ee</code> using
 the following inputs:</p>
@@ -422,9 +423,39 @@ Evaluation K-indicator for Estonia.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="spain-es">Spain (ES)<a class="anchor" aria-label="anchor" href="#spain-es"></a>
-</h2>
+<div class="section level3">
+<h3 id="greece-el">Greece (EL)<a class="anchor" aria-label="anchor" href="#greece-el"></a>
+</h3>
+<p>The potassium supply in view of soil health for agricultural soils in
+Greece can be calculated using <code>osi_c_potassium_el</code> using the
+following inputs:</p>
+<ul>
+<li>B_LU, being the crop code, an unique number for each crop</li>
+<li>A_K_AAA, being the extracted K content with acid ammonium acetate,
+unit mg K /kg</li>
+</ul>
+<p>The evaluation of the K supply is similar for all soil types and land
+uses. Fertilizer manuals have not been found yet, but asking ChatGPT
+hinted to a study of Bilias doing K tests with Cate-Nelson method to
+derive optimum. Teaching/extension practice (lab manual used in Greek
+soil labs): sufficiency threshold often cited around 250–300 mg/kg
+exchangeable K. No working reference was provided.</p>
+<p>Note that crop codes for Greece are not yet available in
+<code>osi_crops</code> package table.</p>
+<p>Below an example is visualized how the soil health index varies in
+relation to variation in K-AAA. The optimum soil K threshold value for
+sustainable crop production is around 275 mg K/ kg, and the soil index
+decreases when K_AAA values decreases down to 30 mg K/kg. There is no
+differntiation among soil types of land uses.</p>
+<div class="figure">
+<img src="eu_osi_for_potassium_files/figure-html/example%20EL1-1.png" alt="Evaluation K-indicator for Greece." width="75%"><p class="caption">
+Evaluation K-indicator for Greece.
+</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="spain-es">Spain (ES)<a class="anchor" aria-label="anchor" href="#spain-es"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Spain can be calculated using <code>osi_c_potassium_es</code> using the
 following inputs:</p>
@@ -448,17 +479,17 @@ LOS CULTIVOS EN ESPAÑA”. This book is online available <a href="https://www.m
 relation to variation in K-AAA. The optimum soil K threshold value for
 sustainable crop production is around 300 mg K/ kg for the three soil
 types. The soil index decreases more stronger on the clay soils, in
-particular when K-AAA values drop down to 140 mg K/kg. For the sande
-soil the P availability remains quite high down to 75 mg K/kg.</p>
+particular when K-AAA values drop down to 140 mg K/kg. For the sand soil
+the K availability remains quite high down to 75 mg K/kg.</p>
 <div class="figure">
 <img src="eu_osi_for_potassium_files/figure-html/example%20ES1-1.png" alt="Evaluation K-indicator for Spain." width="75%"><p class="caption">
 Evaluation K-indicator for Spain.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="finland-fi">Finland (FI)<a class="anchor" aria-label="anchor" href="#finland-fi"></a>
-</h2>
+<div class="section level3">
+<h3 id="finland-fi">Finland (FI)<a class="anchor" aria-label="anchor" href="#finland-fi"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Finland can be calculated using <code>osi_c_potassium_fi</code> using
 the following inputs:</p>
@@ -481,7 +512,7 @@ easily classify the USDA texture class using
 relation to variation in K-AAA for four soil types. The differences
 between the loeamy and peaty soil types is rather small, whereas the
 biggest difference is foudn for the sandy and clay soil. The optimum
-soil P threshold value for sustainable crop production is around 275 mg
+soil K threshold value for sustainable crop production is around 275 mg
 K/ kg for the clay soil and around 175 mg K/kg for the other three soil
 types evaluated (i.e. sand,loam and peat). Deficiencies occur when K-AAA
 decreased down to 150 mg K/kg (clay) and 60-80 mg K/kg (the other soil
@@ -492,9 +523,9 @@ Evaluation K-indicator for Finland.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="france-fr">France (FR)<a class="anchor" aria-label="anchor" href="#france-fr"></a>
-</h2>
+<div class="section level3">
+<h3 id="france-fr">France (FR)<a class="anchor" aria-label="anchor" href="#france-fr"></a>
+</h3>
 <p>In France, soil potassium status for crop production is determined by
 assessing plant-available K levels, using the acid ammonium acetate
 excration method. This soil K pool is then compared against thresholds
@@ -684,9 +715,9 @@ Evaluation K-indicator for France.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="hungary-hu">Hungary (HU)<a class="anchor" aria-label="anchor" href="#hungary-hu"></a>
-</h2>
+<div class="section level3">
+<h3 id="hungary-hu">Hungary (HU)<a class="anchor" aria-label="anchor" href="#hungary-hu"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Hungary can be calculated using <code>osi_c_potassium_fr</code> using
 the following inputs:</p>
@@ -722,9 +753,9 @@ Evaluation K-indicator for Hungary.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="ireland-ie">Ireland (IE)<a class="anchor" aria-label="anchor" href="#ireland-ie"></a>
-</h2>
+<div class="section level3">
+<h3 id="ireland-ie">Ireland (IE)<a class="anchor" aria-label="anchor" href="#ireland-ie"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Ireland can be calculated using <code>osi_c_potassium_ie</code> using
 the following inputs:</p>
@@ -757,9 +788,9 @@ Evaluation K-indicator for Ireland.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="italy-it">Italy (IT)<a class="anchor" aria-label="anchor" href="#italy-it"></a>
-</h2>
+<div class="section level3">
+<h3 id="italy-it">Italy (IT)<a class="anchor" aria-label="anchor" href="#italy-it"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Italy can be calculated using <code>osi_c_potassium_it</code> using the
 following inputs:</p>
@@ -797,9 +828,9 @@ Evaluation K-indicator for Italy.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="latvia-lv">Latvia (LV)<a class="anchor" aria-label="anchor" href="#latvia-lv"></a>
-</h2>
+<div class="section level3">
+<h3 id="latvia-lv">Latvia (LV)<a class="anchor" aria-label="anchor" href="#latvia-lv"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Latvia can be calculated using <code>osi_c_potassium_lv</code> using the
 following inputs:</p>
@@ -833,9 +864,9 @@ Evaluation K-indicator for Latvia.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="lithuania-lt">Lithuania (LT)<a class="anchor" aria-label="anchor" href="#lithuania-lt"></a>
-</h2>
+<div class="section level3">
+<h3 id="lithuania-lt">Lithuania (LT)<a class="anchor" aria-label="anchor" href="#lithuania-lt"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Lithuania can be calculated using <code>osi_c_potassium_lt</code> using
 the following inputs:</p>
@@ -867,9 +898,9 @@ Evaluation K-indicator for Lithuania.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="netherlands-nl">Netherlands (NL)<a class="anchor" aria-label="anchor" href="#netherlands-nl"></a>
-</h2>
+<div class="section level3">
+<h3 id="netherlands-nl">Netherlands (NL)<a class="anchor" aria-label="anchor" href="#netherlands-nl"></a>
+</h3>
 <p>The potassium supply is strongly controlled by the distribution of K
 over different K pools in soil, which are regulated by sorption and
 desorption processes, the cation exchange capacity of the soil, and
@@ -920,9 +951,9 @@ Evaluation K-indicator for the Netherlands.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="norway-no">Norway (NO)<a class="anchor" aria-label="anchor" href="#norway-no"></a>
-</h2>
+<div class="section level3">
+<h3 id="norway-no">Norway (NO)<a class="anchor" aria-label="anchor" href="#norway-no"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Norway can be calculated using <code>osi_c_potassium_no</code> using the
 following inputs:</p>
@@ -953,9 +984,9 @@ Evaluation K-indicator for Norway.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="poland-pl">Poland (PL)<a class="anchor" aria-label="anchor" href="#poland-pl"></a>
-</h2>
+<div class="section level3">
+<h3 id="poland-pl">Poland (PL)<a class="anchor" aria-label="anchor" href="#poland-pl"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Poland can be calculated using <code>osi_c_potassium_pl</code> using the
 following inputs:</p>
@@ -991,9 +1022,9 @@ Evaluation K-indicator for Poland.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="portugal-pt">Portugal (PT)<a class="anchor" aria-label="anchor" href="#portugal-pt"></a>
-</h2>
+<div class="section level3">
+<h3 id="portugal-pt">Portugal (PT)<a class="anchor" aria-label="anchor" href="#portugal-pt"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Portugal can be calculated using <code>osi_c_potassium_pt</code> using
 the following inputs:</p>
@@ -1019,9 +1050,44 @@ Evaluation P-indicator for Portugal.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="sweden-se">Sweden (SE)<a class="anchor" aria-label="anchor" href="#sweden-se"></a>
-</h2>
+<div class="section level3">
+<h3 id="romenia-ro">Romenia (RO)<a class="anchor" aria-label="anchor" href="#romenia-ro"></a>
+</h3>
+<p>The potassium supply in view of soil health for agricultural soils in
+Romenia can be calculated using <code>osi_c_potassium_ro</code> using
+the following inputs:</p>
+<ul>
+<li>B_LU, being the crop code, an unique number for each crop</li>
+<li>B_TEXTURE_HYPRES, being the soil texture class according to HYPRES
+classification system</li>
+<li>A_K_AL, being the extracted K content with Ammonium Acetate Lacate,
+unit mg K /kg.</li>
+</ul>
+<p>The K supplying capacity differs in soils with varying textures.
+Based on the soil mineralogy (clay, sand and silt content) one can
+easily classify the HYPRES texture class using
+<code>osi_get_TEXTURE_HYPRES</code>.Information on the threshold values
+for K-AL in view of sustainable crop production has been derived from
+the Romenia document entitled
+<code>SISTEME DE CULTURI ŞI PLANURI DE FERTILIZARE</code>, a document
+that can be downloaded <a href="https://www.icpa.ro/documente/coduri/Planuri_de_fertilizare.pdf" class="external-link">here</a>.</p>
+<p>Note that the crop codes for Romenia are not yet available in
+<code>osi_crops</code> package table.</p>
+<p>Below an example is visualized how the soil health index varies in
+relation to variation in K-AL. The optimum soil K threshold value for
+sustainable crop production is around 200 mg K/ kg, and the soil index
+decreases when K-AL values decreases. Potassium deficiency occurs when
+K-AL is below 100 mg /kg for the clay soil and below the 50 mg K/kg for
+the sandy soil. There is no differentiation among land uses.</p>
+<div class="figure">
+<img src="eu_osi_for_potassium_files/figure-html/example%20RO1-1.png" alt="Evaluation P-indicator for Romenia." width="75%"><p class="caption">
+Evaluation P-indicator for Romenia.
+</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="sweden-se">Sweden (SE)<a class="anchor" aria-label="anchor" href="#sweden-se"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Sweden can be calculated using <code>osi_c_potassium_se</code> using the
 following inputs:</p>
@@ -1047,9 +1113,9 @@ Evaluation K-indicator for Sweden.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="slovak-republic-sk">Slovak Republic (SK)<a class="anchor" aria-label="anchor" href="#slovak-republic-sk"></a>
-</h2>
+<div class="section level3">
+<h3 id="slovak-republic-sk">Slovak Republic (SK)<a class="anchor" aria-label="anchor" href="#slovak-republic-sk"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Slovak Republic can be calculated using <code>osi_c_potassium_sk</code>
 using the following inputs:</p>
@@ -1083,9 +1149,9 @@ Evaluation K-indicator for Slovak Republic.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="slovenia-sl">Slovenia (SL)<a class="anchor" aria-label="anchor" href="#slovenia-sl"></a>
-</h2>
+<div class="section level3">
+<h3 id="slovenia-sl">Slovenia (SL)<a class="anchor" aria-label="anchor" href="#slovenia-sl"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 Slovenia can be calculated using <code>osi_c_potassium_sl</code> using
 the following inputs:</p>
@@ -1119,9 +1185,9 @@ Evaluation K-indicator for Slovenia.
 </p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="united-kingdom-uk">United Kingdom (UK)<a class="anchor" aria-label="anchor" href="#united-kingdom-uk"></a>
-</h2>
+<div class="section level3">
+<h3 id="united-kingdom-uk">United Kingdom (UK)<a class="anchor" aria-label="anchor" href="#united-kingdom-uk"></a>
+</h3>
 <p>The potassium supply in view of soil health for agricultural soils in
 United Kingdom can be calculated using <code>osi_c_potassium_uk</code>
 using the following inputs:</p>
@@ -1133,10 +1199,10 @@ K /kg</li>
 being used to convert the A_K_AN to the K-index classification system
 used in the UK.</li>
 </ul>
-<p>The P supplying capacity differs among soil textures, but in the UK
-the evaluation of the P supply is similar for all soil types but it
+<p>The K supplying capacity differs among soil textures, but in the UK
+the evaluation of the K supply is similar for all soil types but it
 varies for grassland and crop land. Information on the threshold values
-for P-Olsen in view of sustainable crop production can be found on <a href="https://ahdb.org.uk/knowledge-library/rb209-section-1-principles-of-nutrient-management-and-fertiliser-use" class="external-link">the
+for K-AN in view of sustainable crop production can be found on <a href="https://ahdb.org.uk/knowledge-library/rb209-section-1-principles-of-nutrient-management-and-fertiliser-use" class="external-link">the
 website of AHDB</a>. A more detailed table can be found <a href="https://www.alsenvironmental.co.uk/media-uk/pdf/datasheets/contaminated-land/defra-index-scale_td_uk_2017.pdf" class="external-link">here</a></p>
 <p>Note that the crop codes for the UK are not yet available in
 <code>osi_crops</code> package table. For now, the B_LU code is used to
@@ -1151,6 +1217,18 @@ when the K-AN value decreases below around 60 mg K/kg.</p>
 Evaluation K-indicator for the UK.
 </p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="reading-more">Reading more?<a class="anchor" aria-label="anchor" href="#reading-more"></a>
+</h2>
+<p>More vignettes will be made available regarding the derivation of all
+soil health indicators, the aggregation methods applied, the derivation
+of optimum land use given the current soil quality assessments, and the
+best management practices to be applied to improve the soil quality. See
+for example the vignettes <code><a href="../articles/eu_osi_for_magnesium.html">vignette("eu_osi_for_magnesium")</a></code>
+and the general introduction in
+<code><a href="../articles/eu_osi_introduction.html">vignette("eu_osi_introduction")</a></code>. Are you interested to
+contribute, please contact the author(s) of this R package. Enjoy!</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
