@@ -1,0 +1,70 @@
+---
+title: "EU OSI soil acidity"
+author: "Gerard H Ros"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{eu_osi_for_acidity}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+
+  # load packages
+  require(euosi); require(data.table)
+
+  # general settings
+  knitr::opts_chunk$set(echo = TRUE)
+  knitr::opts_chunk$set(collapse = TRUE,comment = "#>")
+  options(rmarkdown.html_vignette.check_title = FALSE)
+  
+  # to run manually
+  # devtools::load_all()
+```
+
+
+# Introduction
+
+## Soil pH and base saturation
+
+Soil pH is one of the most fundamental indicators of soil health, as it governs the chemical environment in which roots and soil organisms function. It directly affects nutrient solubility, microbial activity, and soil structure. In acidic soils, key nutrients such as phosphorus, calcium, and magnesium become less available, while toxic elements like aluminum and manganese can reach harmful concentrations. In alkaline soils, micronutrients such as zinc, iron, and manganese often become deficient. Within Europe, soil pH varies widely: acidic soils dominate in Northern and Western Europe due to high rainfall and leaching, while calcareous soils are more common in Mediterranean and Central regions. Because most crops perform optimally within a moderately acidic to neutral pH range (approximately 5.5–7.0), soil pH is a central parameter in assessing soil health and guiding liming or amendment strategies.
+
+In agricultural soils, acidification is caused by the application of acidifying fertilisers, nitrate leaching, nutrient uptake (affecting cation/anion balance) by plants, N fixation in legumes, plant root exudates and the mineralisation of soil organic matter. Soil acidification, defined as a decrease in the acid neutralisation capacity of the soil is a major issue all around the world. In calcareous soils with a high natural buffer capacity, there is little concern, as the pH remains stable and slightly alkaline until all carbonates are depleted. This depletion depends on their dissolution rate. However, in non-calcareous soils, with a low buffer capacity, especially sandy soils with low organic matter content, soil acidification may cause a relatively fast decline in soil pH and base saturation. Agronomic measures such as the addition of manure and lime mitigate the impact of soil acidification, thereby preventing a decline in soil pH.
+
+The base cation saturation reflects the proportion of the soil’s cation exchange sites occupied by calcium (Ca²⁺), magnesium (Mg²⁺), potassium (K⁺), and sodium (Na⁺), relative to acidic cations such as hydrogen (H⁺) and aluminum (Al³⁺). High base saturation generally indicates a fertile, well-buffered soil with good nutrient availability, while low base saturation is associated with acidity, nutrient deficiencies, and reduced biological activity. The balance among individual cations is also important: adequate Ca and Mg support soil aggregation and root development, while excessive K relative to Mg and Ca can impair nutrient uptake and plant health. In European soil health assessments, base cation saturation is used not only to evaluate nutrient availability but also as a longer-term indicator of soil resilience, buffering capacity, and the effectiveness of liming practices.
+
+## Measurement and evaluation
+Soil pH is typically measured in water (pH-H₂O) or in a salt solution such as 0.01 M CaCl₂, the latter giving more stable readings and widely used across Europe in soil testing laboratories. Base cation saturation is determined through extraction of exchangeable cations, commonly with ammonium acetate or barium chloride, followed by quantification using atomic absorption spectroscopy (AAS) or inductively coupled plasma (ICP) techniques. Results are expressed as percentages of the cation exchange capacity (CEC).
+
+For crop production, evaluation relies on both absolute pH values and base saturation levels. In much of Northern Europe, where soils are naturally acidic, liming is a common management practice to raise pH, increase base saturation, and improve nutrient availability. In Mediterranean regions, where soils often have naturally high pH and Ca saturation, management focuses more on maintaining micronutrient availability. European guidelines typically recommend maintaining soil pH within crop-specific optimal ranges (for example, 6.0–6.5 for cereals and oilseed rape, slightly lower for potatoes, and slightly higher for legumes and sugar beet). Similarly, base saturation thresholds are used to guide liming and fertilization: values above 70–80% are generally considered favorable for most crops, while low saturation indicates the need for corrective amendments.
+
+## The European OSI
+The European Open Soil Index assesses the soil pH and buffering capacity using the agronomic knowledge base as being used in the various EU countries. The soil function is transformed into an unitless indicator score ranging between zero (poor quality) and one (optimum quality). This indicator score reflects the ‘distance to target’ (i.e. difference between the current and optimum situation, while ensuring that other soil functions are not limiting). The further it deviates from score 1, the poorer the soil function works. An indicator value of 0.5 approximately corresponds to the lower threshold level of the fertilization guidelines under which (additional) fertilization is recommended (given the ‘buildup and maintenance’ approach as being implemented in fertilizer recommendation systems). Overall, the indicator value can be interpreted as good (>0.75), sufficient (0.5-0.75), and poor (<0.5).
+
+# The soil acidity wrapper function
+In euso package has a wrapper function to assess the soil health index for the soil pH and associated buffer capacity in agricultural soils across Europe. The wrapper function is `osi_c_ph` and has the following inputs:
+
+* B_LU (character) The crop code
+* B_SOILTYPE_AGR (character) The soil type in a particular region
+* A_CLAY_MI (numeric) The clay content of the soil (\%)
+* A_SAND_MI (numeric) The sand content of the soil (\%)
+* A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+* A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
+* A_PH_WA (numeric) The pH measured in water.
+* A_PH_CC (numeric) The pH measured in CaCl2 extraction.
+* A_PH_KCL (numeric) The pH measured in KCL extraction.
+* A_CA_CO_PO (numeric) The exchangeable Ca-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+* A_MG_CO_PO (numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+* A_K_CO_PO (numeric) The exchangeable K-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+* A_NA_CO_PO (numeric) The exchangeable Na-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+* B_COUNTRY (character) The country code
+
+Not all the inputs are mandatory. The function runs with the soil parameters being available for LUCAS. Other properties, when unknown, can be estimated from published pedotransferfunctions, using the function `osi_conv_ph`,`osi_conv_som`, and `osi_conv_magnesium`. 
+
+Note that the IACS crop codes codes have been added to the `osi_crops` package table from version 0.4.0 onwards. The crop codes are only present for the countries AT, BE, BG, CZ, DE, DK, ES, FI, FR, IT, NL, PT, SE, and SK.
+
+The wrapper function wraps country specific soil health functions related to soil pH and acidification. These are illustrated and described in this vignette per country, sorted alphabetically.
+
+
+
