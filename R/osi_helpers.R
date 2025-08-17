@@ -7,14 +7,15 @@
 #' @param parm (list) The osi parameter - value combination to be checked
 #' @param fname (character) The name of the function where the check is done
 #' @param na_allowed (character) Are NA allowed in categorial inputs (TRUE or FALSE)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @return 
 #' warning or error messages when parameter value is beyond the allowed range
 #' 
 #' @export
-osi_checkvar <- function(parm,fname = NULL,na_allowed = FALSE) {
+osi_checkvar <- function(parm,fname = NULL,na_allowed = FALSE, unitcheck = TRUE) {
   
   # add visual bindings
   osi_parm_name = osi_parm_data_type = osi_parm_enum = osi_parm_options = NULL
@@ -30,157 +31,161 @@ osi_checkvar <- function(parm,fname = NULL,na_allowed = FALSE) {
     checkmate::assert_true(length(unique(lengths(parm)))==1,
                            .var.name = paste0('not all arguments have same length in ',fname))
   }
- 
-  # check for each property
-  for(i in 1:length(parm)){
+  
+  # do unit check when requested (by default true)
+  if(unitcheck==TRUE){
     
-    # what is the parameter to be checked
-    parm.name <- names(parm[i])
-    
-    # what is the parameter value
-    parm.value <- unlist(parm[i])
-    
-    # location of the error
-    if(is.null(fname)){
-      parm.error <- parm.name
-    } else {
-      parm.error <- paste0(parm.name,' in ', fname)  
-    }
-    
-    # check if parameter is present
-    checkmate::assert_true(parm.name %in% dt.parms$osi_parm_name,
-                           .var.name = parm.error)
-    
-    # check the type of the parameter
-    parm.type <- dt.parms[osi_parm_name== parm.name,osi_parm_data_type]
-    
-    # check if enum is present
-    parm.enum <- dt.parms[osi_parm_name== parm.name,osi_parm_enum]
+    # check for each property
+    for(i in 1:length(parm)){
       
-    # do separate check for land use, being country dependent
-    if(parm.name %in% c('B_LU')){
+      # what is the parameter to be checked
+      parm.name <- names(parm[i])
       
-      # check if country is also present
-      checkmate::assert_true('B_COUNTRY' %in% names(parm),
-                             .var.name = 'to check B_LU also B_COUNTRY should be given')
+      # what is the parameter value
+      parm.value <- unlist(parm[i])
       
-      # check country first
-      b_country <- unique(unlist(parm['B_COUNTRY']))
-      parm.options <-  dt.parms[osi_parm_name== 'B_COUNTRY',osi_parm_options]
-      parm.options <- unlist(strsplit(parm.options,split="||",fixed=T))
-      parm.options <- gsub('^ +| +$','',parm.options)
-      checkmate::assert_character(b_country,
-                                  .var.name = paste0('B_COUNTRY is not character in ',fname))
-      checkmate::assert_subset(b_country,
-                               choices = parm.options,
-                               .var.name = paste0('B_COUNTRY has wrong inputs in ',fname))
-      
-      # subset the crop list
-      dt.crop <- euosi::osi_crops[osi_country %in% b_country]
-      
-      # check crop codes
-      b_crops <- unique(parm.value)
-      checkmate::assert_character(b_crops,
-                                  .var.name = paste0('B_LU is not character in ',fname))
-      checkmate::assert_subset(b_crops,
-                               choices = dt.crop[,crop_code],
-                               .var.name = paste0('B_LU has wrong crop codes in ',fname))
-      
-    }
-    
-    # check numeric example
-    if(parm.type=='num'){
-      checkmate::assert_numeric(parm.value,
-                                lower = dt.parms[osi_parm_name== parm.name,osi_parm_min],
-                                upper = dt.parms[osi_parm_name== parm.name,osi_parm_max],
-                                .var.name = parm.error)
-    }
-    
-    # check on soil mineralogy
-    if(sum(c('A_CLAY_MI','A_SAND_MI','A_SILT_MI') %in% names(parm))>=2){
-      
-      clay.value <- unlist(parm['A_CLAY_MI'])
-      sand.value <- unlist(parm['A_SAND_MI'])
-      silt.value <- unlist(parm['A_SILT_MI'])
-      arg.length <- max(length(clay.value),length(sand.value),length(silt.value))
-      
-      if(length(clay.value)==0){clay.value = rep(0,arg.length)}
-      if(length(sand.value)==0){sand.value = rep(0,arg.length)}
-      if(length(silt.value)==0){silt.value = rep(0,arg.length)}
-      
-      check.sum <- pmax(0,clay.value) + pmax(0,sand.value) + pmax(0,silt.value)
-      check.sum <- all(check.sum <= 105)
-      
-      if(!is.null(fname)){
-        checkmate::assert_true(check.sum,.var.name = paste0('total of clay, silt and sand exceeds 100% in ',fname),na.ok = TRUE)  
+      # location of the error
+      if(is.null(fname)){
+        parm.error <- parm.name
       } else {
-        checkmate::assert_true(check.sum,na.ok = TRUE)
+        parm.error <- paste0(parm.name,' in ', fname)  
       }
       
-    }
-    
-    # check categories
-    if(parm.type=='char' & parm.enum == TRUE){
+      # check if parameter is present
+      checkmate::assert_true(parm.name %in% dt.parms$osi_parm_name,
+                             .var.name = parm.error)
       
-      # get the options as string
-      parm.options <-  dt.parms[osi_parm_name== parm.name,osi_parm_options]
+      # check the type of the parameter
+      parm.type <- dt.parms[osi_parm_name== parm.name,osi_parm_data_type]
+      
+      # check if enum is present
+      parm.enum <- dt.parms[osi_parm_name== parm.name,osi_parm_enum]
         
-      # split into vector
-      parm.options <- unlist(strsplit(parm.options,split="||",fixed=T))
+      # do separate check for land use, being country dependent
+      if(parm.name %in% c('B_LU')){
+        
+        # check if country is also present
+        checkmate::assert_true('B_COUNTRY' %in% names(parm),
+                               .var.name = 'to check B_LU also B_COUNTRY should be given')
+        
+        # check country first
+        b_country <- unique(unlist(parm['B_COUNTRY']))
+        parm.options <-  dt.parms[osi_parm_name== 'B_COUNTRY',osi_parm_options]
+        parm.options <- unlist(strsplit(parm.options,split="||",fixed=T))
+        parm.options <- gsub('^ +| +$','',parm.options)
+        checkmate::assert_character(b_country,
+                                    .var.name = paste0('B_COUNTRY is not character in ',fname))
+        checkmate::assert_subset(b_country,
+                                 choices = parm.options,
+                                 .var.name = paste0('B_COUNTRY has wrong inputs in ',fname))
+        
+        # subset the crop list
+        dt.crop <- euosi::osi_crops[osi_country %in% b_country]
+        
+        # check crop codes
+        b_crops <- unique(parm.value)
+        checkmate::assert_character(b_crops,
+                                    .var.name = paste0('B_LU is not character in ',fname))
+        checkmate::assert_subset(b_crops,
+                                 choices = dt.crop[,crop_code],
+                                 .var.name = paste0('B_LU has wrong crop codes in ',fname))
+        
+      }
       
-      # remove dashes
-      parm.options <- gsub('^ +| +$','',parm.options)
-      
-      # allow NA
-      if(na_allowed){parm.options <- c(NA,parm.options)}
-      
-      # checkmates
-      checkmate::assert_character(parm.value,
+      # check numeric example
+      if(parm.type=='num'){
+        checkmate::assert_numeric(parm.value,
+                                  lower = dt.parms[osi_parm_name== parm.name,osi_parm_min],
+                                  upper = dt.parms[osi_parm_name== parm.name,osi_parm_max],
                                   .var.name = parm.error)
-      checkmate::assert_subset(parm.value,
-                               choices = parm.options,
-                               .var.name = parm.error)
-    }
-    
-    # check integer
-    if(parm.type=='int'){
+      }
       
-      # check if integer is within range
-      checkmate::assert_integerish(parm.value,
-                                   lower = dt.parms[osi_parm_name== parm.name,osi_parm_min],
-                                   upper = dt.parms[osi_parm_name== parm.name,osi_parm_max],
-                                   .var.name = parm.error)
+      # check on soil mineralogy
+      if(sum(c('A_CLAY_MI','A_SAND_MI','A_SILT_MI') %in% names(parm))>=2){
+        
+        clay.value <- unlist(parm['A_CLAY_MI'])
+        sand.value <- unlist(parm['A_SAND_MI'])
+        silt.value <- unlist(parm['A_SILT_MI'])
+        arg.length <- max(length(clay.value),length(sand.value),length(silt.value))
+        
+        if(length(clay.value)==0){clay.value = rep(0,arg.length)}
+        if(length(sand.value)==0){sand.value = rep(0,arg.length)}
+        if(length(silt.value)==0){silt.value = rep(0,arg.length)}
+        
+        check.sum <- pmax(0,clay.value) + pmax(0,sand.value) + pmax(0,silt.value)
+        check.sum <- all(check.sum <= 105)
+        
+        if(!is.null(fname)){
+          checkmate::assert_true(check.sum,.var.name = paste0('total of clay, silt and sand exceeds 100% in ',fname),na.ok = TRUE)  
+        } else {
+          checkmate::assert_true(check.sum,na.ok = TRUE)
+        }
+        
+      }
       
-      # check if integer has prefixed options
-      if(parm.enum == TRUE) {
-      
+      # check categories
+      if(parm.type=='char' & parm.enum == TRUE){
+        
         # get the options as string
         parm.options <-  dt.parms[osi_parm_name== parm.name,osi_parm_options]
-        
+          
         # split into vector
         parm.options <- unlist(strsplit(parm.options,split="||",fixed=T))
         
         # remove dashes
         parm.options <- gsub('^ +| +$','',parm.options)
         
-        # convert to integer
-        parm.options <- as.integer(parm.options)
+        # allow NA
+        if(na_allowed){parm.options <- c(NA,parm.options)}
         
         # checkmates
+        checkmate::assert_character(parm.value,
+                                    .var.name = parm.error)
         checkmate::assert_subset(parm.value,
                                  choices = parm.options,
-                                 .var.name = parm.error)  
+                                 .var.name = parm.error)
+      }
+      
+      # check integer
+      if(parm.type=='int'){
+        
+        # check if integer is within range
+        checkmate::assert_integerish(parm.value,
+                                     lower = dt.parms[osi_parm_name== parm.name,osi_parm_min],
+                                     upper = dt.parms[osi_parm_name== parm.name,osi_parm_max],
+                                     .var.name = parm.error)
+        
+        # check if integer has prefixed options
+        if(parm.enum == TRUE) {
+        
+          # get the options as string
+          parm.options <-  dt.parms[osi_parm_name== parm.name,osi_parm_options]
+          
+          # split into vector
+          parm.options <- unlist(strsplit(parm.options,split="||",fixed=T))
+          
+          # remove dashes
+          parm.options <- gsub('^ +| +$','',parm.options)
+          
+          # convert to integer
+          parm.options <- as.integer(parm.options)
+          
+          # checkmates
+          checkmate::assert_subset(parm.value,
+                                   choices = parm.options,
+                                   .var.name = parm.error)  
+        }
+        
+      }
+      
+      # check boolean
+      if(parm.type =='bool'){
+        
+        checkmate::assert_logical(parm.value,
+                                  .var.name = parm.error)
       }
       
     }
-    
-    # check boolean
-    if(parm.type =='bool'){
-      
-      checkmate::assert_logical(parm.value,
-                                .var.name = parm.error)
-    }
-    
   }
   
   #return()
