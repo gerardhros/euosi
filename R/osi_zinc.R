@@ -8,6 +8,7 @@
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
 #' @param A_C_OF (numeric) The carbon content of the soil layer (g/ kg)
 #' @param A_PH_WA (numeric) The acidity of the soil, measured in water (-)
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P / kg)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-) 
 #' @param A_ZN_EDTA (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by EDTA 
 #' @param A_ZN_CC (numeric) The plant available content of Zn in the soil (ug  Zn per kg) extracted by 0.01M CaCl2
@@ -26,15 +27,18 @@
 #' @export
 osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = NA_real_,
                        A_SOM_LOI = NA_real_,A_PH_WA = NA_real_,A_PH_CC = NA_real_,A_ZN_RT = NA_real_,
-                       A_ZN_EDTA = NA_real_,A_ZN_CC = NA_real_, B_COUNTRY) {
+                       A_ZN_EDTA = NA_real_,A_ZN_CC = NA_real_, A_P_OL = NA_real_, B_COUNTRY) {
   
   # add visual bindings
-  value = A_SILT_MI = A_ZN_AAA = NULL
+  value = A_SILT_MI = A_ZN_AAA = A_P_AL = NULL
   
   # desired length of inputs
   arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),length(A_C_OF),
                     length(A_SOM_LOI), length(A_PH_WA), length(A_PH_CC),length(A_ZN_RT), 
                     length(A_ZN_EDTA), length(A_ZN_CC))
+  
+  # repeat A_P_OL if only one default is given
+  if(length(A_P_OL)==1 & arg.length > 1){A_P_OL <- rep(A_P_OL,arg.length)}
   
   # check inputs
   osi_checkvar(parm = list(B_LU = B_LU,
@@ -42,6 +46,7 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
                            A_CLAY_MI = A_CLAY_MI,
                            A_SAND_MI = A_SAND_MI,
                            A_SOM_LOI = A_SOM_LOI,
+                           A_P_OL = A_P_OL,
                            A_PH_CC = A_PH_CC,
                            A_ZN_RT = A_ZN_RT),
                fname ='osi_c_zinc')
@@ -57,6 +62,7 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
                    B_COUNTRY = B_COUNTRY,
                    A_PH_WA = A_PH_WA,
                    A_PH_CC = A_PH_CC,
+                   A_P_AL = A_P_AL,
                    A_ZN_RT = A_ZN_RT,
                    A_ZN_EDTA = A_ZN_EDTA,
                    A_ZN_CC = A_ZN_CC,
@@ -73,10 +79,14 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
   dt[!is.na(A_ZN_RT) & is.na(A_ZN_EDTA), A_ZN_EDTA := osi_conv_zinc(element = 'A_ZN_EDTA',A_SOM_LOI = A_SOM_LOI, A_ZN_RT = A_ZN_RT,A_PH_CC = A_PH_CC)]
   dt[!is.na(A_ZN_RT) & is.na(A_ZN_AAA), A_ZN_AAA := osi_conv_zinc(element = 'A_ZN_AAA',A_SOM_LOI = A_SOM_LOI, A_ZN_RT = A_ZN_RT,A_PH_CC = A_PH_CC)]
   
+  # estimate A_P_AL from A_P_OL
+  dt[is.na(A_P_AL) & !is.na(A_P_OL), A_P_AL := osi_conv_phosphor(element='A_P_AL',A_P_OL = A_P_OL,A_PH_CC = A_PH_CC)]
+  
   # check updated soil properties
   osi_checkvar(parm = list(A_SOM_LOI = dt$A_SOM_LOI,
                            A_C_OF = dt$A_C_OF,
                            A_PH_WA = dt$A_PH_WA,
+                           A_P_AL = dt$A_P_AL,
                            A_PH_CC = dt$A_PH_CC,
                            A_ZN_CC = dt$A_ZN_CC,
                            A_ZN_EDTA = dt$A_ZN_EDTA),
@@ -91,9 +101,10 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
   dt[B_COUNTRY == 'CZ', value := NA_real_]
   dt[B_COUNTRY == 'DE', value := osi_c_zinc_de(B_LU = B_LU,A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_ZN_EDTA = A_ZN_EDTA)]
   
-  # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
+  # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
   dt[B_COUNTRY == 'EE', value := NA_real_]
+  dt[B_COUNTRY == 'EL', value := NA_real_]
   dt[B_COUNTRY == 'ES', value := NA_real_]
   dt[B_COUNTRY == 'FR', value := osi_c_zinc_fr(B_LU = B_LU,A_PH_WA = A_PH_WA,A_ZN_EDTA = A_ZN_EDTA)]
   dt[B_COUNTRY == 'FI', value := NA_real_]
@@ -112,9 +123,10 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
   dt[B_COUNTRY == 'SK', value := NA_real_]
   dt[B_COUNTRY == 'SL', value := NA_real_]
   
-  # Poland (PL), Portugal (PT), United Kingdom (UK)
+  # Poland (PL), Portugal (PT), Romania (RO), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
   dt[B_COUNTRY == 'PT', value := osi_c_zinc_pt(B_LU = B_LU, A_ZN_AAA = A_ZN_AAA, A_PH_CC = A_PH_CC)]
+  dt[B_COUNTRY == 'RO', value := osi_c_zinc_ro(B_LU = B_LU, A_ZN_EDTA = A_ZN_EDTA, A_P_AL = A_P_AL,A_PH_WA = A_PH_WA)]
   dt[B_COUNTRY == 'UK', value := osi_c_zinc_uk(B_LU = B_LU,A_PH_WA = A_PH_WA, A_ZN_EDTA = A_ZN_EDTA)]
   
   # select the output variable
@@ -500,6 +512,78 @@ osi_c_zinc_pt <- function(B_LU, A_ZN_AAA,A_PH_CC) {
   return(value)
 }
 
+#' Calculate the Zn availability index for agricultural soils in Romenia 
+#' 
+#' This function calculates the Zn availability of a soil, using the agronomic index used in RO.
+#' 
+#' @param B_LU  (character) crop type 
+#' @param A_PH_WA (numeric) pH measured in water (-)
+#' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate (mg P / kg)
+#' @param A_ZN_EDTA (numeric) Zn content measured in EDTA, pH 8.6, with ammonium carbonate (mg / kg)
+#'
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_zinc_ro(B_LU = 'testcrop', A_ZN_EDTA = 45, A_P_AL = 45,A_PH_WA = 6.5)
+#' 
+#' @return 
+#' The zinc availability index in United Kingdom estimated from extractable zinc and pH measured in water, a numeric value.
+#' 
+#' @export
+osi_c_zinc_ro <- function(B_LU, A_PH_WA, A_P_AL, A_ZN_EDTA) {
+  
+  # set visual bindings
+  value = osi_country = osi_indicator = id = crop_cat1 = . = osi_crops = v1 = v2 = NULL
+  fr = irpm = iczn = NULL
+  
+  # Load in the datasets
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country == 'RO']
+  
+  # Check length of desired input
+  arg.length <- max(length(B_LU),length(A_PH_WA),length(A_P_AL), length(A_ZN_EDTA))
+  
+  # check inputs
+  osi_checkvar(parm = list(A_PH_WA = A_PH_WA,
+                           A_P_AL = A_P_AL,
+                           A_ZN_EDTA = A_ZN_EDTA),
+               fname = 'osi_c_zinc_ro')
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   A_ZN_EDTA = A_ZN_EDTA,
+                   A_PH_WA = A_PH_WA,
+                   value = NA_real_)
+  
+  # retreive proxies of Borlan et al. (1975, 1982)
+  # https://www.icpa.ro/documente/coduri/Evaluarea_continutului_de_nutrienti_din_sol.pdf
+  dt[A_PH_WA <= 8, fr := 1.3 * A_PH_WA - 0.11 * A_PH_WA^2 - 2.82]
+  dt[A_PH_WA > 8, fr:= 1.3 * A_PH_WA - 0.11 * A_PH_WA^2 -2.282 + (A_PH_WA - 8) * (0.05 * A_PH_WA)]
+  dt[, irpm := 90 - 10 * A_PH_WA / A_P_AL]
+  dt[, iczn := A_ZN_EDTA * fr * 100 / A_P_AL]
+  
+  # Zn deficiency occurs in soils where the IRPM and ICZn values are lower than 0.384 and 1.7, respectively.
+  
+  # set OSI score
+  dt[, v1 := osi_evaluate_logistic(irpm,b = 32.7925540, x0 = 0.3531964, v =  3.6784009 )]
+  dt[, v2 := osi_evaluate_logistic(iczn,b = 13.3831928, x0 = 0.5762774, v =  1.0695647)]
+  
+  # combine both risksindicators
+  dt[!is.na(v1) & is.na(v2), value := v1]
+  dt[is.na(v1) & !is.na(v2), value := v2]
+  dt[!is.na(v1) & !is.na(v2), value := (cf_ind_importance(v1)*v1 + cf_ind_importance(v2) * v2)/
+                                       (cf_ind_importance(v1) + cf_ind_importance(v2))]
+  
+  # Sort the input in correct order
+  setorder(dt, id)
+  
+  # select and return OSI indicator
+  value <- dt[, value]
+  
+  return(value)
+  
+}
 #' Calculate the Zn availability index for agricultural soils in United Kingdom 
 #' 
 #' This function calculates the Zn availability of a soil, using the agronomic index used in UK.

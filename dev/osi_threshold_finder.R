@@ -25,6 +25,159 @@ findoptvalue <- function(spool, spoolopt,p0 = NULL) {
   return(xpar)
 }
 
+
+# text for romenai
+# The level of magnesium supply in the soil, extracted in 0.025n CaCl2 solution, is
+# determined according to the soil texture. 
+# Thus, in sandy soils with a content of less than 2.5 mg/100 g soil, the Mg supply level is low, 
+# between 2.5 and 5.0 mg/100 g soil it is medium, and above 5.0 mg/100 g soil it is high. 
+# In loamy soils, the three levels are: < 3.5 mg/100 g soil, between 3.6 and 7.0 mg/100 g soil, and above 7.00 mg/100 g soil, 
+# while in soils with clay texture, the ranges are < 6.0 mg/100 g soil, 6.1–12.0 mg/100 g soil, above 12.0
+# mg/100 g soil.
+# The probability of Mg deficiency can be determined using the Mg deficiency index
+# (ICMg), developed by Borlan (in Lăcătuşu, 2000). This is calculated using the following formula:
+# ICMG = MG x Fr / K = (A_MG_CO 24.305 * 0.5) * (1.1 ^ (-0.555 * (A_PH_WA - 4))) / (A_K_CO * 39.098)
+# Values of this index lower than 0.15 indicate a very high probability of Mg deficiency,
+# while values higher than 12 indicate a very low probability of
+# the phenomenon occurring. Between these two limits, with increments of 0.15, 0.30, and 0.60, there are intervals that
+# indicate a high, medium, and low probability of Mg deficiency.
+# https://www.icpa.ro/documente/coduri/Evaluarea_continutului_de_nutrienti_din_sol.pdf
+
+# Belgium Magnesium, optimum 45 (mg Mg/kg) 
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(1,2.5,10,(10+20)/2,21,1.5*20)*45/21
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+
+# Norway Magnesium, optimum 45 (mg Mg/kg) 
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(1,5,25,(25+45)/2,45,1.5*45)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Greece soil pH-water sand
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(1,4,4.5,5.5,6.1,7)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+    
+# Greece soil pH-water others textures
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(1,4,4.5,5.5,6.6,7.6)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Greece soilESP evaluation
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(15,12,(6+15)/2,8,6.6,1)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Greece phosphours P-Olsen (mg P/kg) 
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(1,2.5,10,(10+20)/2,21,1.5*20)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Greece phosphours Potassium K-AAA (mg K/kg) 
+# evaluation soil (A+, A, B, C, D, E)  
+spool <- c(1,50,200,(250+300)/2,301,1.5*300)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Romenia magnesium (mg M/kg) in CaCl2
+# evaluation soil (A+, A, B, C, D, E) sand 
+spool <- c(1,5,25,(25+50),55,1.5*50)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+# evaluation soil (A+, A, B, C, D, E) loam 
+spool <- c(1,5,35,(37+70),75,1.5*70)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+# evaluation soil (A+, A, B, C, D, E) clay 
+spool <- c(1,5,60,(61+120),125,1.5*120)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# evaluation soil (A+, A, B, C, D, E) clay , KMg index
+spool <- c(0.01,0.08,(0.15+0.3)/2,(0.3+0.6),0.6,2*0.6)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# romenia
+# Zn deficiency occurs in soils where the IRPM and ICZn values are lower than 0.384 and 1.7, respectively.
+spool <- c(0.01,0.1,0.3,0.384,0.42,1.6)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+spool <- c(0.01,0.4,0.6,1.7,1.8,2)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# romenia copper
+spool <- c(0.01,0.15,0.6,.75,0.85,1.3)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Romenia pH
+# evaluation soil (A+, A, B, C, D, E) sand 
+spool <- c(1,1.5,5,5.8,5.9,6.5)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Romenia A_NA_CO_PO
+# evaluation soil (A+, A, B, C, D, E) sand
+spool <- c(14,7,5.2,5,4,1.5,1.1,0.9)
+spoolopt <- c(0,0.01,0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Romenia K-AL (mg K/kg)
+# evaluation soil (A+, A, B, C, D, E) sand
+spool <- c(1,50,(50),100,150,200)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# evaluation soil (A+, A, B, C, D, E) loamy sand
+spool <- c(1,50,(100),150,200,1.5*200)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# evaluation soil (A+, A, B, C, D, E) loamy sand
+spool <- c(1,66,(66+132)/2,(132+200)/2,201,1.5*265)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+# evaluation soil (A+, A, B, C, D, E) F and VF
+spool <- c(1,80,(80+160)/2,(160+240)/2,241,1.5*320)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
+# Romenia P-PAL (mg P/kg)
+# evaluation soil (A+, A, B, C, D, E)
+spool <- c(1,2,(8+18)/2,(18+36)/2,37,1.5*72)
+spoolopt <- c(0.05,0.1,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
 # Portugal P-Olsen (mg P2O5/kg)
 # evaluation soil pool peat (A+, A, B, C, D, E)
 spool <- c(1,18,(18+34)/2,(35+56)/2,57,1.5*115)
@@ -1542,6 +1695,8 @@ get_p_nut(pb = 0.1743, px0 = 2.92395, pv = 0.096079,nx0=150)
 get_p_nut(pb = 0.226612, px0 = 30.137321,pv = 1.247315)
 # ee
 get_p_nut(pb= 0.1078429,px0 = -17.16723,pv = 0.0153443)
+# EL GReece
+get_p_nut(pb = 0.3677886, px0 = 9.1132506,pv =  1.0632264 )
 # spain
 get_p_nut(pb = 0.47947, px0 = -1.94363, pv = 0.074075,nx0=40)
 get_p_nut(pb = 0.27155, px0 = 2.81733, pv = 0.154671,nx0=40)
@@ -1573,6 +1728,8 @@ get_p_nut(pb = 1.3,px0=1.3,pv=0.35,nx0=2.5)
 get_p_nut(pb= 0.09801777,px0 = -20.28710038,pv = 0.0218218)
 # portugal
 get_p_nut(pb= 0.17869351 ,px0 = 3.01230206 ,pv = 0.03047017 )
+# romenai
+get_p_nut(pb= 0.1387092   ,px0 = -18.0674770 ,pv = 0.0252298 )
 #sweden
 rbind(
 get_p_nut(pb = 0.126197, px0 = 14.6487, pv = 0.46202),
@@ -1653,6 +1810,9 @@ get_k_nut(pb= 0.0429129,px0 = 1.37161548,pv = 0.001844779,nx0=150)
 #denmark
 get_k_nut(pb = 0.03892854   , px0 = 0.55628171   , pv = 0.08602831,nx0=150)
 
+#greece
+get_k_nut(pb = 0.03390581, px0 = 232.24412487, pv = 2.67687384,nx0=300)
+
 # spain
 get_k_nut(pb= 0.02948845,px0 = 23.21207454,pv = 0.25785455,nx0=100)
 get_k_nut(pb= 0.02108017,px0 = 5.43747198,pv = 0.17298447)
@@ -1710,6 +1870,12 @@ get_k_nut(pb= 0.070369841,px0 = 4.237044272,pv = 0.007390134)
 get_k_nut(pb= 0.070110090,px0 = 0.702553221,pv = 0.001352746)
 #portugal
 get_k_nut( pb = 0.07362818 , px0 = 0.51818429 , pv = 0.02380852)
+# romenia
+get_k_nut( pb= 0.04691703,px0 = 3.13861224,pv = 0.10035566)
+get_k_nut( pb= 0.03211084,px0 = 3.42618554,pv = 0.08696479)
+get_k_nut( pb= 0.04247343,px0 = 3.02608975,pv = 0.03096234)
+get_k_nut( pb= 0.03502668,px0 = 3.35427054,pv = 0.03066438)
+
 #sweden
 get_k_nut( pb = 0.111091036  , px0 = -11.438986748 , pv = 0.007796498)
 

@@ -238,6 +238,27 @@ test_that("osi_c_potassium_ee works", {
   )
 })
 
+test_that("osi_c_potassium_el works", {
+  expect_equal(
+    osi_c_potassium_el(B_LU = '3301000000', 
+                       A_K_AAA = 35),
+    expected = c(0.0822),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_potassium_el(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                       A_K_AAA = c(75,150,75,150)/2),
+    expected = c(0.08482426, 0.13621953, 0.08482426, 0.13621953),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_potassium_el(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                       A_K_AAA = c(30,60,120,240)),
+    expected = c( 0.07714592, 0.11272964, 0.23932702, 0.80812361),
+    tolerance = 0.01
+  )
+})
+
 test_that("osi_c_potassium_es works", {
   expect_equal(
     osi_c_potassium_es(B_LU = '3301000000', 
@@ -551,6 +572,30 @@ test_that("osi_c_potassium_pt works", {
     osi_c_potassium_pt(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
                        A_K_AAA = c(30,30,50,50)),
     expected = c(0.5235276, 0.5235276, 0.9563832, 0.9563832),
+    tolerance = 0.01
+  )
+})
+
+test_that("osi_c_potassium_ro works", {
+  expect_equal(
+    osi_c_potassium_ro(A_K_AL = 150,
+                       B_TEXTURE_HYPRES = 'C',
+                       B_LU = '3301000000'),
+    expected = c(0.9899),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_potassium_ro(A_K_AL = rep(125,4),
+                       B_TEXTURE_HYPRES = c('M','C','F','VF'),
+                       B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected =c(0.7948820, 0.9678162 ,0.6332193 ,0.6332193),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_potassium_ro(A_K_AL = c(65,85,125,150),
+                       B_TEXTURE_HYPRES = rep('C',4),
+                       B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected = c(0.5871304, 0.8091591, 0.9678162, 0.9899163),
     tolerance = 0.01
   )
 })

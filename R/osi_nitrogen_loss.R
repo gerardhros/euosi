@@ -129,9 +129,10 @@ osi_gw_nleach <- function(B_LU = NA_character_,
   dt[B_COUNTRY == 'CZ', value := NA_real_]
   dt[B_COUNTRY == 'DE', value := NA_real_]
   
-  # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
+  # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
   dt[B_COUNTRY == 'EE', value := NA_real_]
+  dt[B_COUNTRY == 'EL', value := NA_real_]
   dt[B_COUNTRY == 'ES', value := NA_real_]
   dt[B_COUNTRY == 'FR', value := osi_gw_nleach_fr(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI, A_CACO3_IF,    
                                                   B_PREC_SUM, B_PREC_WIN, B_PET_SUM, B_PET_WIN, B_TEMP_SUM,        
@@ -152,9 +153,10 @@ osi_gw_nleach <- function(B_LU = NA_character_,
   dt[B_COUNTRY == 'SK', value := NA_real_]
   dt[B_COUNTRY == 'SL', value := NA_real_]
   
-  # Poland (PL), Portugal (PT), and United Kingdom (UK)
+  # Poland (PL), Portugal (PT), Romenia (RO) and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
   dt[B_COUNTRY == 'PT', value := NA_real_]
+  dt[B_COUNTRY == 'RO', value := NA_real_]
   dt[B_COUNTRY == 'UK', value := NA_real_]
   
   # when country specific data is missing,use then the EU template

@@ -1,3 +1,15 @@
+# euosi 0.7.0 2025-08-17
+
+## Added
+* Portugal (PT) functions in `osi_c_phosphor_pt`, and `osi_nut_p`, and update vignette
+* Portugal (PT) functions in `osi_c_potassium_pt` and `osi_nut_k`, and update vignette
+* Portugal functions in `osi_c_magnesium_pt`, `osi_c_copper_pt`,`osi_c_zinc_pt`,and `osi_c_ph_pt`, and `osi_c_boron_pt`
+* Greece (EL) functions for phospor in `osi_c_phosphor_el` and `osi_nut_p`, and update vignette
+* Greece (EL) functions for potassium in `osi_c_potassium_el`  and `osi_nut_k`, and update vignette
+* Greece (EL) functions for soil acidity in `osi_c_ph_el`
+* `osi_c_magnesium_be` and `osi_c_magnesium_no`
+* vignette `eu_osi_for_magnesium` with an introduction to potassium
+
 # euosi 0.6.0 2025-08-17
 
 ## Added
@@ -12,7 +24,6 @@
 * `osi_c_potassium_nl` had filter on peat rather than on veen
 * `osi_nut_k_fr` for wrong filter on soil k classes
 
-## Changed
 
 # euosi 0.5.0 2025-08-15
 

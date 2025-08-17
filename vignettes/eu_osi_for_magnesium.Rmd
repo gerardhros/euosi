@@ -1,0 +1,827 @@
+---
+title: "EU OSI for magnesium"
+author: 'Gerard Ros & Elise van Eynde'
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{eu_osi_for_magnesium}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+
+  # require packages
+  require(euosi);require(data.table);require(ggplot2)
+
+  # settings
+  knitr::opts_chunk$set(echo = TRUE)
+  options(rmarkdown.html_vignette.check_title = FALSE)
+  setDTthreads(1)
+
+  #devtools::load_all()
+```
+
+## Introduction
+Magnesium (Mg) is an essential macronutrient for plants, best known as the central atom in the chlorophyll molecule, making it vital for photosynthesis and energy transfer. Beyond this, Mg plays a role in enzyme activation, protein synthesis, and carbohydrate partitioning, which are all critical for crop productivity. In a soil health context, Mg is not only important as a nutrient but also as a structural component influencing soil chemistry. As a divalent cation, Mg contributes to cation exchange capacity (CEC) and helps stabilize soil aggregates. Its balance with calcium (Ca) and magnesium (K) strongly influences soil structure, nutrient availability, and root development. In Europe, where many soils are derived from calcareous or base-rich parent materials, Mg is often adequate, but deficiencies can still occur, particularly in sandy soils, acidic soils, and areas with high rainfall that promote leaching.
+
+Soil magnesium is typically measured through laboratory analysis of the exchangeable cation pool. Standard extraction methods in Europe include ammonium acetate (pH 7) or calcium chloride solutions, which release Mg from cation exchange sites for quantification, usually via atomic absorption spectroscopy (AAS) or inductively coupled plasma (ICP) analysis. The results are expressed in mg Mg per kg of soil or as milliequivalents per 100 g of soil. In some European soil health frameworks, Mg is also evaluated in relation to other cations, with particular attention to the Ca:Mg and K:Mg ratios. These ratios are seen as indicative of potential nutrient imbalances that could affect both soil physical properties and crop uptake efficiency.
+
+In the context of European agriculture, magnesium availability is assessed against critical thresholds for specific crops and soil types. Deficiencies are most problematic in light-textured soils, where Mg can be leached below the rooting zone, and in regions with acidic soils where exchangeable Mg is low. Crops with high Mg demand, such as potatoes, sugar beet, and certain cereals, are particularly sensitive to shortages. Soil test values below critical limits often trigger recommendations for Mg fertilization, either through liming materials that contain magnesium (e.g., dolomitic lime) or direct application of soluble Mg fertilizers such as kieserite (magnesium sulfate). Evaluation is also linked to soil pH and organic matter content, as both factors influence Mg retention and availability. In practice, soil Mg status is considered alongside nitrogen, phosphorus, and magnesium to ensure balanced nutrition, with deficiency posing risks to both yield and crop quality, particularly in dairy systems where Mg deficiency in forage can lead to animal health problems such as grass tetany.
+
+The [European Open Soil Index](https://gerardhros.github.io/euosi/) assesses the soil function for Mg supply using the agronomic knowledge base as being used in the various EU countries. The soil Mg supply is transformed into an unitless indicator score ranging between zero (poor quality) and one (optimum quality). This indicator score reflects the ‘distance to target’ (i.e. difference between the current and optimum situation, while ensuring that other soil functions are not limiting). The further it deviates from score 1, the poorer the soil function works. An indicator value of 0.5 approximately corresponds to the lower threshold level of the fertilization guidelines under which (additional) fertilization is recommended (given the ‘buildup and maintenance’ approach as being implemented in fertilizer recommendation systems). Overall, the indicator value can be interpreted as good (>0.75), sufficient (0.5-0.75), and poor (<0.5).
+
+## The soil Mg wrapper function
+In euosi package has a wrapper function to assess the soil health index for the soil Mg supply in agricultural soils across Europe. The wrapper function is `osi_c_magnesium` and has the following inputs:
+
+* B_LU (character) The crop code
+* B_SOILTYPE_AGR (character) The soil type in a particular region
+* A_CLAY_MI (numeric) The clay content of the soil (\%)
+* A_SAND_MI (numeric) The sand content of the soil (\%)
+* A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+* A_C_OF (numeric) The organic carbon content in the soil (g C / kg). Optional.
+* A_PH_CC (numeric) The pH measured in CaCl2 extraction.
+* A_PH_WA (numeric) The pH measured in water. Optional.
+* A_CACO3_IF (numeric) the percentage of CaCO3 (\%)
+* A_CEC_CO (numeric) The cation exchange capacity, analyzed via cobalt-hexamine extraction (mmol+ / kg)
+* A_MG_AAA (numeric) is the exchangeable Mg concentration (mg/kg)
+* A_MG_AL (numeric) The exchangeable Mg-content of the soil measured via Ammonium Lactate extraction (mg Mg/ kg)
+* A_MG_AN (numeric) The Mg-content of the soil extracted with ammonium nitrate (mg Mg /kg)
+* A_MG_CC (numeric) The plant available content of Mg in the soil (mg  Mg per kg) extracted by 0.01M CaCl2
+* A_MG_CO_PO (numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+* A_MG_DL (numeric) The exchangeable Mg-content of the soil measured via Double Lactate extraction (mg Mg/ kg)
+* A_MG_KCL (numeric) The plant available magnesium, extracted with KCL (mg per kg)
+* A_MG_M3 (numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)
+* A_MG_NaAAA (numeric) The Mg-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)
+* A_K_AAA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction 
+* A_K_CO_PO (numeric) The occupation of the CEC with magnesium (\%)
+* A_K_CC (numeric) The plant available magnesium, extracted with 0.01M CaCl2 (mg per kg)
+* B_COUNTRY (character) The country code
+
+Not all the inputs are mandatory. The function runs with the soil parameters being available for LUCAS. Other soil Mg extraction methods can be added, but when unknown, then these are estimated from MG-AAA using published pedotransferfunctions, using the function `osi_conv_magnesium`. Similarly, helper functions are applied to estimate `A_C_OF`,`A_PH_WA`, and `A_CEC_CO` when value is missing (i.e. NA_real_).
+
+Note that the IACS crop codes codes have been added to the `osi_crops` package table from version 0.4.0 onwards. The crop codes are only present for the countries AT, BE, BG, CZ, DE, DK, ES, FI, FR, IT, NL, PT, SE, and SK.
+
+The wrapper function wraps country specific Mg assessment functions. These are illustrated and described in this vignette per country, sorted alphabetically.
+
+
+## Austria (AT)
+The magneisum supply in view of soil health can be calculated using `osi_c_magnesium_at` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_MG_CC, being the extracted Mg content with calcium chloride, unit mg Mg /kg.
+* B_TEXTURE_HYPRES, being the soil texture class according to HYPRES classification system
+
+The Mg supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the HYPRES texture class using `osi_get_TEXTURE_HYPRES`.
+
+The soil Mg threshold for optimum soil health is in Austria generic for all soil types but differs between arable land and grassland. More information can be found in the article of Bohner et al. (2013), that can be downloaded [here](https://raumberg-gumpenstein.at/jdownloads/Forschungsberichte/Umweltressourcen_im_Gruenland/Naehrstoffe/2_2013_INTERREG_IV_Projekt_Abschlussbericht_gewaesserzukunft_Bohner.pdf) with a reference to the publication entitled `RICHTLINIEN FÜR DIE SACHGERECHTE DÜNGUNG, 2006: Anleitung zur Interpretation von Bodenuntersuchungsergebnissen in der Landwirtschaft. 6. Aufl. Bundesministerium für Land- und Forstwirtschaft,
+Umwelt und Wasserwirtschaft, 80 S` that can be found [here](https://www.bmluk.gv.at/dam/jcr:6e638ac4-6dd2-441d-8e51-9304966230cf/Richtlinien%20f%C3%BCr%20die%20sachgerechte%20D%C3%BCngung%20im%20Ackerbau%20und%20Gr%C3%BCnland_akt.pdf).
+
+Note that the IACS crop codes codes have been added to the `osi_crops` package table in version 0.4.0. 
+
+The optimum soil Mg threshold is around 90-100 mg Mg/kg whereas occurance of Mg deficiencies might vary depending on soil type. Magnesium deficiency symptoms start to occur when Mg-CaCl2 becomes lower than 60 mg Mg/kg for the clay soils and lower than 20 mg Mg /kg for the sand soils.
+
+```{r example AT1, out.width="75%", fig.cap="Evaluation Mg-indicator for Austria.",dpi=300, echo = FALSE}
+
+# make an example with varying MG-CAL content
+dt <- CJ(B_LU = c('3301090400'),
+         B_TEXTURE_HYPRES = c('C','M','F'),
+         A_MG_CC = seq(1,100,5))
+dt[,stype := fifelse(B_TEXTURE_HYPRES=='C','sand',
+                     fifelse(B_TEXTURE_HYPRES =='F','clay', 'loam'))]
+dt[,osi_c_mg := osi_c_magnesium_at(B_LU,A_MG_CC = A_MG_CC,B_TEXTURE_HYPRES=B_TEXTURE_HYPRES)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_CC, xpar_label = 'Mg-CC (mg Mg/kg)',pgroup = dt$stype)
+
+```
+
+## Belgium (Flanders)
+The Magnesium supply in Belgium is based on the Mg level in soil being extracted with acid ammonium acetate. More information of the optimum threshold values and the soil MG status evaluation can be found in the IFA report entitled `magnesium AND MAGNESIUM FERTILISER RECOMMENDATIONS IN SOME EUROPEAN COUNTRIES`, but recent studies suggest that the method applied follows the Dutch guidelines as presented in the [Handboek Bodem en Bemesting](www.handboekbodemenbemesting.nl). The optimum value is set at 45 mg Mg/ kg soil.
+
+In the euosi package the soil health score for Mg supply can be calculated with `osi_c_magnesium_be`, requiring the following inputs:
+
+* B_LU, being the Belgium crop code, an unique number for each crop
+* A_MG_CC, being the extracted Mg content with calcium chloride, unit mg Mg /kg.
+
+An example is illustrated below for a sugar beet crop (crop code 91) and a grassland (code = 60) for a single sandy soil with Mg-content of 25 mg Mg / kg:
+
+
+```{r example BE1, echo = TRUE}
+
+# show an example for sugar beet crop (code = 91) and grassland (code = 60)
+c(osi_c_magnesium_be(B_LU = '91', A_MG_CC = 25),
+  osi_c_magnesium_be(B_LU = '60', A_MG_CC = 25))
+
+```
+
+Below the same example but then visualised for a series of soils with a MG-CC values ranging from 0 to 75 mg Mg per kg for one soil with land use grassland. From this example one can see that the soil health index score varies from very low to very high, depending on the content of MG-CaCl2 (mg Mg/kg), and deficiency symptions will occur when Mg-CaCl2 values decrease below 20 mg Mg/kg.
+
+```{r example BE2, out.width="75%", fig.cap="Evaluation Mg-indicator for the Belgium.",dpi=300, echo = FALSE}
+
+# make an example with varying MG-AAA content for soil textures
+dt <- CJ(B_LU = c('60'),
+         A_MG_CC = seq(1,75,5))
+dt[,osi_c_mg := osi_c_magnesium_be(B_LU,A_MG_CC = A_MG_CC)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_CC, xpar_label = 'Mg-CC (mg Mg/kg)',pgroup = NULL)
+
+```
+
+
+## Switzerland (CH)
+The magnesium supply in view of soil health for agricultural soils in Switzerland can be calculated using `osi_c_magnesium_ch` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_MG_AAA, being the extracted Mg content with ammonium acetate, unit mg Mg /kg.
+* A_CLAY_MI, being the clay content, in units percentage (\%)
+
+More information can be found in Flisch et al. (2017) entitled `Grundlagen für die Düngung landwirtschaftlicher Kulturen in der Schweiz`. This document can be downloaded [here](https://www.agroscope.admin.ch/agroscope/de/home/themen/pflanzenbau/ackerbau/Pflanzenernaehrung/grud.html).
+
+Note that the crop codes are not yet available in `osi_crops` package table.  
+
+Below an example is visualized how the soil health index varies in relation to variation in MG-AAA. The optimum soil Mg threshold value for sustainable crop production is around 150 mg Mg/ kg, and the soil index shows that Mg deficiency might occur when MG-AAA values decreases down to 50 mg Mg/kg.
+
+
+```{r example CH1, out.width="75%", fig.cap="Evaluation Mg-indicator for Switzerland.",dpi=300, echo = FALSE}
+
+# make an example with varying MG-AAA content
+dt <- CJ(B_LU = c('cropland'),
+         A_CLAY_MI = 15,
+         A_MG_AAA = seq(1,150,1))
+dt[,osi_c_mg := osi_c_magnesium_ch(B_LU,A_MG_AAA = A_MG_AAA,A_CLAY_MI = A_CLAY_MI)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_AAA, xpar_label = 'Mg-AAA (mg Mg/kg)',pgroup = NULL)
+
+```
+
+
+## Czech Republic (CZ)
+The magnesium supply in view of soil health for agricultural soils in Czech Republic can be calculated using `oci_c_magnesium_cz` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_MG_M3, being the extracted Mg content with Mehlich-III, unit mg Mg / kg
+* B_TEXTURE_HYPRES, being the soil texture class according to HYPRES classification system
+
+The Mg supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the HYPRES texture class using `osi_get_TEXTURE_HYPRES`.
+
+Information on the threshold values for Mg-Mehlich in view of sustainable crop production has been derived from Fotyma et al. (2008) who wrote a comprehensive overview of soil testing methods in Eastern Europe entitled "Soil testing methods and fertilizer recommendations in Central–Eastern European countries". 
+
+Note that the IACS crop codes codes have been added to the `osi_crops` package table in version 0.4.0. 
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg extracted with Mehlich-III. The optimum soil Mg threshold value for sustainable crop production is around 180 mg Mg/ kg for the loam and sand soil, and lies around 250 mg Mg / kg for the clay soils. The soil index shows Mg deficiency when Mg Mehlich-III values decreases down to 100 mg Mg / kg for the sand and loam soil, and down to 160 mg Mg / kg for the clay soil.
+
+
+```{r example CZ1, out.width="75%", fig.cap="Evaluation Mg-indicator for Czech Republic.",dpi=300, echo = FALSE}
+
+# make an example with varying MG-M3 content
+dt <- CJ(B_LU = c('3301090400'),
+         B_TEXTURE_HYPRES = c('C','M','F'),
+         A_MG_M3 = seq(1,350,5))
+dt[,stype := fifelse(B_TEXTURE_HYPRES=='C','sand',
+                     fifelse(B_TEXTURE_HYPRES =='F','clay', 'loam'))]
+dt[,osi_c_mg := oci_c_magnesium_cz(B_LU,A_MG_M3 = A_MG_M3, B_TEXTURE_HYPRES=B_TEXTURE_HYPRES)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_M3, xpar_label = 'Mg-M3 (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+
+## Germany (DE)
+The magnesium supply in view of soil health for agricultural soils in Germany can be calculated using `osi_c_magnesium_de` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_C_OF, being the soil organic carbon content (g C/ kg)
+* A_CLAY_MI, being the clay content, in units percentage (\%)
+* A_SAND_MI, being the sand content, in units percentage (\%)
+* A_MG_CC, being the extracted Mg content with calcium chloride, unit mg Mg / kg.
+
+
+The Mg supplying capacity differ for soils varying in clay content and distinghuises also between peaty and mineral soils, as well land use (i.e. grassland versus cropland). Information on the threshold values for MG-CAL in view of sustainable crop production has been derived by the VDLUFA. For more information, see [here](https://www.tll.de/www/daten/publikationen/schriftenreihe/dung0108.pdf) 
+
+Note that the IACS crop codes for Germany are available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in MG-CC for a cropland soil. The optimum soil Mg threshold value for sustainable crop production is around 45 mg Mg/ kg for peat soils and around 80 mg Mg / kg for mineral soils. The soil index decreases when MG-CC values decreases down to 25 mg Mg/kg (peat soils) or 60 mg Mg / kg (mineral soils).
+
+
+```{r example DE1, out.width="75%", fig.cap="Evaluation Mg-indicator for Germany.",dpi=300, echo = FALSE}
+
+# make an example with varying MG-CAL content for three soil types
+dt <- CJ(B_LU = c('3301090400'),
+         A_C_OF = c(5,10,20)*2*10,
+         A_MG_CC = seq(1,100,1))
+dt[A_C_OF==100,A_CLAY_MI := 10]
+dt[A_C_OF > 100,A_CLAY_MI := 5]
+dt[,A_SAND_MI := 25]
+dt[,stype := fifelse(A_C_OF ==100 ,'clay low humus',
+             fifelse(A_C_OF== 200, 'sand high humus','peat'))]
+dt[,osi_c_mg := osi_c_magnesium_de(B_LU,A_MG_CC = A_MG_CC,A_C_OF = A_C_OF,A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_CC, xpar_label = 'Mg-CC (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+
+## Denmark (DK)
+The magnesium supply in Denmark is based on the Mg level in soil being extracted with ammonium lactate. There is no distinction between cropland or grassland or between soil types. More information of the optimum threshold values and the soil Mg status evaluation can be found in the IFA report entitled `magnesium AND MAGNESIUM FERTILISER RECOMMENDATIONS IN SOME EUROPEAN COUNTRIES`. 
+
+In the euosi package the soil health score for Mg supply can be calculated with `osi_c_magnesium_dk`, requiring the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_MG_AL, being the extracted P content with ammonium lactate, unit mg Mg / kg.
+
+Note that the IACS crop codes for Denmark are available in `osi_crops` package table.
+
+Below the same example but then visualised for a series of soils with a  MG-AL value ranging from 0 to 100 mg Mg per kg. The optimum soil Mg threshold value for sustainable crop production is around 75 mg Mg/ kg for all soils. The soil index decreases when MG-AL,in particular below a Mg content of 37 mg Mg / kg.
+
+
+```{r example DK1, out.width="75%", fig.cap="Evaluation Mg-indicator for the Denmark.",dpi=300, echo = FALSE}
+
+# make an example with varying K_AL
+dt <- CJ(B_LU = c('3301090400'),
+         A_MG_AL= seq(1,100,5))
+dt[,osi_c_mg := osi_c_magnesium_dk(B_LU,A_MG_AL = A_MG_AL)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_AL, xpar_label = 'Mg-AL (mg Mg / kg)',pgroup = NULL)
+
+```
+
+
+## Estonia (EE)
+The magnesium supply in view of soil health for agricultural soils in Estonia can be calculated using `oci_c_magnesium_ee` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_MG_M3, being the extracted Mg content with Mehlich-III, unit mg Mg / kg.
+* B_TEXTURE_USDA, being the soil texture class according to USDA classification system
+
+The Mg supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the USDA texture class using `osi_get_TEXTURE_USDA`. Information on the threshold values for Mg-Mehlich in view of sustainable crop production has been derived from Fotyma et al. (2008) who wrote a comprehensive overview of soil testing methods in Eastern Europe entitled "Soil testing methods and fertilizer recommendations in Central–Eastern European countries". 
+
+Note that the IACS crop codes for Estonia are not yet available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg Mehlich-III. The optimum soil Mg threshold value for sustainable crop production is around 65 mg Mg/ kg for sand, around 125 mg Mg / kg for loam and around 175 mg Mg / kg for clay soils. Similarly, Mg deficiencies might occur when Mg-M3 declines to 100 mg Mg/ kg for clay soils down to 35 mg Mg / kg for sandy soils. 
+
+```{r example EE1, out.width="75%", fig.cap="Evaluation Mg-indicator for Estonia.",dpi=300, echo = FALSE}
+
+# make an example with varying MG-M3 content for two soil types
+dt <- CJ(B_LU = c('cropland'),
+         B_TEXTURE_USDA = c('Cl','Lo','Sa'),
+         A_MG_M3 = seq(1,200,5))
+
+dt[,stype := fifelse(B_TEXTURE_USDA=='Cl','clay',
+                     fifelse(B_TEXTURE_USDA =='Sa','sand', 'loam'))]
+dt[,osi_c_mg := oci_c_magnesium_ee(B_LU,A_MG_M3 = A_MG_M3,B_TEXTURE_USDA = B_TEXTURE_USDA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_M3, xpar_label = 'Mg-M3 (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+## Greece (EL)
+The magnesium supply in view of soil health for agricultural soils in Greece is not yet available in the `euosi package`.
+
+## Spain (ES)
+The magnesium supply in view of soil health for agricultural soils in Spain can be calculated using `osi_c_magnesium_es` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_MG_CO_PO, being the extracted Mg content with Cohex, unit % occupation of the CEC (\%) 
+
+The Mg supplying capacity might differ for soils varying in clay content, and the soil health assessment differs with the texture class, distinghuising sandy (Arenoso), loamy (Franco) and clayey (Arcilloso) soils, but this is not (yet) implemented in the agronomic evaluation of Mg availability. Information on the threshold values for Mg occupation in view of sustainable crop production has been derived by the fertilizer guidelines handbook entitled "PRÁCTICA DE LA FERTILIZACIÓN RACIONAL DE LOS CULTIVOS EN ESPAÑA". This book is online available [here](https://www.mapa.gob.es/dam/mapa/contenido/agricultura/publicaciones/01_fertilizacion-baja-.pdf).
+
+Note that IACS crop codes for Spain are available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in the CEC occupation with magnesium. The optimum soil Mg threshold value for sustainable crop production is around 15-20%. Magnesium deficiency symptoms occur when the occupation degree drops down to 6.5%.
+
+
+```{r example ES1, out.width="75%", fig.cap="Evaluation Mg-indicator for Spain.",dpi=300, echo = FALSE}
+
+# make an example with varying Mg content for three soil types
+dt <- CJ(B_LU = c('3301090400'),
+         A_MG_CO_PO = seq(1,25,0.5))
+dt[,osi_c_mg := osi_c_magnesium_es(B_LU,A_MG_CO_PO = A_MG_CO_PO)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_CO_PO, xpar_label = 'Mg-occupation (%)',pgroup = NULL)
+
+```
+
+
+## Finland (FI)
+The magnesium supply in view of soil health for agricultural soils in Finland can be calculated using `osi_c_magnesium_fi` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* B_TEXTURE_USDA, being the soil texture class according to USDA classification system
+* A_MG_AAA, being the extracted Mg content with ammonium acetate extraction, unit mg Mg / kg.
+* A_C_OF, being the organic carbon content of the soil, in unit g C/kg, to distinghuish between mineral and peat soils.
+
+The Mg supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the USDA texture class using `osi_get_TEXTURE_USDA`.  
+
+Note that the crop codes for Finland are available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg-AAA for four soil types. The differences between the loamy and peaty soil types is rather small, whereas the biggest difference is found for the sandy and clay soil. The optimum soil Mg threshold value for sustainable crop production is around 200 mg Mg/ kg for the soil types evaluated. Deficiencies occur when Mg-AAA decreased down to 85 mg Mg / kg (clay) and 50 mg Mg / kg (the other soil types).
+
+
+```{r example FI1, out.width="75%", fig.cap="Evaluation Mg-indicator for Finland.",dpi=300, echo = FALSE}
+
+# make an example with varying P-AA content for two soil types
+dt <- CJ(B_LU = c('3340'),
+         B_TEXTURE_USDA = c('Sa','Lo','Cl','ClLo'),
+         A_MG_AAA = seq(1,250,1))
+dt[,stype := fifelse(B_TEXTURE_USDA=='Sa','sand',
+                     fifelse(B_TEXTURE_USDA =='Cl','clay', 'loam'))]
+dt[,A_C_OF := fifelse(B_TEXTURE_USDA=='ClLo',250,10)]
+dt[B_TEXTURE_USDA=='ClLo',stype:= 'peat']
+dt[,osi_c_mg := osi_c_magnesium_fi(B_LU,A_MG_AAA = A_MG_AAA,B_TEXTURE_USDA = B_TEXTURE_USDA,A_C_OF=A_C_OF)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_AAA, xpar_label = 'Mg-AAA (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+
+## France (FR)
+In France, soil magnesium status for crop production is determined by assessing plant-available Mg levels, using the acid ammonium acetate excration method. This soil K pool is then compared against thresholds specific to different crops, which vary based on factors like soil type and climate. In France the Mg supply can be assessed with varying degree of detail depending on the availability of regional threshold values, similar to that for phosphorus. More information of the optimum threshold values and the soil Mg status evaluation can be found [here](https://comifer.asso.fr/wp-content/uploads/2015/03/COMIFER_RAPPORT_fertilisation_15102019.pdf).
+
+The euosi package the soil health score for Mg supply can be calculated with `osi_c_magnesium_fr`, requiring the following inputs:
+
+* B_LU, being the French crop code, an unique code for each crop
+* A_CLAY_MI, being the clay content, unit percentage (\%)
+* A_CEC_CO, the cation exchange complex, unit mmol+/kg soil
+* A_CACO3_IF, the carbonate fraction being present in soil, unit percentage (\%)
+* A_MG_AAA, being the extracted Mg content with ammonium acetate extraction, unit mg Mg / kg.
+
+An example of the `osi_c_magnesium_fr` function is illustrated below for potato (crop code PTC) and permanent grassland (code = PRL) for a single soil with Mg-content of 45 mg Mg / kg. 
+
+
+```{r example FR1, echo = TRUE}
+
+# show an example for soil K asssesment for potato crop (code = PTC) and grassland (code = PRL)
+c(osi_c_magnesium_fr(B_LU = 'PTC', A_MG_AAA = 45,A_CLAY_MI = 7.5,A_CEC_CO = 85, A_CACO3_IF = 1.5),
+  osi_c_magnesium_fr(B_LU = 'PRL', A_MG_AAA = 45,A_CLAY_MI = 7.5,A_CEC_CO = 85, A_CACO3_IF = 1.5))
+
+```
+
+Below the same example but then visualised for various soil types with a Mg-AAA value ranging from 0 to 300 mg Mg per kg for a potato crop. From this example one can see that the soil health index score varies from very low to very high, depending on the content Mg-AAA (mg Mg / kg). Optimum threshold values are found for Mg-AAA values around 40 mg Mg / kg, with no differences between soil types.
+
+```{r example FR2, out.width="75%", fig.cap="Evaluation Mg-indicator for France.",dpi=300, echo = FALSE}
+
+# make an example with varying P-Olsen content
+dt <- CJ(B_LU = c('PTC'),
+         A_CLAY_MI = 23,
+         A_CEC_CO = c(5,10,13),
+         A_CACO3_IF = 5,
+         A_MG_AAA = seq(1,80,0.5))
+dt[, stype := fifelse(A_CEC_CO < 7,'sand',
+                              fifelse(A_CEC_CO > 7 & A_CEC_CO <= 12,'loam',
+                                 fifelse(A_CACO3_IF>0, 'clay calcareous', 'clay')))]
+dt[,osi_c_mg := osi_c_magnesium_fr(B_LU,A_MG_AAA = A_MG_AAA, A_CEC_CO=A_CEC_CO,
+                                   A_CLAY_MI = A_CLAY_MI, A_CACO3_IF = A_CACO3_IF)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_AAA, xpar_label = 'Mg-AAA (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+## Hungary (HU)
+The magnesium supply in view of soil health for agricultural soils in Hungary can be calculated using `osi_c_magnesium_fr` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* B_TEXTURE_USDA, being the soil texture class according to USDA classification system
+* A_MG_KCL, being the extracted Mg content with kalium chloride, unit mg Mg / kg.
+
+The Mg supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the USDA texture class using `osi_get_TEXTURE_USDA`. Information on the threshold values for MG-AL in view of sustainable crop production has been derived from Fotyma et al. (2008) who wrote a comprehensive overview of soil testing methods in Eastern Europe entitled "Soil testing methods and fertilizer recommendations in Central–Eastern European countries". 
+
+Note that the crop codes for Hungary are not yet available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg-KCL. The optimum soil Mg threshold value for sustainable crop production is around 40 mg Mg/ kg for the three soil types (sand, clay and loam). The soil index rapidly decreases when Mg-KCL values decreases down to 20 mg Mg / kg for sand soil but remained high for the loam soil (to be checked if this is correct).
+
+
+```{r example HU1, out.width="75%", fig.cap="Evaluation Mg-indicator for Hungary.",dpi=300, echo = FALSE}
+
+dt <- CJ(B_LU = c('cropland'),
+         B_TEXTURE_USDA = c('Sa','Lo','Cl'),
+         A_MG_KCL = seq(1,80,1))
+dt[,stype := fifelse(B_TEXTURE_USDA=='Sa','sand',
+                     fifelse(B_TEXTURE_USDA =='Cl','clay', 'loam'))]
+dt[,osi_c_mg := osi_c_magnesium_hu(B_LU,A_MG_KCL = A_MG_KCL,B_TEXTURE_USDA = B_TEXTURE_USDA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_KCL, xpar_label = 'Mg-KCL (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+
+## Ireland (IE)
+The magnesium supply in view of soil health for agricultural soils in Ireland can be calculated using `osi_c_magnesium_ie` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_SOM_LOI, being the soil organic matter content, in units percentage (\%)
+* A_MG_NaAAA, being the extracted Mg content with Morgans solution, unit mg Mg / kg.
+
+The Mg supplying capacity differs among soil textures, but in Ireland the evaluation of the Mg supply is similar for all soil types but it varies for grassland and crop land. The SOM content is used for unit conversion inside the function (since the soil evaluation system uses the so-called Mg-index, a number reflecting the Mg supply). Information on the threshold values for Mg-NaAAA in view of sustainable crop production can be found on [the website of Teagasc](https://teagasc.ie/crops/soil--soil-fertility/soil-analysis/soil-index-system/) 
+
+Note that the crop codes for Ireland are not yet available in `osi_crops` package table. 
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg-NaAAA. The optimum soil Mg-NaAAA threshold value for sustainable crop production is around 75 mg Mg/ kg for mineral soils and around 175 mg Mg / kg for peat soils. Magnesium deficiency occurs when the Mg-NaAAA value decreases below around 80 mg Mg / kg for peat and below 25 mg Mg / kg for mineral soils.
+
+
+```{r example IE1, out.width="75%", fig.cap="Evaluation Mg-indicator for Ireland.",dpi=300, echo = FALSE}
+
+# make an example with varying K-NaAAA content for peat and mineral soils
+dt <- CJ(B_LU = c('cropland'),
+         A_SOM_LOI = c(4, 25),
+         A_MG_NaAAA = seq(1,250,0.1))
+dt[,stype := fifelse(A_SOM_LOI <20 ,'mineral soil','peat')]
+dt[,osi_c_mg := osi_c_magnesium_ie(B_LU,A_MG_NaAAA = A_MG_NaAAA,A_SOM_LOI=A_SOM_LOI)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_NaAAA, xpar_label = 'Mg-NaAAA (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+
+## Italy (IT)
+The magnesium supply in view of soil health for agricultural soils in Italy can be calculated using `osi_c_magnesium_it` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_MG_CO_PO (numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+* A_K_CO_PO (numeric) The exchangeable K-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+
+The Mg supplying capacity differ for soils varying in clay content, but is in Italy evaluated in relation to the occupation degree as well the relationship with potassium. Information on the threshold values for the CEC occupupation of Mg in view of sustainable crop could not be retreived from Italian fertilizer guidelines (follow up action with Italian partners needed). For now, optimum threshold values and the soil K status evaluationare taken from the IFA report entitled `magnesium AND MAGNESIUM FERTILISER RECOMMENDATIONS IN SOME EUROPEAN COUNTRIES`. 
+
+Note that IACS crop codes for Italy are available in `osi_crops` package table. 
+
+Below an example is visualized how the soil health index varies in relation to variation in MG-AAA for three soil types (ie. clay, loam and sand). The optimum soil Mg threshold value for sustainable crop production is around 45% for the soil with high K levels, and is much lower (around 18%) when the soil is low in potassium. 
+
+
+```{r example IT1, out.width="75%", fig.cap="Evaluation Mg-indicator for Italy.",dpi=300, echo = FALSE}
+
+# make an example with varying P-OL content
+dt <- CJ(B_LU = c('3301090400'),
+         A_MG_CO_PO = seq(1,45,1),
+         A_K_CO_PO = c(5,15))
+dt[,stype := fifelse(A_K_CO_PO==5,'low in K','high in K')]      
+dt[,osi_c_mg := osi_c_magnesium_it(B_LU,A_MG_CO_PO = A_MG_CO_PO,A_K_CO_PO=A_K_CO_PO)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_CO_PO, xpar_label = 'Mg-CEC (%)',pgroup = dt$stype)
+
+```
+
+
+## Latvia (LV)
+The magnesium supply in view of soil health for agricultural soils in Latvia can be calculated using `osi_c_magnesium_lv` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* B_TEXTURE_USDA, being the soil texture class according to USDA classification system
+* A_MG_DL, being the extracted Mg content with Double Lactate extraction, unit mg Mg / kg.
+
+The Mg supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the USDA texture class using `osi_get_TEXTURE_USDA`. Information on the threshold values for Mg-DL in view of sustainable crop production has been derived from Fotyma et al. (2008) who wrote a comprehensive overview of soil testing methods in Eastern Europe entitled "Soil testing methods and fertilizer recommendations in Central–Eastern European countries". 
+
+Note that the crop codes for Latvia are not yet available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg-DL. The optimum soil Mg threshold value for sustainable crop production is around 80 mg Mg/ kg for the sandy soil, and varies around 120-140 mg Mg / kg for the other soil types evaluated (clay and loam). Magnesium deficiencies occur when the Mg-DL drows down below 65 mg/kg (for the clay and loam soils) or below the 40 mg Mg / kg for the sandy soil. 
+
+
+```{r example LV1, out.width="75%", fig.cap="Evaluation Mg-indicator for Latvia.",dpi=300, echo = FALSE}
+
+# make an example with varying P-M3 content for two soil types
+dt <- CJ(B_LU = c('cropland'),
+         B_TEXTURE_USDA = c('Sa','Lo','Cl'),
+         A_MG_DL = seq(1,150,1))
+dt[,stype := fifelse(B_TEXTURE_USDA=='Sa','sand',
+                     fifelse(B_TEXTURE_USDA =='Cl','clay', 'loam'))]
+dt[,osi_c_mg := osi_c_magnesium_lv(B_LU,A_MG_DL = A_MG_DL,B_TEXTURE_USDA = B_TEXTURE_USDA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_DL, xpar_label = 'Mg-DL (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+## Lithuania (LT)
+The magnesium supply in view of soil health for agricultural soils in Lithuania can be calculated using `osi_c_magnesium_lt` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_PH_KCL, being the soil acidity measured via KCL extraction (-).
+* A_MG_AL, being the extracted Mg content with ammonium lactate, unit mg Mg / kg.
+
+The Mg supplying capacity differs between peaty soils (having high levels of soil organic matter) and mineral soils. Information on the threshold values for MG-AL in view of sustainable crop production has been derived from Fotyma et al. (2008) who wrote a comprehensive overview of soil testing methods in Eastern Europe entitled "Soil testing methods and fertilizer recommendations in Central–Eastern European countries". 
+
+Note that the crop codes for Lithuania are not yet available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg-AL. The optimum soil Mg threshold value for sustainable crop production is around 100 mg Mg/ kg for the acidic soils and is much higher (i.e. 250 mg Mg / kg) for the calcareous soil. Magnesium deficiences occur therefore earlier in the calcareous soils, in particular when Mg-AL drops down the 150 mg Mg / kg. 
+
+
+```{r example LT1, out.width="75%", fig.cap="Evaluation Mg-indicator for Lithuania.",dpi=300, echo = FALSE}
+
+# make an example with varying P-M3 content for two soil types
+dt <- CJ(B_LU = c('cropland'),
+         A_PH_KCL = c(5,7),
+         A_MG_AL = seq(1,400,5))
+dt[,stype := fifelse(A_PH_KCL <= 6,'acidic soils','calcareous soils')]
+dt[,osi_c_mg := osi_c_magnesium_lt(B_LU,A_MG_AL = A_MG_AL,A_PH_KCL = A_PH_KCL)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_AL, xpar_label = 'Mg-AL (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+## Netherlands (NL)
+The supply of Mg for arable fields as well as grassland fields on sandy soils is directly related
+to the plant available Mg-content (measured with CaCl2-extraction). The Mg supply is
+subsequently evaluated with a more-is-better logistic response curve derived from the field
+experiments. For grassland fields on clay and peat soils, the Mg-supply is indirectly quantified
+based on Mg content in the grass (for intake by cows), which was predicted by a empirically derived regression model of CEC, organic matter content, clay content, pH, as well as the K availability assessed by K-CaCl2 and K-CEC. Subsequently, the Mg supply is evaluated based on the difference between the predicted Mg and the optimum Mg content in grass.The Mg supply is evaluated with the more-is-better logistic scoring function. More information for grasland and maize can be found [here](www.bemestingsadvies.nl) and for arable crops can be found [here](https://www.handboekbodemenbemesting.nl/bemestingsadviezen/fosfaat/).
+
+In the euosi package the Mg indicator for the Netherlands can be estimated via `osi_c_magnesium_nl`. This function requires the following inputs:
+
+* B_LU, being the Dutch BRP code, an unique number for each crop
+* B_SOILTYPE_AGR, the agricultural soil type
+* A_SOM_LOI, being the soil organic matter content, in units percentage (\%)
+* A_CLAY_MI, being the clay content, in units percentage (\%)
+* A_PH_CC, the soil pH measured in 0.01M CaCl2 (-)
+* A_CEC_CO, the cation exchange capacity, measured via cohex extraction (mmol+/kg)
+* A_K_CO_PO, the percentage of the CEC being occupied with K (\%)
+* A_K_CC, being the extracted Mg content with 0.01M CaCl2, unit mg K / kg.
+* A_MG_CC, being the extracted Mg content with 0.01M CaCl2, unit mg Mg / kg.
+
+An example is illustrated below for a maize crop (crop code 265) and a single soil is:
+
+
+```{r example NL1, echo = TRUE}
+
+# show an example for maize crop
+osi_c_magnesium_nl(B_LU = '265', B_SOILTYPE_AGR = 'dekzand',
+                  A_SOM_LOI = 4, A_CLAY_MI = 11,A_PH_CC = 5.4, A_CEC_CO = 125, 
+                  A_K_CO_PO = 8.5, A_K_CC = 45,A_MG_CC = 25)
+
+```
+
+Below the same example but then visualised for a series of soils with a single CEC value (of 150 mmol+/kg), with 8% of the CEC being occupied with K, and a variable K-CaCl2 value (ranging from 0.1 to 150 mg Mg / kg). This is done for two crops: grassland and maize. From this example one can see that the soil health index score varies from very low to very high, depending on the content of Mg-CaCl2. It is also evident that optimum threshold values for Mg-CaCl2 are much lower than for grassland, for the given soil.
+
+```{r example NL2, out.width="75%", fig.cap="Evaluation Mg-indicator for the Netherlands.",dpi=300, echo = FALSE}
+
+# make an example with varying K-CaCl2 and a fixed K-Cohex
+dt <- CJ(B_LU = c('259','265'),
+         B_SOILTYPE_AGR = 'dekzand',
+         A_SOM_LOI = 4, A_CLAY_MI = 11,A_PH_CC = 5.4, 
+         A_CEC_CO = 150,A_K_CO_PO = 8, 
+         A_K_CC = 25,
+         A_MG_CC = seq(10,150,1))
+dt[,landuse := fifelse(B_LU=='259','maize','grassland')]
+dt[,osi_c_mg := osi_c_magnesium_nl(B_LU,B_SOILTYPE_AGR=B_SOILTYPE_AGR,
+                                  A_SOM_LOI = A_SOM_LOI,A_CLAY_MI=A_CLAY_MI,
+                                  A_PH_CC=A_PH_CC,A_CEC_CO=A_CEC_CO,
+                                  A_K_CO_PO=A_K_CO_PO,A_K_CC=A_K_CC,A_MG_CC=A_MG_CC)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_CC, xpar_label = 'Mg-CaCl2 (mg Mg / kg)',pgroup = dt$landuse)
+
+```
+
+
+## Norway (NO)
+The magnesium supply in view of soil health for agricultural soils in Norway can be calculated using `osi_c_magnesium_no` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_MG_AL, being the extracted Mg content with ammonium lactate extraction, unit mg Mg / kg 
+
+The Mg supplying capacity differs among soil textures, but here the evaluation of the Mg supply is similar for all land uses.The Norwegian fertilizer documentation has not been retreived yet, and information of the optimum threshold values and the soil Mg status evaluation was retreived from the IFA report entitled `magnesium AND MAGNESIUM FERTILISER RECOMMENDATIONS IN SOME EUROPEAN COUNTRIES`. Additional information is retreived from the [website from NIBIO](https://www.nibio.no/tema/jord/gjodslingshandbok/korreksjonstabeller/kaliumkorreksjon-til-eng).
+
+Note that the crop codes for Norway are not yet available in `osi_crops` package table. 
+
+Below an example is visualized how the soil health index varies in relation to variation in MG-AL. The optimum soil Mg threshold value for sustainable crop production is around 35 mg Mg/ kg, and there is no distinction between soil types. Magnesium deficiency occurs when the Mg-AL value decreases below around 20 mg Mg / kg.
+
+
+```{r example NO1, out.width="75%", fig.cap="Evaluation Mg-indicator for Norway.",dpi=300, echo = FALSE}
+
+# make an example with varying MG-AL content
+dt <- CJ(B_LU = c('cropland'),
+         A_MG_AL = seq(1,80,0.1))
+dt[,osi_c_mg := osi_c_magnesium_no(B_LU,A_MG_AL = A_MG_AL)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_AL, xpar_label = 'Mg-AL (mg Mg / kg)',pgroup = NULL)
+
+```
+
+
+## Poland (PL)
+The magnesium supply in view of soil health for agricultural soils in Poland can be calculated using `osi_c_magnesium_pl` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* B_TEXTURE_HYPRES, being the soil texture class according to HYPRES classification system
+* A_MG_CC, being the extracted Mg content with calcium chloride, unit mg Mg / kg.
+
+The Mg supplying capacity differ for soils varying in clay content, and the soil health assessment differs with the texture class, distinghuising sandy (C), loamy (M) and clayey (F) soils, for example. One can easily classify the HYPRES texture class using `osi_get_TEXTURE_HYPRES` when clay, sand and silt content are known. 
+
+Information on the threshold values for Mg-CaCl2 in view of sustainable crop production has been derived from Fotyma et al. (2008) who wrote a comprehensive overview of soil testing methods in Eastern Europe entitled "Soil testing methods and fertilizer recommendations in Central–Eastern European countries". 
+
+Note that the crop codes for Poland are not yet available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg-CaCl2 for three soil types. The optimum soil Mg threshold value for sustainable crop production is strongly dependent on soil type, ranging from around 25 mg Mg / kg for sandy soils up to 75 mg Mg / kg for clayey and loamy soils. Magnesium deficiencies range accordingly between 12.5 and 37-50 mg Mg / kg. 
+
+```{r example PL1, out.width="75%", fig.cap="Evaluation Mg-indicator for Poland.",dpi=300, echo = FALSE}
+
+# make an example with varying Mg-Cal2
+dt <- CJ(B_LU = c('cropland'),
+         B_TEXTURE_HYPRES= c('C','F','M'),
+         A_MG_CC = seq(1,100,1))
+dt[,stype:=fifelse(B_TEXTURE_HYPRES=='C', 'sand',
+                   fifelse(B_TEXTURE_HYPRES=='F','clay','loam'))]
+dt[,osi_c_mg := osi_c_magnesium_pl(B_LU,A_MG_CC = A_MG_CC,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_CC, xpar_label = 'MgCaCl2 (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+## Portugal (PT)
+The magnesium supply in view of soil health for agricultural soils in Portugal can be calculated using `osi_c_magnesium_pt` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_MG_AAA, being the extracted Mg content with acid ammonium acetate, unit mg Mg / kg 
+
+Information on the threshold values for Mg-AAA in view of sustainable crop production has been derived from the Portugese fertilizer manual entitled `Manual de fertilização das culturas`, a document that can be downloaded [here](https://www.iniav.pt/images/publicacoes/livros-manuais/Manual_Fertilizacao_das_culturas.pdf).
+
+Note that IACS crop codes for Portugal are available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg-AAA. The optimum soil Mg threshold value for sustainable crop production is around 75 mg Mg/ kg, and the soil index decreases when Mg-AAA values decreases down to 40 mg Mg / kg. There is no differentiation among soil types of land uses.
+
+
+```{r example PT1, out.width="75%", fig.cap="Evaluation P-indicator for Portugal.",dpi=300, echo = FALSE}
+
+# make an example with varying MG-AAA
+dt <- CJ(B_LU = c('3301090400'),
+         A_MG_AAA = seq(1,100,5))
+dt[,osi_c_mg := osi_c_magnesium_pt(B_LU,A_MG_AAA = A_MG_AAA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_AAA, xpar_label = 'Mg-AAA (mg Mg / kg)',pgroup = NULL)
+
+```
+
+## Romenia (RO)
+The magnesium supply in view of soil health for agricultural soils in Romenia can be calculated using `osi_c_magnesium_ro` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* B_TEXTURE_HYPRES, being the soil texture class according to HYPRES classification system
+* A_CEC_CO, the cation exchange capacity, measured via cohex extraction (mmol+/kg)
+* A_MG_CO_PO, the percentage of the CEC being occupied with Mg (\%)
+* A_K_CO_PO, the percentage of the CEC being occupied with K (\%)
+* A_K_CC, being the extracted Mg content with 0.01M CaCl2, unit mg K / kg.
+* A_MG_CC, being the extracted Mg content with 0.01M CaCl2, unit mg Mg / kg.
+* A_PH_WA (numeric) The pH measured in water. 
+
+
+The Mg supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the HYPRES texture class using `osi_get_TEXTURE_HYPRES`.Information on the threshold values for magnesium in view of sustainable crop production has been derived from the Romenia document entitled `SISTEME DE CULTURI ŞI PLANURI DE FERTILIZARE`, a document that can be downloaded [here](https://www.icpa.ro/documente/coduri/Planuri_de_fertilizare.pdf).
+
+Note that the crop codes for Romenia are not yet available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg-CaCl2. The optimum soil Mg threshold value for sustainable crop production is around 80 mg Mg/ kg, and the soil index decreases when Mg-CaCl2 values decreases. Magnesium deficiency occurs when Mg-CaCl2 is below 40 mg /kg for the clay soil and below the 18 mg Mg / kg for the sandy soil, given the fixed CEC and Mg and K occupation of the CEC as well. There is no differentiation among land uses.
+
+
+```{r example RO1, out.width="75%", fig.cap="Evaluation P-indicator for Romenia.",dpi=300, echo = FALSE}
+
+# make an example with varying MG-AL
+dt <- CJ(B_LU = c('3301090400'),
+         A_CEC_CO = 100,
+         A_MG_CC = seq(5,80,1), 
+         A_MG_CO_PO = 6, 
+         A_K_CO_PO = 3, 
+         A_PH_WA = 6.5,
+         B_TEXTURE_HYPRES= c('C','F','M'))
+dt[,stype:=fifelse(B_TEXTURE_HYPRES=='C', 'sand',
+                   fifelse(B_TEXTURE_HYPRES=='F','clay','loam'))]
+dt[,osi_c_mg := osi_c_magnesium_ro(B_LU,A_CEC_CO = A_CEC_CO, A_MG_CC = A_MG_CC,
+                                   A_MG_CO_PO = A_MG_CO_PO, A_K_CO_PO = A_K_CO_PO,
+                                   A_PH_WA = A_PH_WA, B_TEXTURE_HYPRES=B_TEXTURE_HYPRES)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_CC, xpar_label = 'Mg-CaCl2 (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+
+## Sweden (SE)
+The magnesium supply in view of soil health for agricultural soils in Sweden can be calculated using `osi_c_magnesium_se` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_MG_AL, being the extracted Mg content with ammonium lactate extraction, unit mg Mg / kg 
+
+The Mg supplying capacity differs per land use type. The threshold values for optimum crop production were derived from the fertilizer guidelines ["Rekommendationer för gödsling och kalkning 2025"](https://webbutiken.jordbruksverket.se/sv/artiklar/jo219.html).
+
+Note that IACS crop codes for Sweden are available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg-AL. The soil health assessment does not differentiate (yet) between crop types and has an optimum threshold around 10 mg Mg / kg. Magnesium deficiency occurs when the Mg-AL values decrease below 3 mg Mg / kg (to be checked).
+
+
+```{r example SE1, out.width="75%", fig.cap="Evaluation Mg-indicator for Sweden.",dpi=300, echo = FALSE}
+
+# make an example with varying MG-AL content for three land uses
+dt <- CJ(B_LU = c('3301090400','3301030000','3301060500'),
+         A_MG_AL = seq(1,10,1))
+dt[B_LU=='3301090400', landuse := 'cereal']
+dt[B_LU=='3301030000', landuse := 'potato']
+dt[B_LU=='3301060500', landuse := 'oil crop']
+dt[,osi_c_mg := osi_c_magnesium_se(B_LU,A_MG_AL = A_MG_AL)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_AL, xpar_label = 'Mg-AL (mg Mg / kg)',pgroup = dt$landuse)
+
+```
+
+
+
+## Slovak Republic (SK)
+The magnesium supply in view of soil health for agricultural soils in Slovak Republic can be calculated using `osi_c_magnesium_sk` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* B_TEXTURE_HYPRES, being the soil texture class according to HYPRES classification system
+* A_MG_M3, being the extracted Mg content with Mehlich-III extraction, unit mg Mg / kg.
+
+The Mg supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the USDA texture class using `osi_get_TEXTURE_HYPRES`. Information on the threshold values for Mg-Mehlich in view of sustainable crop production has been derived from Fotyma et al. (2008) who wrote a comprehensive overview of soil testing methods in Eastern Europe entitled "Soil testing methods and fertilizer recommendations in Central–Eastern European countries". 
+
+Note that IACS crop codes for Slovak Republic are available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg-M3. The optimum soil Mg threshold value for sustainable crop production is around 250 mg Mg/ kg for the clay soil and is around 150 - 200 mg Mg / kg for the loam and sandy soil. The soil index rapidly decreases when Mg-M3 values decreases. Magnesium deficiencies occur when Mg-M3 goes down to 100 mg Mg / kg for the sandy soil and down to 175 mg Mg / kg for the clay soil. 
+
+
+```{r example SK1, out.width="75%", fig.cap="Evaluation Mg-indicator for Slovak Republic.",dpi=300, echo = FALSE}
+
+# make an example with varying MG-M3 content for two soil types
+dt <- CJ(B_LU = c('3301090400'),
+         B_TEXTURE_HYPRES = c('C','M','F'),
+         A_MG_M3 = seq(1,350,5))
+dt[,stype := fifelse(B_TEXTURE_HYPRES=='C','sand',
+                     fifelse(B_TEXTURE_HYPRES =='F','clay', 'loam'))]
+dt[,osi_c_mg := osi_c_magnesium_sk(B_LU,A_MG_M3 = A_MG_M3,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_M3, xpar_label = 'Mg-M3 (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+## Slovenia (SL)
+The magnesium supply in view of soil health for agricultural soils in Slovenia can be calculated using `osi_c_magnesium_sl` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* B_TEXTURE_HYPRES, being the soil texture class according to HYPRES classification system
+* A_MG_AL, being the extracted Mg content with Ammonium Lactate extraction, unit mg Mg / kg.
+
+The Mg supplying capacity differs in soils with varying textures. Based on the soil mineralogy (clay, sand and silt content) one can easily classify the USDA texture class using `osi_get_TEXTURE_HYPRES`.The Mg supplying capacity does not differ among crop types; there is a single optimum threshold defined. Information on the threshold values for Mg-AL in view of sustainable crop production has been derived from Fotyma et al. (2008) who wrote a comprehensive overview of soil testing methods in Eastern Europe entitled "Soil testing methods and fertilizer recommendations in Central–Eastern European countries". 
+
+Note that the crop codes for Slovenia are not yet available in `osi_crops` package table.
+
+Below an example is visualized how the soil health index varies in relation to variation in Mg-AL. The optimum soil Mg threshold value for sustainable crop production is around 125 mg Mg/ kg for the three soil types evaluated (clay, sand and loam). Magnesium deficiency occurs at Mg-AL values around 40 (sand and loam) and 65 (clay) mg Mg / kg.
+
+
+```{r example SL1, out.width="75%", fig.cap="Evaluation Mg-indicator for Slovenia.",dpi=300, echo = FALSE}
+
+# make an example with varying Mg content
+dt <- CJ(B_LU = c('cropland'),
+         B_TEXTURE_HYPRES = c('C','M','F'),
+         A_MG_AL = seq(1,150,5))
+dt[,stype := fifelse(B_TEXTURE_HYPRES=='C','sand',
+                     fifelse(B_TEXTURE_HYPRES =='F','clay', 'loam'))]
+dt[,osi_c_mg := osi_c_magnesium_sl(B_LU,A_MG_AL = A_MG_AL, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_AL, xpar_label = 'Mg-AL (mg Mg / kg)',pgroup = dt$stype)
+
+```
+
+## United Kingdom (UK)
+The magnesium supply in view of soil health for agricultural soils in United Kingdom can be calculated using `osi_c_magnesium_uk` using the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_MG_AN, being the extracted Mg content with ammonium nitrate, unit mg Mg / kg 
+* A_SOM_LOI, being the organic matter content, unit in percentage (\%), being used to convert the A_MG_AN to the Mg-index classification system used in the UK.
+
+The Mg supplying capacity differs among soil textures, but in the UK the evaluation of the Mg supply is similar for all soil types but it varies for grassland and crop land.  Information on the threshold values for Mg levels in soil in view of sustainable crop production can be found on [the website of AHDB](https://ahdb.org.uk/knowledge-library/rb209-section-1-principles-of-nutrient-management-and-fertiliser-use). A more detailed table can be found [here](https://www.alsenvironmental.co.uk/media-uk/pdf/datasheets/contaminated-land/defra-index-scale_td_uk_2017.pdf)
+
+Note that the crop codes for the UK are not yet available in `osi_crops` package table. 
+
+Below an example is visualized how the soil health index varies in relation to variation in K-AN. The optimum soil Mg threshold value for sustainable crop production is around 60 mg Mg/ kg. Differences among crops are small. Magnesium deficiency occurs when the Mg-AN value decreases below around 25 mg Mg / kg.
+
+
+```{r example UK1, out.width="75%", fig.cap="Evaluation Mg-indicator for the UK.",dpi=300, echo = FALSE}
+
+# make an example with varying K-AN content for two land uses
+dt <- CJ(B_LU = c('potato'),
+         A_SOM_LOI = 2.5,
+         A_MG_AN = seq(1,100,1))
+dt[,landuse := fifelse(B_LU == 'grassland' ,'grassland','potato')]
+dt[,osi_c_mg := osi_c_magnesium_uk(B_LU,A_MG_AN = A_MG_AN,A_SOM_LOI=A_SOM_LOI)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_mg, xpar = dt$A_MG_AN, xpar_label = 'Mg-AN (mg Mg / kg)',pgroup = NULL)
+
+```
+
+# Reading more?
+More vignettes will be made available regarding the derivation of all soil health indicators, the aggregation methods applied, the derivation of optimum land use given the current soil quality assessments, and the best management practices to be applied to improve the soil quality. See for example the vignettes `vignette("eu_osi_for_phosphor")` and the general introduction in `vignette("eu_osi_introduction")`. Are you interested to contribute, please contact the author(s) of this R package. Enjoy!

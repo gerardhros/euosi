@@ -32,7 +32,7 @@ test_that("osi_c_magnesium works", {
                     A_MG_NaAAA = NA_real_,A_K_AAA = NA_real_,
                     A_K_CO_PO = NA_real_,A_K_CC = NA_real_,
                     B_COUNTRY = c('NL','FR','SE','ES','SK')),
-    expected = c(0.6597,0.97096,1,0.4486,0.0064),
+    expected = c(0.6597,0.996,1,0.4486,0.0064),
     tolerance = 0.01
   )
 
@@ -55,7 +55,7 @@ test_that("osi_c_magnesium works", {
                     A_MG_NaAAA = NA_real_,A_K_AAA = NA_real_,
                     A_K_CO_PO = NA_real_,A_K_CC = NA_real_,
                     B_COUNTRY = c('NL','FR','SE','ES','SK')),
-    expected = c(0.6597,0.97096,1,0.4486,0.0064),
+    expected = c(0.6597,0.99588953 ,1,0.4486,0.0064),
     tolerance = 0.01
   )
 })
@@ -80,6 +80,27 @@ test_that("osi_c_magnesium_at works", {
                        B_TEXTURE_HYPRES = rep('C',4),
                        B_LU = c('3301000000','3301010901','3301061299','3304990000')),
     expected = c(0.0386,0.1117,0.432,0.9188),
+    tolerance = 0.01
+  )
+})
+
+test_that("osi_c_magnesium_be works", {
+  expect_equal(
+    osi_c_magnesium_be(A_MG_CC = 47,
+                       B_LU = '3301000000'),
+    expected = c(0.9916),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_be(A_MG_CC = rep(47,4),
+                       B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected = rep(0.9916,4),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_be(A_MG_CC = c(5,10,20,40),
+                       B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected = c(0.08891171, 0.18163437, 0.54086819, 0.97281577),
     tolerance = 0.01
   )
 })
@@ -269,7 +290,7 @@ test_that("osi_c_magnesium_fr works", {
                        A_CEC_CO = c(85,120,160,200), 
                        A_CACO3_IF = rep(6.5,4),
                        A_MG_AAA = c(10,30,60,100)),
-    expected = c(0.244,0.615,0.946,0.9977),
+    expected = c(0.2911305, 0.7875299, 0.9463230, 0.9976932),
     tolerance = 0.01
   )
   expect_equal(
@@ -278,7 +299,7 @@ test_that("osi_c_magnesium_fr works", {
                        A_CEC_CO = c(85,120,160,200), 
                        A_CACO3_IF = c(0.5,1,2,18),
                        A_MG_AAA = c(10,30,60,100)),
-    expected = c(0.244,0.6153,0.9463,0.9977),
+    expected = c(0.2911305, 0.7875299, 0.9463230, 0.9976932),
     tolerance = 0.01
   )
 })
@@ -450,6 +471,28 @@ test_that("osi_c_magnesium_nl works", {
   )
 })
 
+
+test_that("osi_c_magnesium_no works", {
+  expect_equal(
+    osi_c_magnesium_no(A_MG_AL = 47,
+                       B_LU = '3301000000'),
+    expected = c(0.9909),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_no(A_MG_AL = rep(47,4),
+                       B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected = rep(0.9909823,4),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_no(A_MG_AL = c(5,10,20,40),
+                       B_LU = c('3301000000','3301010901','3301061299','3304990000')),
+    expected = c(0.09185132, 0.15394335, 0.40575098, 0.96294923),
+    tolerance = 0.01
+  )
+})
+
 test_that("osi_c_magnesium_pl works", {
   expect_equal(
     osi_c_magnesium_pl(A_MG_CC = 15,
@@ -492,6 +535,43 @@ test_that("osi_c_magnesium_pt works", {
     osi_c_magnesium_pt(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
                        A_MG_AAA = c(15,40,70,100)),
     expected = c(0.0003538678, 0.4107402791, 0.9397338991, 0.9956818386),
+    tolerance = 0.01
+  )
+})
+
+
+test_that("osi_c_magnesium_ro works", {
+  expect_equal(
+    osi_c_magnesium_ro(B_LU = 'testcrop', 
+                       B_TEXTURE_HYPRES ='M', 
+                       A_CEC_CO = 140,
+                       A_MG_CC = 60, 
+                       A_MG_CO_PO = 8,
+                       A_K_CO_PO = 12, 
+                       A_PH_WA = 5),
+    expected = c(0.6392354),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_ro(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                       B_TEXTURE_HYPRES = rep('M',4), 
+                       A_CEC_CO = rep(140,4),
+                       A_MG_CC = c(20,40,60,80), 
+                       A_MG_CO_PO = rep(8,4),
+                       A_K_CO_PO = c(2,3,4,5) ,
+                       A_PH_WA = rep(5,4)),
+    expected = c(0.4684300, 0.8334871, 0.9533450, 0.9420577),
+    tolerance = 0.01
+  )
+  expect_equal(
+    osi_c_magnesium_ro(B_LU = c('3301000000','3301010901','3301061299','3304990000'), 
+                       B_TEXTURE_HYPRES = rep('M',4), 
+                       A_CEC_CO = rep(140,4),
+                       A_MG_CC = rep(40,4), 
+                       A_MG_CO_PO = c(2,3,4,5),
+                       A_K_CO_PO = c(2,3,4,5) ,
+                       A_PH_WA = rep(5,4)),
+    expected = c(0.6956271, 0.6956271, 0.6956271, 0.6956271),
     tolerance = 0.01
   )
 })

@@ -153,9 +153,10 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_c
   dt[B_COUNTRY == 'CZ', value := osi_c_potassium_cz(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_K_M3 = A_K_M3)]
   dt[B_COUNTRY == 'DE', value := osi_c_potassium_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_K_CAL = A_K_CAL)]
   
-  # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
+  # Denmark (DK), Estonia (EE), Greece (EL),  Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := osi_c_potassium_dk(B_LU = B_LU, A_K_AL = A_K_AL)]
   dt[B_COUNTRY == 'EE', value := osi_c_potassium_ee(B_LU = B_LU,B_TEXTURE_USDA = B_TEXTURE_USDA,A_K_M3 = A_K_M3)]
+  dt[B_COUNTRY == 'EL', value := osi_c_potassium_el(B_LU = B_LU, A_K_AAA = A_K_AAA)]
   dt[B_COUNTRY == 'ES', value := osi_c_potassium_es(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_K_AAA = A_K_AAA)]
   dt[B_COUNTRY == 'FR', value := osi_c_potassium_fr(B_LU = B_LU, B_TEXTURE_GEPPA  = B_TEXTURE_GEPPA, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
                                                     A_PH_WA = A_PH_WA,
@@ -183,6 +184,7 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_c
   # Poland (PL), Portugal (PT), and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_c_potassium_pl(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_K_DL = A_K_DL)]
   dt[B_COUNTRY == 'PT', value := osi_c_potassium_pt(B_LU = B_LU, A_K_AAA = A_K_AAA)]
+  dt[B_COUNTRY == 'RO', value := osi_c_potassium_ro(B_LU = B_LU, A_K_AL = A_K_AL,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES)]
   dt[B_COUNTRY == 'UK', value := osi_c_potassium_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_K_AN = A_K_AN)]
   
   # select the output variable
@@ -716,6 +718,61 @@ osi_c_potassium_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
   
   return(value)
   
+}
+
+#' Calculate the potassium availability index in Greece
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_K_AAA (numeric) The K-content of the soil extracted with ammonium acetate (mg K/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_el(B_LU = '3301061299',A_K_AAA = 50)
+#' osi_c_potassium_el(B_LU = c('3301061299','3301000000'),A_K_AAA = c(5,15))
+#' 
+#' @return 
+#' The potassium availability index in Greece derived from extractable soil K fractions. A numeric value.
+#' 
+#' @export
+osi_c_potassium_el <- function(B_LU, A_K_AAA) {
+  
+  # add visual bindings
+  osi_country = crop_code = crop_cat1 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='EL']
+  
+  # Check length of desired input
+  arg.length <- max(length(B_LU),length(A_K_AAA))
+  
+  # check inputs (crop code is not yet in osi_crops, so no check)
+  osi_checkvar(parm = list(A_K_AAA = A_K_AAA),
+               fname = 'osi_c_potassium_el')
+  
+  # internal data.table
+  dt <- data.table(id = 1: arg.length,
+                   B_LU = B_LU,
+                   A_K_AAA = A_K_AAA,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU',
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # evaluation soil K status for grasslands and croplands
+  # source ChatGPT, PhD thesis from https://ikee.lib.auth.gr/record/292420/files/GRI-2017-19713.pdf
+  dt[, value := osi_evaluate_logistic(A_K_AAA, b = 0.03390581, x0 = 232.24412487, v = 2.67687384)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
 }
 
 #' Calculate the potassium availability index in Spain
@@ -1724,6 +1781,62 @@ osi_c_potassium_pt <- function(B_LU, A_K_AAA) {
   return(value)
 }
 
+#' Calculate the potassium availability index in Romenia
+#' 
+#' This function calculates the potassium availability. 
+#' 
+#' @param B_LU (character) The crop code
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
+#' @param A_K_AL (numeric) The exchangeable K-content of the soil measured via ammoniuml lactate extracton (mg K/ kg)
+#' 
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_potassium_ro(B_LU = 'testcrop1',A_K_AL = 45,B_TEXTURE_HYPRES='M')
+#' 
+#' @return 
+#' The potassium availability index in Romenia estimated from extractable potassium. A numeric value.
+#' 
+#' @export
+osi_c_potassium_ro <- function(A_K_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
+  
+  # set visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = NULL
+  
+  # get max length of input variables
+  arg.length <- max(length(B_LU),length(B_TEXTURE_HYPRES),length(A_K_AL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                           A_K_AL = A_K_AL),
+               fname = 'osi_c_potassium_ro')
+  
+  # Collect the data into a table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
+                   A_K_AL = A_K_AL,
+                   value = NA_real_)
+  
+  # evaluate the OSI score for Light sandy and loamy soils, Lower values for sandy soils, higher values for loamy-sandy soils 
+  dt[B_TEXTURE_HYPRES %in% c('C'), value := osi_evaluate_logistic(x = A_K_AL, b= 0.04691703,x0 = 3.13861224,v = 0.10035566)]
+  dt[B_TEXTURE_HYPRES %in% c('M'), value := osi_evaluate_logistic(x = A_K_AL, b= 0.03211084,x0 = 3.42618554,v = 0.08696479)]
+  
+  # evaluate the OSI score for Medium clayey-sandy and loamy soils. Averaged conditions.
+  dt[B_TEXTURE_HYPRES %in% c('MF'), value := osi_evaluate_logistic(x = A_K_AL, b= 0.04247343,x0 = 3.02608975,v = 0.03096234)]
+  
+  # evaluate the OSI score for Heavy clayey-sandy and loamy soils. Averaged conditions.  
+  dt[B_TEXTURE_HYPRES %in% c('F','VF'), value := osi_evaluate_logistic(x = A_K_AL, b= 0.03502668,x0 = 3.35427054,v = 0.03066438)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # return value
+  value <- dt[, value]
+  
+  return(value)
+  
+}
 #' Calculate the potassium availability index in Sweden
 #' 
 #' This function calculates the potassium availability. 

@@ -133,6 +133,7 @@ osi_nut_p <- function(B_LU,
   # Denmark (DK), Estonia (EE), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := osi_nut_p_dk(B_LU = B_LU, A_P_OL = A_P_OL)]
   dt[B_COUNTRY == 'EE', value := osi_nut_p_ee(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_M3 = A_P_M3)]
+  dt[B_COUNTRY == 'EL', value := osi_nut_p_el(B_LU = B_LU, A_P_OL = A_P_OL)]
   dt[B_COUNTRY == 'ES', value := osi_nut_p_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_P_OL = A_P_OL)]
   dt[B_COUNTRY == 'FR', value := osi_nut_p_fr(B_LU = B_LU, A_P_OL = A_P_OL,A_PH_WA = A_PH_WA)]
   dt[B_COUNTRY == 'FI', value := osi_nut_p_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_AAA = A_P_AAA, A_C_OF = A_C_OF )]
@@ -151,10 +152,11 @@ osi_nut_p <- function(B_LU,
   dt[B_COUNTRY == 'SK', value := osi_nut_p_sk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_P_M3 = A_P_M3)]
   dt[B_COUNTRY == 'SL', value := osi_nut_p_sl(B_LU = B_LU, A_P_AL = A_P_AL)]
   
-  # Poland (PL), United Kingdom (UK)
+  # Poland (PL), Portugal (PT), Romenia (RO) and United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := osi_nut_p_pl(B_LU = B_LU, A_P_DL = A_P_DL)]
   dt[B_COUNTRY == 'PT', value := osi_nut_p_pt(B_LU = B_LU, A_P_OL = A_P_OL)]
-  dt[B_COUNTRY == 'IE', value := osi_nut_p_uk(B_LU = B_LU, A_P_OL = A_P_OL)]
+  dt[B_COUNTRY == 'RO', value := osi_nut_p_ro(B_LU = B_LU, A_P_AL = A_P_AL)]
+  dt[B_COUNTRY == 'UK', value := osi_nut_p_uk(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_OL = A_P_OL)]
   
   # select the output variable
   value <- dt[,value]
@@ -615,6 +617,63 @@ osi_nut_p_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_) {
   
   return(value)
   
+}
+
+#' Calculate the phosphate excess index in Greece
+#' 
+#' This function calculates the phosphate excess index. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_nut_p_el(B_LU = '3301061299',A_P_OL = 5)
+#' osi_nut_p_el(B_LU = c('3301061299','3301000000'),A_P_OL = c(5,15))
+#' 
+#' @return 
+#' The phosphate availability index in Greece derived from extractable soil P fractions. A numeric value.
+#' 
+#' @export
+osi_nut_p_el <- function(B_LU, A_P_OL) {
+  
+  # add visual bindings
+  osi_country = crop_code = crop_cat1 = . = NULL
+  
+  # crop data
+  # dt.crops <- as.data.table(euosi::osi_crops)
+  # dt.crops <- dt.crops[osi_country=='EL']
+  
+  # Check length of desired input
+  arg.length <- max(length(B_LU),length(A_P_OL))
+  
+  # check inputs (crop code is not yet in osi_crops, so no check)
+  osi_checkvar(parm = list(A_P_OL = A_P_OL),
+               fname = 'osi_nut_p_el')
+  
+  # internal data.table
+  dt <- data.table(id = 1: arg.length,
+                   B_LU = B_LU,
+                   A_P_OL = A_P_OL,
+                   value = NA_real_)
+  
+  # merge crop properties
+  # dt <- merge(dt,
+  #             dt.crops[,.(crop_code,crop_cat1)],
+  #             by.x = 'B_LU',
+  #             by.y = 'crop_code',
+  #             all.x=TRUE)
+  
+  # P index derived following P-Olsen.
+  
+  # evaluation soil P status for grasslands and croplands
+  # source ChatGPT, reference to https://ir.lib.uth.gr/xmlui/bitstream/handle/11615/1729/P0001729.pdf
+  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = -5.169509e-02, x0 = 2.001029e+02, v = 5.130838e-04)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
 }
 
 #' Calculate the phosphate excess index in Spain
@@ -1501,6 +1560,52 @@ osi_nut_p_pt <- function(B_LU, A_P_OL) {
   
   # evaluation soil P status for grasslands and croplands
   dt[, value := OBIC::evaluate_logistic(A_P_OL, b = -0.04188751 , x0 = 77.36111528 , v = 1.74093923)]
+  
+  # select value and return
+  value <- dt[,value]
+  return(value)
+}
+
+#' Calculate the phosphate excess index index in Romenia
+#' 
+#' This function calculates the phosphate excess index. 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_P_AL (numeric) The P-content of the soil extracted with Acetate Lactate (mg/kg)
+#'  
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_phosphor_ro(B_LU = 'testcrop1',A_P_AL = 5)
+#' osi_c_phosphor_ro(B_LU = c('testcrop1','testcrop2'),A_P_AL = c(3.5,5.5))
+#' 
+#' @return 
+#' The phosphate availability index in Romenia derived from extractable soil P fractions. A numeric value.
+#' 
+#' @export
+osi_nut_p_ro <- function(B_LU, A_P_AL) {
+  
+  # add visual binding
+  cropcat1 = NULL
+  
+  # length of inputs
+  arg.length <- max(length(B_LU),length(A_P_AL))
+  
+  # check inputs (not for B_LU since these are not in osi_crops)
+  osi_checkvar(parm = list(A_P_AL = A_P_AL),
+               fname = 'osi_nut_p_ro')
+  
+  # internal data.table
+  dt <- data.table(id = 1: arg.length,
+                   B_LU = B_LU,
+                   A_P_AL = A_P_AL,
+                   value = NA_real_)
+  
+  # P index derived following P-AL
+  
+  # evaluation soil P status
+  # https://icpa.ro/site_vechi/documente/coduri/Planuri_de_fertilizare.pdf
+  dt[, value := OBIC::evaluate_logistic(A_P_AL, b = -1.781695 , x0 = 56.737743, v = 69.979745)]
   
   # select value and return
   value <- dt[,value]
