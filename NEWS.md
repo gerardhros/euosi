@@ -8,6 +8,7 @@
 * Greece (EL) functions for potassium in `osi_c_potassium_el`  and `osi_nut_k`, and update vignette
 * Greece (EL) functions for soil acidity in `osi_c_ph_el`
 * `osi_c_magnesium_be` and `osi_c_magnesium_no`
+* vignette `eu_osi_for_magnesium` with an introduction to potassium
 
 # euosi 0.6.0 2025-08-17
 
