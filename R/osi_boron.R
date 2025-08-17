@@ -26,7 +26,9 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   osi_checkvar(list(B_COUNTRY = B_COUNTRY,B_LU = B_LU,
                     A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,
                     A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,
-                    A_B_HW = A_B_HW),fname='osi_c_boron')
+                    A_B_HW = A_B_HW),
+               fname='osi_c_boron', 
+               unitcheck = TRUE)
   
   # desired length of inputs
   arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),
@@ -62,45 +64,47 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   # do checks on the calculated variables
   osi_checkvar(list(B_TEXTURE_USDA = dt$B_TEXTURE_USDA,B_TEXTURE_HYPRES = dt$B_TEXTURE_HYPRES,
                     B_TEXTURE_BE = dt$B_TEXTURE_BE, B_TEXTURE_GEPPA = dt$B_TEXTURE_GEPPA,
-                    A_PH_WA = dt$A_PH_WA, A_C_OF = dt$A_C_OF),fname='osi_c_boron')
+                    A_PH_WA = dt$A_PH_WA, A_C_OF = dt$A_C_OF),
+               fname='osi_c_boron', 
+               unitcheck = TRUE)
   
   # calculate the OSI score for boron
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
   dt[B_COUNTRY == 'AT', value := NA_real_]
   dt[B_COUNTRY == 'BE', value := NA_real_]
-  dt[B_COUNTRY == 'CH', value := osi_c_boron_ch(B_LU = B_LU, A_B_HW = A_B_HW)]
+  dt[B_COUNTRY == 'CH', value := osi_c_boron_ch(B_LU = B_LU, A_B_HW = A_B_HW, unitcheck = FALSE)]
   dt[B_COUNTRY == 'CZ', value := NA_real_]
-  dt[B_COUNTRY == 'DE', value := osi_c_boron_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_PH_CC = A_PH_CC, A_B_HW = A_B_HW)]
+  dt[B_COUNTRY == 'DE', value := osi_c_boron_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_PH_CC = A_PH_CC, A_B_HW = A_B_HW, unitcheck = FALSE)]
   
   # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
   dt[B_COUNTRY == 'EE', value := NA_real_]
   dt[B_COUNTRY == 'EL', value := NA_real_]
   dt[B_COUNTRY == 'ES', value := NA_real_]
-  dt[B_COUNTRY == 'FR', value := osi_c_boron_fr(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_B_HW = A_B_HW)]
+  dt[B_COUNTRY == 'FR', value := osi_c_boron_fr(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_B_HW = A_B_HW, unitcheck = FALSE)]
   dt[B_COUNTRY == 'FI', value := NA_real_]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
   dt[B_COUNTRY == 'HU', value := NA_real_]
-  dt[B_COUNTRY == 'IE', value := osi_c_boron_ie(B_LU = B_LU, A_B_HW = A_B_HW)]
+  dt[B_COUNTRY == 'IE', value := osi_c_boron_ie(B_LU = B_LU, A_B_HW = A_B_HW, unitcheck = FALSE)]
   dt[B_COUNTRY == 'IT', value := NA_real_]
   dt[B_COUNTRY == 'LV', value := NA_real_]
   dt[B_COUNTRY == 'LT', value := NA_real_]
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
   dt[B_COUNTRY == 'NL', value := osi_c_boron_nl(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_SOM_LOI = A_SOM_LOI, 
-                                                A_B_HW = A_B_HW)]
+                                                A_B_HW = A_B_HW, unitcheck = FALSE)]
   dt[B_COUNTRY == 'NO', value := NA_real_]
-  dt[B_COUNTRY == 'SE', value := osi_c_boron_se(B_LU = B_LU, A_PH_WA = A_PH_WA)]
+  dt[B_COUNTRY == 'SE', value := osi_c_boron_se(B_LU = B_LU, A_PH_WA = A_PH_WA, unitcheck = FALSE)]
   dt[B_COUNTRY == 'SK', value := NA_real_]
   dt[B_COUNTRY == 'SL', value := NA_real_]
   
   # Poland (PL), Portugal (PT), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
-  dt[B_COUNTRY == 'PT', value := osi_c_boron_pt(B_LU = B_LU, A_B_HW = A_B_HW)]
+  dt[B_COUNTRY == 'PT', value := osi_c_boron_pt(B_LU = B_LU, A_B_HW = A_B_HW, unitcheck = FALSE)]
   dt[B_COUNTRY == 'RO', value := NA_real_]
-  dt[B_COUNTRY == 'UK', value := osi_c_boron_uk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,A_B_HW = A_B_HW)]
+  dt[B_COUNTRY == 'UK', value := osi_c_boron_uk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,A_B_HW = A_B_HW, unitcheck = FALSE)]
   
   # select the output variable
   value <- dt[,value]
@@ -116,7 +120,8 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_B_HW (numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water 
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -127,7 +132,7 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
 #' The boron availability index in Switzerland derived from extractable soil B fractions. A numeric value.
 #' 
 #' @export
-osi_c_boron_ch <- function(B_LU, A_B_HW) {
+osi_c_boron_ch <- function(B_LU, A_B_HW, unitcheck = TRUE) {
   
   # add visual bindings
   crop_name = . = crop_cat1 = osi_country = senscrop = id = NULL
@@ -141,7 +146,8 @@ osi_c_boron_ch <- function(B_LU, A_B_HW) {
   
   # check inputs
   osi_checkvar(parm = list(A_B_HW = A_B_HW),
-               fname = 'osi_c_boron_ch')
+               fname = 'osi_c_boron_ch',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
@@ -188,7 +194,8 @@ osi_c_boron_ch <- function(B_LU, A_B_HW) {
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
 #' @param A_B_HW (numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water 
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -198,7 +205,7 @@ osi_c_boron_ch <- function(B_LU, A_B_HW) {
 #' The boron availability index in Germany derived from extractable soil B fractions. A numeric value.
 #' 
 #' @export
-osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
+osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW, unitcheck = TRUE) {
   
   # add visual bindings
   A_SILT_MI = stype = . = crop_name = crop_code = osi_country = crop_cat1 = id = NULL
@@ -219,7 +226,8 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
                            A_SAND_MI = A_SAND_MI,
                            A_PH_CC = A_PH_CC,
                            A_B_HW = A_B_HW),
-               fname = 'osi_c_boron_de')
+               fname = 'osi_c_boron_de',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
@@ -274,6 +282,7 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_B_HW (numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #'  
 #' @import data.table
 #' 
@@ -285,7 +294,7 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW) {
 #' The boron availability index in Ireland derived from extractable soil B fractions. A numeric value.
 #' 
 #' @export
-osi_c_boron_ie <- function(B_LU, A_B_HW) {
+osi_c_boron_ie <- function(B_LU, A_B_HW, unitcheck = TRUE) {
   
   # add visual bindings
   id = . = crop_cat1 = crop_name = osi_country = crop_code = senscrop = NULL
@@ -296,7 +305,8 @@ osi_c_boron_ie <- function(B_LU, A_B_HW) {
   
   # check inputs
   osi_checkvar(parm = list(A_B_HW = A_B_HW),
-               fname = 'osi_c_boron_ie')
+               fname = 'osi_c_boron_ie',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -337,14 +347,15 @@ osi_c_boron_ie <- function(B_LU, A_B_HW) {
 #' @param B_LU (character) The crop type
 #' @param A_CLAY_MI (numeric) The clay content (\%)
 #' @param A_B_HW (numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water 
-#'
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @return 
 #' The boron availability index in France estimated from extractable boron, clay, A numeric value.
 #' 
 #' @export
-osi_c_boron_fr <- function(B_LU,A_CLAY_MI, A_B_HW) {
+osi_c_boron_fr <- function(B_LU,A_CLAY_MI, A_B_HW, unitcheck = TRUE) {
   
   # set visual bindings
   i_c_bo = osi_country = osi_indicator = id = crop_cat1 = . = crop_code = NULL
@@ -367,7 +378,8 @@ osi_c_boron_fr <- function(B_LU,A_CLAY_MI, A_B_HW) {
                            B_LU = B_LU,
                            A_CLAY_MI = A_CLAY_MI,
                            A_B_HW = A_B_HW),
-               fname = 'osi_c_boron_fr')
+               fname = 'osi_c_boron_fr',
+               unitcheck = unitcheck)
 
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -415,7 +427,8 @@ osi_c_boron_fr <- function(B_LU,A_CLAY_MI, A_B_HW) {
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_B_HW (numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water 
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -426,7 +439,7 @@ osi_c_boron_fr <- function(B_LU,A_CLAY_MI, A_B_HW) {
 #' The boron availability index in Portugal derived from extractable soil B fractions. A numeric value.
 #' 
 #' @export
-osi_c_boron_pt <- function(B_LU, A_B_HW) {
+osi_c_boron_pt <- function(B_LU, A_B_HW, unitcheck = TRUE) {
   
   # add visual bindings
   id = . = crop_cat1 = crop_name = osi_country = crop_code = senscrop = NULL
@@ -442,7 +455,8 @@ osi_c_boron_pt <- function(B_LU, A_B_HW) {
   osi_checkvar(parm = list(B_COUNTRY = rep('PT',arg.length),
                            B_LU = B_LU,
                            A_B_HW = A_B_HW),
-               fname = 'osi_c_boron_pt')
+               fname = 'osi_c_boron_pt',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -483,14 +497,15 @@ osi_c_boron_pt <- function(B_LU, A_B_HW) {
 #' @param A_CLAY_MI (numeric) The clay content (\%)
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
 #' @param A_B_HW (numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water 
-#'
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @return 
 #' The boron availability index in the Netherlands estimated from hot water extractable boron, and clay, A numeric value.
 #' 
 #' @export
-osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
+osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -515,7 +530,8 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
                            A_SOM_LOI = A_SOM_LOI,
                            A_CLAY_MI = A_CLAY_MI,
                            A_B_HW = A_B_HW),
-               fname = 'osi_c_boron_nl')
+               fname = 'osi_c_boron_nl',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -561,7 +577,8 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_PH_WA (numeric) The pH measured in water
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -572,7 +589,7 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW) {
 #' The boron availability index in Sweden depends primarily on pH. A numeric value.
 #' 
 #' @export
-osi_c_boron_se <- function(B_LU, A_PH_WA) {
+osi_c_boron_se <- function(B_LU, A_PH_WA, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
@@ -588,7 +605,8 @@ osi_c_boron_se <- function(B_LU, A_PH_WA) {
   osi_checkvar(parm = list(B_COUNTRY = rep('SE',arg.length),
                            B_LU = B_LU,
                            A_PH_WA = A_PH_WA),
-               fname = 'osi_c_boron_se')
+               fname = 'osi_c_boron_se',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
@@ -622,7 +640,8 @@ osi_c_boron_se <- function(B_LU, A_PH_WA) {
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
 #' @param A_B_HW (numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water 
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -635,7 +654,7 @@ osi_c_boron_se <- function(B_LU, A_PH_WA) {
 #' The boron availability index in UK derived from extractable soil B fractions. A numeric value.
 #' 
 #' @export
-osi_c_boron_uk <- function(B_LU, B_TEXTURE_HYPRES,A_SOM_LOI,A_PH_CC,A_B_HW) {
+osi_c_boron_uk <- function(B_LU, B_TEXTURE_HYPRES,A_SOM_LOI,A_PH_CC,A_B_HW, unitcheck = TRUE) {
   
   # add visual bindings
   crop_code = crop_name = crop_cat1 = . = id = A_PH_WA = BDS = senscrop = osi_country = NULL
@@ -649,7 +668,8 @@ osi_c_boron_uk <- function(B_LU, B_TEXTURE_HYPRES,A_SOM_LOI,A_PH_CC,A_B_HW) {
                            B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                            A_B_HW = A_B_HW,
                            A_PH_CC = A_PH_CC),
-               fname = 'osi_c_boron_uk')
+               fname = 'osi_c_boron_uk',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),

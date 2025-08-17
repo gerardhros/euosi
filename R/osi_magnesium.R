@@ -101,7 +101,8 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                            A_K_CO_PO = dt$A_K_CO_PO,
                            A_K_CC = dt$A_K_CC),
                fname='oci_c_magnesium',
-               na_allowed = TRUE)
+               na_allowed = TRUE,
+               unitcheck = TRUE)
   
   # estimate texture information
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
@@ -154,49 +155,50 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                            A_MG_M3 = dt$A_MG_M3,
                            A_MG_NaAAA = dt$A_MG_NaAAA
                            ),
-               fname='oci_c_magnesium')
+               fname='oci_c_magnesium',
+               unitcheck = TRUE)
   
   # calculate the open soil index score for magnesium availability
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
-  dt[B_COUNTRY == 'AT', value := osi_c_magnesium_at(B_LU=B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_MG_CC = A_MG_CC)]
-  dt[B_COUNTRY == 'BE', value := osi_c_magnesium_be(B_LU = B_LU, A_MG_CC = A_MG_CC)]
-  dt[B_COUNTRY == 'CH', value := osi_c_magnesium_ch(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_MG_AAA = A_MG_AAA)]
-  dt[B_COUNTRY == 'CZ', value := oci_c_magnesium_cz(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_M3 = A_MG_M3)]
-  dt[B_COUNTRY == 'DE', value := osi_c_magnesium_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_MG_CC = A_MG_CC)]
+  dt[B_COUNTRY == 'AT', value := osi_c_magnesium_at(B_LU=B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_MG_CC = A_MG_CC, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'BE', value := osi_c_magnesium_be(B_LU = B_LU, A_MG_CC = A_MG_CC, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'CH', value := osi_c_magnesium_ch(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_MG_AAA = A_MG_AAA, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'CZ', value := oci_c_magnesium_cz(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_M3 = A_MG_M3, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'DE', value := osi_c_magnesium_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_MG_CC = A_MG_CC, unitcheck = FALSE)]
   
   # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
-  dt[B_COUNTRY == 'DK', value := osi_c_magnesium_dk(B_LU = B_LU, A_MG_AL = A_MG_AL)]
-  dt[B_COUNTRY == 'EE', value := oci_c_magnesium_ee(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA,A_MG_M3 = A_MG_M3)]
+  dt[B_COUNTRY == 'DK', value := osi_c_magnesium_dk(B_LU = B_LU, A_MG_AL = A_MG_AL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'EE', value := oci_c_magnesium_ee(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA,A_MG_M3 = A_MG_M3, unitcheck = FALSE)]
   dt[B_COUNTRY == 'EL', value := NA_real_]
-  dt[B_COUNTRY == 'ES', value := osi_c_magnesium_es(B_LU = B_LU,A_MG_CO_PO = A_MG_CO_PO)]
+  dt[B_COUNTRY == 'ES', value := osi_c_magnesium_es(B_LU = B_LU,A_MG_CO_PO = A_MG_CO_PO, unitcheck = FALSE)]
   dt[B_COUNTRY == 'FR', value := osi_c_magnesium_fr(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI,A_CEC_CO = A_CEC_CO, 
-                                                    A_MG_AAA = A_MG_AAA,A_CACO3_IF = A_CACO3_IF)]
-  dt[B_COUNTRY == 'FI', value := osi_c_magnesium_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_MG_AAA = A_MG_AAA,A_C_OF = A_C_OF)]
+                                                    A_MG_AAA = A_MG_AAA,A_CACO3_IF = A_CACO3_IF, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'FI', value := osi_c_magnesium_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_MG_AAA = A_MG_AAA,A_C_OF = A_C_OF, unitcheck = FALSE)]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
-  dt[B_COUNTRY == 'HU', value := osi_c_magnesium_hu(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_MG_KCL = A_MG_KCL)]
-  dt[B_COUNTRY == 'IE', value := osi_c_magnesium_ie(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_MG_NaAAA = A_MG_NaAAA)]
-  dt[B_COUNTRY == 'IT', value := osi_c_magnesium_it(B_LU = B_LU, A_MG_CO_PO = A_MG_CO_PO, A_K_CO_PO = A_K_CO_PO)]
-  dt[B_COUNTRY == 'LV', value := osi_c_magnesium_lv(B_LU = B_LU,B_TEXTURE_USDA = B_TEXTURE_USDA, A_MG_DL = A_MG_DL)]
-  dt[B_COUNTRY == 'LT', value := osi_c_magnesium_lt(B_LU = B_LU,A_PH_KCL = A_PH_KCL, A_MG_AL = A_MG_AL)]
+  dt[B_COUNTRY == 'HU', value := osi_c_magnesium_hu(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_MG_KCL = A_MG_KCL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'IE', value := osi_c_magnesium_ie(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_MG_NaAAA = A_MG_NaAAA, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'IT', value := osi_c_magnesium_it(B_LU = B_LU, A_MG_CO_PO = A_MG_CO_PO, A_K_CO_PO = A_K_CO_PO, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'LV', value := osi_c_magnesium_lv(B_LU = B_LU,B_TEXTURE_USDA = B_TEXTURE_USDA, A_MG_DL = A_MG_DL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'LT', value := osi_c_magnesium_lt(B_LU = B_LU,A_PH_KCL = A_PH_KCL, A_MG_AL = A_MG_AL, unitcheck = FALSE)]
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
   dt[B_COUNTRY == 'NL', value := osi_c_magnesium_nl(B_LU = B_LU,B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                                                     A_SOM_LOI = A_SOM_LOI,A_CLAY_MI = A_CLAY_MI,
                                                     A_PH_CC = A_PH_CC, A_CEC_CO = A_CEC_CO,
-                                                    A_K_CO_PO = A_K_CO_PO,A_MG_CC = A_MG_CC,A_K_CC = A_K_CC)]
-  dt[B_COUNTRY == 'NO', value := osi_c_magnesium_no(B_LU = B_LU, A_MG_AL = A_MG_AL)]
-  dt[B_COUNTRY == 'SE', value := osi_c_magnesium_se(B_LU = B_LU, A_MG_AL = A_MG_AL)]
-  dt[B_COUNTRY == 'SK', value := osi_c_magnesium_sk(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_M3 = A_MG_M3)]
-  dt[B_COUNTRY == 'SL', value := osi_c_magnesium_sl(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_AL = A_MG_AL)]
+                                                    A_K_CO_PO = A_K_CO_PO,A_MG_CC = A_MG_CC,A_K_CC = A_K_CC, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'NO', value := osi_c_magnesium_no(B_LU = B_LU, A_MG_AL = A_MG_AL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'SE', value := osi_c_magnesium_se(B_LU = B_LU, A_MG_AL = A_MG_AL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'SK', value := osi_c_magnesium_sk(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_M3 = A_MG_M3, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'SL', value := osi_c_magnesium_sl(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_AL = A_MG_AL, unitcheck = FALSE)]
   
   # Poland (PL), Portugal, and United Kingdom (UK)
-  dt[B_COUNTRY == 'PL', value := osi_c_magnesium_pl(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_CC = A_MG_CC)]
-  dt[B_COUNTRY == 'PT', value := osi_c_magnesium_pt(B_LU = B_LU, A_MG_AAA = A_MG_AAA)]
+  dt[B_COUNTRY == 'PL', value := osi_c_magnesium_pl(B_LU = B_LU,B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_MG_CC = A_MG_CC, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'PT', value := osi_c_magnesium_pt(B_LU = B_LU, A_MG_AAA = A_MG_AAA, unitcheck = FALSE)]
   dt[B_COUNTRY == 'RO', value := osi_c_magnesium_ro(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, A_CEC_CO = A_CEC_CO,
-                                                    A_MG_CC = A_MG_CC, A_MG_CO_PO = A_MG_CO_PO,A_K_CO_PO = A_K_CO_PO, A_PH_WA = 5)]
-  dt[B_COUNTRY == 'UK', value := osi_c_magnesium_uk(B_LU = B_LU,A_SOM_LOI = A_SOM_LOI,A_MG_AN = A_MG_AN)]
+                                                    A_MG_CC = A_MG_CC, A_MG_CO_PO = A_MG_CO_PO,A_K_CO_PO = A_K_CO_PO, A_PH_WA = 5, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'UK', value := osi_c_magnesium_uk(B_LU = B_LU,A_SOM_LOI = A_SOM_LOI,A_MG_AN = A_MG_AN, unitcheck = FALSE)]
   
   # select the output variable
   value <- dt[,value]
@@ -213,6 +215,7 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
 #' @param A_MG_CC (numeric) The exchangeable Mg-content of the soil measured via Calcium Chloride (mg Mg/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -223,7 +226,7 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
 #' The magnesium availability index in Austria estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_at <- function(B_LU, A_MG_CC,B_TEXTURE_HYPRES) {
+osi_c_magnesium_at <- function(B_LU, A_MG_CC,B_TEXTURE_HYPRES, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
@@ -247,7 +250,8 @@ osi_c_magnesium_at <- function(B_LU, A_MG_CC,B_TEXTURE_HYPRES) {
                            B_LU = B_LU,
                            B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                            A_MG_CC = A_MG_CC),
-               fname = 'osi_c_magnesium_at')
+               fname = 'osi_c_magnesium_at',
+               unitcheck = unitcheck)
   
   # merge crop properties
   dt <- merge(dt,
@@ -282,7 +286,8 @@ osi_c_magnesium_at <- function(B_LU, A_MG_CC,B_TEXTURE_HYPRES) {
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_MG_CC (numeric) The exchangeable Mg-content of the soil measured via calcium chloride extracton (mg Mg/ kg)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -292,7 +297,7 @@ osi_c_magnesium_at <- function(B_LU, A_MG_CC,B_TEXTURE_HYPRES) {
 #' The magnesium availability index in Belgium estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_be <- function(B_LU,A_MG_CC) {
+osi_c_magnesium_be <- function(B_LU,A_MG_CC, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = rop_code = . = NULL
@@ -308,7 +313,8 @@ osi_c_magnesium_be <- function(B_LU,A_MG_CC) {
   osi_checkvar(parm = list(B_COUNTRY = rep("BE",arg.length),
                            B_LU = B_LU,
                            A_MG_CC = A_MG_CC),
-               fname = 'osi_c_magnesium_be')
+               fname = 'osi_c_magnesium_be',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -339,6 +345,7 @@ osi_c_magnesium_be <- function(B_LU,A_MG_CC) {
 #' @param B_LU (character) The crop code
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_MG_AAA (numeric) The exchangeable Mg-content of the soil measured via acid ammonium acetate extraction (mg Mg/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -349,7 +356,7 @@ osi_c_magnesium_be <- function(B_LU,A_MG_CC) {
 #' The potassium availability index in Switzerland estimated from extractable potassium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_ch <- function(A_MG_AAA,A_CLAY_MI,B_LU = NA_character_) {
+osi_c_magnesium_ch <- function(A_MG_AAA,A_CLAY_MI,B_LU = NA_character_, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -379,7 +386,8 @@ osi_c_magnesium_ch <- function(A_MG_AAA,A_CLAY_MI,B_LU = NA_character_) {
   # check inputs
   osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI,
                            A_MG_AAA = A_MG_AAA),
-               fname = 'osi_c_magnesium_ch')
+               fname = 'osi_c_magnesium_ch',
+               unitcheck = unitcheck)
   
   # merge crop properties
   # dt <- merge(dt,
@@ -426,6 +434,7 @@ osi_c_magnesium_ch <- function(A_MG_AAA,A_CLAY_MI,B_LU = NA_character_) {
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
 #' @param A_MG_M3 (numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -436,7 +445,7 @@ osi_c_magnesium_ch <- function(A_MG_AAA,A_CLAY_MI,B_LU = NA_character_) {
 #' The magnesium availability index in Czech Republic estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-oci_c_magnesium_cz <- function(A_MG_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
+oci_c_magnesium_cz <- function(A_MG_M3,B_TEXTURE_HYPRES,B_LU = NA_character_, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
@@ -460,7 +469,8 @@ oci_c_magnesium_cz <- function(A_MG_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
                            B_LU = B_LU,
                            B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                            A_MG_M3 = A_MG_M3),
-               fname = 'osi_c_magnesium_cz')
+               fname = 'osi_c_magnesium_cz',
+               unitcheck = unitcheck)
   
   # merge crop properties
   dt <- merge(dt,
@@ -496,14 +506,15 @@ oci_c_magnesium_cz <- function(A_MG_M3,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_MG_CC (numeric) The magnesium content extracted with CaCl2 (g / kg)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @return 
 #' The magnesium availability index in Germany derived from extractable soil Mg fractions. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC) {
+osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC, unitcheck = TRUE) {
   
   # add visual bindings
   A_SILT_MI = stype = NULL
@@ -518,7 +529,8 @@ osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC) {
                            A_CLAY_MI = A_CLAY_MI,
                            A_SAND_MI = A_SAND_MI,
                            A_MG_CC = A_MG_CC),
-               fname = 'osi_c_magnesium_de')
+               fname = 'osi_c_magnesium_de',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -559,7 +571,8 @@ osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC) {
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_MG_AL (numeric) The Mg-content of the soil extracted with ammonium lactate (mg Mg / kg)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -570,7 +583,7 @@ osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC) {
 #' The magnesium availability index in Denmark derived from extractable soil Mg fractions. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_dk <- function(B_LU, A_MG_AL) {
+osi_c_magnesium_dk <- function(B_LU, A_MG_AL, unitcheck = TRUE) {
   
   # length of arguments
   arg.length <- max(length(B_LU),length(A_MG_AL))
@@ -579,7 +592,8 @@ osi_c_magnesium_dk <- function(B_LU, A_MG_AL) {
   osi_checkvar(parm = list(B_COUNTRY = rep('DK',arg.length),
                            B_LU = B_LU,
                            A_MG_AL = A_MG_AL),
-               fname = 'osi_c_magnesium_dk')
+               fname = 'osi_c_magnesium_dk',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -603,7 +617,8 @@ osi_c_magnesium_dk <- function(B_LU, A_MG_AL) {
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
 #' @param A_MG_M3 (numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -613,7 +628,7 @@ osi_c_magnesium_dk <- function(B_LU, A_MG_AL) {
 #' The magnesium availability index in Estonia estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-oci_c_magnesium_ee <- function(A_MG_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
+oci_c_magnesium_ee <- function(A_MG_M3,B_TEXTURE_USDA,B_LU = NA_character_, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -636,7 +651,8 @@ oci_c_magnesium_ee <- function(A_MG_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
   # check inputs
   osi_checkvar(parm = list(B_TEXTURE_USDA = B_TEXTURE_USDA,
                            A_MG_M3 = A_MG_M3),
-               fname = 'osi_c_magnesium_ee')
+               fname = 'osi_c_magnesium_ee',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -688,7 +704,8 @@ oci_c_magnesium_ee <- function(A_MG_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_MG_CO_PO (numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -698,7 +715,7 @@ oci_c_magnesium_ee <- function(A_MG_M3,B_TEXTURE_USDA,B_LU = NA_character_) {
 #' The magnesium availability index in Spain estimated from the magnesium occupation at CEC. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_es <- function(B_LU,A_MG_CO_PO) {
+osi_c_magnesium_es <- function(B_LU,A_MG_CO_PO, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
@@ -714,7 +731,8 @@ osi_c_magnesium_es <- function(B_LU,A_MG_CO_PO) {
   osi_checkvar(parm = list(B_COUNTRY = rep('ES',arg.length),
                            B_LU = B_LU,
                            A_MG_CO_PO = A_MG_CO_PO),
-               fname = 'osi_c_magnesium_es')
+               fname = 'osi_c_magnesium_es',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -750,7 +768,8 @@ osi_c_magnesium_es <- function(B_LU,A_MG_CO_PO) {
 #' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_MG_AAA (numeric) The exchangeable Mg-content of the soil measured via ammonium acetate extraction (mg Mg / kg)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -760,7 +779,7 @@ osi_c_magnesium_es <- function(B_LU,A_MG_CO_PO) {
 #' The magnesium availability index in Finland estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_fi <- function(B_LU, B_TEXTURE_USDA, A_MG_AAA,A_C_OF = 0.5) {
+osi_c_magnesium_fi <- function(B_LU, B_TEXTURE_USDA, A_MG_AAA,A_C_OF = 0.5, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -783,7 +802,8 @@ osi_c_magnesium_fi <- function(B_LU, B_TEXTURE_USDA, A_MG_AAA,A_C_OF = 0.5) {
                            B_TEXTURE_USDA = B_TEXTURE_USDA,
                            A_C_OF = A_C_OF,
                            A_MG_AAA = A_MG_AAA),
-               fname = 'osi_c_magnesium_fi')
+               fname = 'osi_c_magnesium_fi',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -831,6 +851,7 @@ osi_c_magnesium_fi <- function(B_LU, B_TEXTURE_USDA, A_MG_AAA,A_C_OF = 0.5) {
 #' @param A_CEC_CO (numeric) The cation exchange capacity of the soil in mmol/kg
 #' @param A_CACO3_IF (numeric) The CaCO3 content in the soil (\%)
 #' @param A_MG_AAA (numeric) The extractable Mg content in the soil (mg/kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #'  
@@ -838,7 +859,7 @@ osi_c_magnesium_fi <- function(B_LU, B_TEXTURE_USDA, A_MG_AAA,A_C_OF = 0.5) {
 #' The magnesium availability index in France estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_fr <- function(B_LU,A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AAA) {
+osi_c_magnesium_fr <- function(B_LU,A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AAA, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -864,7 +885,8 @@ osi_c_magnesium_fr <- function(B_LU,A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AAA) {
                            A_CEC_CO = A_CEC_CO,
                            A_CACO3_IF = A_CACO3_IF,
                            A_MG_AAA = A_MG_AAA),
-               fname = 'osi_c_magnesium_fr')
+               fname = 'osi_c_magnesium_fr',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -906,7 +928,8 @@ osi_c_magnesium_fr <- function(B_LU,A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AAA) {
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
 #' @param A_MG_KCL (numeric) The exchangeable Mg-content of the soil measured via KCL extracton (mg Mg/ kg)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -916,7 +939,7 @@ osi_c_magnesium_fr <- function(B_LU,A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AAA) {
 #' The magnesium availability index in Hungary estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_hu <- function(B_TEXTURE_USDA,A_MG_KCL,B_LU = NA_character_) {
+osi_c_magnesium_hu <- function(B_TEXTURE_USDA,A_MG_KCL,B_LU = NA_character_, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -939,7 +962,8 @@ osi_c_magnesium_hu <- function(B_TEXTURE_USDA,A_MG_KCL,B_LU = NA_character_) {
   # check inputs
   osi_checkvar(parm = list(B_TEXTURE_USDA = B_TEXTURE_USDA,
                            A_MG_KCL = A_MG_KCL),
-               fname = 'osi_c_magnesium_hu')
+               fname = 'osi_c_magnesium_hu',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -990,6 +1014,7 @@ osi_c_magnesium_hu <- function(B_TEXTURE_USDA,A_MG_KCL,B_LU = NA_character_) {
 #' @param B_LU (character) The crop code
 #' @param A_MG_CO_PO (numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
 #' @param A_K_CO_PO (numeric) The exchangeable K-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #'  
 #' @import data.table
 #' 
@@ -1000,7 +1025,7 @@ osi_c_magnesium_hu <- function(B_TEXTURE_USDA,A_MG_KCL,B_LU = NA_character_) {
 #' The magnesium availability index in Italy estimated from the Mg extracted soil pool, expressed as occupation of the CEC. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_it <- function(B_LU,A_MG_CO_PO,A_K_CO_PO) {
+osi_c_magnesium_it <- function(B_LU,A_MG_CO_PO,A_K_CO_PO, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1018,7 +1043,8 @@ osi_c_magnesium_it <- function(B_LU,A_MG_CO_PO,A_K_CO_PO) {
                            B_LU = B_LU,
                            A_MG_CO_PO = A_MG_CO_PO,
                            A_K_CO_PO = A_K_CO_PO),
-               fname = 'osi_c_magnesium_it')
+               fname = 'osi_c_magnesium_it',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1065,7 +1091,8 @@ osi_c_magnesium_it <- function(B_LU,A_MG_CO_PO,A_K_CO_PO) {
 #' @param B_LU (numeric) The crop code
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
 #' @param A_MG_NaAAA (numeric) The Mg-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -1076,7 +1103,7 @@ osi_c_magnesium_it <- function(B_LU,A_MG_CO_PO,A_K_CO_PO) {
 #' The magnesium availability index in Ireland derived from extractable soil Mg fractions. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_ie <- function(B_LU, A_SOM_LOI,A_MG_NaAAA) {
+osi_c_magnesium_ie <- function(B_LU, A_SOM_LOI,A_MG_NaAAA, unitcheck = TRUE) {
   
   # add visual bindings
   BDS = NULL
@@ -1084,7 +1111,8 @@ osi_c_magnesium_ie <- function(B_LU, A_SOM_LOI,A_MG_NaAAA) {
   # check inputs
   osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
                            A_MG_NaAAA = A_MG_NaAAA),
-               fname = 'osi_c_magnesium_ie')
+               fname = 'osi_c_magnesium_ie',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
@@ -1117,7 +1145,8 @@ osi_c_magnesium_ie <- function(B_LU, A_SOM_LOI,A_MG_NaAAA) {
 #' @param B_LU (character) The crop code
 #' @param A_MG_DL (numeric) The exchangeable Mg-content of the soil measured via Double Lactate extraction (mg Mg/ kg)
 #' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -1127,7 +1156,7 @@ osi_c_magnesium_ie <- function(B_LU, A_SOM_LOI,A_MG_NaAAA) {
 #' The magnesium availability index in Latvia estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_lv <- function(A_MG_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
+osi_c_magnesium_lv <- function(A_MG_DL,B_TEXTURE_USDA, B_LU = NA_character_, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1150,7 +1179,8 @@ osi_c_magnesium_lv <- function(A_MG_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
   # check inputs
   osi_checkvar(parm = list(B_TEXTURE_USDA = B_TEXTURE_USDA,
                            A_MG_DL = A_MG_DL),
-               fname = 'osi_c_magnesium_lv')
+               fname = 'osi_c_magnesium_lv',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1201,7 +1231,8 @@ osi_c_magnesium_lv <- function(A_MG_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
 #' @param B_LU (character) The crop code
 #' @param A_MG_AL (numeric) The exchangeable Mg-content of the soil measured via Ammonium Lactate extraction (mg Mg/ kg)
 #' @param A_PH_KCL (numeric) The pH measured in KCl
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -1211,7 +1242,7 @@ osi_c_magnesium_lv <- function(A_MG_DL,B_TEXTURE_USDA, B_LU = NA_character_) {
 #' The magnesium availability index in Lithuania estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_lt <- function(A_MG_AL,A_PH_KCL,B_LU = NA_character_) {
+osi_c_magnesium_lt <- function(A_MG_AL,A_PH_KCL,B_LU = NA_character_, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1234,7 +1265,8 @@ osi_c_magnesium_lt <- function(A_MG_AL,A_PH_KCL,B_LU = NA_character_) {
   # check inputs
   osi_checkvar(parm = list(A_PH_KCL = A_PH_KCL,
                            A_MG_AL = A_MG_AL),
-               fname = 'osi_c_magnesium_lt')
+               fname = 'osi_c_magnesium_lt',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1288,6 +1320,7 @@ osi_c_magnesium_lt <- function(A_MG_AL,A_PH_KCL,B_LU = NA_character_) {
 #' @param A_K_CO_PO (numeric) The occupation of the CEC with potassium (\%)
 #' @param A_MG_CC (numeric) The plant available content of Mg in the soil (mg  Mg per kg) extracted by 0.01M CaCl2
 #' @param A_K_CC (numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg per kg), 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -1301,7 +1334,7 @@ osi_c_magnesium_lt <- function(A_MG_AL,A_PH_KCL,B_LU = NA_character_) {
 #' 
 #' @export
 osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
-                               A_PH_CC, A_CEC_CO,A_K_CO_PO,A_MG_CC,A_K_CC) {
+                               A_PH_CC, A_CEC_CO,A_K_CO_PO,A_MG_CC,A_K_CC, unitcheck = TRUE) {
   
   # set variables to NULL
   B_LU_BRP = D_MG = A_MG_NC = A_PH_KCL = A_SLIB_MI = cF = A_K_CO = kg1 = kg2 = kg = mg_pred = mg_aim = NULL
@@ -1330,7 +1363,8 @@ osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
                            A_K_CO_PO = A_K_CO_PO,
                            A_SOM_LOI = A_SOM_LOI,
                            A_CLAY_MI = A_CLAY_MI                           ),
-               fname = 'osi_c_magnesium_nl')
+               fname = 'osi_c_magnesium_nl',
+               unitcheck = unitcheck)
   
   # Settings
   param.re = 180 # protein content of first cut grassland in spring (g/kg)
@@ -1440,7 +1474,8 @@ osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_MG_AL (numeric) The exchangeable Mg-content of the soil measured via ammonium lactate (mg K/kg)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -1450,7 +1485,7 @@ osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
 #' The magnesium availability index in Norway estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_no <- function(B_LU,A_MG_AL) {
+osi_c_magnesium_no <- function(B_LU,A_MG_AL, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = rop_code = . = NULL
@@ -1464,7 +1499,8 @@ osi_c_magnesium_no <- function(B_LU,A_MG_AL) {
   
   # check inputs (not yet crop since not available in osi_crops)
   osi_checkvar(parm = list(A_MG_AL = A_MG_AL),
-               fname = 'osi_c_magnesium_no')
+               fname = 'osi_c_magnesium_no',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1494,7 +1530,8 @@ osi_c_magnesium_no <- function(B_LU,A_MG_AL) {
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
 #' @param A_MG_CC (numeric) The exchangeable Mg-content of the soil measured via calcium chloride extracton (mg Mg/ kg)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -1504,7 +1541,7 @@ osi_c_magnesium_no <- function(B_LU,A_MG_AL) {
 #' The magnesium availability index in Poland estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_pl <- function(A_MG_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
+osi_c_magnesium_pl <- function(A_MG_CC,B_TEXTURE_HYPRES,B_LU = NA_character_, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1527,7 +1564,8 @@ osi_c_magnesium_pl <- function(A_MG_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   # check inputs
   osi_checkvar(parm = list(B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                            A_MG_CC = A_MG_CC),
-               fname = 'osi_c_magnesium_pl')
+               fname = 'osi_c_magnesium_pl',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1579,7 +1617,8 @@ osi_c_magnesium_pl <- function(A_MG_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_MG_AAA (numeric) The exchangeable Mg-content of the soil measured via ammonium acetate extraction (mg Mg / kg)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -1589,7 +1628,7 @@ osi_c_magnesium_pl <- function(A_MG_CC,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' The magnesium availability index in Portugal estimated from the Mg extracted soil pool. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_pt <- function(B_LU,A_MG_AAA) {
+osi_c_magnesium_pt <- function(B_LU,A_MG_AAA, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
@@ -1605,7 +1644,8 @@ osi_c_magnesium_pt <- function(B_LU,A_MG_AAA) {
   osi_checkvar(parm = list(B_COUNTRY = rep('PT',arg.length),
                            B_LU = B_LU,
                            A_MG_AAA = A_MG_AAA),
-               fname = 'osi_c_magnesium_pt')
+               fname = 'osi_c_magnesium_pt',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1644,7 +1684,8 @@ osi_c_magnesium_pt <- function(B_LU,A_MG_AAA) {
 #' @param A_MG_CO_PO (numeric) The exchangeable Mg-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
 #' @param A_K_CO_PO (numeric) The exchangeable K-content of the soil measured via Cohex extracton, percentage occupation at CEC (\%)
 #' @param A_PH_WA (numeric) The pH measured in water
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -1655,7 +1696,8 @@ osi_c_magnesium_pt <- function(B_LU,A_MG_AAA) {
 #' The Mg index in Romenia. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_ro <- function(B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_CEC_CO, A_MG_CC,A_MG_CO_PO,A_K_CO_PO,A_PH_WA) {
+osi_c_magnesium_ro <- function(B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_CEC_CO, A_MG_CC,A_MG_CO_PO,
+                               A_K_CO_PO,A_PH_WA, unitcheck = TRUE) {
   
   # add visual bindings
   crop_code = v1 = v2 = crop_cat1 = crop_name = id = . = osi_country = NULL
@@ -1675,7 +1717,8 @@ osi_c_magnesium_ro <- function(B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_CEC_C
                            A_MG_CO_PO = A_MG_CO_PO,
                            A_K_CO_PO = A_K_CO_PO,
                            A_MG_CC = A_MG_CC),
-               fname = 'osi_c_magnesium_ro')
+               fname = 'osi_c_magnesium_ro',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1:arg.length,
@@ -1729,6 +1772,7 @@ osi_c_magnesium_ro <- function(B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_CEC_C
 #' 
 #' @param B_LU (character) The crop code
 #' @param A_MG_AL (numeric) The exchangeable Mg-content of the soil measured via ammonium lactate (mg K/kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #'  
 #' @import data.table
 #' 
@@ -1739,7 +1783,7 @@ osi_c_magnesium_ro <- function(B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_CEC_C
 #' The magnesium availability index in Sweden estimated from the Mg extracted soil pool. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_se <- function(B_LU,A_MG_AL) {
+osi_c_magnesium_se <- function(B_LU,A_MG_AL, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
@@ -1755,7 +1799,8 @@ osi_c_magnesium_se <- function(B_LU,A_MG_AL) {
   osi_checkvar(parm = list(B_COUNTRY = rep('SE',arg.length),
                            B_LU = B_LU,
                            A_MG_AL = A_MG_AL),
-               fname = 'osi_c_magnesium_se')
+               fname = 'osi_c_magnesium_se',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1790,6 +1835,7 @@ osi_c_magnesium_se <- function(B_LU,A_MG_AL) {
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
 #' @param A_MG_M3 (numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -1800,7 +1846,7 @@ osi_c_magnesium_se <- function(B_LU,A_MG_AL) {
 #' The magnesium availability index in Slovak Republic estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_sk <- function(B_LU,B_TEXTURE_HYPRES,A_MG_M3) {
+osi_c_magnesium_sk <- function(B_LU,B_TEXTURE_HYPRES,A_MG_M3, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
@@ -1817,7 +1863,8 @@ osi_c_magnesium_sk <- function(B_LU,B_TEXTURE_HYPRES,A_MG_M3) {
                            B_LU = B_LU,
                            B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                            A_MG_M3 = A_MG_M3),
-               fname = 'osi_c_magnesium_sk')
+               fname = 'osi_c_magnesium_sk',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1859,7 +1906,8 @@ osi_c_magnesium_sk <- function(B_LU,B_TEXTURE_HYPRES,A_MG_M3) {
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
 #' @param A_MG_AL (numeric) The exchangeable Mg-content of the soil measured via ammonium lactate extracton (mg Mg/ kg)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -1869,7 +1917,7 @@ osi_c_magnesium_sk <- function(B_LU,B_TEXTURE_HYPRES,A_MG_M3) {
 #' The magnesium availability index in Slovenia estimated from extractable magnesium. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_sl <- function(A_MG_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
+osi_c_magnesium_sl <- function(A_MG_AL,B_TEXTURE_HYPRES,B_LU = NA_character_, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -1892,7 +1940,8 @@ osi_c_magnesium_sl <- function(A_MG_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
   # check inputs
   osi_checkvar(parm = list(B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                            A_MG_AL = A_MG_AL),
-               fname = 'osi_c_magnesium_sl')
+               fname = 'osi_c_magnesium_sl',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -1938,7 +1987,8 @@ osi_c_magnesium_sl <- function(A_MG_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' @param B_LU (numeric) The crop code
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
 #' @param A_MG_AN (numeric) The Mg-content of the soil extracted with ammonium nitrate (mg Mg /kg)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -1949,7 +1999,7 @@ osi_c_magnesium_sl <- function(A_MG_AL,B_TEXTURE_HYPRES,B_LU = NA_character_) {
 #' The magnesium availability index in United Kingdom derived from extractable soil Mg fractions. A numeric value.
 #' 
 #' @export
-osi_c_magnesium_uk <- function(B_LU, A_SOM_LOI,A_MG_AN) {
+osi_c_magnesium_uk <- function(B_LU, A_SOM_LOI,A_MG_AN, unitcheck = TRUE) {
   
   # add visual bindings
   crop_cat1 = BDS = . = crop_name = NULL
@@ -1960,7 +2010,8 @@ osi_c_magnesium_uk <- function(B_LU, A_SOM_LOI,A_MG_AN) {
   # check inputs
   osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
                            A_MG_AN = A_MG_AN),
-               fname = 'osi_c_magnesium_uk')
+               fname = 'osi_c_magnesium_uk',
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),

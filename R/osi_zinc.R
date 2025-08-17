@@ -49,7 +49,8 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
                            A_P_OL = A_P_OL,
                            A_PH_CC = A_PH_CC,
                            A_ZN_RT = A_ZN_RT),
-               fname ='osi_c_zinc')
+               fname ='osi_c_zinc', 
+               unitcheck = TRUE)
   
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
@@ -90,7 +91,8 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
                            A_PH_CC = dt$A_PH_CC,
                            A_ZN_CC = dt$A_ZN_CC,
                            A_ZN_EDTA = dt$A_ZN_EDTA),
-               fname ='osi_c_zinc')
+               fname ='osi_c_zinc', 
+               unitcheck = TRUE)
   
   # calculate the open soil index score for Zinc availability 
   
@@ -99,25 +101,25 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
   dt[B_COUNTRY == 'BE', value := NA_real_]
   dt[B_COUNTRY == 'CH', value := NA_real_]
   dt[B_COUNTRY == 'CZ', value := NA_real_]
-  dt[B_COUNTRY == 'DE', value := osi_c_zinc_de(B_LU = B_LU,A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_ZN_EDTA = A_ZN_EDTA)]
+  dt[B_COUNTRY == 'DE', value := osi_c_zinc_de(B_LU = B_LU,A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_ZN_EDTA = A_ZN_EDTA, unitcheck = FALSE)]
   
   # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
   dt[B_COUNTRY == 'EE', value := NA_real_]
   dt[B_COUNTRY == 'EL', value := NA_real_]
   dt[B_COUNTRY == 'ES', value := NA_real_]
-  dt[B_COUNTRY == 'FR', value := osi_c_zinc_fr(B_LU = B_LU,A_PH_WA = A_PH_WA,A_ZN_EDTA = A_ZN_EDTA)]
+  dt[B_COUNTRY == 'FR', value := osi_c_zinc_fr(B_LU = B_LU,A_PH_WA = A_PH_WA,A_ZN_EDTA = A_ZN_EDTA, unitcheck = FALSE)]
   dt[B_COUNTRY == 'FI', value := NA_real_]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
   dt[B_COUNTRY == 'HU', value := NA_real_]
-  dt[B_COUNTRY == 'IE', value := osi_c_zinc_ie(B_LU = B_LU,A_SOM_LOI = A_SOM_LOI, A_PH_WA = A_PH_WA, A_ZN_EDTA = A_ZN_EDTA)]
+  dt[B_COUNTRY == 'IE', value := osi_c_zinc_ie(B_LU = B_LU,A_SOM_LOI = A_SOM_LOI, A_PH_WA = A_PH_WA, A_ZN_EDTA = A_ZN_EDTA, unitcheck = FALSE)]
   dt[B_COUNTRY == 'IT', value := NA_real_]
   dt[B_COUNTRY == 'LV', value := NA_real_]
   dt[B_COUNTRY == 'LT', value := NA_real_]
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
-  dt[B_COUNTRY == 'NL', value := osi_c_zinc_nl(B_LU = B_LU,A_PH_CC = A_PH_CC,A_ZN_CC = A_ZN_CC)]
+  dt[B_COUNTRY == 'NL', value := osi_c_zinc_nl(B_LU = B_LU,A_PH_CC = A_PH_CC,A_ZN_CC = A_ZN_CC, unitcheck = FALSE)]
   dt[B_COUNTRY == 'NO', value := NA_real_]
   dt[B_COUNTRY == 'SE', value := NA_real_]
   dt[B_COUNTRY == 'SK', value := NA_real_]
@@ -125,9 +127,9 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
   
   # Poland (PL), Portugal (PT), Romania (RO), United Kingdom (UK)
   dt[B_COUNTRY == 'PL', value := NA_real_]
-  dt[B_COUNTRY == 'PT', value := osi_c_zinc_pt(B_LU = B_LU, A_ZN_AAA = A_ZN_AAA, A_PH_CC = A_PH_CC)]
-  dt[B_COUNTRY == 'RO', value := osi_c_zinc_ro(B_LU = B_LU, A_ZN_EDTA = A_ZN_EDTA, A_P_AL = A_P_AL,A_PH_WA = A_PH_WA)]
-  dt[B_COUNTRY == 'UK', value := osi_c_zinc_uk(B_LU = B_LU,A_PH_WA = A_PH_WA, A_ZN_EDTA = A_ZN_EDTA)]
+  dt[B_COUNTRY == 'PT', value := osi_c_zinc_pt(B_LU = B_LU, A_ZN_AAA = A_ZN_AAA, A_PH_CC = A_PH_CC, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'RO', value := osi_c_zinc_ro(B_LU = B_LU, A_ZN_EDTA = A_ZN_EDTA, A_P_AL = A_P_AL,A_PH_WA = A_PH_WA, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'UK', value := osi_c_zinc_uk(B_LU = B_LU,A_PH_WA = A_PH_WA, A_ZN_EDTA = A_ZN_EDTA, unitcheck = FALSE)]
   
   # select the output variable
   out <- dt[,value]
@@ -146,7 +148,8 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_ZN_EDTA (numeric) Zn content measured in EDTA (mg / kg)
-#'  
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
 #' @import data.table
 #' 
 #' @examples 
@@ -156,7 +159,7 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
 #' The zinc availability index in Germany derived from extractable soil Zn fractions. A numeric value.
 #' 
 #' @export
-osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA) {
+osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA, unitcheck = TRUE) {
 
   # add visual bindings
   stype = . = crop_name = crop_code = crop_cat1 = osi_country = A_SILT_MI = NULL
@@ -176,7 +179,8 @@ osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA) {
                            A_SAND_MI = A_SAND_MI,
                            A_C_OF = A_C_OF,
                            A_ZN_EDTA = A_ZN_EDTA),
-               fname = 'osi_c_zinc_de')
+               fname = 'osi_c_zinc_de', 
+               unitcheck = unitcheck)
   
   # internal data.table
   dt <- data.table(id = 1: arg.length,
@@ -226,7 +230,8 @@ osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA) {
 #' @param B_LU  (character) crop type 
 #' @param A_PH_WA (numeric) pH measured in water (-)
 #' @param A_ZN_EDTA (numeric) Zn content measured in EDTA (mg / kg)
-#'
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -236,7 +241,7 @@ osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA) {
 #' The zinc availability index in France estimated from extractable zinc and pH measured in water, a numeric value.
 #' 
 #' @export
-osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
+osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA, unitcheck = TRUE) {
   
   # set visual bindings
   value = osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -259,7 +264,8 @@ osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
                            B_COUNTRY = rep('FR',arg.length),
                            A_PH_WA = A_PH_WA,
                            A_ZN_EDTA = A_ZN_EDTA),
-               fname = 'osi_c_zinc_fr')
+               fname = 'osi_c_zinc_fr',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -300,7 +306,8 @@ osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
 #' @param A_PH_WA (numeric) pH measured in water (-)
 #' @param A_ZN_EDTA (numeric) Zn content measured in EDTA (mg / kg)
-#'
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -310,7 +317,7 @@ osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
 #' The zinc availability index in Ireland estimated from extractable zinc and pH measured in water, a numeric value.
 #' 
 #' @export
-osi_c_zinc_ie <- function(B_LU,A_SOM_LOI, A_PH_WA, A_ZN_EDTA) {
+osi_c_zinc_ie <- function(B_LU,A_SOM_LOI, A_PH_WA, A_ZN_EDTA, unitcheck = TRUE) {
   
   # set visual bindings
   value = osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -334,7 +341,8 @@ osi_c_zinc_ie <- function(B_LU,A_SOM_LOI, A_PH_WA, A_ZN_EDTA) {
   osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
                            A_PH_WA = A_PH_WA,
                            A_ZN_EDTA = A_ZN_EDTA),
-               fname = 'osi_c_zinc_ie')
+               fname = 'osi_c_zinc_ie',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -377,6 +385,7 @@ osi_c_zinc_ie <- function(B_LU,A_SOM_LOI, A_PH_WA, A_ZN_EDTA) {
 #' @param B_LU (numeric) The crop code from the BRP
 #' @param A_PH_CC (numeric) The acidity of the soil, determined in 0.01M CaCl2 (-)
 #' @param A_ZN_CC The plant available Zn content, extracted with 0.01M CaCl2 (mg / kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -387,7 +396,7 @@ osi_c_zinc_ie <- function(B_LU,A_SOM_LOI, A_PH_WA, A_ZN_EDTA) {
 #' The function of the soil to supply zinc (a numeric value).
 #' 
 #' @export
-osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
+osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC, unitcheck = TRUE) {
   
   # set visual bindings
   id = crop_code = soiltype = soiltype.n = crop_n = crop_category = D_ZN = NULL
@@ -409,7 +418,8 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
                            B_COUNTRY = rep('NL',arg.length),
                            A_PH_CC = A_PH_CC,
                            A_ZN_CC = A_ZN_CC),
-               fname = 'osi_c_zinc_nl')
+               fname = 'osi_c_zinc_nl',
+               unitcheck = unitcheck)
   
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
@@ -453,7 +463,8 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
 #' @param B_LU (numeric) A unique crop code
 #' @param A_ZN_AAA The plant available Zn content, extracted with ammonium acetate (mg Zn / kg)
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-) 
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -463,7 +474,7 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC) {
 #' The function of the soil to supply zinc (a numeric value).
 #' 
 #' @export
-osi_c_zinc_pt <- function(B_LU, A_ZN_AAA,A_PH_CC) {
+osi_c_zinc_pt <- function(B_LU, A_ZN_AAA,A_PH_CC, unitcheck = TRUE) {
   
   # set visual bindings
   id = crop_code = soiltype = soiltype.n = crop_n = crop_category = D_ZN = NULL
@@ -481,7 +492,8 @@ osi_c_zinc_pt <- function(B_LU, A_ZN_AAA,A_PH_CC) {
                            B_COUNTRY = rep('PT',arg.length),
                            A_PH_CC = A_PH_CC,
                            A_ZN_AAA = A_ZN_AAA),
-               fname = 'osi_c_zinc_pt')
+               fname = 'osi_c_zinc_pt',
+               unitcheck = unitcheck)
   
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
@@ -520,7 +532,8 @@ osi_c_zinc_pt <- function(B_LU, A_ZN_AAA,A_PH_CC) {
 #' @param A_PH_WA (numeric) pH measured in water (-)
 #' @param A_P_AL (numeric) The P-content of the soil extracted with ammonium lactate (mg P / kg)
 #' @param A_ZN_EDTA (numeric) Zn content measured in EDTA, pH 8.6, with ammonium carbonate (mg / kg)
-#'
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -530,7 +543,7 @@ osi_c_zinc_pt <- function(B_LU, A_ZN_AAA,A_PH_CC) {
 #' The zinc availability index in United Kingdom estimated from extractable zinc and pH measured in water, a numeric value.
 #' 
 #' @export
-osi_c_zinc_ro <- function(B_LU, A_PH_WA, A_P_AL, A_ZN_EDTA) {
+osi_c_zinc_ro <- function(B_LU, A_PH_WA, A_P_AL, A_ZN_EDTA, unitcheck = TRUE) {
   
   # set visual bindings
   value = osi_country = osi_indicator = id = crop_cat1 = . = osi_crops = v1 = v2 = NULL
@@ -547,7 +560,8 @@ osi_c_zinc_ro <- function(B_LU, A_PH_WA, A_P_AL, A_ZN_EDTA) {
   osi_checkvar(parm = list(A_PH_WA = A_PH_WA,
                            A_P_AL = A_P_AL,
                            A_ZN_EDTA = A_ZN_EDTA),
-               fname = 'osi_c_zinc_ro')
+               fname = 'osi_c_zinc_ro',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -591,7 +605,8 @@ osi_c_zinc_ro <- function(B_LU, A_PH_WA, A_P_AL, A_ZN_EDTA) {
 #' @param B_LU  (character) crop type 
 #' @param A_PH_WA (numeric) pH measured in water (-)
 #' @param A_ZN_EDTA (numeric) Zn content measured in EDTA (mg / kg)
-#'
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -601,7 +616,7 @@ osi_c_zinc_ro <- function(B_LU, A_PH_WA, A_P_AL, A_ZN_EDTA) {
 #' The zinc availability index in United Kingdom estimated from extractable zinc and pH measured in water, a numeric value.
 #' 
 #' @export
-osi_c_zinc_uk <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
+osi_c_zinc_uk <- function(B_LU, A_PH_WA, A_ZN_EDTA, unitcheck = TRUE) {
   
   # set visual bindings
   value = osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -621,7 +636,8 @@ osi_c_zinc_uk <- function(B_LU, A_PH_WA, A_ZN_EDTA) {
   # check inputs
   osi_checkvar(parm = list(A_PH_WA = A_PH_WA,
                            A_ZN_EDTA = A_ZN_EDTA),
-               fname = 'osi_c_zinc_uk')
+               fname = 'osi_c_zinc_uk',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
