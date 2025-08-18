@@ -25,7 +25,7 @@ osi_plot_shi <- function(shi, xpar, xpar_label ='soil indicator',pgroup = NULL){
   dt <- data.table(shi = shi, xpar = xpar,pgroup = pgroup)
   
   # classification colour for soil health assessments
-  df.class <- data.table(xmin = rep(0,5),
+  df.class <- data.table(xmin = rep(min(dt$xpar),5),
                          xmax = rep(max(dt$xpar),5),
                          ymin = c(0,0.25,0.5,0.75,1.00),
                          ymax = c(0.25,0.5,0.75,1.0,1),

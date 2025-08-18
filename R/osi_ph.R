@@ -339,7 +339,7 @@ osi_c_ph_ch <- function(B_LU, A_CLAY_MI = NA_real_,A_PH_WA = NA_real_,
                         A_NA_CO_PO= NA_real_, unitcheck = TRUE) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
+  osi_country = osi_indicator = id = crop_cat1 = v1 = v2 = NULL
   crop_code = BS = crop_k = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
   
   # crop data
@@ -393,11 +393,16 @@ osi_c_ph_ch <- function(B_LU, A_CLAY_MI = NA_real_,A_PH_WA = NA_real_,
   #             all.x = TRUE)
   
   # derive the OSI score for the Base Saturation
-  dt[,value := osi_evaluate_logistic(x = BS, b= 0.12208837 ,x0 = 0.04485426 ,v = 0.00213294 )]
+  dt[,v1 := osi_evaluate_logistic(x = BS, b= 0.12208837 ,x0 = 0.04485426 ,v = 0.00213294 )]
   
   # If BS not available, ue pH-water (for soils < 30%  clay)
-  dt[is.na(value) & A_CLAY_MI <= 30, value := osi_evaluate_logistic(x = A_PH_WA, b= 2.5556578,x0 = -1.0511862,v = 0.0000001)]
-  dt[is.na(value) & A_CLAY_MI > 30, value := osi_evaluate_logistic(x = A_PH_WA, b= 2.4248367,x0 = -0.7972011,v = 0.0000003)]
+  dt[A_CLAY_MI <= 30, v2 := osi_evaluate_logistic(x = A_PH_WA, b= 2.5556578,x0 = -1.0511862,v = 0.0000001)]
+  dt[A_CLAY_MI > 30, v2 := osi_evaluate_logistic(x = A_PH_WA, b= 2.4248367,x0 = -0.7972011,v = 0.0000003)]
+  
+  # calculate the weighted mean
+  dt[!is.na(v1) & !is.na(v2),value := (cf_ind_importance(v1) * v1 + cf_ind_importance(v2) * v2)/(cf_ind_importance(v1) + cf_ind_importance(v2))]
+  dt[!is.na(v1) & is.na(v2),value := v1]
+  dt[is.na(v1) & !is.na(v2),value := v2]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -620,7 +625,7 @@ osi_c_ph_el <- function(B_LU, A_PH_WA,A_NA_CO_PO, B_TEXTURE_HYPRES, unitcheck = 
   # calculate the weighted mean
   dt[!is.na(v1) & !is.na(v2),value := (cf_ind_importance(v1) * v1 + cf_ind_importance(v2) * v2)/(cf_ind_importance(v1) + cf_ind_importance(v2))]
   dt[!is.na(v1) & is.na(v2),value := v1]
-  dt[is.na(v1) & !is.na(v2),value := v1]
+  dt[is.na(v1) & !is.na(v2),value := v2]
   
   # set the order to the original inputs
   setorder(dt, id)
