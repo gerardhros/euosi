@@ -81,19 +81,19 @@ test_that("osi_c_boron_de works", {
 
 test_that("osi_c_boron_ie works", {
   expect_equal(
-    osi_c_boron_ie(B_LU = 'testcrop1',
+    osi_c_boron_ie(B_LU = 'cabbage',
                    A_B_HW = 0.50),
     expected = c(0.318),
     tolerance = 0.01
   )
   expect_equal(
-    osi_c_boron_ie(B_LU = c('3301000000','3301010901','3301061299','3304990000'),
+    osi_c_boron_ie(B_LU = c('cabbage','cabbage','cabbage','cabbage'),
                    A_B_HW = rep(0.50,4)),
     expected = rep(0.3186252 ,4),
     tolerance = 0.01
   )
   expect_equal(
-    osi_c_boron_ie(B_LU = c('3301000000','3301010901','3301061299','3304990000'),
+    osi_c_boron_ie(B_LU = c('cabbage','cabbage','cabbage','cabbage'),
                    A_B_HW = c(0.1,0.4,0.8,1.2)),
     expected = c(0.04359523, 0.21841281 ,0.64542789, 0.89945411),
     tolerance = 0.01

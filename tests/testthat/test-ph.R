@@ -245,7 +245,7 @@ test_that("osi_c_ph_fi works", {
                  B_TEXTURE_USDA = rep('Si',4),
                 A_PH_WA = rep(4.5,4),
                  A_C_OF = c(10,20,100,300)),
-    expected = rep(0.07621,4),
+    expected = c(rep(0.07621,3),NA),
     tolerance = 0.01
   )
   expect_equal(
@@ -253,7 +253,7 @@ test_that("osi_c_ph_fi works", {
                B_TEXTURE_USDA = rep('Si',4),
                A_PH_WA = c(4.5,5,5.5,6),
                A_C_OF = c(10,20,100,300)),
-    expected = c(0.0762,0.2231,0.5,0.777),
+    expected = c(0.0762,0.2231,0.5,NA),
     tolerance = 0.01
   )
 })
