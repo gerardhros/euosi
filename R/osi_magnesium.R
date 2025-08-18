@@ -533,7 +533,7 @@ oci_c_magnesium_cz <- function(A_MG_M3,B_TEXTURE_HYPRES,B_LU = NA_character_, un
 osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC, unitcheck = TRUE) {
   
   # add visual bindings
-  A_SILT_MI = stype = NULL = crop_code = crop_cat1 = . = NULL
+  A_SILT_MI = stype = crop_code = crop_cat1 = . = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -943,6 +943,7 @@ osi_c_magnesium_fr <- function(B_LU,A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AAA, u
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
                    A_MG_AAA = A_MG_AAA,
                    A_CLAY_MI = A_CLAY_MI,
                    A_CEC_CO = A_CEC_CO/10,

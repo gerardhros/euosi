@@ -113,6 +113,7 @@ osi_c_copper_fr <- function(B_LU,A_CLAY_MI,B_CF, A_SOM_LOI,A_CU_EDTA) {
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
+                   B_LU = B_LU,
                    A_CLAY_MI=A_CLAY_MI,
                    A_SOM_LOI=A_SOM_LOI,
                    A_CU_EDTA = A_CU_EDTA,

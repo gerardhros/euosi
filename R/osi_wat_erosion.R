@@ -61,7 +61,7 @@ osi_erosion <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_SAND_MI,B_COUNTRY,
   
   # merge crop properties
   dt <- merge(dt,
-              dt.crops[,.(osi_country, crop_code,crop_cat1,crop_c)],
+              dt.crops[,.(osi_country, crop_code,crop_cat1,crop_cat2,crop_c)],
               by.x = c('B_LU','B_COUNTRY') ,
               by.y = c('crop_code','osi_country'),
               all.x=TRUE)

@@ -326,6 +326,9 @@ osi_c_boron_ie <- function(B_LU, A_B_HW, unitcheck = TRUE) {
   # evaluate risk based OSI
   dt[,value := osi_evaluate_logistic(x = A_B_HW, b = 3.7254881, x0 = 0.3723286 , v = 0.4226000 )]
   
+  # temporary fix
+  dt[,crop_name := tolower(B_LU)]
+  
   # set risk cases for specific cases
   dt[, senscrop := fifelse(grepl('swedes|turnip|rape|beet|mangel|celery|carrot|brassica|radish|cabbage|cauliflo|broccol|sprout',tolower(crop_name)),'yes','no')]
   
