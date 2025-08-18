@@ -57,7 +57,8 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
                            A_SOM_LOI = dt$A_SOM_LOI,
                            A_N_RT = dt$A_N_RT),
                fname = 'osi_c_nitrogen',
-               na_allowed = TRUE)
+               na_allowed = TRUE,
+               unitcheck = TRUE)
   
   # estimate missing properties (if applicable)
   dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
@@ -68,14 +69,15 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
   osi_checkvar(parm = list(A_CN_FR = dt$A_CN_FR,
                            A_C_OF = dt$A_C_OF,
                            A_SOM_LOI = dt$A_SOM_LOI),
-               fname = 'osi_c_nitrogen')
+               fname = 'osi_c_nitrogen',
+               unitcheck = TRUE)
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
   dt[B_COUNTRY == 'AT', value := NA_real_]
-  dt[B_COUNTRY == 'BE', value := osi_c_nitrogen_be(B_LU = B_LU, A_N_RT = A_N_RT, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_CACO3_IF = A_CACO3_IF)]
+  dt[B_COUNTRY == 'BE', value := osi_c_nitrogen_be(B_LU = B_LU, A_N_RT = A_N_RT, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_CACO3_IF = A_CACO3_IF, unitcheck = FALSE)]
   dt[B_COUNTRY == 'CH', value := NA_real_]
   dt[B_COUNTRY == 'CZ', value := NA_real_]
-  dt[B_COUNTRY == 'DE', value := osi_c_nitrogen_de(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_SOM_LOI = A_SOM_LOI,A_N_RT = A_N_RT)]
+  dt[B_COUNTRY == 'DE', value := osi_c_nitrogen_de(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_SOM_LOI = A_SOM_LOI,A_N_RT = A_N_RT, unitcheck = FALSE)]
   
   # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
@@ -83,7 +85,7 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
   dt[B_COUNTRY == 'EL', value := NA_real_]
   dt[B_COUNTRY == 'ES', value := NA_real_]
   dt[B_COUNTRY == 'FR', value := osi_c_nitrogen_fr(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
-                                                   A_C_OF = A_C_OF,A_N_RT = A_N_RT, A_CACO3_IF = A_CACO3_IF)]
+                                                   A_C_OF = A_C_OF,A_N_RT = A_N_RT, A_CACO3_IF = A_CACO3_IF, unitcheck = FALSE)]
   dt[B_COUNTRY == 'FI', value := NA_real_]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
@@ -95,7 +97,7 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
   dt[B_COUNTRY == 'NL', value := osi_c_nitrogen_nl(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
-                                                   A_SOM_LOI = A_SOM_LOI,A_N_RT = A_N_RT)]
+                                                   A_SOM_LOI = A_SOM_LOI,A_N_RT = A_N_RT, unitcheck = FALSE)]
   dt[B_COUNTRY == 'NO', value := NA_real_]
   dt[B_COUNTRY == 'SE', value := NA_real_]
   dt[B_COUNTRY == 'SK', value := NA_real_]
@@ -109,7 +111,7 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
   # estimate N supply capacity for all soils without specific evaluation yet
   dt[is.na(value), value := osi_c_nitrogen_eu(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,
                                               A_SOM_LOI = A_SOM_LOI,A_C_OF = A_C_OF, A_N_RT = A_N_RT, 
-                                              B_COUNTRY = B_COUNTRY)]
+                                              B_COUNTRY = B_COUNTRY, unitcheck = FALSE)]
   
   # sort the internal table on id
   setorder(dt,id)
@@ -132,7 +134,8 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_CACO3_IF (numeric) The percentage of carbonated lime (\%) 
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil (mg N / kg)
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -143,7 +146,7 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
 #' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
 #' 
 #' @export
-osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_IF) {
+osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_IF, unitcheck = TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -170,7 +173,8 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
                            A_CACO3_IF = A_CACO3_IF,
                            A_C_OF = A_C_OF,
                            A_N_RT = A_N_RT),
-               fname = 'osi_c_nitrogen_be')
+               fname = 'osi_c_nitrogen_be',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -206,6 +210,9 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
   # convert to the OSI score
   dt[,value := osi_evaluate_parabolic(x = D_NSC, x.top = osi_st_c1)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -226,6 +233,7 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -239,10 +247,14 @@ osi_c_nitrogen_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3
 #' @export
 osi_c_nitrogen_de <- function(B_LU = NA_character_, 
                               A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_) {
+                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_, unitcheck = TRUE) {
   
   # add visual bindings
   A_SILT_MI = stype = cf1 = BD = NSC = NSCPS = arate = NULL
+  
+  # Load in the datasets
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country == 'DE']
   
   # max length of input parameters
   arg.length <- max(length(B_LU), 
@@ -257,7 +269,8 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
                            A_SOM_LOI = A_SOM_LOI,
                            A_C_OF = A_C_OF,
                            A_N_RT = A_N_RT),
-               fname = 'osi_c_nitrogen_de')
+               fname = 'osi_c_nitrogen_de',
+               unitcheck = unitcheck)
   
   # Collect data in an internal table
   dt <- data.table(id = 1:arg.length,
@@ -269,6 +282,13 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
                    A_SOM_LOI = A_SOM_LOI,
                    A_N_RT = A_N_RT,
                    value = NA_real_)
+  
+  # merge with crop_category (arable or grassland)
+  dt <- merge(dt, 
+              dt.crops[, list(crop_code, crop_cat1)], 
+              by.x = "B_LU", 
+              by.y = "crop_code", 
+              all.x = TRUE)
   
   # add missing ones
   dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
@@ -308,6 +328,9 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
   # run default NSC calculation for Nmin in springg (optimum around 100 kg N/ ha)
   dt[, value := osi_evaluate_logistic(x = NSCPS, b =   0.13683559, x0 = -14.84508232, v =  0.03487421)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # select calculated NSC
   value <- dt[,value]
   
@@ -326,6 +349,7 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_CACO3_IF (numeric) The percentage of carbonated lime (\%) 
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil (mg N / kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -337,7 +361,7 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
 #' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
 #' 
 #' @export
-osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF) {
+osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF, unitcheck = TRUE) {
   
   # add visual bindings
   osi_country = osi_indicator = NULL
@@ -363,7 +387,8 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
                            A_SAND_MI = A_SAND_MI,
                            A_C_OF = A_C_OF,
                            A_N_RT = A_N_RT),
-               fname = 'osi_c_nitrogen_fr')
+               fname = 'osi_c_nitrogen_fr',
+               unitcheck = unitcheck)
   
   # Collect data in an internal table
   dt <- data.table(id = 1 : arg.length,
@@ -405,6 +430,9 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
   # ensure that value is between 0 and 1
   dt[, value := pmax(0,pmin(1,value))]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # setorder dt
   setorder(dt,id)
   
@@ -424,6 +452,7 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
 #' @param B_SOILTYPE_AGR (character) The agricultural type of soil
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -436,7 +465,7 @@ osi_c_nitrogen_fr <- function(B_LU,A_CLAY_MI,A_SAND_MI,A_C_OF,A_N_RT, A_CACO3_IF
 #' The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.
 #' 
 #' @export
-osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
+osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT, unitcheck = TRUE) {
   
   # add visual bindings
   osi_country = osi_indicator = crop_code = crop_cat1 = osi_threshold_cropcat = NULL
@@ -464,7 +493,8 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
                            B_SOILTYPE_AGR = B_SOILTYPE_AGR,
                            A_SOM_LOI = A_SOM_LOI,
                            A_N_RT = A_N_RT),
-               fname = 'osi_c_nitrogen_nl')
+               fname = 'osi_c_nitrogen_nl',
+               unitcheck = unitcheck)
   
   # Collect data in an internal table
   dt <- data.table(id = 1:arg.length,
@@ -525,7 +555,7 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
     dt.grass[soiltype.n == "veen", value := 250]
     
     # Calculate the NLV for arable land
-    dt.arable <- dt[grepl('arable|maize|other|forest|permanent|nature',crop_cat1)]
+    dt.arable <- dt[grepl('arable|maize|permanent',crop_cat1)]
     dt.arable[, c.diss := D_OC * (1 - exp(4.7 * ((param.a + param.b * param.t)^-0.6 - param.a^-0.6)))]
     dt.arable[, c.ass := c.diss / param.diss.micro]
     dt.arable[, value := ((c.diss + c.ass) / A_CN_FR) - (c.ass / param.cn.micro)]
@@ -542,14 +572,14 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
   
   # subset and evaluate for arable soils
   dths <- dt.thresholds[osi_threshold_cropcat == 'arable']
-  dt[grepl('arable|maize|perman|other',crop_cat1), value := osi_evaluate_parabolic(value, x.top = dths[,osi_st_c1])]
+  dt[grepl('arable|maize|perman',crop_cat1), value := osi_evaluate_parabolic(value, x.top = dths[,osi_st_c1])]
   
   # subset and evaluate for grassland soils
   dths <- dt.thresholds[osi_threshold_cropcat == 'grassland']
   dt[grepl('grassland',crop_cat1), value := osi_evaluate_parabolic(value, x.top = dths[,osi_st_c1])]
   
-  # set OSI score for others  
-  dt[grepl('nature|forest',crop_cat1), value := 1]
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # select output variable
   out <- dt[,value]
@@ -569,7 +599,8 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
 #' @param B_COUNTRY (character) The country code
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples 
@@ -582,7 +613,8 @@ osi_c_nitrogen_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI,A_N_RT) {
 #' @export
 osi_c_nitrogen_eu <- function(B_LU = NA_character_, 
                               A_CLAY_MI= NA_real_, A_SAND_MI= NA_real_,
-                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_, B_COUNTRY = NA_real_) {
+                              A_SOM_LOI= NA_real_,A_C_OF = NA_real_,A_N_RT = NA_real_, 
+                              B_COUNTRY = NA_real_, unitcheck = TRUE) {
   
   # add visual bindings
   A_CN_FR = NSCPS = BD = value = arate = NSC = NULL
@@ -606,7 +638,8 @@ osi_c_nitrogen_eu <- function(B_LU = NA_character_,
                            A_SOM_LOI = A_SOM_LOI,
                            A_N_RT = A_N_RT),
                fname = 'osi_c_nitrogen_eu',
-               na_allowed = TRUE)
+               na_allowed = TRUE,
+               unitcheck = unitcheck)
   
   # Collect data in an internal table
   dt <- data.table(id = 1:arg.length,

@@ -261,6 +261,9 @@ osi_nut_k_at <- function(A_K_CAL,B_TEXTURE_HYPRES,B_LU = NA_character_, unitchec
   dt[B_TEXTURE_HYPRES %in% c('F','VF'),
      value := osi_evaluate_logistic(x = A_K_CAL, b = -0.0115, x0 = 286.2, v = 1.796)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -344,6 +347,9 @@ osi_nut_k_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_, unitcheck = TRU
   
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = A_K_AAA, b = -0.01082, x0 = 301.78, v = 1.7673)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -500,6 +506,9 @@ osi_nut_k_cz <- function(A_K_M3,B_TEXTURE_HYPRES,B_LU = NA_character_, unitcheck
   dt[B_TEXTURE_HYPRES %in% c('F','VF'),
      value := osi_evaluate_logistic(x = A_K_M3, b = -0.10697, x0 = 224.35, v = 58.0264)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -577,12 +586,12 @@ osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_CAL, unitcheck =
   dt[ A_C_OF >= 150,  stype := "BG6"]
   
   # evaluate A_K_AAA for arable soils
-  dt[stype=='BG1' & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(A_K_CAL, b = -0.10391, x0 = 31.43, v = 1.7684)]
-  dt[stype=='BG2' & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(A_K_CAL, b = -0.08953, x0 = 36.28, v = 1.7474)]
-  dt[stype=='BG3' & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(A_K_CAL, b = -0.07638, x0 = 42.55, v = 1.7511)]
-  dt[stype=='BG4' & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(A_K_CAL, b = -0.07024, x0 = 46.9, v = 1.7988)]
-  dt[stype=='BG5' & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(A_K_CAL, b = -0.05202, x0 = 63.81, v = 1.8263)]
-  dt[stype=='BG6' & crop_cat1 %in% c('arable','maize'), value := osi_evaluate_logistic(A_K_CAL2, b = -0.07217, x0 = 45.45, v = 1.7838)]
+  dt[stype=='BG1' & crop_cat1 %in% c('arable','maize','permanent'), value := osi_evaluate_logistic(A_K_CAL, b = -0.10391, x0 = 31.43, v = 1.7684)]
+  dt[stype=='BG2' & crop_cat1 %in% c('arable','maize','permanent'), value := osi_evaluate_logistic(A_K_CAL, b = -0.08953, x0 = 36.28, v = 1.7474)]
+  dt[stype=='BG3' & crop_cat1 %in% c('arable','maize','permanent'), value := osi_evaluate_logistic(A_K_CAL, b = -0.07638, x0 = 42.55, v = 1.7511)]
+  dt[stype=='BG4' & crop_cat1 %in% c('arable','maize','permanent'), value := osi_evaluate_logistic(A_K_CAL, b = -0.07024, x0 = 46.9, v = 1.7988)]
+  dt[stype=='BG5' & crop_cat1 %in% c('arable','maize','permanent'), value := osi_evaluate_logistic(A_K_CAL, b = -0.05202, x0 = 63.81, v = 1.8263)]
+  dt[stype=='BG6' & crop_cat1 %in% c('arable','maize','permanent'), value := osi_evaluate_logistic(A_K_CAL2, b = -0.07217, x0 = 45.45, v = 1.7838)]
   
   # evaluate A_K_AAA for grassland soils
   dt[stype=='BG1' & crop_cat1 %in% c('grassland'), value := osi_evaluate_logistic(A_K_CAL, b = -0.19519, x0 = 17.78, v = 0.7916)]
@@ -592,8 +601,8 @@ osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_CAL, unitcheck =
   dt[stype=='BG5' & crop_cat1 %in% c('grassland'), value := osi_evaluate_logistic(A_K_CAL, b = -0.12803, x0 = 29.48, v = 2.269)]
   dt[stype=='BG6' & crop_cat1 %in% c('grassland'), value := osi_evaluate_logistic(A_K_CAL2, b = -0.1343, x0 = 28.03, v = 2.2603)]
   
-  # all other cases get value 1
-  dt[crop_cat1 %in% c('forest','other','permanent'), value := 1]
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # select value and return
   value <- dt[,value]
@@ -622,6 +631,13 @@ osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_CAL, unitcheck =
 #' @export
 osi_nut_k_dk <- function(B_LU, A_K_AL, unitcheck = TRUE) {
   
+  # add visual bindings
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='DK']
+  
   # length of arguments
   arg.length <- max(length(B_LU),length(A_K_AL))
   
@@ -638,8 +654,18 @@ osi_nut_k_dk <- function(B_LU, A_K_AL, unitcheck = TRUE) {
                    A_K_AL = A_K_AL,
                    value = NA_real_)
   
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
   # evaluation soil K status, only threshold at optimum level is given (IFS, Ristimaki et al. (2007))
   dt[, value := OBIC::evaluate_logistic(A_K_AL, b = -0.01074, x0 = 293.55, v = 1.6325)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # select value 
   value <- dt[,value]
@@ -833,6 +859,13 @@ osi_nut_k_es <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA, unitcheck = TRUE) {
                    A_K_AAA = A_K_AAA,
                    value = NA_real_)
   
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
   # franco = loam (M) ; arena = sand (C); silt = limoso (MF); arcilla = clay (F to VF)
   
   # evaluate the OSI score for arenose
@@ -844,6 +877,9 @@ osi_nut_k_es <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA, unitcheck = TRUE) {
   # evaluate the OSI score for arcilloso
   dt[B_TEXTURE_HYPRES %in% c('F','VF'),
      value := osi_evaluate_logistic(x = A_K_AAA, b = -0.00491, x0 = 633.26, v = 1.5787)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # select value
   value <- dt[,value]
@@ -935,6 +971,9 @@ osi_nut_k_fi <- function(B_LU, B_TEXTURE_USDA, A_K_AAA,A_C_OF = 0.5, unitcheck =
   dt[B_SOILTYPE_AGR=='clay',value := osi_evaluate_logistic(x = A_K_AAA,b = -0.00573, x0 = 552.32, v = 1.6538)]
   dt[B_SOILTYPE_AGR=='loam',value := osi_evaluate_logistic(x = A_K_AAA,b = -0.01811, x0 = 159.28, v = 6.5885)]
   dt[B_SOILTYPE_AGR=='sand',value := osi_evaluate_logistic(x = A_K_AAA,b = -0.01139, x0 = 277.91, v = 1.6516)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -1046,6 +1085,9 @@ osi_nut_k_fr <- function(B_LU, A_K_AAA, B_TEXTURE_GEPPA = NA_character_, B_SOILT
   dt[crop_k =='moderate',value := osi_evaluate_logistic(x = A_K_AAA,b = -0.02221, x0 = 148.42, v = 1.8025 )]
   dt[crop_k =='high',value := osi_evaluate_logistic(x = A_K_AAA, b = -0.01012, x0 = 300.95, v = 0.8066)]
   dt[crop_k =='low',value := osi_evaluate_logistic(x = A_K_AAA,b = -0.02602, x0 = 112.04, v = 1.1065 )]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -1257,6 +1299,13 @@ osi_nut_k_it <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA, unitcheck = TRUE) {
                    A_K_AAA = A_K_AAA,
                    value = NA_real_)
   
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
   # franco = loam (M) ; arena = sand (C); silt = limoso (MF); arcilla = clay (F to VF)
   
   # evaluate the OSI score for terreni sabbiosi
@@ -1268,6 +1317,9 @@ osi_nut_k_it <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA, unitcheck = TRUE) {
   # evaluate the OSI score for terreni argillosi e limos
   dt[B_TEXTURE_HYPRES %in% c('F','VF'),
      value := osi_evaluate_logistic(x = A_K_AAA, b = -0.00977, x0 = 332.32, v = 1.7515 )]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # select value
   value <- dt[,value]
@@ -1537,7 +1589,7 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   dt.maize[,value := (1 - (120 - A_K_CC) / 120) * 2.5]
   
   # Calculate the K excess for arable crops (Ros & Bussink, 2011)
-  dt.arable <- dt[crop_cat1 %in% c('arable','cropland')]
+  dt.arable <- dt[crop_cat1 %in% c('arable','cropland','permanent')]
   
   # derive b-factor, texture dependent correction
   dt.arable[grepl('duin|rivier|maas|klei',B_SOILTYPE_AGR) & A_SOM_LOI <= 10 & A_CLAY_MI <= 11, b := 1.513]
@@ -1582,8 +1634,8 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   dt.arable[value < 0, value := 0]
   
   # Calculate the K excess for nature
-  dt.nature <- dt[crop_cat1 %in% c('nature','permanent','forest','other')]
-  dt.nature[,value := 0]
+  dt.nature <- dt[crop_cat1 %in% c('nature','forest','other')]
+  dt.nature[,value := NA_real_]
   
   # score the K index given threshold for agronomic production / product quality
   
@@ -1614,7 +1666,7 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   dt.arable[grepl('loess',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = -0.09995, x0 = 32.87, v = 1.7907)]
   
   # evaluate nature soils
-  dt.nature[, i_c_k := 1]
+  dt.nature[, i_c_k := NA_real_]
   
   # Combine both tables and extract values
   dt <- rbindlist(list(dt.arable,dt.grass, dt.maize,dt.nature), fill = TRUE)
@@ -1817,6 +1869,9 @@ osi_nut_k_pt <- function(B_LU, A_K_AAA, unitcheck = TRUE) {
   # evaluation soil K status
   dt[, value := osi_evaluate_logistic(A_K_AAA, b = -0.02732, x0 = 117.62, v = 1.7064)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # select value and return
   value <- dt[,value]
   return(value)
@@ -1874,6 +1929,9 @@ osi_nut_k_se <- function(B_LU, A_K_AL, unitcheck = TRUE) {
   
   # evaluation soil K status
   dt[, value := OBIC::evaluate_logistic(A_K_AL,b = -0.01225, x0 = 300.51, v = 0.5419)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # select value and return
   value <- dt[,value]
@@ -1964,7 +2022,7 @@ osi_nut_k_sk <- function(B_LU, B_TEXTURE_HYPRES,A_K_M3, unitcheck = TRUE) {
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
-  dt.crops <- dt.crops[osi_country=='SE']
+  dt.crops <- dt.crops[osi_country=='SK']
   
   # get max length of inputs
   arg.length <- max(length(B_LU),length(B_TEXTURE_HYPRES),length(A_K_M3))
@@ -2001,6 +2059,9 @@ osi_nut_k_sk <- function(B_LU, B_TEXTURE_HYPRES,A_K_M3, unitcheck = TRUE) {
      value := osi_evaluate_logistic(x = A_K_M3, b = -0.00797, x0 = 415.86, v = 1.8222 )]
   dt[B_TEXTURE_HYPRES %in% c('F','VF'),
      value := osi_evaluate_logistic(x = A_K_M3, b = -0.00615, x0 = 539.04, v = 1.8201)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)

@@ -68,6 +68,9 @@ osi_p_wef <- function(B_LU,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   # Evaluate the wind erodibility factor (WEF)
   dt[,value := 1 - value]
   
+  # add OSI score for "other" crops: nature, forest, other
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # return Wind Erodibility Factor
   setorder(dt, id)
   value <- dt[, value]

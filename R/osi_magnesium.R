@@ -270,6 +270,9 @@ osi_c_magnesium_at <- function(B_LU, A_MG_CC,B_TEXTURE_HYPRES, unitcheck = TRUE)
   dt[B_TEXTURE_HYPRES %in% c('F','VF'),
      value := osi_evaluate_logistic(x = A_MG_CC, b= 0.08246231,x0 = 3.16282481,v = 0.02204703)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -322,12 +325,22 @@ osi_c_magnesium_be <- function(B_LU,A_MG_CC, unitcheck = TRUE) {
                    A_MG_CC = A_MG_CC,
                    value = NA_real_)
   
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU', 
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
   # calculate the OSI score 
   # according to ChatGPT uses Flanders the recommendation of the Netherlands with optimum around 45 mg /kg
   # https://lv.vlaanderen.be/sites/default/files/attachments/praktijkgids-bemesting-meststoffen-groenbedekkers_1.pdf
   # for NL is information derived from handboekbodemenbemesting.nl
   dt[,value := evaluate_logistic(A_MG_CC, b = 0.1717292, x0 = 19.5341702, v = 1.0640583)]
  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -487,6 +500,9 @@ oci_c_magnesium_cz <- function(A_MG_M3,B_TEXTURE_HYPRES,B_LU = NA_character_, un
   dt[B_TEXTURE_HYPRES %in% c('F','VF'),
      value := osi_evaluate_logistic(x = A_MG_M3, b= 0.02996501,x0 = 87.56290295  ,v = 0.14816731)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -517,7 +533,11 @@ oci_c_magnesium_cz <- function(A_MG_M3,B_TEXTURE_HYPRES,B_LU = NA_character_, un
 osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC, unitcheck = TRUE) {
   
   # add visual bindings
-  A_SILT_MI = stype = NULL
+  A_SILT_MI = stype = NULL = crop_code = crop_cat1 = . = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='DE']
   
   # get max length of input variables
   arg.length <- max(length(B_LU),length(A_C_OF),length(A_CLAY_MI),length(A_SAND_MI),length(A_MG_CC))
@@ -542,6 +562,13 @@ osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC, unitc
                    A_MG_CC = A_MG_CC,
                    value = NA_real_)
   
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
   # add soil type
   dt[A_SAND_MI >= 85 & A_SILT_MI <= 25 & A_CLAY_MI <= 5 & A_C_OF < 150, stype := "BG1"]
   dt[A_SAND_MI >= 42 & A_SAND_MI <= 95 & A_SILT_MI <= 40 & A_CLAY_MI <= 17 & A_C_OF < 150,  stype :="BG2"]
@@ -557,6 +584,9 @@ osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC, unitc
   dt[stype=='BG4', value := osi_evaluate_logistic(A_MG_CC, b = 0.07756033, x0 = 3.04955824, v = 0.02572424)]
   dt[stype=='BG5', value := osi_evaluate_logistic(A_MG_CC, b = 0.06074047, x0 = 3.55690767, v = 0.02687046)]
   dt[stype=='BG6', value := osi_evaluate_logistic(A_MG_CC, b = 0.17394558, x0 = 1.97132628, v = 0.01974615)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # select value and return
   value <- dt[,value]
@@ -585,8 +615,15 @@ osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC, unitc
 #' @export
 osi_c_magnesium_dk <- function(B_LU, A_MG_AL, unitcheck = TRUE) {
   
+  # add visual bindings
+  crop_code = crop_cat1 = . = NULL
+  
   # length of arguments
   arg.length <- max(length(B_LU),length(A_MG_AL))
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='DK']
   
   # check inputs
   osi_checkvar(parm = list(B_COUNTRY = rep('DK',arg.length),
@@ -601,8 +638,18 @@ osi_c_magnesium_dk <- function(B_LU, A_MG_AL, unitcheck = TRUE) {
                    A_MG_AL = A_MG_AL,
                    value = NA_real_)
   
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
   # evaluation soil Mg status, only threshold at optimum level is given (IFS, Ristimaki et al. (2007))
   dt[, value := OBIC::evaluate_logistic(A_MG_AL, b = 0.07792559, x0 = 0.53507550    , v = 0.08751223  )]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # select value 
   value <- dt[,value]
@@ -750,6 +797,9 @@ osi_c_magnesium_es <- function(B_LU,A_MG_CO_PO, unitcheck = TRUE) {
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = A_MG_CO_PO, b= 0.25752413 ,x0 = -8.39867874,v = 0.03108629)]
  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -831,6 +881,9 @@ osi_c_magnesium_fi <- function(B_LU, B_TEXTURE_USDA, A_MG_AAA,A_C_OF = 0.5, unit
   dt[B_SOILTYPE_AGR == 'loam', value := osi_evaluate_logistic(x = A_MG_AAA, b= 0.04239632 ,x0 = 0.53855312 ,v = 0.14653214 )]
   dt[B_SOILTYPE_AGR == 'clay', value := osi_evaluate_logistic(x = A_MG_AAA, b= 0.02578294  ,x0 = 0.55427721  ,v = 0.14196990  )]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -896,6 +949,13 @@ osi_c_magnesium_fr <- function(B_LU,A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AAA, u
                    A_CACO3_IF = A_CACO3_IF,
                    value = NA_real_)
   
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU', 
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
   # add soil category based in CEC and CACO3
   dt[, soil_cat_mg := fifelse(A_CEC_CO <= 7,'sand',
                               fifelse(A_CEC_CO > 7 & A_CEC_CO <= 12,'loam',
@@ -910,6 +970,9 @@ osi_c_magnesium_fr <- function(B_LU,A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AAA, u
   
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = A_MG_AAA, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -1073,6 +1136,9 @@ osi_c_magnesium_it <- function(B_LU,A_MG_CO_PO,A_K_CO_PO, unitcheck = TRUE) {
   
   # get lowest score
   dt[, value := pmin(v1,v2,na.rm=T)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -1391,7 +1457,7 @@ osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
               by.x = "B_SOILTYPE_AGR", by.y = "osi_soil_cat1",all.x = TRUE)
   
   # Calculate the Mg availability for arable land
-  dt.arable <- dt[crop_cat1 == "arable"]
+  dt.arable <- dt[crop_cat1 %in% c("arable","permanent")]
   dt.arable[,D_MG := A_MG_CC]
   
   # Calculate the Mg availability for maize land
@@ -1444,7 +1510,7 @@ osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
   dt.grass.other[,D_MG := pmin(100 * (mg_pred /2.0), 100)] 
   
   # nature parcels
-  dt.nature <- dt[crop_cat1 %in%  c("nature","permanent","forest","other")]
+  dt.nature <- dt[crop_cat1 %in%  c("nature","forest","other")]
   dt.nature[,D_MG := 0]
   
   # Combine both tables and extract values
@@ -1457,10 +1523,10 @@ osi_c_magnesium_nl <- function(B_LU,B_SOILTYPE_AGR,A_SOM_LOI,A_CLAY_MI,
   setorder(dt, id)
   
   # convert to indicator score
-  dt[crop_cat1 %in% c("arable","maize"),value := evaluate_logistic(D_MG, b = 0.206, x0 = 45, v = 2.39)]
+  dt[crop_cat1 %in% c("arable","maize","permanent"),value := evaluate_logistic(D_MG, b = 0.206, x0 = 45, v = 2.39)]
   dt[crop_cat1 == "grassland" & grepl('zand|loess|dalgrond',B_SOILTYPE_AGR),value := evaluate_logistic(D_MG, b = 0.075, x0 = 80, v = 2)]
   dt[crop_cat1 == "grassland" & grepl('klei|veen',B_SOILTYPE_AGR), value := evaluate_logistic(D_MG, b = 0.15, x0 = 75, v = 1)]
-  dt[crop_cat1 %in% c("nature","other","forest","permanent"), value := 1]
+  dt[crop_cat1 %in% c("nature","other","forest"), value := NA_real_]
  
   # select and return OSI indicator
   value <- dt[, value]
@@ -1663,6 +1729,9 @@ osi_c_magnesium_pt <- function(B_LU,A_MG_AAA, unitcheck = TRUE) {
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = A_MG_AAA, b= 0.08883167 ,x0 = -14.53907863,v = 0.00880924 )]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -1818,6 +1887,9 @@ osi_c_magnesium_se <- function(B_LU,A_MG_AL, unitcheck = TRUE) {
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = A_MG_AL, b= 0.923539575,x0 = -2.901659957,v = 0.004982924)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -1887,6 +1959,9 @@ osi_c_magnesium_sk <- function(B_LU,B_TEXTURE_HYPRES,A_MG_M3, unitcheck = TRUE) 
      value := osi_evaluate_logistic(x = A_MG_M3, b= 0.03614588 ,x0 = 2.27785045,v = 0.01123181)]
   dt[B_TEXTURE_HYPRES %in% c('F','VF'),
      value := osi_evaluate_logistic(x = A_MG_M3, b= 0.03224561 ,x0 = 65.84935480,v = 0.04160495)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)

@@ -128,8 +128,18 @@ osi_c_copper_fr <- function(B_LU,A_CLAY_MI,B_CF, A_SOM_LOI,A_CU_EDTA) {
               by.y = 'osi_threshold_soilcat',
               all.x = TRUE)
   
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU', 
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
   # convert to the OSI score
   dt[, value := evaluate_logistic(x = A_CU_EDTA, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)

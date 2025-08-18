@@ -215,6 +215,9 @@ osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA, unitcheck
   # evalute A_B_HW for grassland (no richtwerte existieren)
   dt[crop_cat1 != 'arable', value := 1]
   
+  # add OSI score for "other" crops: nature, forest, other
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # select value
   value <- dt[,value]
   
@@ -284,10 +287,20 @@ osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA, unitcheck = TRUE) {
               by.y = 'osi_threshold_soilcat',
               all.x = TRUE)
   
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
   # convert to the OSI score only for in and mais soils: DLN, MID, MIE and MIS crops
   dt[, value := osi_evaluate_logistic(A_ZN_EDTA,b = osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
   dt[!B_LU %in% c('DLN','MID','MIE','MIS','3301010600','3301010699','3301090400'), value := 1]
 
+  # add OSI score for "other" crops: nature, forest, other
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # Sort the input in correct order
   setorder(dt, id)
   
@@ -447,6 +460,9 @@ osi_c_zinc_nl <- function(B_LU, A_PH_CC, A_ZN_CC, unitcheck = TRUE) {
   # convert to OSI score
   dt[, value := osi_evaluate_parabolic(D_ZN,x.top = dt.thresholds$osi_st_c1)]
   
+  # add OSI score for "other" crops: nature, forest, other
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # Sort the input in correct order
   setorder(dt, id)
   
@@ -514,6 +530,9 @@ osi_c_zinc_pt <- function(B_LU, A_ZN_AAA,A_PH_CC, unitcheck = TRUE) {
   
   # increase risk at high pH
   dt[A_PH_CC > 7, value := value * 0.8]
+  
+  # add OSI score for "other" crops: nature, forest, other
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # Sort the input in correct order
   setorder(dt, id)

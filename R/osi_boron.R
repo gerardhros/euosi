@@ -256,15 +256,17 @@ osi_c_boron_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_PH_CC,A_B_HW, uni
               all.x = TRUE)
   
   # evaluate A_B_HW for arable soils
-  dt[stype=='BG1' & crop_cat1 %in% c('maize','arable'), value := osi_evaluate_logistic(A_B_HW, b = 8.341249, x0 = -1.551311, v = 1.144485e-06)]
-  dt[stype=='BG2' & crop_cat1 %in% c('maize','arable'), value := osi_evaluate_logistic(A_B_HW, b = 26.0637369, x0 = 0.1613828  , v = 0.7724603 )]
-  dt[stype=='BG3' & crop_cat1 %in% c('maize','arable'), value := osi_evaluate_logistic(A_B_HW, b = 14.316871145, x0 = -0.261544761, v = 0.001656784 )]
-  dt[stype=='BG4' & crop_cat1 %in% c('maize','arable'), value := osi_evaluate_logistic(A_B_HW, b = 5.394509, x0 = -2.323976, v = 1.053392e-06)]
-  dt[stype=='BG5' & crop_cat1 %in% c('maize','arable'), value := osi_evaluate_logistic(A_B_HW, b = 5.394509, x0 = -2.323976, v = 1.053392e-06)]
-  dt[stype=='BG6' & crop_cat1 %in% c('maize','arable'), value := osi_evaluate_logistic(A_B_HW, b = 16.953310497 , x0 = -0.225954413  , v = 0.003793037 )]
+  acols <- c('arable','maize','permanent')
+  dt[stype=='BG1' & crop_cat1 %in% acols, value := osi_evaluate_logistic(A_B_HW, b = 8.341249, x0 = -1.551311, v = 1.144485e-06)]
+  dt[stype=='BG2' & crop_cat1 %in% acols, value := osi_evaluate_logistic(A_B_HW, b = 26.0637369, x0 = 0.1613828  , v = 0.7724603 )]
+  dt[stype=='BG3' & crop_cat1 %in% acols, value := osi_evaluate_logistic(A_B_HW, b = 14.316871145, x0 = -0.261544761, v = 0.001656784 )]
+  dt[stype=='BG4' & crop_cat1 %in% acols, value := osi_evaluate_logistic(A_B_HW, b = 5.394509, x0 = -2.323976, v = 1.053392e-06)]
+  dt[stype=='BG5' & crop_cat1 %in% acols, value := osi_evaluate_logistic(A_B_HW, b = 5.394509, x0 = -2.323976, v = 1.053392e-06)]
+  dt[stype=='BG6' & crop_cat1 %in% acols, value := osi_evaluate_logistic(A_B_HW, b = 16.953310497 , x0 = -0.225954413  , v = 0.003793037 )]
   
   # evalute A_B_HW for grassland (no richtwerte existieren)
-  dt[!crop_cat1 %in% c('maize','arable'), value := 1]
+  dt[crop_cat1 %in% c('grassland'), value := 1]
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # setorder
   setorder(dt,id)
@@ -316,7 +318,7 @@ osi_c_boron_ie <- function(B_LU, A_B_HW, unitcheck = TRUE) {
   
   # merge with crop
   dt <- merge(dt,
-              dt.crops[,.(crop_code,crop_cat1)],
+              dt.crops[,.(crop_code,crop_cat1,crop_name)],
               by.x = 'B_LU',
               by.y = 'crop_code',
               all.x=TRUE)
@@ -329,6 +331,9 @@ osi_c_boron_ie <- function(B_LU, A_B_HW, unitcheck = TRUE) {
   
   # OSI score only for bron sensitive crops, others no issue
   dt[senscrop=='no',value := 1]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # setorder
   setorder(dt,id)
@@ -411,6 +416,9 @@ osi_c_boron_fr <- function(B_LU,A_CLAY_MI, A_B_HW, unitcheck = TRUE) {
   # exlcude other crops that a subset
   dt[!B_LU %in% c('DFV','TRN','FVL','3301020100','3301060500'), value := 1]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -479,6 +487,9 @@ osi_c_boron_pt <- function(B_LU, A_B_HW, unitcheck = TRUE) {
   
   # OSI score only for bron sensitive crops, others no issue
   # dt[senscrop=='no',value := 1]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # setorder
   setorder(dt,id)
@@ -561,6 +572,9 @@ osi_c_boron_nl <- function(B_LU,A_CLAY_MI, A_SOM_LOI,A_B_HW, unitcheck = TRUE) {
   # convert to the OSI score
   dt[, value := evaluate_logistic(x = A_B_HW, b= 16,x0 = 0.22,v = 0.978)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -624,6 +638,9 @@ osi_c_boron_se <- function(B_LU, A_PH_WA, unitcheck = TRUE) {
   # evaluate risk based OSI
   dt[,value := osi_evaluate_logistic(x = A_PH_WA, b = 3.675897945, x0 = 3.750990339, v = 0.001025269)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # select value
   value <- dt[,value]
   
@@ -683,7 +700,7 @@ osi_c_boron_uk <- function(B_LU, B_TEXTURE_HYPRES,A_SOM_LOI,A_PH_CC,A_B_HW, unit
   
   # merge with crop
   dt <- merge(dt,
-              dt.crops[,.(crop_code,crop_cat1)],
+              dt.crops[,.(crop_code,crop_cat1, crop_name)],
               by.x = 'B_LU',
               by.y = 'crop_code',
               all.x=TRUE)
@@ -701,6 +718,9 @@ osi_c_boron_uk <- function(B_LU, B_TEXTURE_HYPRES,A_SOM_LOI,A_PH_CC,A_B_HW, unit
   # set risk cases for specific cases
   dt[, senscrop := fifelse(grepl('beet|carrot|brassica|radish|cabbage|cauliflo|broccol|sprout',tolower(crop_name)),'yes','no')]
   dt[B_TEXTURE_HYPRES %in% c('C') & A_PH_WA > 6.5 & senscrop=='yes',value := value * 0.5]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # select value
   value <- dt[,value]

@@ -137,6 +137,9 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
                                           x0 = dt.thresholds$osi_st_c2,
                                           v = dt.thresholds$osi_st_c3)]
   
+  # add OSI score for "other" crops: nature, forest, other
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # setorderid
   setorder(dt,id)
   
