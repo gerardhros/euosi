@@ -20,7 +20,7 @@ vignette: >
   options(rmarkdown.html_vignette.check_title = FALSE)
   
   # to run manually
-  devtools::load_all()
+  # devtools::load_all()
 ```
 
 
