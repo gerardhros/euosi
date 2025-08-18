@@ -4,7 +4,17 @@
 \alias{osi_erosion}
 \title{Calculate the water erosion index using RUSLE approach}
 \usage{
-osi_erosion(B_LU, A_SOM_LOI, A_CLAY_MI, A_SAND_MI, B_COUNTRY)
+osi_erosion(
+  B_LU,
+  A_SOM_LOI,
+  A_CLAY_MI,
+  A_SAND_MI,
+  B_COUNTRY,
+  B_RUSL_RE = NA_real_,
+  B_RUSL_SE = NA_real_,
+  B_RUSL_LS = NA_real_,
+  B_RUSL_CM = NA_real_
+)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -16,6 +26,14 @@ osi_erosion(B_LU, A_SOM_LOI, A_CLAY_MI, A_SAND_MI, B_COUNTRY)
 \item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{B_RUSL_RE}{Rainfall erositivity R-factor used in Revised Universal Soil Loss Euqation model}
+
+\item{B_RUSL_SE}{Soil erodobility K-factor used in Revised Universal Soil Loss Euqation model}
+
+\item{B_RUSL_LS}{Topography LS-factor used in Revised Universal Soil Loss Euqation model}
+
+\item{B_RUSL_CM}{Cover management C-factor used in Revised Universal Soil Loss Euqation model}
 }
 \value{
 The water erosion index. A numeric value.

@@ -4,7 +4,14 @@
 \alias{osi_c_phosphor_de}
 \title{Calculate the phosphate availability index in Germany}
 \usage{
-osi_c_phosphor_de(B_LU, A_SOM_LOI, A_CLAY_MI, A_P_CAL, A_P_DL = NA_real_)
+osi_c_phosphor_de(
+  B_LU,
+  A_SOM_LOI,
+  A_CLAY_MI,
+  A_P_CAL,
+  A_P_DL = NA_real_,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -16,6 +23,8 @@ osi_c_phosphor_de(B_LU, A_SOM_LOI, A_CLAY_MI, A_P_CAL, A_P_DL = NA_real_)
 \item{A_P_CAL}{(numeric) The P-content of the soil extracted with ammonium lactate(mg P / kg)}
 
 \item{A_P_DL}{(numeric) The P-content of the soil extracted with double lactate (mg P / kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphate availability index in Germany stimated from extractable soil P fractions. A numeric value.

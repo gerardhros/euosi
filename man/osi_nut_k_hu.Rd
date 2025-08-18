@@ -4,7 +4,14 @@
 \alias{osi_nut_k_hu}
 \title{Calculate the potassium excess index in Hungary}
 \usage{
-osi_nut_k_hu(A_SOM_LOI, A_CLAY_MI, A_CACO3_IF, A_K_AL, B_LU = NA_character_)
+osi_nut_k_hu(
+  A_SOM_LOI,
+  A_CLAY_MI,
+  A_CACO3_IF,
+  A_K_AL,
+  B_LU = NA_character_,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil (\%)}
@@ -16,6 +23,8 @@ osi_nut_k_hu(A_SOM_LOI, A_CLAY_MI, A_CACO3_IF, A_K_AL, B_LU = NA_character_)
 \item{A_K_AL}{(numeric) The exchangeable K-content of the soil measured via Ammonium Lactate extracton (mg K/ kg)}
 
 \item{B_LU}{(character) The crop code}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The potassium excess index in Hungary estimated from extractable potassium. A numeric value.

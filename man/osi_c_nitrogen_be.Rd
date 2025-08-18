@@ -4,7 +4,15 @@
 \alias{osi_c_nitrogen_be}
 \title{Calculate the soil nitrogen supplying capacity in Belgium}
 \usage{
-osi_c_nitrogen_be(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI, A_CACO3_IF)
+osi_c_nitrogen_be(
+  B_LU,
+  A_N_RT,
+  A_C_OF,
+  A_CLAY_MI,
+  A_SAND_MI,
+  A_CACO3_IF,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -18,6 +26,8 @@ osi_c_nitrogen_be(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI, A_CACO3_IF)
 \item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
 
 \item{A_CACO3_IF}{(numeric) The percentage of carbonated lime (\%)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.

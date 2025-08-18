@@ -10,7 +10,8 @@ osi_c_potassium_fr(
   B_TEXTURE_GEPPA = NA_character_,
   B_SOILTYPE_AGR = NA_character_,
   B_AER_FR = NA_character_,
-  A_PH_WA = NA_real_
+  A_PH_WA = NA_real_,
+  unitcheck = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ osi_c_potassium_fr(
 \item{B_AER_FR}{(character) An agroeconomic region in France. Optional argument.}
 
 \item{A_PH_WA}{(numeric) The pH measured in water.}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The potassium availability index in France estimated from extractable potassium. A numeric value.

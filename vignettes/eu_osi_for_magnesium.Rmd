@@ -54,7 +54,7 @@ In euosi package has a wrapper function to assess the soil health index for the 
 * A_MG_M3 (numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)
 * A_MG_NaAAA (numeric) The Mg-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)
 * A_K_AAA (numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction 
-* A_K_CO_PO (numeric) The occupation of the CEC with magnesium (\%)
+* A_K_CO_PO (numeric) The occupation of the CEC with potassium (\%)
 * A_K_CC (numeric) The plant available magnesium, extracted with 0.01M CaCl2 (mg per kg)
 * B_COUNTRY (character) The country code
 
@@ -66,7 +66,7 @@ The wrapper function wraps country specific Mg assessment functions. These are i
 
 
 ## Austria (AT)
-The magneisum supply in view of soil health can be calculated using `osi_c_magnesium_at` using the following inputs:
+The magnesium supply in view of soil health can be calculated using `osi_c_magnesium_at` using the following inputs:
 
 * B_LU, being the crop code, an unique number for each crop
 * A_MG_CC, being the extracted Mg content with calcium chloride, unit mg Mg /kg.

@@ -4,12 +4,14 @@
 \alias{osi_c_phosphor_pt}
 \title{Calculate the phosphate availability index in Portugal}
 \usage{
-osi_c_phosphor_pt(B_LU, A_P_OL)
+osi_c_phosphor_pt(B_LU, A_P_OL, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_P_OL}{(numeric) The P-content of the soil extracted with Olsen (mg P/kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphate availability index in Portugal derived from extractable soil P fractions. A numeric value.

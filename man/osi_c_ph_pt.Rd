@@ -11,7 +11,8 @@ osi_c_ph_pt(
   A_CA_CO_PO = NA_real_,
   A_MG_CO_PO = NA_real_,
   A_K_CO_PO = NA_real_,
-  A_NA_CO_PO = NA_real_
+  A_NA_CO_PO = NA_real_,
+  unitcheck = TRUE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ osi_c_ph_pt(
 \item{A_K_CO_PO}{(numeric) The potassium occupation of the CEC (\%)}
 
 \item{A_NA_CO_PO}{(numeric) The sodium occupation of the CEC (\%)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The pH index in Portugal estimated from the base saturation with Ca, Mg and K. For soils with pH water below 5.9 the soil is extracted with HCL+H2SO4. Soils with higher pH are extracted with Bariumchloride.

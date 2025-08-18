@@ -274,7 +274,7 @@ test_that("osi_nut_p_fi works", {
                        B_TEXTURE_USDA = rep('Si',4),
                       A_P_AAA = rep(15,4),
                        A_C_OF = c(10,20,100,300)),
-    expected = rep(0.9354294 ,4),
+    expected = c(rep(0.9354294 ,3),NA),
     tolerance = 0.01
   )
   expect_equal(
@@ -282,7 +282,7 @@ test_that("osi_nut_p_fi works", {
                        B_TEXTURE_USDA = rep('Si',4),
                       A_P_AAA = c(8,15,45,90),
                        A_C_OF = c(10,20,100,300)),
-    expected = c(0.938,0.935,0.9199,0.8907),
+    expected = c(0.938,0.935,0.9199,NA),
     tolerance = 0.01
   )
 })

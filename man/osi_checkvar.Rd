@@ -4,7 +4,7 @@
 \alias{osi_checkvar}
 \title{Select the correct boundary values (min and max) for a given parameter}
 \usage{
-osi_checkvar(parm, fname = NULL, na_allowed = FALSE)
+osi_checkvar(parm, fname = NULL, na_allowed = FALSE, unitcheck = TRUE)
 }
 \arguments{
 \item{parm}{(list) The osi parameter - value combination to be checked}
@@ -12,6 +12,8 @@ osi_checkvar(parm, fname = NULL, na_allowed = FALSE)
 \item{fname}{(character) The name of the function where the check is done}
 
 \item{na_allowed}{(character) Are NA allowed in categorial inputs (TRUE or FALSE)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 warning or error messages when parameter value is beyond the allowed range

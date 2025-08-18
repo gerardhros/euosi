@@ -1,3 +1,13 @@
+# euosi 0.8.0 2025-08-19
+
+## Added
+* possibility to switch off unit checks when wrapper functions are used
+* add `B_RUSL_RE`, `B_RUSL_SE`, `B_RUSL_LS`, and `B_RUSL_CM` as input arguments for `osi_erosion`, `osi_field` and `osi_field_dt`
+* vignette `eu_osi_for_acidity` with an introduction to soil acidity evaluation
+
+## Changed
+* set all indicator values to NA when `crop_cat1` equals to nature, forest or other land uses.
+
 # euosi 0.7.0 2025-08-17
 
 ## Added

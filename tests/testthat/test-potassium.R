@@ -297,7 +297,7 @@ test_that("osi_c_potassium_fi works", {
                        B_TEXTURE_USDA = rep('Si',4),
                        A_K_AAA = rep(45,4),
                        A_C_OF = c(10,20,100,300)),
-    expected = rep(0.1835,4),
+    expected = c(rep(0.1835,3),NA),
     tolerance = 0.01
   )
   expect_equal(
@@ -305,7 +305,7 @@ test_that("osi_c_potassium_fi works", {
                        B_TEXTURE_USDA = rep('Si',4),
                        A_K_AAA = c(15,45,90,180),
                        A_C_OF = c(10,20,100,300)),
-    expected = c(0.077,0.1835,0.498,0.9508),
+    expected = c(0.077,0.1835,0.498,NA),
     tolerance = 0.01
   )
 })

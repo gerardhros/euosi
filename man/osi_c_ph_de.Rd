@@ -4,7 +4,15 @@
 \alias{osi_c_ph_de}
 \title{Calculate the pH index for soils in Germany}
 \usage{
-osi_c_ph_de(B_LU, A_SOM_LOI, A_C_OF, A_CLAY_MI, A_SAND_MI, A_PH_CC)
+osi_c_ph_de(
+  B_LU,
+  A_SOM_LOI,
+  A_C_OF,
+  A_CLAY_MI,
+  A_SAND_MI,
+  A_PH_CC,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -18,6 +26,8 @@ osi_c_ph_de(B_LU, A_SOM_LOI, A_C_OF, A_CLAY_MI, A_SAND_MI, A_PH_CC)
 \item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
 
 \item{A_PH_CC}{(numeric) The soil acidity measures with CaCl2 method.}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The pH index in Germany derived for grassland and arable crops. A numeric value.

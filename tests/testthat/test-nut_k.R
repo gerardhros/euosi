@@ -298,7 +298,7 @@ test_that("osi_nut_k_fi works", {
                        B_TEXTURE_USDA = rep('Si',4),
                        A_K_AAA = rep(145,4),
                        A_C_OF = c(10,20,100,300)),
-    expected = rep(0.9168192,4),
+    expected = c(rep(0.9168192,3),NA),
     tolerance = 0.01
   )
   expect_equal(
@@ -306,7 +306,7 @@ test_that("osi_nut_k_fi works", {
                        B_TEXTURE_USDA = rep('Si',4),
                        A_K_AAA = c(15,45,90,180)*2,
                        A_C_OF = c(10,20,100,300)),
-    expected = c( 0.9861550, 0.9626355, 0.8725474, 0.5736836),
+    expected = c( 0.9861550, 0.9626355, 0.8725474, NA),
     tolerance = 0.01
   )
 })

@@ -4,7 +4,7 @@
 \alias{osi_c_magnesium_uk}
 \title{Calculate the magnesium availability index in United Kingdom}
 \usage{
-osi_c_magnesium_uk(B_LU, A_SOM_LOI, A_MG_AN)
+osi_c_magnesium_uk(B_LU, A_SOM_LOI, A_MG_AN, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -12,6 +12,8 @@ osi_c_magnesium_uk(B_LU, A_SOM_LOI, A_MG_AN)
 \item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil}
 
 \item{A_MG_AN}{(numeric) The Mg-content of the soil extracted with ammonium nitrate (mg Mg /kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The magnesium availability index in United Kingdom derived from extractable soil Mg fractions. A numeric value.

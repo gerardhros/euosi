@@ -4,7 +4,14 @@
 \alias{osi_c_boron_uk}
 \title{Calculate the boron availability index in United Kingdom}
 \usage{
-osi_c_boron_uk(B_LU, B_TEXTURE_HYPRES, A_SOM_LOI, A_PH_CC, A_B_HW)
+osi_c_boron_uk(
+  B_LU,
+  B_TEXTURE_HYPRES,
+  A_SOM_LOI,
+  A_PH_CC,
+  A_B_HW,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -16,6 +23,8 @@ osi_c_boron_uk(B_LU, B_TEXTURE_HYPRES, A_SOM_LOI, A_PH_CC, A_B_HW)
 \item{A_PH_CC}{(numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)}
 
 \item{A_B_HW}{(numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The boron availability index in UK derived from extractable soil B fractions. A numeric value.

@@ -4,7 +4,7 @@
 \alias{osi_c_zinc_ie}
 \title{Calculate the Zn availability index for agricultural soils in Ireland}
 \usage{
-osi_c_zinc_ie(B_LU, A_SOM_LOI, A_PH_WA, A_ZN_EDTA)
+osi_c_zinc_ie(B_LU, A_SOM_LOI, A_PH_WA, A_ZN_EDTA, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(character) crop type}
@@ -14,6 +14,8 @@ osi_c_zinc_ie(B_LU, A_SOM_LOI, A_PH_WA, A_ZN_EDTA)
 \item{A_PH_WA}{(numeric) pH measured in water (-)}
 
 \item{A_ZN_EDTA}{(numeric) Zn content measured in EDTA (mg / kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The zinc availability index in Ireland estimated from extractable zinc and pH measured in water, a numeric value.

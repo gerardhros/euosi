@@ -4,7 +4,7 @@
 \alias{osi_c_potassium_at}
 \title{Calculate the potassium availability index in Austria}
 \usage{
-osi_c_potassium_at(B_LU, A_K_CAL, B_TEXTURE_HYPRES)
+osi_c_potassium_at(B_LU, A_K_CAL, B_TEXTURE_HYPRES, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -12,6 +12,8 @@ osi_c_potassium_at(B_LU, A_K_CAL, B_TEXTURE_HYPRES)
 \item{A_K_CAL}{(numeric) The exchangeable K-content of the soil measured via Calcium Ammonium Lactate (mg K/ kg)}
 
 \item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The potassium availability index in Austria estimated from extractable potassium. A numeric value.

@@ -4,7 +4,7 @@
 \alias{osi_nut_k_uk}
 \title{Calculate the potassium excess index in United Kingdom}
 \usage{
-osi_nut_k_uk(B_LU, A_SOM_LOI, A_K_AN)
+osi_nut_k_uk(B_LU, A_SOM_LOI, A_K_AN, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -12,6 +12,8 @@ osi_nut_k_uk(B_LU, A_SOM_LOI, A_K_AN)
 \item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil}
 
 \item{A_K_AN}{(numeric) The K-content of the soil extracted with ammonium nitrate (mg K /kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The potassium excess index in United Kingdom derived from extractable soil K fractions. A numeric value.

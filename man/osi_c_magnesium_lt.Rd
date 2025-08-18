@@ -4,7 +4,7 @@
 \alias{osi_c_magnesium_lt}
 \title{Calculate the magnesium availability index in Lithuania}
 \usage{
-osi_c_magnesium_lt(A_MG_AL, A_PH_KCL, B_LU = NA_character_)
+osi_c_magnesium_lt(A_MG_AL, A_PH_KCL, B_LU = NA_character_, unitcheck = TRUE)
 }
 \arguments{
 \item{A_MG_AL}{(numeric) The exchangeable Mg-content of the soil measured via Ammonium Lactate extraction (mg Mg/ kg)}
@@ -12,6 +12,8 @@ osi_c_magnesium_lt(A_MG_AL, A_PH_KCL, B_LU = NA_character_)
 \item{A_PH_KCL}{(numeric) The pH measured in KCl}
 
 \item{B_LU}{(character) The crop code}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The magnesium availability index in Lithuania estimated from extractable magnesium. A numeric value.

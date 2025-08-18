@@ -4,7 +4,7 @@
 \alias{osi_nut_k_pl}
 \title{Calculate the potassium excess index in Poland}
 \usage{
-osi_nut_k_pl(A_K_DL, B_TEXTURE_HYPRES, B_LU = NA_character_)
+osi_nut_k_pl(A_K_DL, B_TEXTURE_HYPRES, B_LU = NA_character_, unitcheck = TRUE)
 }
 \arguments{
 \item{A_K_DL}{(numeric) The exchangeable K-content of the soil measured via ammonium double lactate extracton (mg K/ kg)}
@@ -12,6 +12,8 @@ osi_nut_k_pl(A_K_DL, B_TEXTURE_HYPRES, B_LU = NA_character_)
 \item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
 
 \item{B_LU}{(character) The crop code}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The potassium excess index in Poland estimated from extractable potassium. A numeric value.

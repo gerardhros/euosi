@@ -4,7 +4,7 @@
 \alias{osi_nut_k_no}
 \title{Calculate the potassium excess index in Norway}
 \usage{
-osi_nut_k_no(B_LU, A_K_AL, A_CLAY_MI)
+osi_nut_k_no(B_LU, A_K_AL, A_CLAY_MI, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -12,6 +12,8 @@ osi_nut_k_no(B_LU, A_K_AL, A_CLAY_MI)
 \item{A_K_AL}{(numeric) The K-content of the soil extracted with ammonium lactate (mg K / kg)}
 
 \item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The potassium excess index in Norway derived from extractable soil K fractions. A numeric value.

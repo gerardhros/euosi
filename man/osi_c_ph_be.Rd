@@ -4,7 +4,7 @@
 \alias{osi_c_ph_be}
 \title{Calculate the pH index for Belgium}
 \usage{
-osi_c_ph_be(B_LU, B_TEXTURE_BE, A_PH_KCL)
+osi_c_ph_be(B_LU, B_TEXTURE_BE, A_PH_KCL, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(character) The crop type}
@@ -12,6 +12,8 @@ osi_c_ph_be(B_LU, B_TEXTURE_BE, A_PH_KCL)
 \item{B_TEXTURE_BE}{(character) The soil texture according to Belgium classification system}
 
 \item{A_PH_KCL}{(numeric) The pH measured in KCl}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The pH index in Belgium estimated from pH in KCL, the textural class and the crop type

@@ -4,12 +4,14 @@
 \alias{osi_nut_p_ro}
 \title{Calculate the phosphate excess index index in Romenia}
 \usage{
-osi_nut_p_ro(B_LU, A_P_AL)
+osi_nut_p_ro(B_LU, A_P_AL, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_P_AL}{(numeric) The P-content of the soil extracted with Acetate Lactate (mg/kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphate availability index in Romenia derived from extractable soil P fractions. A numeric value.

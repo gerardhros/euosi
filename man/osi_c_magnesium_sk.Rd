@@ -4,7 +4,7 @@
 \alias{osi_c_magnesium_sk}
 \title{Calculate the magnesium availability index in  Slovak Republic}
 \usage{
-osi_c_magnesium_sk(B_LU, B_TEXTURE_HYPRES, A_MG_M3)
+osi_c_magnesium_sk(B_LU, B_TEXTURE_HYPRES, A_MG_M3, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -12,6 +12,8 @@ osi_c_magnesium_sk(B_LU, B_TEXTURE_HYPRES, A_MG_M3)
 \item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
 
 \item{A_MG_M3}{(numeric) The exchangeable Mg-content of the soil measured via Mehlich 3 extracton (mg Mg/ kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The magnesium availability index in Slovak Republic estimated from extractable magnesium. A numeric value.

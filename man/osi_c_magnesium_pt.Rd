@@ -4,12 +4,14 @@
 \alias{osi_c_magnesium_pt}
 \title{Calculate the magnesium availability index in Portugal}
 \usage{
-osi_c_magnesium_pt(B_LU, A_MG_AAA)
+osi_c_magnesium_pt(B_LU, A_MG_AAA, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
 
 \item{A_MG_AAA}{(numeric) The exchangeable Mg-content of the soil measured via ammonium acetate extraction (mg Mg / kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The magnesium availability index in Portugal estimated from the Mg extracted soil pool. A numeric value.

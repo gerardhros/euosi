@@ -4,7 +4,15 @@
 \alias{osi_c_boron_de}
 \title{Calculate the boron availability index in Germany}
 \usage{
-osi_c_boron_de(B_LU, A_C_OF, A_CLAY_MI, A_SAND_MI, A_PH_CC, A_B_HW)
+osi_c_boron_de(
+  B_LU,
+  A_C_OF,
+  A_CLAY_MI,
+  A_SAND_MI,
+  A_PH_CC,
+  A_B_HW,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -18,6 +26,8 @@ osi_c_boron_de(B_LU, A_C_OF, A_CLAY_MI, A_SAND_MI, A_PH_CC, A_B_HW)
 \item{A_PH_CC}{(numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)}
 
 \item{A_B_HW}{(numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The boron availability index in Germany derived from extractable soil B fractions. A numeric value.

@@ -4,12 +4,14 @@
 \alias{osi_nut_p_no}
 \title{Calculate the phosphorus excess index in Norway}
 \usage{
-osi_nut_p_no(A_P_AL, B_LU = NA_character_)
+osi_nut_p_no(A_P_AL, B_LU = NA_character_, unitcheck = TRUE)
 }
 \arguments{
 \item{A_P_AL}{(numeric) The exchangeable P-content of the soil measured via Ammonium Lactate (mg P/ kg)}
 
 \item{B_LU}{(character) The crop code}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphorus excess index in Norway estimated from extractable phosphorus. A numeric value.

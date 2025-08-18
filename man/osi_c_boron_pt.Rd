@@ -4,12 +4,14 @@
 \alias{osi_c_boron_pt}
 \title{Calculate the boron availability index in Portugal}
 \usage{
-osi_c_boron_pt(B_LU, A_B_HW)
+osi_c_boron_pt(B_LU, A_B_HW, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_B_HW}{(numeric) The plant available content of B in the soil (mg B per kg) extracted by hot water}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The boron availability index in Portugal derived from extractable soil B fractions. A numeric value.

@@ -111,7 +111,8 @@ osi_gw_nleach <- function(B_LU = NA_character_,
                            B_TEXTURE_BE = dt$B_TEXTURE_BE,
                            B_TEXTURE_GEPPA = dt$B_TEXTURE_GEPPA,
                            A_SOM_LOI = dt$A_SOM_LOI),
-               fname ='osi_gw_nleach')
+               fname ='osi_gw_nleach',
+               unitcheck = TRUE)
   
   # calculate the OSI score for N leaching
   
@@ -124,7 +125,7 @@ osi_gw_nleach <- function(B_LU = NA_character_,
   dt[B_COUNTRY == 'AT', value := NA_real_]
   dt[B_COUNTRY == 'BE', value := osi_gw_nleach_be(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI, A_CACO3_IF,    
                                                   B_PREC_SUM, B_PREC_WIN, B_PET_SUM, B_PET_WIN, B_TEMP_SUM,        
-                                                  B_TEMP_WIN)]
+                                                  B_TEMP_WIN,unitcheck = FALSE)]
   dt[B_COUNTRY == 'CH', value := NA_real_]
   dt[B_COUNTRY == 'CZ', value := NA_real_]
   dt[B_COUNTRY == 'DE', value := NA_real_]
@@ -136,7 +137,7 @@ osi_gw_nleach <- function(B_LU = NA_character_,
   dt[B_COUNTRY == 'ES', value := NA_real_]
   dt[B_COUNTRY == 'FR', value := osi_gw_nleach_fr(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI, A_CACO3_IF,    
                                                   B_PREC_SUM, B_PREC_WIN, B_PET_SUM, B_PET_WIN, B_TEMP_SUM,        
-                                                  B_TEMP_WIN)]
+                                                  B_TEMP_WIN,unitcheck = FALSE)]
   dt[B_COUNTRY == 'FI', value := NA_real_]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
@@ -163,7 +164,7 @@ osi_gw_nleach <- function(B_LU = NA_character_,
   dt[is.na(value), value := osi_gw_nleach_eu(B_LU = B_LU, A_N_RT = A_N_RT, A_C_OF = A_C_OF, 
                                              A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,
                                              B_PREC_Y = B_PREC_Y, B_PET_Y = B_PET_Y, 
-                                             B_TEMP_Y = B_TEMP_Y,B_COUNTRY=B_COUNTRY)]
+                                             B_TEMP_Y = B_TEMP_Y,B_COUNTRY=B_COUNTRY,unitcheck = FALSE)]
   
   # setorderid
   setorder(dt,id)
@@ -192,6 +193,7 @@ osi_gw_nleach <- function(B_LU = NA_character_,
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_CACO3_IF (numeric) The percentage of carbonated lime (\%) 
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil (mg N / kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -205,7 +207,7 @@ osi_gw_nleach <- function(B_LU = NA_character_,
 #' @export
 osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_IF,
                              B_PREC_SUM = NA_real_,B_PREC_WIN = NA_real_, B_PET_SUM = NA_real_,B_PET_WIN = NA_real_,
-                             B_TEMP_SUM = NA_real_,B_TEMP_WIN = NA_real_) {
+                             B_TEMP_SUM = NA_real_,B_TEMP_WIN = NA_real_, unitcheck= TRUE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -236,7 +238,8 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
                            A_C_OF = A_C_OF,
                            A_N_RT = A_N_RT,
                            A_CACO3_IF = A_CACO3_IF),
-               fname ='osi_gw_nleach_be')
+               fname ='osi_gw_nleach_be',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -303,7 +306,7 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   
   # calculate flu
   dt[crop_cat1 %in% c('grassland','forest'), flu := 0.85]
-  dt[crop_cat1 %in% c('arable'), flu := 1.0]
+  dt[crop_cat1 %in% c('arable','cropland','permanet'), flu := 1.0]
   
   # calculate PS
   dt[crop_s == 'summer',B_PS := B_PREC_SUM - abs(B_PET_SUM)]
@@ -352,6 +355,9 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = nloss, b = -0.79255, x0 = 2.5, v=1)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -378,6 +384,7 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_CACO3_IF (numeric) The percentage of carbonated lime (\%) 
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil (mg N / kg)
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -391,7 +398,7 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
 #' @export
 osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_IF,
                              B_PREC_SUM = NA_real_,B_PREC_WIN = NA_real_, B_PET_SUM = NA_real_,B_PET_WIN = NA_real_,
-                             B_TEMP_SUM = NA_real_,B_TEMP_WIN = NA_real_
+                             B_TEMP_SUM = NA_real_,B_TEMP_WIN = NA_real_, unitcheck= TRUE
                              ) {
   
   # set visual bindings
@@ -423,7 +430,8 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
                            A_C_OF = A_C_OF,
                            A_N_RT = A_N_RT,
                            A_CACO3_IF = A_CACO3_IF),
-               fname ='osi_gw_nleach_fr')
+               fname ='osi_gw_nleach_fr',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -492,8 +500,8 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   dt[grepl('^C$|^SaC$|^SaCl$|^Cl$',B_TEXTURE_USDA),flemax := 0.5]
   
   # calculate flu
-  dt[crop_cat1 %in% c('grassland','forest'), flu := 0.85]
-  dt[crop_cat1 %in% c('arable'), flu := 1.0]
+  dt[crop_cat1 %in% c('grassland','forest','nature'), flu := 0.85]
+  dt[crop_cat1 %in% c('arable','cropland','maize','permanent'), flu := 1.0]
   
   # calculate PS
   dt[crop_s == 'summer',B_PS := B_PREC_SUM - abs(B_PET_SUM)]
@@ -542,6 +550,9 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = nloss, b = -0.79825, x0 = 2.5, v=1)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -565,6 +576,7 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil (mg N / kg)
 #' @param B_COUNTRY (character) The country code
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -578,7 +590,7 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
 #' @export
 osi_gw_nleach_eu <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
                              B_PREC_Y = NA_real_, B_PET_Y = NA_real_, B_TEMP_Y = NA_real_,
-                             B_COUNTRY) {
+                             B_COUNTRY, unitcheck= TRUE) {
   
   # set visual bindings
   D_BS = B_TEXTURE_USDA = A_SILT_MI =arate = NSC = crop_cat1 = NS = NULL
@@ -603,7 +615,8 @@ osi_gw_nleach_eu <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
                            A_CLAY_MI = A_CLAY_MI,
                            A_C_OF = A_C_OF,
                            A_N_RT = A_N_RT),
-               fname ='osi_gw_nleach_eu')
+               fname ='osi_gw_nleach_eu',
+               unitcheck = unitcheck)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
@@ -661,8 +674,8 @@ osi_gw_nleach_eu <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
   
   # calculate flu
   dt[crop_cat1 %in% c('grassland','forest','other'), flu := 0.85]
-  dt[crop_cat1 %in% c('arable','cropland','maize'), flu := 1.0]
-  dt[crop_cat1 %in% c('Permanent','other','nature')|is.na(crop_cat1), flu := 0.5]
+  dt[crop_cat1 %in% c('arable','cropland','maize','permanent'), flu := 1.0]
+  dt[crop_cat1 %in% c('other','nature','forest')|is.na(crop_cat1), flu := 0.5]
   
   # calculate PS
   dt[,B_PS := max(0,B_PREC_Y - abs(B_PET_Y))]
@@ -705,6 +718,9 @@ osi_gw_nleach_eu <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
   
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = nloss, b = -0.79255, x0 = 2.5, v=1)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)

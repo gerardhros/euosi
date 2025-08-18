@@ -2,9 +2,17 @@
 % Please edit documentation in R/osi_ph.R
 \name{osi_c_ph_nl}
 \alias{osi_c_ph_nl}
-\title{Calculate the distance for target for soil pH in view of the BLN production function}
+\title{Calculate the distance for target for soil pH in view of the crop production function}
 \usage{
-osi_c_ph_nl(ID, B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC)
+osi_c_ph_nl(
+  ID,
+  B_LU,
+  B_SOILTYPE_AGR,
+  A_SOM_LOI,
+  A_CLAY_MI,
+  A_PH_CC,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{ID}{(character) A field id}
@@ -18,6 +26,8 @@ osi_c_ph_nl(ID, B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_CLAY_MI, A_PH_CC)
 \item{A_CLAY_MI}{(numeric) The percentage of clay (\%)}
 
 \item{A_PH_CC}{(numeric) The pH-CaCl2 of the soil}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The osi indicator for the soil pH

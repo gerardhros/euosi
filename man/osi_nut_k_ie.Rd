@@ -4,7 +4,7 @@
 \alias{osi_nut_k_ie}
 \title{Calculate the potassium excess index in Ireland}
 \usage{
-osi_nut_k_ie(B_LU, A_SOM_LOI, A_K_NaAAA)
+osi_nut_k_ie(B_LU, A_SOM_LOI, A_K_NaAAA, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -12,6 +12,8 @@ osi_nut_k_ie(B_LU, A_SOM_LOI, A_K_NaAAA)
 \item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil (\%)}
 
 \item{A_K_NaAAA}{(numeric) The K-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The potassium excess index in Ireland derived from extractable soil K fractions. A numeric value.

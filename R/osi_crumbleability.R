@@ -23,7 +23,7 @@
 osi_p_crumbleability <- function(B_LU,A_CLAY_MI,A_SOM_LOI,A_PH_CC,B_COUNTRY) {
   
   # Add visual bindings
-  id = . = crop_code = osi_country = crop_crumbleability = NULL
+  id = . = crop_code = osi_country = crop_crumbleability = crop_cat1 = NULL
   value.A_CLAY_MI = cor.A_PH_CC = cor.A_SOM_LOI = crvalue = lower = upper = NULL
   
   # load internal table
@@ -50,7 +50,7 @@ osi_p_crumbleability <- function(B_LU,A_CLAY_MI,A_SOM_LOI,A_PH_CC,B_COUNTRY) {
   
   # merge with crop table
   dt <- merge(dt,
-              dt.crops[,.(crop_code,osi_country,crop_crumbleability)],
+              dt.crops[,.(crop_code,osi_country,crop_crumbleability,crop_cat1)],
               by.x =c('B_LU','B_COUNTRY'),
               by.y = c('crop_code','osi_country'),
               all.x=TRUE)
@@ -95,6 +95,9 @@ osi_p_crumbleability <- function(B_LU,A_CLAY_MI,A_SOM_LOI,A_PH_CC,B_COUNTRY) {
   dt[crvalue <= lower, value := 0.5 * crvalue / lower]
   dt[, value := pmin(1,pmax(0,value))]
  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # sort dt
   setorder(dt,id)
   

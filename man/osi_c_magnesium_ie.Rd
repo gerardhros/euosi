@@ -4,7 +4,7 @@
 \alias{osi_c_magnesium_ie}
 \title{Calculate the magnesium availability index in Ireland}
 \usage{
-osi_c_magnesium_ie(B_LU, A_SOM_LOI, A_MG_NaAAA)
+osi_c_magnesium_ie(B_LU, A_SOM_LOI, A_MG_NaAAA, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -12,6 +12,8 @@ osi_c_magnesium_ie(B_LU, A_SOM_LOI, A_MG_NaAAA)
 \item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil (\%)}
 
 \item{A_MG_NaAAA}{(numeric) The Mg-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The magnesium availability index in Ireland derived from extractable soil Mg fractions. A numeric value.

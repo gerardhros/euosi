@@ -261,7 +261,7 @@ test_that("osi_c_magnesium_fi works", {
                        B_TEXTURE_USDA = rep('Si',4),
                        A_MG_AAA = rep(45,4),
                        A_C_OF = c(10,20,100,300)),
-    expected = rep(0.3811,4),
+    expected = c(rep(0.3811,3),NA),
     tolerance = 0.01
   )
   expect_equal(
@@ -269,7 +269,7 @@ test_that("osi_c_magnesium_fi works", {
                        B_TEXTURE_USDA = rep('Si',4),
                        A_MG_AAA = c(15,45,90,180),
                        A_C_OF = c(10,20,100,300)),
-    expected = c(0.052,0.381,0.8589,0.99662),
+    expected = c(0.052,0.381,0.8589,NA),
     tolerance = 0.01
   )
 })

@@ -4,7 +4,7 @@
 \alias{osi_nut_k_fi}
 \title{Calculate the potassium excess index in Finland}
 \usage{
-osi_nut_k_fi(B_LU, B_TEXTURE_USDA, A_K_AAA, A_C_OF = 0.5)
+osi_nut_k_fi(B_LU, B_TEXTURE_USDA, A_K_AAA, A_C_OF = 0.5, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -14,6 +14,8 @@ osi_nut_k_fi(B_LU, B_TEXTURE_USDA, A_K_AAA, A_C_OF = 0.5)
 \item{A_K_AAA}{(numeric) The exchangeable K-content of the soil measured via ammonium acetate extraction}
 
 \item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The potassium excess index in Finland estimated from extractable potassium. A numeric value.

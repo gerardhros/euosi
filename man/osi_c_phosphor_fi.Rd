@@ -4,7 +4,13 @@
 \alias{osi_c_phosphor_fi}
 \title{Calculate the phosphorus availability index in Finland}
 \usage{
-osi_c_phosphor_fi(B_LU, B_TEXTURE_USDA, A_P_AAA, A_C_OF = 0.5)
+osi_c_phosphor_fi(
+  B_LU,
+  B_TEXTURE_USDA,
+  A_P_AAA,
+  A_C_OF = 0.5,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -14,6 +20,8 @@ osi_c_phosphor_fi(B_LU, B_TEXTURE_USDA, A_P_AAA, A_C_OF = 0.5)
 \item{A_P_AAA}{(numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction}
 
 \item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphorus availability index in Finland estimated from extractable phosphorus. A numeric value.

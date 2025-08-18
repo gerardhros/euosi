@@ -71,7 +71,7 @@ test_that("osi_c_copper_fr works", {
                  B_CF = rep(3,5),
                  A_SOM_LOI = rep(3.5,5),
                  A_CU_EDTA = c(0.1,0.5,0.8,1.0,2.0)),
-    expected = c(0.168,0.5,0.768,0.88,0.997),
+    expected = c(0.168,0.5,0.768,0.88,NA),
     tolerance = 0.01
   )
   

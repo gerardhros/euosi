@@ -129,7 +129,7 @@ test_that("osi_c_ph_ch works", {
                 A_K_CO_PO = c(10,5,3,2,2), 
                 A_NA_CO_PO = c(5,5,3,2,2),
                 B_LU = c('testcrop1','3301000000','3301010901','3301061299','3304990000')),
-    expected = c(0.985,0.9733,0.9699,0.9764,0.987),
+    expected = c( 0.1653691, 0.1647900, 0.1646248, 0.1649359, 0.1654480),
     tolerance = 0.01
   )
   expect_equal(
@@ -140,7 +140,7 @@ test_that("osi_c_ph_ch works", {
                 A_K_CO_PO = c(10,5,3,2,2), 
                 A_NA_CO_PO = c(5,5,3,2,2),
                 B_LU = c('testcrop1','3301000000','3301010901','3301061299','3304990000')),
-    expected = c(0.564,0.240,0.1125,0.098,0.1804),
+    expected = c(0.11707766, 0.07504312, 0.04390351, 0.04010603, 0.16258526),
     tolerance = 0.01
   )
 })
@@ -245,7 +245,7 @@ test_that("osi_c_ph_fi works", {
                  B_TEXTURE_USDA = rep('Si',4),
                 A_PH_WA = rep(4.5,4),
                  A_C_OF = c(10,20,100,300)),
-    expected = rep(0.07621,4),
+    expected = c(rep(0.07621,3),NA),
     tolerance = 0.01
   )
   expect_equal(
@@ -253,7 +253,7 @@ test_that("osi_c_ph_fi works", {
                B_TEXTURE_USDA = rep('Si',4),
                A_PH_WA = c(4.5,5,5.5,6),
                A_C_OF = c(10,20,100,300)),
-    expected = c(0.0762,0.2231,0.5,0.777),
+    expected = c(0.0762,0.2231,0.5,NA),
     tolerance = 0.01
   )
 })

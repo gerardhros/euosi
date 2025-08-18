@@ -15,6 +15,10 @@ osi_field(
   B_PET_WIN = NA_real_,
   B_TEMP_SUM = NA_real_,
   B_TEMP_WIN = NA_real_,
+  B_RUSL_RE = NA_real_,
+  B_RUSL_SE = NA_real_,
+  B_RUSL_LS = NA_real_,
+  B_RUSL_CM = NA_real_,
   A_CLAY_MI = NA_real_,
   A_SAND_MI = NA_real_,
   A_SOM_LOI = NA_real_,
@@ -55,6 +59,14 @@ osi_field(
 \item{B_TEMP_SUM}{(numeric) Mean winter temperature (degrees Celcius)}
 
 \item{B_TEMP_WIN}{(numeric) Mean winter temperature (degrees Celcius)}
+
+\item{B_RUSL_RE}{Rainfall erositivity R-factor used in Revised Universal Soil Loss Euqation model}
+
+\item{B_RUSL_SE}{Soil erodobility K-factor used in Revised Universal Soil Loss Euqation model}
+
+\item{B_RUSL_LS}{Topography LS-factor used in Revised Universal Soil Loss Euqation model}
+
+\item{B_RUSL_CM}{Cover management C-factor used in Revised Universal Soil Loss Euqation model}
 
 \item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
 

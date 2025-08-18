@@ -4,7 +4,7 @@
 \alias{osi_c_ph_se}
 \title{Calculate the pH index in Sweden}
 \usage{
-osi_c_ph_se(B_LU, A_SOM_LOI, A_CLAY_MI, A_PH_WA)
+osi_c_ph_se(B_LU, A_SOM_LOI, A_CLAY_MI, A_PH_WA, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -14,6 +14,8 @@ osi_c_ph_se(B_LU, A_SOM_LOI, A_CLAY_MI, A_PH_WA)
 \item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
 
 \item{A_PH_WA}{(numeric) The pH measured in water}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The pH index in Sweden. A numeric value.

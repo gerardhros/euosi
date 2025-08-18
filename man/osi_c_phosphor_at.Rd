@@ -4,12 +4,14 @@
 \alias{osi_c_phosphor_at}
 \title{Calculate the phosphorus availability index in Austria}
 \usage{
-osi_c_phosphor_at(B_LU, A_P_CAL)
+osi_c_phosphor_at(B_LU, A_P_CAL, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
 
 \item{A_P_CAL}{(numeric) The exchangeable P-content of the soil measured via Calcium Ammonium Lactate (mg P/ kg)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The phosphorus availability index in Austria estimated from extractable phosphorus. A numeric value.
