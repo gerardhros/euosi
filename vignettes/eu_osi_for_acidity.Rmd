@@ -20,7 +20,7 @@ vignette: >
   options(rmarkdown.html_vignette.check_title = FALSE)
   
   # to run manually
-  # devtools::load_all()
+  devtools::load_all()
 ```
 
 
@@ -66,5 +66,520 @@ Note that the IACS crop codes codes have been added to the `osi_crops` package t
 
 The wrapper function wraps country specific soil health functions related to soil pH and acidification. These are illustrated and described in this vignette per country, sorted alphabetically.
 
+## Austria (AT)
+Austrian agronomic guidance treats active soil pH (measured in the lab, usually H₂O or CaCl₂) as the primary diagnostic for lime needs and crop suitability; buffer or reserve acidity methods are used to estimate lime requirement together with soil texture and organic matter. Target pH ranges are crop-specific (e.g., cereals and grass close to neutral), and practical liming recommendations consider the soil’s buffering capacity so lime rates are matched to texture and OM to reach and maintain target pH. Base cation saturation (Ca, Mg, K, Na as % of CEC) is used mainly to check long-term fertility and structural implications (Ca:Mg balance for aggregate stability). Local chamber-of-agriculture and extension material summarise these principles and stress regular soil testing (every 3–5 years) to guide liming.
 
+Soil pH is measured in CaCl2 whereas the soil pH assessment depends on texture class and crop (see `National Richtlinien für die sachgerechte Düngung`). The base saturation (with calcium, magnesium and potassium) is sometimes reported but not primary for farmer advice.
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_at` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_PH_CC, being the soil pH measured with calcium chloride.
+* B_TEXTURE_HYPRES, being the soil texture class according to HYPRES classification system
+
+The soil pH assessment differs per soil type, adopted via the HYPRES soil texture classification. Based on the soil mineralogy (clay, sand and silt content) one can classify the HYPRES texture class using `osi_get_TEXTURE_HYPRES`.
+
+Note that the IACS crop codes codes have been added to the `osi_crops` package table in version 0.4.0. 
+
+Below we illustrate how the soil health index varies in response to variation in the soil pH for three soil types differing in soil texture, and a pH ranging from 3 to 7.
+
+
+
+```{r example AT1, out.width="75%", fig.cap="Evaluation pH-indicator for Austria.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('3301090400'),
+         B_TEXTURE_HYPRES = c('C','M','F'),
+         A_PH_CC = seq(3,7,0.2))
+dt[,stype := fifelse(B_TEXTURE_HYPRES=='C','sand',
+                     fifelse(B_TEXTURE_HYPRES =='F','clay', 'loam'))]
+dt[,osi_c_ph := osi_c_ph_at(B_LU,A_PH_CC = A_PH_CC,B_TEXTURE_HYPRES=B_TEXTURE_HYPRES)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_CC, xpar_label = 'pH-CC',pgroup = dt$stype)
+
+```
+
+## Belgium (BE)
+Belgian soil-health and agronomy guidance follows European practice: soil pH is measured in laboratory conditions (water or a salt solution) and used to decide liming; lime requirement is derived from pH plus buffering indicators (texture/OM). National and regional advisory bodies incorporate pH and exchangeable cation analyses (usually extracted with ammonium acetate) into soil reports; results are interpreted with crop-specific target pH ranges and with attention to Ca:Mg and K:Mg ratios to avoid imbalances that affect structure and uptake. Belgian research/extension literature and soil-quality projects emphasise site-specific testing because of strong local variability (peaty/sandy pockets needing different approaches).
+
+In Flanders, soil analysis reports pH-KCl and exchangeable cations; Wallonia uses pH-water. the soil health indicator for soil acidity need assessed by soil type, target pH, and sometimes the base cation balance. Recommended thresholds for pH-KCl varies for sandy soils between 5.5–6.0, for loam soils between 6.0–6.5, and for clay soils above 6.5. Sugar beet and alfalfa require pH values higher than 6.5–7.0. Where levels of Magnesium is low, dolomitic lime is recommended to increase the CEC occupation with magnesium.
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_be` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_PH_KCL, being the soil pH measured with potassium chloride.
+* B_TEXTURE_BE, being the soil texture class according to Belgium classification system
+
+The soil pH assessment differs per soil type, adopted via the Belgium soil texture classification. Based on the soil mineralogy (clay, sand and silt content) one can classify the Belgium texture class using `osi_get_TEXTURE_BE`.
+
+Note that the IACS crop codes codes have been added to the `osi_crops` package table in version 0.4.0. 
+
+Below we illustrate how the soil health index varies in response to variation in the soil pH for three soil types differing in soil texture, and a pH ranging from 3 to 9.
+
+```{r example BE1, out.width="75%", fig.cap="Evaluation pH-indicator for Belgium.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('3301090400'),
+         B_TEXTURE_BE = c('S','A','E'),
+         A_PH_KCL = seq(3,9,0.2))
+dt[,stype := fifelse(B_TEXTURE_BE=='S','sand',
+                     fifelse(B_TEXTURE_BE =='A','leem', 'clay'))]
+dt[,osi_c_ph := osi_c_ph_be(B_LU,A_PH_KCL = A_PH_KCL,B_TEXTURE_BE=B_TEXTURE_BE)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_KCL, xpar_label = 'pH-KCl',pgroup = dt$stype)
+
+```
+
+
+## Switzerland (CH)
+Swiss practice (Agroscope guidance and national fertiliser recommendations) uses standard laboratory pH measurement (water and buffer/indicator tests where needed) and exchangeable cations (ammonium-acetate extraction) to calculate base saturation and CEC. Switzerland evaluates liming needs relative to crop targets and soil buffering capacity; liming recommendations are routinely integrated into national fertiliser/advice documents and calibrated with field yield data, particularly for high-value arable and forage systems. Base saturation is used as a diagnostic of long-term base status and recovery after acidification (for example in regions historically affected by acid deposition), with management focusing on restoring Ca and Mg levels to support structure and root growth.
+
+Soil pH measured in water; the Swiss Fertilizer Guidelines (PRIF) set targets by soil texture and crop. Base saturation is determined in soil surveys and forest soil monitoring but not central to farm-level advice.Target pH for mineral soils varies between 6.2–6.8, and for organic soils between 5.5–6.0. High-demand crops (clover, beet) require pH levels above 6.5.
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_ch` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_CLAY_MI, being the clay content (\%)
+* A_PH_WA, being the soil pH measured in a water extract.
+* A_CA_CO_PO, being the extracted Ca content with Cohex, unit percentage occupation of the CEC (\%) 
+* A_MG_CO_PO, being the extracted Mg content with Cohex, unit percentage occupation of the CEC (\%) 
+* A_K_CO_PO, being the extracted K content with Cohex, unit percentage occupation of the CEC (\%) 
+* A_NA_CO_PO, being the extracted Na content with Cohex, unit percentage occupation of the CEC (\%) 
+
+The soil pH assessment is based on the combined assessment of the base saturation (evaluation 1) and the pH in view of an optimum pH target value differing for clayey and sandy soils (evaluation 2). 
+
+Note that the IACS crop codes codes have been added to the `osi_crops` package table in version 0.4.0. 
+
+Below we illustrate how the soil health index varies in response to variation in the soil pH for three soil types differing in soil texture, and a pH ranging from 3 to 9, and a base saturation of 52.5% (low saturation) and of 87.5% (high saturation).
+
+
+```{r example CH1, out.width="75%", fig.cap="Evaluation pH-indicator for Switzerland.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('3301090400'),
+         A_CLAY_MI = 15, 
+         A_PH_WA =  seq(3,9,0.2), 
+         A_CA_CO_PO = c(30,65), 
+         A_MG_CO_PO = 15, 
+         A_K_CO_PO = 5,
+         A_NA_CO_PO = 2.5)
+dt[,stype := fifelse(A_CA_CO_PO==30,'low base saturation','high base saturation')]
+dt[,osi_c_ph := osi_c_ph_ch(B_LU,A_CLAY_MI = A_CLAY_MI,A_PH_WA = A_PH_WA,
+                            A_CA_CO_PO = A_CA_CO_PO, A_MG_CO_PO= A_MG_CO_PO, A_K_CO_PO= A_K_CO_PO,
+                            A_NA_CO_PO= A_NA_CO_PO)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_WA, xpar_label = 'pH-water',pgroup = dt$stype)
+
+```
+
+
+## Czech Republic (CZ)
+Czech agronomic practice centres on laboratory soil pH (often in CaCl₂) and exchangeable bases determined by standard extractions; national monitoring and advisory frameworks use these data within an agrochemical testing programme to generate liming and fertiliser advice. Liming is recommended where pH and base saturation fall below crop-specific thresholds, and long-term monitoring (national soil surveys and forest/field studies) informs regional liming programmes. Guidance emphasises both immediate pH correction and the need to address the causes of acidification (e.g., long-term N-use and leaching) to maintain base saturation and prevent aluminium toxicity in sensitive soils.
+
+The soil pH is usually measured in water. The soil assessment is based on the pH and accounts for soil textural differences and crop requirements. The base saturation is not commonly used. Optimal pH ranges for various crops are provided in national guidelines, with with specific recommendations for sensitive crops like sugar beet and vegetables. Liming is advised when pH falls below crop-specific thresholds.
+
+Liming guidelines and soil test interpretation documentation has not yet been found, so the `euosi R package` has not yet a function for CZ implemented.
+
+## Germany (DE)
+German practice treats soil pH (measured both in water and in KCl or CaCl₂ solutions) and exchangeable bases (extracted typically with ammonium acetate) as core diagnostics for liming and nutrient management. Laboratories report CEC and base saturation (% of CEC occupied by Ca, Mg, K, Na) and many advisory services use crop-specific target pH ranges (often near neutral for arable crops) and minimum base saturation guidance to determine lime need and corrective fertiliser. Liming recommendations are adjusted by soil texture and organic matter because these control buffering capacity; in forest and grassland contexts regional monitoring also targets recovery of base saturation following past acid deposition.
+
+Soil pH typically measured in CaCl2. The soil pH assessment and associate lime requirement is derived from current pH vs. soil-type-specific optimum, while accounting for soil properties controlling the buffer capacity such as clay and soil organic matter. The base saturation is also used in diagnostic soil chemistry and humus evaluation, but not for the assessment of soil acidity. According to the `VDLUFA Handbuch der Landwirtschaftlichen Versuche` and state fertilization guides, optimal pH-CaCl2 ranges for sandy soils between 5.0–5.5, for loamy soils between 6.0–6.5, and for clay soils at values higher than 6.5. Liming is advised when pH falls 0.2–0.3 units below the target.
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_de` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_CLAY_MI, being the clay content (\%)
+* A_SAND_MI, being the sand content (\%)
+* A_SOM_LOI, being the soil organic matter content (\%)
+* A_C_OF, being the organic carbon content (mg C/ kg)
+* A_PH_CC, being the soil pH measured in a CaCl2 extract.
+
+The soil pH assessment is based on the combined assessment of the pH in view of an optimum pH target value differing in view of soil texture and land use. 
+
+Note that the IACS crop codes codes have been added to the `osi_crops` package table in version 0.4.0. 
+
+Below we illustrate how the soil health index varies in response to variation in the soil pH for two soil types differing in soil texture, and a pH ranging from 3 to 9, and a SOM content of 4.5%.
+
+```{r example DE1, out.width="75%", fig.cap="Evaluation pH-indicator for Germany.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('3301090400'),
+         A_SOM_LOI = 4.5,
+         A_C_OF = 4.5*0.5*10,
+         A_CLAY_MI = c(5,45), 
+         A_SAND_MI = 45,
+         A_PH_CC =  seq(3,9,0.2))
+dt[,stype := fifelse(A_CLAY_MI==5,'sand','clay')]
+dt[,osi_c_ph := osi_c_ph_de(B_LU,A_SOM_LOI = A_SOM_LOI, A_C_OF = A_C_OF,
+                            A_CLAY_MI = A_CLAY_MI,A_SAND_MI =  A_SAND_MI,A_PH_CC = A_PH_CC)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_CC, xpar_label = 'pH-CaCl2',pgroup = dt$stype)
+
+```
+
+
+## Denmark (DK) 
+Danish guidance emphasizes routine laboratory measurement of soil pH (typically both pH in water and pH in a CaCl2) and quantification of exchangeable bases to calculate CEC and base saturation. Because Danish soils vary from marine clays to sandy, leached soils, interpretation is strongly soil-type specific: coastal and clay soils are often base-rich while sandy soils can be acidified and require more frequent liming. Liming advice in Denmark couples target pH ranges for particular crops with buffer- or reserve-acidity approaches to calculate lime rates (taking texture and organic matter into account) and pays special attention to regional maps and monitoring to prioritize areas for corrective liming.
+
+In production terms, advisers in Denmark use pH and base saturation both to protect yields (ensure macronutrient availability and avoid Al toxicity) and to maintain soil structure—high Ca saturation is tied to aggregate stability on heavier soils while Mg and the Ca:Mg balance are monitored to avoid structural or uptake problems. Liming is therefore treated as both an agronomic and an environmental management tool (e.g., to reduce N losses and sustain productive grass and arable systems).
+
+Soil reaction is managed via reaktionstal (Rt), closely related to pH CaCl2 (approx. Rt ≈ pH+0.5). Soil pH assessment depends on soil texture and crop sensitivity; base saturation is not used in routine Danish recommendations. SEGES materials outline optimal Rt bands that increase with clay content and for sensitive crops; advisory notes emphasize maintaining Rt near the soil- and crop-specific optimum to secure P, K, Mg availability and structure. More information can be found [here](https://silo.seges.dk/media/33qadkue/goedningslaere.pdf).
+
+Well documented liming guidelines and soil test interpretation documentation has not yet been found, so the `euosi R package` has not yet a function for DK implemented.
+
+## Estonia (EE) 
+Estonian soil guidance focuses on pH measured in the laboratory (commonly pH in KCl for mineral soils) and on exchangeable bases to calculate base saturation and CEC. Because large areas of Estonian arable land include podzolic and peaty soils, monitoring pHKCl and base saturation helps to identify soils requiring correction liming versus routine maintenance liming. National practice typically recommends correction where pHKCl drops below established thresholds (maintenance programs recommend re-liming every few years on acid-prone soils) and factors lime rates by texture and organic matter to account for buffering capacity.
+
+For crop production, Estonian advisers use pH and base saturation to avoid Al toxicity and to secure Ca and Mg supplies for root growth and aggregate stability; sandy and low-organic soils are prioritized because they lose bases most rapidly. Crop-specific pH targets are used to set liming priorities, with special attention to grassland and fodder crops where forage quality and animal health (e.g., grass tetany risk) depend on balanced bases.
+
+National guidance uses pH measured in 1 M KCl (pH-KCl). The soil acidity is evaluated from pHKCl together with texture and soil organic matter. The base saturation is generally not part of routine advice. The [`Väetamise ABC`](https://metk.agri.ee/sites/default/files/documents/2024-07/Vaetamise_ABC.pdf) states optimal pH-KCl varying between 6.0–6.7 for most arable soils whereas liming is recommended below this range, with stricter targets for sensitive crops and finer textures.
+
+Well documented liming guidelines and soil test interpretation documentation has not yet been found, so the `euosi R package` has not yet a function for DK implemented.
+
+## Greece (EL) 
+Greek soil assessment for pH and base saturation is regionally differentiated because soils range from calcareous Mediterranean soils (often naturally alkaline and base-rich) to more acidic mountainous and upland soils. Standard laboratory pH measurement (often water and sometimes CaCl2) and exchangeable cation analysis (e.g., ammonium acetate extraction) are used to calculate CEC and base saturation. In calcareous lowlands the emphasis is typically not on liming but on managing micronutrient availability (Fe, Zn, Mn) at higher pH, whereas in upland or leached soils liming is recommended where pH and base saturation fall below crop-specific thresholds. In crop-management terms, Greek advisers therefore interpret pH and base saturation in a landscape context: in many Mediterranean cropping systems the priority is to avoid induced micronutrient deficiencies at high pH, while in acid-prone mountain soils the priority is to restore bases to prevent Al toxicity and improve structure for root growth. Lime recommendations are adjusted for soil texture and the carbonate status of the parent material.
+
+Optimal pH ranges for various crops are provided in national guidelines, with specific recommendations for sensitive crops like sugar beet and vegetables. Liming is advised when pH falls below crop-specific thresholds.
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_el` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* B_TEXTURE_HYPRES, being the soil texture class according to HYPRES classification system
+* A_NA_CO_PO, being the extracted Na content with Cohex, unit percentage occupation of the CEC (\%) 
+* A_PH_WA, being the soil pH measured in a water extract.
+
+The soil pH assessment differs per soil type, adopted via the HYPRES soil texture classification. Based on the soil mineralogy (clay, sand and silt content) one can classify the HYPRES texture class using `osi_get_TEXTURE_HYPRES`.
+
+The soil pH assessment is based on the combined assessment of the pH in view of an optimum pH target value differing in view of soil texture and land use and an assessment of the levels of exchangeable sodium in soil. 
+
+Note that the IACS crop codes codes have been added to the `osi_crops` package table in version 0.4.0. 
+
+Below we illustrate how the soil health index varies in response to variation in the soil pH for a clay soil types differing in Na levels (5%, being low, and 15% being high in Na), and a pH ranging from 3 to 9.
+
+```{r example EL1, out.width="75%", fig.cap="Evaluation pH-indicator for Greece.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('3301090400'),
+         B_TEXTURE_HYPRES = c('C'),
+         A_NA_CO_PO = c(5,15),
+         A_PH_WA = seq(3,9,0.2))
+dt[,stype := fifelse(A_NA_CO_PO== 5,'low sodium','high sodium')]
+dt[,osi_c_ph := osi_c_ph_el(B_LU,A_PH_WA = A_PH_WA,B_TEXTURE_HYPRES=B_TEXTURE_HYPRES,A_NA_CO_PO=A_NA_CO_PO)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_WA, xpar_label = 'pH-water',pgroup = dt$stype)
+
+```
+
+
+## Spain (ES)
+Spain uses routine pH measurements (usually water or KCL) and sometimes exchangeable base analyses to assess soil acidity and liming requirements. The interpretation has strongly regional differences. Much of Spain’s agricultural land is calcareous and already base-rich, so many Iberian guidance documents focus on managing micronutrient availability at high pH and on adjusting fertiliser practice for calcareous conditions. In Atlantic and northern regions with more acidic soils, liming recommendations follow the standard approach—measuring pH, assessing buffering capacity and using crop-specific pH targets. For Spanish crop production, pH and base saturation are therefore used either to identify a need for liming (northern, leached soils; uplands) or to manage micronutrients and phosphorus availability in calcareous soils. Recommendations account for soil texture, organic matter and the high spatial variability typical of Mediterranean landscapes.
+
+The main principle of soil health assessment is mainly based on pH-water. Well documented liming guidelines and soil test interpretation documentation has not yet been found, so the `euosi R package` has not yet a function for Spain implemented.
+
+
+## Finland (FI)
+Finnish guidance uses laboratory pH (usually water) and exchangeable base measurements to report CEC and base saturation. Because Finland has a large area of acidified podzols and organic soils, national advisory practice emphasizes regular soil testing and systematic liming programmes on acid-prone mineral soils and maintenance liming on peat and drained peat soils with crop-specific pH targets. Lime requirement is calculated using buffer or reserve-acidity approaches adapted to local textures and organic matter content so that doses match the soil’s buffering capacity.From a crop-production perspective, Finland treats liming as essential where pH and base saturation limit nutrient availability or promote Al toxicity—especially for grass and cereal systems—and lime is recommended to sustain yields, improve soil structure and reduce the agronomic and environmental impacts of acidification.
+
+The main principle of soil health assessment is based on pH-water, where the evaluation differs among soil texture classes and the organic matter content. The base saturation is not commonly used in routine advisory services. Optimal pH ranges for various crops are provided in national guidelines, with specific recommendations for sensitive crops like sugar beet and vegetables. Liming is advised when pH falls below crop-specific thresholds. Target values for soil pH ranges roughly ~6.3–6.7 for clays, ~6.0–6.5 for coarse mineral soils, and ~5.6–6.0 for organic soils; crop-specific adjustments apply. More information can be found on the Fertilization Guidelines provided by [Finnish Food Authority](www.ruokavirasto.fi) and in common soil fertility tests applied, as sown [here](https://ak.maanmittauslaitos.fi/sites/default/files/2024/Viljavuustutkimuksen%20tulkinta%20peltoviljelyssa%5B1%5D_1.pdf)
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_fi` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* B_TEXTURE_USDA, being the soil texture class according to USDA classification system
+* A_C_OF, being the organic carbon content (mg C/ kg)
+* A_PH_WA, being the soil pH measured in a water extract.
+
+The soil pH assessment differs per soil type, adopted via the USDA soil texture classification. Based on the soil mineralogy (clay, sand and silt content) one can classify the USDA texture class using `osi_get_TEXTURE_USDA`. The soil pH assessment is based on the assessment of pH while accounting for soil type. Below an example how the soil pH assessment is evaluated in the `euosi R package` for three soil types and a pH value ranging from 3 to 9. The soil has a SOC content of 25 g/kg.
+
+```{r example FI1, out.width="75%", fig.cap="Evaluation pH-indicator for Finland.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('4010'),
+         B_TEXTURE_USDA = c('Sa','Cl'),
+         A_C_OF = 25,
+         A_PH_WA = seq(3,9,0.2))
+dt[,stype := fifelse(B_TEXTURE_USDA== 'Sa','sand','clay')]
+dt[,osi_c_ph := osi_c_ph_fi(B_LU,A_PH_WA = A_PH_WA,B_TEXTURE_USDA=B_TEXTURE_USDA,A_C_OF =A_C_OF)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_WA, xpar_label = 'pH-water',pgroup = dt$stype)
+
+```
+
+
+
+## France (FR) 
+French agronomic practice integrates pH (H₂O and sometimes CaCl₂ or buffer tests) and exchangeable base analysis (ammonium acetate extractions) into routine soil reports used by agronomists and advisers. France spans many soil types, so national guidance uses crop-specific target pH bands and base saturation indicators; liming advice is based on buffer-based lime requirement tests or lookup tables that account for texture and organic matter. French extension and research organisations also emphasize the balance among Ca, Mg and K because it affects structure and nutrient uptake, and liming is used both to restore productive capacity and to address environmental goals such as reducing N losses where pH constrains nitrification.
+
+In practice, French advisers treat pH and base saturation as core diagnostics for both arable and perennial systems; on calcareous areas the emphasis shifts to micronutrient and P management, while in more leached parts liming to raise base saturation and avoid Al toxicity is routine. The soil pH is usually determined in a water extract where the soil health assesment accounts for differences in texture and soil organic matter content. Recommended pH ranges vary by region and crop type. For instance, in the Loire Valley, optimal pH for cereals is around 6.0–6.5. Liming is recommended when pH is below these optimal ranges. More information is provided by COMIFER - liming guidelines [here](https://comifer.asso.fr/wp-content/uploads/2015/03/brochure_chaulage-maj-2012_chaulage-lt.pdf)
+
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_fr` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* B_TEXTURE_GEPPA, being the soil texture class according to GEPPA classification system
+* A_PH_WA, being the soil pH measured in a water extract.
+
+The soil pH assessment differs per soil type, adopted via the French GEPPA soil texture classification. Based on the soil mineralogy (clay, sand and silt content) one can classify the GEPPA texture class using `osi_get_TEXTURE_GEPPA`. The soil pH assessment is based on the assessment of pH while accounting for soil type. Below an example how the soil pH assessment is evaluated in the `euosi R package` for two soil types and a pH value ranging from 3 to 9. 
+
+```{r example FR1, out.width="75%", fig.cap="Evaluation pH-indicator for France.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('3301090400'),
+         B_TEXTURE_GEPPA = c('SS','LL'),
+         A_PH_WA = seq(3,9,0.2))
+dt[,stype := fifelse(B_TEXTURE_GEPPA== 'SS','sand','loam')]
+dt[,osi_c_ph := osi_c_ph_fr(B_LU,A_PH_WA = A_PH_WA,B_TEXTURE_GEPPA=B_TEXTURE_GEPPA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_WA, xpar_label = 'pH-water',pgroup = dt$stype)
+
+```
+
+## Hungary (HU) 
+In Hungary soil testing for pH (typically in water or CaCl₂) and exchangeable cations is the routine basis for lime and fertilizer advice. Advisory practice links measured pH and base saturation to crop-specific target ranges and uses reserve acidity or buffer-based calculations to estimate lime requirement; soils with low base saturation and acid pH prompt liming to avoid Al toxicity and to secure Ca and Mg for structure and plant nutrition. Local guidance often differentiates light sandy soils (which need more frequent liming) from heavier loams and calcareous parent materials.
+
+Soil pH is usually measured in a water extract. The soil health assessment of the acidity differs in soils varyng in soil texture and the crop requirement. The base saturaiton is not commonly used in routine advisory services. Optimal pH ranges for various crops are provided in national guidelines, with specific recommendations for sensitive crops like sugar beet and vegetables. Liming is advised when pH falls below crop-specific thresholds.
+
+Well documented liming guidelines and soil test interpretation documentation has not yet been found, so the `euosi R package` has not yet a function for Hungary implemented.
+
+## Ireland (IE) 
+Ireland’s national advice emphasises active soil pH testing and the use of SMP or buffer pH tests to calculate lime requirements, with clear target bands (for example mineral soils often targeted ~6.3–6.5 for grass and arable, lower targets for peat). Exchangeable Ca and Mg and base saturation are reported by labs and used to check that liming will restore base status and avoid long-term depletion. Practical guidance in Ireland also stresses farm liming plans and incremental applications to maintain pH and base saturation over time.
+
+The soil pH is measured in water, where the soil health assessment accounts for differences in soil texture and the crop requirement. Optimal pH ranges for various crops are provided in national guidelines, with specific recommendations for sensitive crops like sugar beet and vegetables. Liming is advised when pH falls below crop-specific thresholds. More information can be found in fertilizer guidelines provided by Teagasc [here](https://teagasc.ie/wp-content/uploads/uploads/media/website/publications/2020/Major-and-Micro-Nutrient-Advice-for-Productive-Agricultural-Crops-2020.pdf)
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_ie` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_SOM_LOI, being the soil organic matter content, in units percentage (\%)
+* A_PH_WA, being the soil pH measured in a water extract.
+
+The soil pH assessment differs between mineral and organic soils following the SOM content measured. The soil pH assessment is based on the assessment of pH with optimum treshold varying per crop. Below an example how the soil pH assessment is evaluated in the `euosi R package` for both mineral and organic soil types and a pH value ranging from 3 to 9. 
+
+```{r example IE1, out.width="75%", fig.cap="Evaluation pH-indicator for Ireland.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('3301090400'),
+         A_SOM_LOI = c(4.5,25),
+         A_PH_WA =  seq(3,9,0.2))
+dt[,stype := fifelse(A_SOM_LOI==4.5,'mineral soils','peat soil')]
+dt[,osi_c_ph := osi_c_ph_ie(B_LU,A_SOM_LOI = A_SOM_LOI, A_PH_WA = A_PH_WA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_WA, xpar_label = 'pH-water',pgroup = dt$stype)
+
+```
+
+
+
+## Italy (IT) 
+Italian agronomic practice uses standard lab pH measurements (H₂O and sometimes CaCl₂) and exchangeable cations (ammonium-acetate or similar) to determine CEC and base saturation. Recommendations are strongly soil-type and region dependent because Italy spans calcareous Mediterranean soils and more acidic alpine and northern soils; thus target pH and base saturation thresholds are set by crop group and local pedology. Liming is advised mainly where pH is below crop-specific thresholds or where base saturation is too low to support structure and nutrient supply.
+
+The soil pH is usually measured in water. The soil health assessment and associated liming recommendations are based on pH, soil texture, and crop requirements. Recommended pH ranges vary by region and crop type. For instance, in Tuscany, optimal pH for cereals is around 6.0–6.5. Liming is recommended when pH is below these optimal ranges.
+
+Well documented liming guidelines and soil test interpretation documentation has not yet been found, so the `euosi R package` has not yet a function for Hungary implemented.
+
+## Latvia (LV) 
+Latvian soil assessment focuses on lab pH (water/CaCl₂) and exchangeable bases to calculate base saturation and to judge lime needs, with particular attention to acidic podzols and peaty soils common in parts of the country. Advisers use crop-specific target pH bands and evaluate Ca:Mg balance as part of structural and fertility diagnostics; sandy, low-organic soils are prioritized for liming because of their higher risk of base losses and aluminium mobilization.
+
+Routine soil testing commonly uses pH in KCl; liming is recommended where soils are acidic for intended crops. Base saturation is not a standard advisory metric.National crop production guidelines classify soils with pH < 5.5 as acidic and recommend liming to reach near-neutral pH for sensitive crops (typically ~6.0–6.5+ depending on crop/soil). More information can possibly found [here](https://www.zm.gov.lv/lv/media/753/download?attachment=&utm_source).
+
+Well documented liming guidelines and soil test interpretation documentation has not yet been found, so the `euosi R package` has not yet a function for Hungary implemented.
+
+## Lithuania (LT)
+Lithuanian agronomic guidance uses routine pH and exchangeable cation testing, reporting CEC and base saturation to guide liming and fertiliser choices. Targets vary by crop and soil texture; soils with low base saturation are limed to reduce acidity and raise Ca and Mg, especially on light soils and on soils with historical acidification. Buffering capacity (texture and OM) is used to calculate lime rates so that the recommended dose reflects reserve acidity.
+
+Soil pH is measured in 1 M KCl; liming priority and dose consider pH class, soil type, and aluminum risk. Routine advice focuses on pH; base saturation is rarely used. Long-term LAMMC monitoring flags extensive areas with pH<5.5 requiring liming; crop guides indicate sensitive crops (e.g., cukriniai runkeliai) need ~pH 6.5–7.4, while cereals tolerate slightly lower. More information can possibly found [here](https://zum.lrv.lt/uploads/zum/documents/files/LT_versija/Naujiena/Leidiniai/Projekto_%E2%80%9ELietuva_be_kaimo-Lietuva_be_ateities%E2%80%9C_leidiniu_elektronines_versijos/Aplinkosauga%20ir%20tr%C4%99%C5%A1imo%20planavimas.pdf).
+
+Well documented liming guidelines and soil test interpretation documentation has not yet been found, so the `euosi R package` has not yet a function for Hungary implemented.
+
+## the Netherlands (NL) 
+Dutch practice measures pH (H₂O and sometimes CaCl₂) and exchangeable cations (ammonium acetate) as part of standard soil analysis; base saturation and CEC are central to lime and nutrient advice. Because much of the Netherlands uses high-value cropping systems and has diverse soil parent materials, advisers pay close attention to Ca:Mg ratios and to maintaining base saturation targets that support aggregate stability and water management. Liming recommendations are tailored by crop and by whether soils are drained peat, reclaimed marine clays, or sandy uplands.
+
+The acidity of the soil is an important variable controlling the availability of nutrients as well as the activity in the rhizosphere. Liming recommendations have been derived from extensive field trials analyzing crop responses to varying pH levels in soil. Using these field experiments, the crop specific optimum pH levels can be determined given the pH, the crop rotation plan, the organic matter content of the soil and the soil texture. The distance to the optimum pH is evaluated with a logistic evaluation function, with which the closer the actual pH is to the optimum pH, the higher the score is. More information can be found [here](https://www.handboekbodemenbemesting.nl/bemestingsadviezen/advisering-ph-dekzand-dal-en-veengronden/).
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_nl` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* B_SOILTYPE_AGR, the agricultural soil type
+* A_SOM_LOI, being the soil organic matter content, in units percentage (\%)
+* A_CLAY_MI, being the clay content, in units percentage (\%)
+* A_PH_CC, the soil pH measured in 0.01M CaCl2 (-)
+
+The soil pH assessment differs between sandy, clayey and peaty soils following the agricultural soil type. This soil type can be retreived from the soil mineralogy and organic matter content using `osi_get_SOILTYPE_AGR`. The soil pH assessment is based on the assessment of pH with optimum treshold varying for main crops in the crop rotation. Below an example how the soil pH assessment is evaluated in the `euosi R package` for two soil types and a pH value ranging from 3 to 6. 
+
+```{r example NL1, out.width="75%", fig.cap="Evaluation pH-indicator for the Netherlands.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('265'),
+         B_SOILTYPE_AGR = c('dekzand','veen'),
+         A_SOM_LOI = 4.5,
+         A_CLAY_MI = 10, 
+         A_PH_CC =  seq(3,6,0.1))
+dt[B_SOILTYPE_AGR == 'veen', A_SOM_LOI := 25]
+dt[,stype := B_SOILTYPE_AGR]
+dt[,ID := 1:.N]
+dt[,osi_c_ph := osi_c_ph_nl(ID = ID,B_LU = B_LU,B_SOILTYPE_AGR=B_SOILTYPE_AGR,A_SOM_LOI = A_SOM_LOI,
+                            A_CLAY_MI = A_CLAY_MI,A_PH_CC = A_PH_CC)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_CC, xpar_label = 'pH-CaCl2',pgroup = dt$stype)
+
+```
+
+
+## Norway (NO)  
+Norway uses laboratory pH tests and exchangeable base analyses to assess liming needs, with additional emphasis on regional differences (acidified coastal and upland soils vs more base-rich areas). Forestry and agricultural guidance often target recovery of base saturation in acidified soils and use buffer-based calculations for lime rates; in agricultural soils, target pH bands and base saturation criteria are applied to ensure nutrient availability and to prevent Al toxicity.
+
+In Norway, routine lab pH measurements are done in water, CaCl2 or sometimes KCL. Typical pH-water thresholds on mineraly soils vary between 6 and 6.5, being crop specific, whereas the thresholds are slightly lower on organic soils (varying between 5.4 and 5.6). Brassica vegetables commonly managed at pH ≥7.0 to reduce clubroot. Maintenance liming used to uphold target pH and adequate Ca/Mg base status; dolomitic materials preferred where Mg is low.
+
+Well documented liming guidelines and soil test interpretation documentation has not yet been found, so the `euosi R package` has not yet a function for Norway implemented.
+
+## Poland (PL) 
+Poland relies on routine soil pH (often KCl and H₂O) and exchangeable base determinations to calculate CEC and base saturation; these metrics underpin liming and fertilizer recommendations. National targets vary by crop and region, but typical goals aim to avoid aluminum toxicity and maintain base saturation at levels that support structure and nutrient availability; liming programmes historically have aimed to reverse acidification in many arable and grassland soils.
+
+Soil pH is measured in water.Optimal pH ranges vary by region and crop type. Well documented liming guidelines and soil test interpretation documentation has not yet been found, so the `euosi R package` has not yet a function for Poland implemented.
+
+## Portugal (PT)
+In Portugal pH (H₂O/CaCl₂) and exchangeable cations are standard tests used to inform liming and fertiliser advice, but interpretation is strongly region-dependent because many southern soils are calcareous and already base-rich while some northern uplands are more acidic. Advisers use crop-specific pH targets and base saturation measures to decide whether liming is necessary; in calcareous soils emphasis may instead be on micronutrient management.
+
+Soil pH is measured in water. Liming recommendations are based on pH, soil texture, and crop requirements. Base saturation is considered in some regional guidelines.Optimal pH ranges vary by region and crop type. For instance, in Alentejo, optimal pH for cereals is around 6.0–6.5. Liming is recommended when pH is below these optimal ranges.
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_pt` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_CEC_CO (numeric) The cation exchange capacity, analyzed via cobalt-hexamine extraction (mmol+ / kg)
+* A_CA_CO_PO, being the extracted Ca content with Cohex, unit percentage occupation of the CEC (\%) 
+* A_MG_CO_PO, being the extracted Mg content with Cohex, unit percentage occupation of the CEC (\%) 
+* A_K_CO_PO, being the extracted K content with Cohex, unit percentage occupation of the CEC (\%) 
+* A_NA_CO_PO, being the extracted Na content with Cohex, unit percentage occupation of the CEC (\%) 
+* A_PH_WA (numeric) The pH measured in water.
+
+The soil pH assessment differs between soil types following the CEC content and the occupation with base cations. The soil pH assessment is based on the assessment of pH with one optimum treshold value, and an evaluation of the base saturation as well the individual cations being present in soil. Below an example how the soil pH assessment is evaluated in the `euosi R package` for two soil types and a pH value ranging from 3 to 9, and a soil with a low base saturation (30% Ca, 5% Mg, 5% K and 5% Na) and a soil with high base saturation (65% Ca, 15% Mg, 10% K and 10% Na). 
+
+
+```{r example PT1, out.width="75%", fig.cap="Evaluation pH-indicator for Portugal.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('3301090400'),
+         A_CEC_CO  = 140,
+         A_PH_WA =  seq(3,9,0.2), 
+         A_CA_CO_PO = c(30,65))
+dt[, A_MG_CO_PO := fifelse(A_CA_CO_PO==30,5,15)]
+dt[, A_K_CO_PO := fifelse(A_CA_CO_PO==30,5,10)]
+dt[, A_NA_CO_PO := fifelse(A_CA_CO_PO==30,5,10)]
+dt[,stype := fifelse(A_CA_CO_PO==30,'low base saturation','high base saturation')]
+dt[,osi_c_ph := osi_c_ph_pt(B_LU,A_CEC_CO = A_CEC_CO,A_PH_WA = A_PH_WA,
+                            A_CA_CO_PO = A_CA_CO_PO, A_MG_CO_PO= A_MG_CO_PO, A_K_CO_PO= A_K_CO_PO,
+                            A_NA_CO_PO= A_NA_CO_PO)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_WA, xpar_label = 'pH-water',pgroup = dt$stype)
+
+```
+
+
+## Romenia (RO)
+Romanian agronomic guidance uses laboratory pH and exchangeable base analyses to calculate base saturation and CEC and to guide liming. Because of diverse parent materials, thresholds and recommended target pH bands are adjusted by region and crop; liming is advised where pH and base saturation fall below crop requirements, and lime rates are calculated taking into account reserve acidity (buffering by texture and organic matter).
+
+Soil pH is measured in water. Liming recommendations are based on pH, soil texture, and crop requirements. Base saturation is considered in some regional guidelines. Optimal pH ranges vary by region and crop type.
+
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_ro` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_NA_CO_PO, being the extracted Na content with Cohex, unit percentage occupation of the CEC (\%) 
+* A_PH_WA (numeric) The pH measured in water.
+
+The soil pH assessment is based on the assessment of pH with one optimum treshold value, and an evaluation of the sodium content (as percentage occupation at CEC). Below an example how the soil pH assessment is evaluated in the `euosi R package` for two soils varying in sodium content (low = 1.5% and high = 6%) and a pH value ranging from 3 to 9. From this visualisation it is also clear that the assessment differs between acidic (pH < 7.2) and calcareous soils (pH > 7.2), where in the latter the assessment is done using the Na occupation independent of the soil pH. 
+
+```{r example RO1, out.width="75%", fig.cap="Evaluation pH-indicator for Romania.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('3301090400'),
+         A_NA_CO_PO = c(1.5,6),
+         A_PH_WA = seq(3,9,0.2))
+dt[,stype := fifelse(A_NA_CO_PO== 1.5,'low sodium','high sodium')]
+dt[,osi_c_ph := osi_c_ph_ro(B_LU,A_PH_WA = A_PH_WA,A_NA_CO_PO=A_NA_CO_PO)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_WA, xpar_label = 'pH-water',pgroup = dt$stype)
+
+```
+
+
+## Sweden (SE) 
+Swedish soil testing reports pH (H₂O and KHCO₃ or CaCl₂ in some labs) and exchangeable bases to calculate CEC and base saturation and inform liming. National guidance links liming to both crop productivity and environmental goals (e.g., protecting water quality), and recommends liming rates based on buffer capacity and target pH values specific to crop types. Base saturation targets are used to assess the longer-term base status of soils and to prioritize liming in sensitive, acidified areas.
+
+Routine assessment uses pH-water on mineral or organic topsoils. The soil pH is judged against crop- and texture-specific pH-targets. The extractable cations (usually with ammoniumlactate) are sometimes used to estimate the base saturation, but this is not implemented in the soil acitity assessment. 
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_se` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_SOM_LOI, being the soil organic matter content, in units percentage (\%)
+* A_CLAY_MI, being the clay content, in units percentage (\%)
+* A_PH_WA, the soil pH measured in water
+
+The soil pH assessment differs between sandy, clayey and peaty soils following the clay and soil organic matter content. The soil pH assessment is based on the assessment of pH with optimum treshold varying per soil type. Below an example how the soil pH assessment is evaluated in the `euosi R package` for mineral and peat soil types and a pH value ranging from 4 to 8.
+
+```{r example SE1, out.width="75%", fig.cap="Evaluation pH-indicator for Sweden.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('3301090400'),
+         A_SOM_LOI = c(4.5,25),
+         A_CLAY_MI = 15,
+         A_PH_WA =  seq(4,8,0.1))
+dt[,stype := fifelse(A_SOM_LOI==4.5,'mineral soils','peat soil')]
+dt[,osi_c_ph := osi_c_ph_ie(B_LU,A_SOM_LOI = A_SOM_LOI, A_PH_WA = A_PH_WA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_WA, xpar_label = 'pH-water',pgroup = dt$stype)
+
+```
+
+
+## Slovak Republic (SK) 
+Slovakia’s advisory frameworks use lab pH and exchangeable base testing (standard extraction methods) to determine liming and fertiliser advice. Target pH ranges and base saturation thresholds are crop-specific, and regional soil surveys inform where acidification is most problematic; liming recommendations account for texture and organic matter to calculate required dosages.
+
+In Slovakia the soil pH is usually determined in water. The soil health assessment accounts for soil texture and crop requirement. Liming guidelines and soil test interpretation documentation has not yet been found, so the euosi R package has not yet a function for SK implemented.
+
+## Slovenia (SL)
+Slovenian soil fertility practice measures pH (water/CaCl₂) and exchangeable cations, using base saturation and CEC values to steer liming and nutrient management. Because of varied topography and a mix of calcareous and acid soils, national guidance emphasizes site-specific testing and crop-based pH targets; calcareous regions require different approaches than acid mountain soils where liming is often needed to restore base saturation.
+
+In Slovenia the soil pH is usually determined in water. The soil health assessment accounts for soil texture and crop requirement. Liming guidelines and soil test interpretation documentation has not yet been found, so the euosi R package has not yet a function for SK implemented.
+
+## United Kingdom (UK)
+UK practice (extension, agronomy guides and national labs) uses pH measurements (water and SMP or CaCl₂) and exchangeable base analysis to calculate CEC and base saturation; lime requirement is commonly calculated from SMP or buffer methods and look-up tables that account for soil texture and organic matter. Target pH bands are crop-specific (e.g. 6.0–6.5 for many arable crops, 6.3 for grassland) and advisers monitor base saturation to ensure adequate Ca and Mg and to avoid excessive K:Mg imbalances; farm liming plans and incremental maintenance liming are standard recommendations.
+
+The soil health assessment accounts for soil texture and crop requirement. Liming is recommended when pH is below these optimal ranges. More information can be found in the fertilizer guidelines provided by AHDB, being found [here](https://ahdb.org.uk/knowledge-library/soil-ph-and-liming-recommendations-for-arable-and-grass-systems).
+
+The function to assess soil acidity in the euosi package is called `osi_c_ph_uk` and requires the following inputs:
+
+* B_LU, being the crop code, an unique number for each crop
+* A_SOM_LOI, being the soil organic matter content, in units percentage (\%)
+* A_PH_WA, being the soil pH measured in a water extract.
+
+The soil pH assessment differs between mineral and organic soils following the SOM content measured. The soil pH assessment is based on the assessment of pH with optimum treshold varying per crop. Below an example how the soil pH assessment is evaluated in the `euosi R package` for both mineral and organic soil types and a pH value ranging from 4 to 8. 
+
+```{r example UK1, out.width="75%", fig.cap="Evaluation pH-indicator for United Kingdom.",dpi=300, echo = FALSE}
+
+# make an example
+dt <- CJ(B_LU = c('3301090400'),
+         A_SOM_LOI = c(4.5,25),
+         A_PH_WA =  seq(4,8,0.05))
+dt[,stype := fifelse(A_SOM_LOI==4.5,'mineral soils','peat soil')]
+dt[,osi_c_ph := osi_c_ph_uk(B_LU,A_SOM_LOI = A_SOM_LOI, A_PH_WA = A_PH_WA)]
+
+# show plot
+osi_plot_shi(shi = dt$osi_c_ph, xpar = dt$A_PH_WA, xpar_label = 'pH-water',pgroup = dt$stype)
+
+```
+
+# Reading more?
+More vignettes will be made available regarding the derivation of all soil health indicators, the aggregation methods applied, the derivation of optimum land use given the current soil quality assessments, and the best management practices to be applied to improve the soil quality. See for example the vignettes `vignette("eu_osi_for_phosphor")` and the general introduction in `vignette("eu_osi_introduction")`. Are you interested to contribute, please contact the author(s) of this R package. Enjoy!
 
