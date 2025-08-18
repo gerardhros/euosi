@@ -13,6 +13,10 @@
 #' @param B_PET_WIN (numeric) Total potential evapotranspiration in winter (mm)
 #' @param B_TEMP_SUM (numeric) Mean winter temperature (degrees Celcius)
 #' @param B_TEMP_WIN (numeric) Mean winter temperature (degrees Celcius)
+#' @param B_RUSL_SE Soil erodobility K-factor used in Revised Universal Soil Loss Euqation model
+#' @param B_RUSL_RE Rainfall erositivity R-factor used in Revised Universal Soil Loss Euqation model
+#' @param B_RUSL_CM Cover management C-factor used in Revised Universal Soil Loss Euqation model
+#' @param B_RUSL_LS Topography LS-factor used in Revised Universal Soil Loss Euqation model
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
@@ -48,6 +52,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                       B_PREC_SUM = NA_real_,B_PREC_WIN = NA_real_, 
                       B_PET_SUM = NA_real_,B_PET_WIN = NA_real_,
                       B_TEMP_SUM = NA_real_,B_TEMP_WIN = NA_real_,
+                      B_RUSL_RE = NA_real_,B_RUSL_SE= NA_real_,B_RUSL_LS= NA_real_,B_RUSL_CM= NA_real_,
                       A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,
                       A_SOM_LOI = NA_real_, A_C_OF= NA_real_,A_CEC_CO = NA_real_,
                       A_PH_CC = NA_real_, A_CACO3_IF = NA_real_,
@@ -199,6 +204,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
     # risk for water erosion
     dt[,i_e_watererosie := osi_erosion(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI,
                                        A_CLAY_MI = A_CLAY_MI, A_SAND_MI=A_SAND_MI, 
+                                       B_RUSL_RE = B_RUSL_RE,B_RUSL_SE= B_RUSL_SE,B_RUSL_LS= B_RUSL_LS,B_RUSL_CM= B_RUSL_LS,
                                        B_COUNTRY = B_COUNTRY)]
     
     # carbon sequestration
@@ -403,7 +409,7 @@ osi_field_dt <- function(dt, output ='all'){
   
   # add default numeric variables when missing
   cols <- c('B_PREC_SUM','B_PREC_WIN','B_PET_SUM','B_PET_WIN','B_TEMP_SUM','B_TEMP_WIN',
-            'A_ZN_EDTA')
+            'A_ZN_EDTA','B_RUSL_RE','B_RUSL_SE','B_RUSL_LS','B_RUSL_CM')
   cols <- cols[!cols %in% colnames(dt)]
   if(length(cols)>0){dt[,c(cols):= NA_real_]}
   
@@ -414,7 +420,8 @@ osi_field_dt <- function(dt, output ='all'){
   
   # check whether all input variables are present
   colsp <- c('ID',"B_COUNTRY","B_LU","B_SOILTYPE_AGR","B_PREC_SUM","B_PREC_WIN","B_PET_SUM",     
-             "B_PET_WIN","B_TEMP_SUM","B_TEMP_WIN","A_SOM_LOI","A_CLAY_MI","A_SAND_MI" ,    
+             "B_PET_WIN","B_TEMP_SUM","B_TEMP_WIN",'B_RUSL_RE','B_RUSL_SE','B_RUSL_LS','B_RUSL_CM',
+             "A_SOM_LOI","A_CLAY_MI","A_SAND_MI" ,    
              "A_PH_CC","A_CACO3_IF","A_CEC_CO","A_C_OF","A_N_RT","A_N_PMN",       
              "A_P_OL","A_K_AAA","A_B_HW","A_ZN_CC","A_ZN_RT","A_MG_AAA")
   checkmate::assert_true(all(colsp  %in% colnames(dt)))
@@ -430,6 +437,10 @@ osi_field_dt <- function(dt, output ='all'){
                          B_PET_WIN = dt$B_PET_WIN,
                          B_TEMP_SUM = dt$B_TEMP_SUM,
                          B_TEMP_WIN = dt$B_TEMP_WIN,
+                         B_RUSL_RE = dt$B_RUSL_RE,
+                         B_RUSL_SE= dt$B_RUSL_SE,
+                         B_RUSL_LS= dt$B_RUSL_LS,
+                         B_RUSL_CM= dt$B_RUSL_CM,
                          A_CLAY_MI = dt$A_CLAY_MI,
                          A_SAND_MI = dt$A_SAND_MI,
                          A_SOM_LOI = dt$A_SOM_LOI, 
