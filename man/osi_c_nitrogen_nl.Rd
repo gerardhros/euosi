@@ -4,7 +4,7 @@
 \alias{osi_c_nitrogen_nl}
 \title{Calculate the soil nitrogen supplying capacity in the Netherlands}
 \usage{
-osi_c_nitrogen_nl(B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_N_RT)
+osi_c_nitrogen_nl(B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_N_RT, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code from the BRP}
@@ -14,6 +14,8 @@ osi_c_nitrogen_nl(B_LU, B_SOILTYPE_AGR, A_SOM_LOI, A_N_RT)
 \item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil}
 
 \item{A_N_RT}{(numeric) The organic nitrogen content of the soil in mg N / kg}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.

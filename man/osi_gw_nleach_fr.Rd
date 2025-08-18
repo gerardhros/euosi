@@ -16,7 +16,8 @@ osi_gw_nleach_fr(
   B_PET_SUM = NA_real_,
   B_PET_WIN = NA_real_,
   B_TEMP_SUM = NA_real_,
-  B_TEMP_WIN = NA_real_
+  B_TEMP_WIN = NA_real_,
+  unitcheck = TRUE
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ osi_gw_nleach_fr(
 \item{B_TEMP_SUM}{(numeric) Mean winter temperature (degrees Celcius)}
 
 \item{B_TEMP_WIN}{(numeric) Mean winter temperature (degrees Celcius)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The risk of nitrogen leaching. A numeric value, converted to a OSI score.

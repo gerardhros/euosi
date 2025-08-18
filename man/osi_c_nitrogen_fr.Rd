@@ -4,7 +4,15 @@
 \alias{osi_c_nitrogen_fr}
 \title{Calculate the soil nitrogen supplying capacity in France}
 \usage{
-osi_c_nitrogen_fr(B_LU, A_CLAY_MI, A_SAND_MI, A_C_OF, A_N_RT, A_CACO3_IF)
+osi_c_nitrogen_fr(
+  B_LU,
+  A_CLAY_MI,
+  A_SAND_MI,
+  A_C_OF,
+  A_N_RT,
+  A_CACO3_IF,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{B_LU}{(character) The crop code}
@@ -18,6 +26,8 @@ osi_c_nitrogen_fr(B_LU, A_CLAY_MI, A_SAND_MI, A_C_OF, A_N_RT, A_CACO3_IF)
 \item{A_N_RT}{(numeric) The organic nitrogen content of the soil (mg N / kg)}
 
 \item{A_CACO3_IF}{(numeric) The percentage of carbonated lime (\%)}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The capacity of the soil to supply nitrogen (kg N / ha / yr). A numeric value, converted to a OSI score.

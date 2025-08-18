@@ -13,7 +13,8 @@ osi_gw_nleach_eu(
   B_PREC_Y = NA_real_,
   B_PET_Y = NA_real_,
   B_TEMP_Y = NA_real_,
-  B_COUNTRY
+  B_COUNTRY,
+  unitcheck = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ osi_gw_nleach_eu(
 \item{B_TEMP_Y}{(numeric) Mean year temperature (degrees Celcius)}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
 \value{
 The risk for N leaching
