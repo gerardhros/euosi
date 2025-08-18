@@ -303,7 +303,7 @@ osi_c_magnesium_at <- function(B_LU, A_MG_CC,B_TEXTURE_HYPRES, unitcheck = TRUE)
 osi_c_magnesium_be <- function(B_LU,A_MG_CC, unitcheck = TRUE) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = rop_code = . = NULL
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -533,7 +533,7 @@ oci_c_magnesium_cz <- function(A_MG_M3,B_TEXTURE_HYPRES,B_LU = NA_character_, un
 osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC, unitcheck = TRUE) {
   
   # add visual bindings
-  A_SILT_MI = stype = crop_code = crop_cat1 = . = NULL
+  A_SILT_MI = stype = crop_code = crop_cat1 = . = osi_country = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -616,7 +616,7 @@ osi_c_magnesium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_MG_CC, unitc
 osi_c_magnesium_dk <- function(B_LU, A_MG_AL, unitcheck = TRUE) {
   
   # add visual bindings
-  crop_code = crop_cat1 = . = NULL
+  crop_code = crop_cat1 = . = osi_country = NULL
   
   # length of arguments
   arg.length <- max(length(B_LU),length(A_MG_AL))
@@ -915,7 +915,7 @@ osi_c_magnesium_fi <- function(B_LU, B_TEXTURE_USDA, A_MG_AAA,A_C_OF = 0.5, unit
 osi_c_magnesium_fr <- function(B_LU,A_CLAY_MI, A_CEC_CO, A_CACO3_IF, A_MG_AAA, unitcheck = TRUE) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
+  osi_country = osi_indicator = id = crop_cat1 = . = crop_code = NULL
   soil_cat_mg = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
   
   # Load in the crop datasets

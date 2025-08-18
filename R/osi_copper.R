@@ -86,7 +86,7 @@ osi_c_copper <- function(B_LU,A_CLAY_MI = NA_real_,B_CF= NA_real_,A_SOM_LOI= NA_
 osi_c_copper_fr <- function(B_LU,A_CLAY_MI,B_CF, A_SOM_LOI,A_CU_EDTA) {
   
   # set visual bindings
-  i_c_cu = osi_country = osi_indicator = id = crop_cat1 = value = NULL
+  i_c_cu = osi_country = osi_indicator = id = crop_cat1 = value = . = crop_code = NULL
   soil_cat_cu = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
   
   # checkmate for inputs

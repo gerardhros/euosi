@@ -23,7 +23,7 @@
 osi_p_crumbleability <- function(B_LU,A_CLAY_MI,A_SOM_LOI,A_PH_CC,B_COUNTRY) {
   
   # Add visual bindings
-  id = . = crop_code = osi_country = crop_crumbleability = NULL
+  id = . = crop_code = osi_country = crop_crumbleability = crop_cat1 = NULL
   value.A_CLAY_MI = cor.A_PH_CC = cor.A_SOM_LOI = crvalue = lower = upper = NULL
   
   # load internal table

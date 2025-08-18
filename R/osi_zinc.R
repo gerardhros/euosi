@@ -247,7 +247,7 @@ osi_c_zinc_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI,A_ZN_EDTA, unitcheck
 osi_c_zinc_fr <- function(B_LU, A_PH_WA, A_ZN_EDTA, unitcheck = TRUE) {
   
   # set visual bindings
-  value = osi_country = osi_indicator = id = crop_cat1 = NULL
+  value = osi_country = osi_indicator = id = crop_cat1 = . = crop_code = NULL
   osi_crops = cat_zn = osi_st_c1 = osi_st_c2 = osi_st_c3 = NULL
   
   # Load in the datasets

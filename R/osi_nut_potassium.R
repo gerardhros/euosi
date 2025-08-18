@@ -1276,7 +1276,7 @@ osi_nut_k_ie <- function(B_LU, A_SOM_LOI,A_K_NaAAA, unitcheck = TRUE) {
 osi_nut_k_it <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA, unitcheck = TRUE) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = NULL
+  osi_country = osi_indicator = id = crop_cat1 = . = crop_code = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)

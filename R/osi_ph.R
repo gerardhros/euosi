@@ -662,7 +662,7 @@ osi_c_ph_el <- function(B_LU, A_PH_WA,A_NA_CO_PO, B_TEXTURE_HYPRES, unitcheck = 
 osi_c_ph_fr <- function(B_LU,B_TEXTURE_GEPPA, A_PH_WA, unitcheck = TRUE) {
   
   # set visual bindings
-  osi_c_ph_fr = osi_country = osi_indicator = id = crop_cat1 = NULL
+  osi_c_ph_fr = osi_country = osi_indicator = id = crop_cat1 = crop_code = NULL
   cat_crop_ph = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = B_SOILTYPE_AGR = NULL
   
   # Load in the datasets

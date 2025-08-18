@@ -251,6 +251,7 @@ osi_c_nitrogen_de <- function(B_LU = NA_character_,
   
   # add visual bindings
   A_SILT_MI = stype = cf1 = BD = NSC = NSCPS = arate = NULL
+  osi_country = crop_code = crop_cat1 = . = NULL
   
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
