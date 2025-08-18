@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/description_osi_crops_table.html">Description of osi_crops table</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_aggregation.html">EU OSI aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_for_acidity.html">EU OSI soil acidity</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_magnesium.html">EU OSI for magnesium</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_nitrogen.html">EU OSI for nitrogen</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_phosphor.html">EU OSI for phosphor</a></li>
@@ -42,6 +43,20 @@
 
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.8.0" id="euosi-080-2025-08-19">euosi 0.8.0 2025-08-19<a class="anchor" aria-label="anchor" href="#euosi-080-2025-08-19"></a></h2>
+<div class="section level3">
+<h3 id="added-0-8-0">Added<a class="anchor" aria-label="anchor" href="#added-0-8-0"></a></h3>
+<ul><li>possibility to switch off unit checks when wrapper functions are used</li>
+<li>add <code>B_RUSL_RE</code>, <code>B_RUSL_SE</code>, <code>B_RUSL_LS</code>, and <code>B_RUSL_CM</code> as input arguments for <code>osi_erosion</code>, <code>osi_field</code> and <code>osi_field_dt</code>
+</li>
+<li>vignette <code>eu_osi_for_acidity</code> with an introduction to soil acidity evaluation</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changed-0-8-0">Changed<a class="anchor" aria-label="anchor" href="#changed-0-8-0"></a></h3>
+<ul><li>set all indicator values to NA when <code>crop_cat1</code> equals to nature, forest or other land uses.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.0" id="euosi-070-2025-08-17">euosi 0.7.0 2025-08-17<a class="anchor" aria-label="anchor" href="#euosi-070-2025-08-17"></a></h2>
 <div class="section level3">

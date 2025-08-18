@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/description_osi_crops_table.html">Description of osi_crops table</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_aggregation.html">EU OSI aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_for_acidity.html">EU OSI soil acidity</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_magnesium.html">EU OSI for magnesium</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_nitrogen.html">EU OSI for nitrogen</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_phosphor.html">EU OSI for phosphor</a></li>
@@ -49,7 +50,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">osi_nut_p_it</span><span class="op">(</span><span class="va">B_LU</span>, <span class="va">A_P_OL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">osi_nut_p_it</span><span class="op">(</span><span class="va">B_LU</span>, <span class="va">A_P_OL</span>, unitcheck <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -62,6 +63,10 @@
 
 <dt id="arg-a-p-ol">A_P_OL<a class="anchor" aria-label="anchor" href="#arg-a-p-ol"></a></dt>
 <dd><p>(numeric) The P-content of the soil extracted with Olsen (mg/kg)</p></dd>
+
+
+<dt id="arg-unitcheck">unitcheck<a class="anchor" aria-label="anchor" href="#arg-unitcheck"></a></dt>
+<dd><p>(character) Option to switch off unit checks (TRUE or FALSE)</p></dd>
 
 </dl></div>
     <div class="section level2">

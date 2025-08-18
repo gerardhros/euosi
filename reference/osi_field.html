@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/description_osi_crops_table.html">Description of osi_crops table</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_aggregation.html">EU OSI aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/eu_osi_for_acidity.html">EU OSI soil acidity</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_magnesium.html">EU OSI for magnesium</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_nitrogen.html">EU OSI for nitrogen</a></li>
     <li><a class="dropdown-item" href="../articles/eu_osi_for_phosphor.html">EU OSI for phosphor</a></li>
@@ -60,6 +61,10 @@
 <span>  B_PET_WIN <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  B_TEMP_SUM <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  B_TEMP_WIN <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>  B_RUSL_RE <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>  B_RUSL_SE <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>  B_RUSL_LS <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>  B_RUSL_CM <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  A_CLAY_MI <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  A_SAND_MI <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  A_SOM_LOI <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
@@ -123,6 +128,22 @@
 
 <dt id="arg-b-temp-win">B_TEMP_WIN<a class="anchor" aria-label="anchor" href="#arg-b-temp-win"></a></dt>
 <dd><p>(numeric) Mean winter temperature (degrees Celcius)</p></dd>
+
+
+<dt id="arg-b-rusl-re">B_RUSL_RE<a class="anchor" aria-label="anchor" href="#arg-b-rusl-re"></a></dt>
+<dd><p>Rainfall erositivity R-factor used in Revised Universal Soil Loss Euqation model</p></dd>
+
+
+<dt id="arg-b-rusl-se">B_RUSL_SE<a class="anchor" aria-label="anchor" href="#arg-b-rusl-se"></a></dt>
+<dd><p>Soil erodobility K-factor used in Revised Universal Soil Loss Euqation model</p></dd>
+
+
+<dt id="arg-b-rusl-ls">B_RUSL_LS<a class="anchor" aria-label="anchor" href="#arg-b-rusl-ls"></a></dt>
+<dd><p>Topography LS-factor used in Revised Universal Soil Loss Euqation model</p></dd>
+
+
+<dt id="arg-b-rusl-cm">B_RUSL_CM<a class="anchor" aria-label="anchor" href="#arg-b-rusl-cm"></a></dt>
+<dd><p>Cover management C-factor used in Revised Universal Soil Loss Euqation model</p></dd>
 
 
 <dt id="arg-a-clay-mi">A_CLAY_MI<a class="anchor" aria-label="anchor" href="#arg-a-clay-mi"></a></dt>
