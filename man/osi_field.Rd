@@ -36,7 +36,8 @@ osi_field(
   A_ZN_EDTA = NA_real_,
   A_ZN_RT = NA_real_,
   ID = 1,
-  output = "all"
+  output = "all",
+  pwarning = FALSE
 )
 }
 \arguments{
@@ -103,6 +104,8 @@ osi_field(
 \item{ID}{(character) A field id}
 
 \item{output}{(character) An optional argument to select output: scores, indicators, or all. (default = all)}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The output of the Open Soil Index Calculator for a specific agricultural field. 

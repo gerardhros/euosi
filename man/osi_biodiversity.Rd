@@ -4,12 +4,14 @@
 \alias{osi_biodiversity}
 \title{Calculate a biodiversity index}
 \usage{
-osi_biodiversity(A_SOM_LOI, A_PH_CC)
+osi_biodiversity(A_SOM_LOI, A_PH_CC, pwarning = FALSE)
 }
 \arguments{
 \item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil (\%)}
 
 \item{A_PH_CC}{(numeric) The pH measured in CaCl2 solution}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The biodiversity index. A numeric value.

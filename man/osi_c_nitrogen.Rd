@@ -13,7 +13,8 @@ osi_c_nitrogen(
   A_C_OF = NA_real_,
   A_N_RT,
   A_CACO3_IF = NA_real_,
-  B_COUNTRY
+  B_COUNTRY,
+  pwarning = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ osi_c_nitrogen(
 \item{A_CACO3_IF}{(numeric) The percentage of carbonated lime (\%)}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 the capacity of soils to supply  nitorgen, converted to an OSI score.

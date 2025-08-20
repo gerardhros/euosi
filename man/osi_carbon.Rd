@@ -4,7 +4,15 @@
 \alias{osi_carbon}
 \title{Calculate a carbon index}
 \usage{
-osi_carbon(B_LU, A_C_OF, B_BGZ, A_CLAY_MI, A_SAND_MI, B_COUNTRY)
+osi_carbon(
+  B_LU,
+  A_C_OF,
+  B_BGZ,
+  A_CLAY_MI,
+  A_SAND_MI,
+  B_COUNTRY,
+  pwarning = FALSE
+)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -18,6 +26,8 @@ osi_carbon(B_LU, A_C_OF, B_BGZ, A_CLAY_MI, A_SAND_MI, B_COUNTRY)
 \item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The carbon index. A numeric value.

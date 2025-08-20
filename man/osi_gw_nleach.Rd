@@ -17,7 +17,8 @@ osi_gw_nleach(
   B_PET_WIN = NA_real_,
   B_TEMP_SUM = NA_real_,
   B_TEMP_WIN = NA_real_,
-  B_COUNTRY
+  B_COUNTRY,
+  pwarning = FALSE
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ osi_gw_nleach(
 \item{B_TEMP_WIN}{(numeric) Mean winter temperature (degrees Celcius)}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The risk for N leaching from agricultural soils in Europe

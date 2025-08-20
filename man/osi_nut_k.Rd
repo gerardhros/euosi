@@ -26,7 +26,8 @@ osi_nut_k(
   A_K_M3 = NA_real_,
   A_K_NaAAA = NA_real_,
   A_K_WA = NA_real_,
-  B_COUNTRY
+  B_COUNTRY,
+  pwarning = FALSE
 )
 }
 \arguments{
@@ -73,6 +74,8 @@ osi_nut_k(
 \item{A_K_WA}{(numeric) The exchangeable K-content of the soil measured via water extracton (mg K/ kg)}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The capacity of the soil to supply and buffer potassium, evaluated given an optimum threshold for yield. If the value is exceeding this threshold, then the efficiency of fertilizers decline. A numeric value.

@@ -4,7 +4,7 @@
 \alias{osi_p_wef}
 \title{Calculate indicator for wind erodibility}
 \usage{
-osi_p_wef(B_LU, A_CLAY_MI, A_SAND_MI, B_COUNTRY)
+osi_p_wef(B_LU, A_CLAY_MI, A_SAND_MI, B_COUNTRY, pwarning = FALSE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -14,6 +14,8 @@ osi_p_wef(B_LU, A_CLAY_MI, A_SAND_MI, B_COUNTRY)
 \item{A_SAND_MI}{(numeric) The sand content of the soil (\%)}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The vulnerability of the soil for wind erosion. A numeric value.

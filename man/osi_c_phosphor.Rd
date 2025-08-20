@@ -22,7 +22,8 @@ osi_c_phosphor(
   A_P_M3 = NA_real_,
   A_P_OL = NA_real_,
   A_P_WA = NA_real_,
-  B_COUNTRY
+  B_COUNTRY,
+  pwarning = FALSE
 )
 }
 \arguments{
@@ -61,6 +62,8 @@ osi_c_phosphor(
 \item{A_P_WA}{(numeric) The P-content of the soil extracted with water (mg P / kg)}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The phosphate availability index in European countries estimated from extractable soil P fractions. A numeric value.

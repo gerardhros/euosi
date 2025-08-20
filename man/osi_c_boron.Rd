@@ -4,7 +4,16 @@
 \alias{osi_c_boron}
 \title{Calculate the boron availability index (wrapper function)}
 \usage{
-osi_c_boron(B_LU, A_CLAY_MI, A_SAND_MI, A_SOM_LOI, A_PH_CC, A_B_HW, B_COUNTRY)
+osi_c_boron(
+  B_LU,
+  A_CLAY_MI,
+  A_SAND_MI,
+  A_SOM_LOI,
+  A_PH_CC,
+  A_B_HW,
+  B_COUNTRY,
+  pwarning = FALSE
+)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -20,6 +29,8 @@ osi_c_boron(B_LU, A_CLAY_MI, A_SAND_MI, A_SOM_LOI, A_PH_CC, A_B_HW, B_COUNTRY)
 \item{A_B_HW}{(numeric) The plant available content of B in the soil (mg  B per kg) extracted by hot water}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The capacity of the soil to supply and buffer boron, evaluated given an optimum threshold for yield. A numeric value.
