@@ -143,9 +143,14 @@ osi_parm_id;osi_parm_name;osi_parm_type;osi_parm_description;osi_parm_unit;osi_p
 142;B_TEXTURE_HYPRES;field property;texture hypres european soil map;-;;;char;TRUE;C||course||MF||medium fine||M||medium||F||fine||VF||very fine
 143;B_CF;field property;coarse fragments;%;0;100;num;FALSE;
 144;B_BGZ;field property;biogeographical zone;-;1;12;char;TRUE;1||alpine || 2||anatolian || 3||arctic || 4 ||atlantic || 5 ||blackSea || 6 ||boreal || 7 ||continental || 8 ||macaronesia || 9|| mediterranean || 10|| outside || 11 ||pannonian || 12 ||steppic
-145;B_PREC_SUM;field property;"the total summer precipitation; ERA5";mm;0;1000;num;FALSE;
-146;B_PREC_WIN;field property;"the total winter precipitation; ERA5";mm;0;1000;num;FALSE;
-147;B_PET_SUM;field property;"the total summer evaporation; ERA5";mm;0;1000;num;FALSE;
-148;B_PET_WIN;field property;"the total winter evaporation; ERA5";mm;0;1000;num;FALSE;
+145;B_PREC_SUM;field property;"the total summer precipitation; ERA5";mm;0;2000;num;FALSE;
+146;B_PREC_WIN;field property;"the total winter precipitation; ERA5";mm;0;2000;num;FALSE;
+147;B_PET_SUM;field property;"the total summer evaporation; ERA5";mm;0;6000;num;FALSE;
+148;B_PET_WIN;field property;"the total winter evaporation; ERA5";mm;0;6000;num;FALSE;
 149;B_TEMP_SUM;field property;"the mean summer temperature; ERA5 (degrees C)";C;-10;40;num;FALSE;
 150;B_TEMP_WIN;field property;"the mean winter temperature; ERA5 (degrees C)";C;-10;40;num;FALSE;
+151;B_SMC_SUM;field property;the mean soil moisture content in summer;-;0.1;0.7;num;FALSE;
+152;B_SMC_WIN;field property;the mean soil moisture content in winter;-;0.1;0.7;num;FALSE;
+153;B_RUSL_LS;field property;topography ls-factor;-;0;1.5;num;FALSE;
+154;B_RUSL_RE;field property;rainfall erositivity r-factor;-;100;6000;num;FALSE;
+155;B_RUSL_SE;field property;soil erodibility k-factor;-;1;4;int;FALSE;
