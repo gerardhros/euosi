@@ -17,6 +17,7 @@
 #' @param A_PH_CC (numeric) The pH measured in cacl2 
 #' @param A_PH_KCL (numeric) The pH measured in KCl
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -30,7 +31,7 @@ osi_c_ph <- function(B_LU,
                      A_CEC_CO = NA_real_,
                      A_CA_CO_PO = NA_real_, A_MG_CO_PO = NA_real_,A_K_CO_PO = NA_real_, A_NA_CO_PO = NA_real_,
                      A_PH_WA = NA_real_, A_PH_CC= NA_real_, A_PH_KCL= NA_real_,
-                     B_COUNTRY) {
+                     B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
   value = B_TEXTURE_USDA = A_SILT_MI = B_TEXTURE_HYPRES = NULL
@@ -78,7 +79,8 @@ osi_c_ph <- function(B_LU,
                            A_PH_CC = dt$A_PH_CC),
                fname = 'osi_c_ph',
                na_allowed = TRUE, 
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # estimate texture information
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
@@ -107,7 +109,8 @@ osi_c_ph <- function(B_LU,
                            A_PH_WA = dt$A_PH_WA,
                            A_PH_KCL = dt$A_PH_KCL),
                fname = 'osi_c_ph',
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # evaluate OSI index for pH
   

@@ -11,7 +11,8 @@
 #' @param B_RUSL_RE Rainfall erositivity R-factor used in Revised Universal Soil Loss Euqation model
 #' @param B_RUSL_CM Cover management C-factor used in Revised Universal Soil Loss Euqation model
 #' @param B_RUSL_LS Topography LS-factor used in Revised Universal Soil Loss Euqation model
-#'     
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -22,7 +23,7 @@
 #' 
 #' @export
 osi_erosion <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_SAND_MI,B_COUNTRY,
-                        B_RUSL_RE = NA_real_,B_RUSL_SE= NA_real_,B_RUSL_LS= NA_real_,B_RUSL_CM= NA_real_) {
+                        B_RUSL_RE = NA_real_,B_RUSL_SE= NA_real_,B_RUSL_LS= NA_real_,B_RUSL_CM= NA_real_,pwarning = FALSE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -43,7 +44,10 @@ osi_erosion <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_SAND_MI,B_COUNTRY,
                            A_SAND_MI = A_SAND_MI,
                            A_CLAY_MI = A_CLAY_MI,
                            A_SOM_LOI = A_SOM_LOI),
-               fname ='osi_erosion')
+               fname ='osi_erosion',
+               unitcheck = TRUE,
+               na_allowed = TRUE,
+               pwarning = pwarning)
   
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,

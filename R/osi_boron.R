@@ -9,14 +9,15 @@
 #' @param A_B_HW (numeric) The plant available content of B in the soil (mg  B per kg) extracted by hot water
 #' @param A_PH_CC (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
 #' @param B_COUNTRY (character) The country code
-#' 
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @return
 #' The capacity of the soil to supply and buffer boron, evaluated given an optimum threshold for yield. A numeric value.
 #' 
 #' @export
-osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_COUNTRY) {
+osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
   i_c_bo = A_SILT_MI = B_TEXTURE_USDA = B_TEXTURE_HYPRES = B_TEXTURE_GEPPA = B_TEXTURE_BE = NULL
@@ -28,7 +29,9 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
                     A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,
                     A_B_HW = A_B_HW),
                fname='osi_c_boron', 
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               na_allowed = TRUE,
+               pwarning = pwarning)
   
   # desired length of inputs
   arg.length <- max(length(B_LU), length(A_CLAY_MI), length(A_SAND_MI),
@@ -66,7 +69,8 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
                     B_TEXTURE_BE = dt$B_TEXTURE_BE, B_TEXTURE_GEPPA = dt$B_TEXTURE_GEPPA,
                     A_PH_WA = dt$A_PH_WA, A_C_OF = dt$A_C_OF),
                fname='osi_c_boron', 
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # calculate the OSI score for boron
   
@@ -75,19 +79,23 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   dt[B_COUNTRY == 'BE', value := NA_real_]
   dt[B_COUNTRY == 'CH', value := osi_c_boron_ch(B_LU = B_LU, A_B_HW = A_B_HW, unitcheck = FALSE)]
   dt[B_COUNTRY == 'CZ', value := NA_real_]
-  dt[B_COUNTRY == 'DE', value := osi_c_boron_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_PH_CC = A_PH_CC, A_B_HW = A_B_HW, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'DE', value := osi_c_boron_de(B_LU = B_LU, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, 
+                                                A_SAND_MI = A_SAND_MI, A_PH_CC = A_PH_CC, A_B_HW = A_B_HW, 
+                                                unitcheck = FALSE)]
   
   # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
   dt[B_COUNTRY == 'EE', value := NA_real_]
   dt[B_COUNTRY == 'EL', value := NA_real_]
   dt[B_COUNTRY == 'ES', value := NA_real_]
-  dt[B_COUNTRY == 'FR', value := osi_c_boron_fr(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_B_HW = A_B_HW, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'FR', value := osi_c_boron_fr(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_B_HW = A_B_HW, 
+                                                unitcheck = FALSE)]
   dt[B_COUNTRY == 'FI', value := NA_real_]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
   dt[B_COUNTRY == 'HU', value := NA_real_]
-  dt[B_COUNTRY == 'IE', value := osi_c_boron_ie(B_LU = B_LU, A_B_HW = A_B_HW, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'IE', value := osi_c_boron_ie(B_LU = B_LU, A_B_HW = A_B_HW, 
+                                                unitcheck = FALSE)]
   dt[B_COUNTRY == 'IT', value := NA_real_]
   dt[B_COUNTRY == 'LV', value := NA_real_]
   dt[B_COUNTRY == 'LT', value := NA_real_]
@@ -104,7 +112,8 @@ osi_c_boron <- function(B_LU,A_CLAY_MI,A_SAND_MI, A_SOM_LOI, A_PH_CC,A_B_HW, B_C
   dt[B_COUNTRY == 'PL', value := NA_real_]
   dt[B_COUNTRY == 'PT', value := osi_c_boron_pt(B_LU = B_LU, A_B_HW = A_B_HW, unitcheck = FALSE)]
   dt[B_COUNTRY == 'RO', value := NA_real_]
-  dt[B_COUNTRY == 'UK', value := osi_c_boron_uk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,A_B_HW = A_B_HW, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'UK', value := osi_c_boron_uk(B_LU = B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_SOM_LOI = A_SOM_LOI, 
+                                                A_PH_CC = A_PH_CC,A_B_HW = A_B_HW, unitcheck = FALSE)]
   
   # select the output variable
   value <- dt[,value]

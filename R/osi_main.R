@@ -34,6 +34,7 @@
 #' @param A_ZN_EDTA (numeric) The plant available content of Zn in the soil (mg Zn per kg) extracted by EDTA 
 #' @param A_ZN_RT (numeric) The total Zn-content of the soil via XRF or Dumas (mg Zn/kg)
 #' @param output (character) An optional argument to select output: scores, indicators, or all. (default = all)
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #' 
 #' @details 
 #' It is assumed that the crop series is a continuous series in decreasing order of years. So most recent year first, oldest year last.
@@ -59,7 +60,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                       A_N_RT = NA_real_,A_N_PMN = NA_real_,
                       A_P_OL = NA_real_,A_K_AAA = NA_real_,A_MG_AAA = NA_real_, A_B_HW = NA_real_, 
                       A_ZN_CC = NA_real_, A_ZN_EDTA = NA_real_,A_ZN_RT = NA_real_,
-                      ID = 1, output = 'all') {
+                      ID = 1, output = 'all',pwarning = FALSE) {
   
   # add visual bindings
   i_c_p = i_p_whc = i_p_dens = i_p_wef = i_p_paw = i_p_cr = i_p_ksat = i_b_pmn = NULL
@@ -112,7 +113,8 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
     # calculate OSI indicator for N supply
     dt[,i_c_n := osi_c_nitrogen(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR,A_CLAY_MI = A_CLAY_MI, 
                                 A_SAND_MI = A_SAND_MI, A_C_OF = A_C_OF, A_SOM_LOI = A_SOM_LOI,
-                                A_CACO3_IF = A_CACO3_IF,A_N_RT = A_N_RT,B_COUNTRY = B_COUNTRY)]
+                                A_CACO3_IF = A_CACO3_IF,A_N_RT = A_N_RT,B_COUNTRY = B_COUNTRY,
+                                pwarning = pwarning)]
     
     # calculate OSI indicator for P supply
     dt[,i_c_p := osi_c_phosphor(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, A_CLAY_MI = A_CLAY_MI, 
@@ -120,7 +122,8 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                                A_PH_WA = NA_real_, A_PH_CC = A_PH_CC, A_CACO3_IF = A_CACO3_IF,    
                                A_P_OL = A_P_OL, A_P_M3 = NA_real_, A_P_CAL = NA_real_,         
                                A_P_AAA = NA_real_, A_P_DL = NA_real_, A_P_AL = NA_real_,         
-                               A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY)]
+                               A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY = B_COUNTRY,
+                               pwarning = pwarning)]
     
     # calculate OSI indicator for K supply
     dt[,i_c_k := osi_c_potassium(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR,
@@ -130,8 +133,8 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                                  A_CEC_CO = A_CEC_CO, 
                                  A_K_AAA = A_K_AAA,A_K_AL = NA_real_,A_K_AN = NA_real_,A_K_CAL = NA_real_,A_K_CC = NA_real_,
                                  A_K_CO_PO = NA_real_,A_K_DL = NA_real_,A_K_M3 = NA_real_,A_K_NaAAA = NA_real_,
-                                 A_K_WA = NA_real_,
-                                 B_COUNTRY = B_COUNTRY)]
+                                 A_K_WA = NA_real_,B_COUNTRY = B_COUNTRY,
+                                 pwarning = pwarning)]
     
     # calculate OSI indicator for Mg supply
     dt[, i_c_mg := osi_c_magnesium(B_LU = B_LU,
@@ -144,12 +147,12 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                                    A_MG_CO_PO = NA_real_, A_MG_DL = NA_real_,A_MG_KCL = NA_real_,A_MG_M3 = NA_real_,
                                    A_MG_NaAAA = NA_real_,
                                    A_K_CO_PO = NA_real_,A_K_CC = NA_real_,
-                                   B_COUNTRY = B_COUNTRY)]
+                                   B_COUNTRY = B_COUNTRY, pwarning = pwarning)]
      
     # calculate OSI indicator for B supply
     dt[,i_c_b := osi_c_boron(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI, 
                              A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,A_B_HW = A_B_HW, 
-                             B_COUNTRY = B_COUNTRY)]
+                             B_COUNTRY = B_COUNTRY,pwarning = pwarning)]
     
     # calculate OSI indicator for Zn supply
     dt[,i_c_zn := osi_c_zinc(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
@@ -157,7 +160,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                              A_PH_WA = NA_real_, A_PH_CC = A_PH_CC,
                              A_ZN_EDTA = NA_real_,A_ZN_CC = A_ZN_CC, A_ZN_RT=A_ZN_RT,
                              A_P_OL = A_P_OL,
-                             B_COUNTRY = B_COUNTRY)]
+                             B_COUNTRY = B_COUNTRY,pwarning = pwarning)]
     
     # calculate OSI indicator for soil pH
     dt[,i_c_ph := osi_c_ph(B_LU= B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
@@ -166,37 +169,37 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                            A_CA_CO_PO = NA_real_, A_MG_CO_PO = NA_real_,A_K_CO_PO = NA_real_, 
                            A_NA_CO_PO = NA_real_,
                            A_PH_WA = NA_real_, A_PH_CC= A_PH_CC, A_PH_KCL= NA_real_,
-                           B_COUNTRY = B_COUNTRY)]
+                           B_COUNTRY = B_COUNTRY,pwarning = pwarning)]
   
   # --- soil physical functions ----  
     
     # water holding capacity (equal for all countries)
-    dt[,i_p_whc := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI,type = 'whc')]
+    dt[,i_p_whc := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI,type = 'whc',pwarning = pwarning)]
   
     # plant available water (equal for all countries)
-    dt[,i_p_paw := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI,type = 'paw')]
+    dt[,i_p_paw := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI,type = 'paw',pwarning = pwarning)]
   
     # permeabilty of the soil (equal for all countries)
-    dt[,i_p_ksat := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI,type = 'ksat')]
+    dt[,i_p_ksat := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI,type = 'ksat',pwarning = pwarning)]
   
     # bulk density (equal for all countries)
-    dt[,i_p_dens := osi_p_density(A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI)]
+    dt[,i_p_dens := osi_p_density(A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI,pwarning = pwarning)]
   
     # soil structure: crumbleability
     dt[, i_p_cr := osi_p_crumbleability(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI,A_SOM_LOI = A_SOM_LOI,
-                                        A_PH_CC = A_PH_CC, B_COUNTRY = B_COUNTRY)]
+                                        A_PH_CC = A_PH_CC, B_COUNTRY = B_COUNTRY,pwarning = pwarning)]
     
     # risk for wind erodibility (equal for all countries)
-    dt[,i_p_wef := osi_p_wef(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, B_COUNTRY = B_COUNTRY)]
+    dt[,i_p_wef := osi_p_wef(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, B_COUNTRY = B_COUNTRY,pwarning = pwarning)]
     
  # --- soil biological functions ----  
     
     # potentially mineralable N / microbial activity
     dt[,i_b_pmn := osi_b_pmn(B_LU = B_LU,B_SOILTYPE_AGR = B_SOILTYPE_AGR,A_CLAY_MI = A_CLAY_MI, 
-                             A_N_PMN = A_N_PMN,A_N_RT = A_N_RT,B_COUNTRY = B_COUNTRY)]
+                             A_N_PMN = A_N_PMN,A_N_RT = A_N_RT,B_COUNTRY = B_COUNTRY,pwarning = pwarning)]
     
     # conditions for biodiversity (equal for all countries)
-    dt[,i_b_biodiv := osi_biodiversity(A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC)]
+    dt[,i_b_biodiv := osi_biodiversity(A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC,pwarning = pwarning)]
     
     
  # --- soil environmental function ---
@@ -205,12 +208,12 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
     dt[,i_e_watererosie := osi_erosion(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI,
                                        A_CLAY_MI = A_CLAY_MI, A_SAND_MI=A_SAND_MI, 
                                        B_RUSL_RE = B_RUSL_RE,B_RUSL_SE= B_RUSL_SE,B_RUSL_LS= B_RUSL_LS,B_RUSL_CM= B_RUSL_LS,
-                                       B_COUNTRY = B_COUNTRY)]
+                                       B_COUNTRY = B_COUNTRY,pwarning = pwarning)]
     
     # carbon sequestration
     dt[,i_e_carbon := osi_carbon(B_LU = B_LU,A_C_OF = A_C_OF, 
                                  B_BGZ = '4', A_CLAY_MI = A_CLAY_MI, 
-                                 A_SAND_MI=A_SAND_MI, B_COUNTRY = B_COUNTRY)]
+                                 A_SAND_MI=A_SAND_MI, B_COUNTRY = B_COUNTRY,pwarning = pwarning)]
     
     # nitrate loss risks from soil organic nitrogen
     dt[, i_e_nleach := osi_gw_nleach(B_LU = B_LU, 
@@ -220,7 +223,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                                      B_PREC_SUM = B_PREC_SUM,B_PREC_WIN = B_PREC_WIN, 
                                      B_PET_SUM = B_PET_SUM,B_PET_WIN = B_PET_WIN,
                                      B_TEMP_SUM = B_TEMP_SUM,B_TEMP_WIN = B_TEMP_WIN,
-                                     B_COUNTRY = B_COUNTRY)]
+                                     B_COUNTRY = B_COUNTRY,pwarning = pwarning)]
     
     # phosphorus excess risk indicator
     dt[,i_e_pexcess := osi_nut_p(B_LU, 
@@ -230,7 +233,8 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                                  A_PH_WA = NA_real_,A_PH_CC = A_PH_CC, A_CACO3_IF = A_CACO3_IF,
                                  A_P_OL = A_P_OL, A_P_M3 = NA_real_, A_P_CAL = NA_real_,
                                  A_P_AAA = NA_real_,A_P_DL = NA_real_,
-                                 A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY = B_COUNTRY)]
+                                 A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_, 
+                                 B_COUNTRY = B_COUNTRY,pwarning = pwarning)]
     
     # potassium excess risk indicator
     dt[,i_e_kexcess := osi_nut_k(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR,
@@ -240,7 +244,7 @@ osi_field <- function(B_LU,B_SOILTYPE_AGR,B_COUNTRY, B_BGZ = NA_character_,
                                  A_CEC_CO = A_CEC_CO, 
                                  A_K_AAA = A_K_AAA,A_K_AL = NA_real_,A_K_AN = NA_real_,A_K_CAL = NA_real_,A_K_CC = NA_real_,
                                  A_K_CO_PO = NA_real_,A_K_DL = NA_real_,A_K_M3 = NA_real_,A_K_NaAAA = NA_real_,
-                                 B_COUNTRY = B_COUNTRY)]
+                                 B_COUNTRY = B_COUNTRY, pwarning = pwarning)]
     
  # --- aggregate indicators before scoring ----
   

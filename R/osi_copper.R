@@ -12,7 +12,8 @@
 #' @param A_CU_RT (numeric) The pseudo-total content of Cu in the soil (mg Cu per kg) extracted by Aqua regia
 #' @param A_CU_EDTA (numeric) The plant available content of Cu in the soil (mg Cu per kg) extracted by EDTA 
 #' @param B_COUNTRY (character) The country code
-#'  
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @return
@@ -20,7 +21,8 @@
 #' 
 #' @export
 osi_c_copper <- function(B_LU,A_CLAY_MI = NA_real_,B_CF= NA_real_,A_SOM_LOI= NA_real_,A_PH_WA= NA_real_,
-                         A_CACO3_IF= NA_real_,A_CU_RT= NA_real_,A_CU_EDTA= NA_real_,A_CU_CC= NA_real_, B_COUNTRY) {
+                         A_CACO3_IF= NA_real_,A_CU_RT= NA_real_,A_CU_EDTA= NA_real_,A_CU_CC= NA_real_, B_COUNTRY,
+                         pwarning = FALSE) {
   
   # add visual bindings
   i_c_cu = NULL
@@ -33,7 +35,11 @@ osi_c_copper <- function(B_LU,A_CLAY_MI = NA_real_,B_CF= NA_real_,A_SOM_LOI= NA_
                     A_CLAY_MI = A_CLAY_MI,A_CACO3_IF = A_CACO3_IF,
                     A_SOM_LOI = A_SOM_LOI, A_PH_WA = A_PH_WA,
                     A_CU_RT = A_CU_RT, A_CU_EDTA = A_CU_EDTA,
-                    A_CU_CC = A_CU_CC),fname='osi_c_copper')
+                    A_CU_CC = A_CU_CC),
+               fname='osi_c_copper',
+               na_allowed = TRUE,
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,

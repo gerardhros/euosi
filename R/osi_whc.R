@@ -8,7 +8,8 @@
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
 #' @param type (character) The type of water retention index. Options include c('water holding capacity', 'whc','plant available water','paw','Ksat' or 'ksat')
 #' @param ptf (character) Pedotransfer functions to calculate van Genuchten parameters. Options include c('Wosten1999', 'Wosten2001', 'Klasse')
-#'
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
+#' 
 #' @references Wosten et al. (2001) Pedotransfer functions: bridging the gap between available basic soil data and missing hydraulic characteristics. Journal of Hydrology 251, p123.
 #'
 #' @import data.table  
@@ -26,7 +27,7 @@
 #' Soil functions are evaluated given a threshold value and expressed as a distance to target.
 #' 
 #' @export
-osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SOM_LOI,type = 'whc', ptf = 'Wosten1999') {
+osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SOM_LOI,type = 'whc', ptf = 'Wosten1999',pwarning = FALSE) {
   
   # Add visual bindings
   id = thetaS = thetaR = alfa = n = fc = wp = whc = paw = ksat = density = Pleem = mineral = NULL
@@ -49,7 +50,9 @@ osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SOM_LOI,type = 'whc', ptf = 'Wosten1
   osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI,
                            A_SAND_MI = A_SAND_MI,
                            A_SOM_LOI = A_SOM_LOI),
-               fname = 'osi_p_whc')
+               fname = 'osi_p_whc',
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,

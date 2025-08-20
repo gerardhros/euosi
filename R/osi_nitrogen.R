@@ -11,6 +11,7 @@
 #' @param A_CACO3_IF (numeric) The percentage of carbonated lime (\%) 
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil (mg N / kg)
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #'  
 #' @import data.table
 #' 
@@ -25,7 +26,7 @@
 #' @export
 osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_real_,
                            A_SAND_MI = NA_real_,A_SOM_LOI = NA_real_,A_C_OF = NA_real_,
-                           A_N_RT, A_CACO3_IF = NA_real_, B_COUNTRY) {
+                           A_N_RT, A_CACO3_IF = NA_real_, B_COUNTRY,pwarning = FALSE) {
   
   # add visual bindings
   A_CN_FR = value = id = NULL
@@ -58,7 +59,8 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
                            A_N_RT = dt$A_N_RT),
                fname = 'osi_c_nitrogen',
                na_allowed = TRUE,
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # estimate missing properties (if applicable)
   dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
@@ -70,14 +72,19 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
                            A_C_OF = dt$A_C_OF,
                            A_SOM_LOI = dt$A_SOM_LOI),
                fname = 'osi_c_nitrogen',
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # Austria (AT), Belgium (BE), Switzerland (CH), Czech Republic (CZ), Germany (DE)
   dt[B_COUNTRY == 'AT', value := NA_real_]
-  dt[B_COUNTRY == 'BE', value := osi_c_nitrogen_be(B_LU = B_LU, A_N_RT = A_N_RT, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_CACO3_IF = A_CACO3_IF, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'BE', value := osi_c_nitrogen_be(B_LU = B_LU, A_N_RT = A_N_RT, A_C_OF = A_C_OF, A_CLAY_MI = A_CLAY_MI, 
+                                                   A_SAND_MI = A_SAND_MI, A_CACO3_IF = A_CACO3_IF, 
+                                                   unitcheck = FALSE)]
   dt[B_COUNTRY == 'CH', value := NA_real_]
   dt[B_COUNTRY == 'CZ', value := NA_real_]
-  dt[B_COUNTRY == 'DE', value := osi_c_nitrogen_de(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, A_SOM_LOI = A_SOM_LOI,A_N_RT = A_N_RT, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'DE', value := osi_c_nitrogen_de(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI,A_C_OF = A_C_OF, 
+                                                   A_SOM_LOI = A_SOM_LOI,A_N_RT = A_N_RT, 
+                                                   unitcheck = FALSE)]
   
   # Denmark (DK), Estonia (EE), Greece (EL), Spain (ES),France (FR), Finland (FI) 
   dt[B_COUNTRY == 'DK', value := NA_real_]
@@ -85,7 +92,8 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
   dt[B_COUNTRY == 'EL', value := NA_real_]
   dt[B_COUNTRY == 'ES', value := NA_real_]
   dt[B_COUNTRY == 'FR', value := osi_c_nitrogen_fr(B_LU = B_LU,A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,
-                                                   A_C_OF = A_C_OF,A_N_RT = A_N_RT, A_CACO3_IF = A_CACO3_IF, unitcheck = FALSE)]
+                                                   A_C_OF = A_C_OF,A_N_RT = A_N_RT, A_CACO3_IF = A_CACO3_IF, 
+                                                   unitcheck = FALSE)]
   dt[B_COUNTRY == 'FI', value := NA_real_]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
@@ -97,7 +105,8 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
   
   # the Netherlands (NL), Norway (NO),  Sweden (SE), Slovak Republic (SK), Slovenia (SL)
   dt[B_COUNTRY == 'NL', value := osi_c_nitrogen_nl(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, 
-                                                   A_SOM_LOI = A_SOM_LOI,A_N_RT = A_N_RT, unitcheck = FALSE)]
+                                                   A_SOM_LOI = A_SOM_LOI,A_N_RT = A_N_RT, 
+                                                   unitcheck = FALSE)]
   dt[B_COUNTRY == 'NO', value := NA_real_]
   dt[B_COUNTRY == 'SE', value := NA_real_]
   dt[B_COUNTRY == 'SK', value := NA_real_]

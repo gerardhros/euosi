@@ -20,6 +20,7 @@
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P / kg)
 #' @param A_P_WA (numeric) The P-content of the soil extracted with water (mg P / kg)
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -34,7 +35,7 @@ osi_c_phosphor <- function(B_LU,
                           A_P_AAA = NA_real_,A_P_AL = NA_real_, A_P_CAL = NA_real_,
                           A_P_CC = NA_real_, A_P_DL = NA_real_, A_P_M3 = NA_real_,
                           A_P_OL = NA_real_,A_P_WA = NA_real_, 
-                          B_COUNTRY) {
+                          B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
   id = B_TEXTURE_USDA = B_TEXTURE_HYPRES = A_SILT_MI = value = NULL
@@ -89,7 +90,8 @@ osi_c_phosphor <- function(B_LU,
                            A_P_CC = dt$A_P_CC),
                fname='oci_c_phosphor',
                na_allowed = TRUE,
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # estimate texture information
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
@@ -120,7 +122,8 @@ osi_c_phosphor <- function(B_LU,
                            A_P_WA = dt$A_P_WA,
                            A_P_CC = dt$A_P_CC),
                fname='oci_c_phosphor',
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # calculate the OSI score per country
   

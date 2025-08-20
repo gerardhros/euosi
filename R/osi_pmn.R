@@ -8,20 +8,22 @@
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil in mg N / kg
 #' @param A_N_PMN (numeric) The potentially mineralizable N pool (mg N / kg soil) 
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #'  
 #' @import data.table
 #' @import OBIC
 #' 
 #' @examples 
-#' osi_b_pmn(B_LU = 256, B_SOILTYPE_AGR = 'dekzand', A_N_PMN = 125, B_COUNTRY = 'NL')
-#' osi_b_pmn(B_LU = c(256,1027), B_SOILTYPE_AGR = c('dekzand','rivierklei'), 
+#' osi_b_pmn(B_LU = '256', B_SOILTYPE_AGR = 'dekzand', A_N_PMN = 125, B_COUNTRY = 'NL')
+#' osi_b_pmn(B_LU = c('256','1027'), B_SOILTYPE_AGR = c('dekzand','rivierklei'), 
 #' A_N_PMN = c(125,45),B_COUNTRY = c('NL','NL'))
 #'
 #' @return 
 #' the normalized potentially mineralizable Nitrogen pool (mg N / kg), a numeric value, converted to an OSI score.
 #' 
 #' @export
-osi_b_pmn <- function(B_LU, B_SOILTYPE_AGR,A_CLAY_MI = NA_real_, A_N_PMN = NA_real_, A_N_RT = NA_real_, B_COUNTRY) {
+osi_b_pmn <- function(B_LU, B_SOILTYPE_AGR,A_CLAY_MI = NA_real_, A_N_PMN = NA_real_, A_N_RT = NA_real_, 
+                      B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
 
@@ -41,14 +43,26 @@ osi_b_pmn <- function(B_LU, B_SOILTYPE_AGR,A_CLAY_MI = NA_real_, A_N_PMN = NA_re
                    value = NA_real_
                   )
   
+  # check the input parameters
+  osi_checkvar(parm = list(B_LU = dt$B_LU,
+                           B_COUNTRY = dt$B_COUNTRY,
+                           B_SOILTYPE_AGR = dt$B_SOILTYPE_AGR,
+                           A_CLAY_MI = dt$A_CLAY_MI,
+                           A_N_PMN = dt$A_N_PMN,
+                           A_N_RT = dt$A_N_RT),
+               fname = 'osi_b_pmn',
+               na_allowed = TRUE, 
+               unitcheck = TRUE,
+               pwarning = pwarning)
+  
   # estimate A_N_PMN (mg N / kg) when missing
   dt[is.na(A_N_PMN) & !is.na(A_N_RT), A_N_PMN := exp(-3.440931 + 1.1012449 * log(A_N_RT) - 0.055858 * log(A_CLAY_MI))]
   
   # calculate the open soil index score for phosphor availability
-  dt[B_COUNTRY == 'NL', value := osi_b_pmn_nl(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, A_N_PMN = A_N_PMN)]
+  dt[B_COUNTRY == 'NL', value := osi_b_pmn_nl(B_LU = B_LU, B_SOILTYPE_AGR = B_SOILTYPE_AGR, A_N_PMN = A_N_PMN, unitcheck = FALSE)]
   
   # calculate PMN for other countries
-  dt[B_COUNTRY != 'NL', value := osi_b_pmn_eu(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_N_RT = A_N_RT)]
+  dt[B_COUNTRY != 'NL', value := osi_b_pmn_eu(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_N_RT = A_N_RT, B_COUNTRY = B_COUNTRY,unitcheck = FALSE)]
   
   # select the output variable
   value <- dt[,value]
@@ -65,19 +79,20 @@ osi_b_pmn <- function(B_LU, B_SOILTYPE_AGR,A_CLAY_MI = NA_real_, A_N_PMN = NA_re
 #' @param B_LU (numeric) The crop code
 #' @param B_SOILTYPE_AGR (character) The agricultural type of soil
 #' @param A_N_PMN (numeric) The potentially mineralizable N pool (mg N / kg soil) 
-#' 
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' @import OBIC
 #' 
 #' @examples 
-#' osi_b_pmn_nl(B_LU = 256, B_SOILTYPE_AGR = 'dekzand', A_N_PMN = 125)
-#' osi_b_pmn_nl(c(256,1027), c('dekzand','rivierklei'), c(125,45))
+#' osi_b_pmn_nl(B_LU = '256', B_SOILTYPE_AGR = 'dekzand', A_N_PMN = 125)
+#' osi_b_pmn_nl(c('256','1027'), c('dekzand','rivierklei'), c(125,45))
 #'
 #' @return 
 #' the normalized potentially mineralizable Nitrogen pool (mg N / kg), a numeric value, converted to an OSI score.
 #' 
 #' @export
-osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
+osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN, unitcheck = TRUE) {
   
   # add visual bindings
   osi_country = osi_indicator = crop_code = osi_b_pmn = NULL
@@ -96,6 +111,15 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
   
   # check length and of arguments
   arg.length <- max(length(A_N_PMN), length(B_LU), length(B_SOILTYPE_AGR))
+  
+  # check the input parameters
+  osi_checkvar(parm = list(B_COUNTRY = rep('NL',arg.length),
+                           B_LU = B_LU,
+                           B_SOILTYPE_AGR = B_SOILTYPE_AGR,
+                           A_N_PMN = A_N_PMN),
+               fname = 'osi_b_pmn_nl',
+               unitcheck = unitcheck)
+  
   checkmate::assert_numeric(A_N_PMN, lower = 0, upper = 1000, any.missing = FALSE, len = arg.length)
   checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
   checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
@@ -157,19 +181,21 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN) {
 #' @param B_LU (numeric) The crop code
 #' @param A_CLAY_MI (numeric) The aclay content of the soil (\%)
 #' @param A_N_RT (numeric) The total N content of the soil(mg N / kg soil) 
+#' @param B_COUNTRY (character) The country code
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' @import OBIC
 #' 
 #' @examples 
-#' osi_b_pmn_eu(B_LU = 256, A_CLAY_MI = 4.5, A_N_RT = 1250)
-#' osi_b_pmn_eu(c(256,1027),c(4,48), c(3125,1450))
+#' osi_b_pmn_eu(B_LU = '256', A_CLAY_MI = 4.5, A_N_RT = 1250)
+#' osi_b_pmn_eu(B_LU = c('256','1027'),A_CLAY_MI = c(4,48), A_N_RT = c(3125,1450))
 #'
 #' @return 
 #' the normalized potentially mineralizable Nitrogen pool (mg N / kg), a numeric value, converted to an OSI score.
 #' 
 #' @export
-osi_b_pmn_eu <- function(B_LU, A_N_RT, A_CLAY_MI) {
+osi_b_pmn_eu <- function(B_LU, A_N_RT, A_CLAY_MI, B_COUNTRY = NA_character_,unitcheck = TRUE) {
   
   # add visual bindings
   osi_country = osi_indicator = PMN = NULL
@@ -190,8 +216,18 @@ osi_b_pmn_eu <- function(B_LU, A_N_RT, A_CLAY_MI) {
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
                    A_CLAY_MI = A_CLAY_MI,
-                   A_N_RT = A_N_RT
+                   A_N_RT = A_N_RT,
+                   B_COUNTRY = B_COUNTRY
                    )
+  
+  # check inputs
+  osi_checkvar(parm = list(B_LU = dt$B_LU,
+                           B_COUNTRY = dt$B_COUNTRY,
+                           A_CLAY_MI = dt$A_CLAY_MI,
+                           A_N_RT = dt$A_N_RT),
+               fname ='osi_b_pmn_eu',
+               na_allowed = TRUE,
+               unitcheck = unitcheck)
   
   # predict PMN (based on Dutch emperical relationship)
   # built on the large dataset of Dutch soils (R2 = 0.79, N=109.146 samples)

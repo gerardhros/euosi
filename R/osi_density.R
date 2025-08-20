@@ -4,7 +4,8 @@
 #' 
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
-#' 
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #' 
 #' @examples
@@ -16,7 +17,7 @@
 #' The bulk density of an arable soil (kg / m3) evaluated given the maximum density that limit the root penetration.
 #' 
 #' @export
-osi_p_density <- function(A_SOM_LOI, A_CLAY_MI) {
+osi_p_density <- function(A_SOM_LOI, A_CLAY_MI, pwarning = FALSE) {
   
   # set visual bindings
   dens.sand = dens.clay = cf = density = crit1 = NULL
@@ -29,7 +30,8 @@ osi_p_density <- function(A_SOM_LOI, A_CLAY_MI) {
   
   # Check input
   osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,A_CLAY_MI = A_CLAY_MI), 
-                           fname = 'osi_p_density')
+               fname = 'osi_p_density',
+               pwarning = pwarning)
   
   # Collect data into a table
   dt <- data.table(A_SOM_LOI = A_SOM_LOI,

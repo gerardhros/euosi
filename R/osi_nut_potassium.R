@@ -24,6 +24,7 @@
 #' @param A_K_NaAAA (numeric) The K-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)
 #' @param A_K_WA (numeric) The exchangeable K-content of the soil measured via water extracton (mg K/ kg)
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -43,7 +44,7 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_charact
                             A_CEC_CO = NA_real_, 
                             A_K_AAA = NA_real_,A_K_AL = NA_real_,A_K_AN = NA_real_,A_K_CAL = NA_real_,A_K_CC = NA_real_,
                             A_K_CO_PO = NA_real_,A_K_DL = NA_real_,A_K_M3 = NA_real_,A_K_NaAAA = NA_real_,A_K_WA = NA_real_,
-                            B_COUNTRY) {
+                            B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
   i_c_k = B_TEXTURE_USDA = B_TEXTURE_HYPRES = B_TEXTURE_BE = B_TEXTURE_GEPPA = A_SILT_MI = NULL
@@ -100,7 +101,8 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_charact
                            ),
                fname='osi_nut_k',
                na_allowed = TRUE,
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # estimate texture information
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
@@ -147,7 +149,8 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_charact
                            A_K_NaAAA = dt$A_K_NaAAA,
                            A_K_WA = dt$A_K_WA),
                fname='oci_nut_k',
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # calculate the OSI score per country
   

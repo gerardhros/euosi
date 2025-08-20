@@ -20,6 +20,7 @@
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P / kg)
 #' @param A_P_M3 (numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -33,7 +34,7 @@ osi_nut_p <- function(B_LU,
                       A_SOM_LOI = NA_real_, A_PH_WA = NA_real_,A_PH_CC = NA_real_, A_CACO3_IF = NA_real_,
                       A_P_OL = NA_real_, A_P_M3 = NA_real_, A_P_CAL = NA_real_,
                       A_P_AAA = NA_real_,A_P_DL = NA_real_,
-                      A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY) {
+                      A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
   B_TEXTURE_BE = B_TEXTURE_GEPPA = B_TEXTURE_HYPRES = B_TEXTURE_USDA = A_SILT_MI = NULL
@@ -84,7 +85,8 @@ osi_nut_p <- function(B_LU,
                            A_P_OL = dt$A_P_OL,
                            A_P_CC = dt$A_P_CC),
                fname='oci_nut_p',
-               na_allowed = TRUE)
+               na_allowed = TRUE,
+               pwarning = pwarning)
   
   
   # estimate texture information
@@ -119,7 +121,8 @@ osi_nut_p <- function(B_LU,
                            A_P_M3 = dt$A_P_M3,
                            A_P_WA = dt$A_P_WA,
                            A_P_CC = dt$A_P_CC),
-               fname='oci_nut_p')
+               fname='oci_nut_p',
+               pwarning = pwarning)
   
   # calculate the OSI score for P excess
   

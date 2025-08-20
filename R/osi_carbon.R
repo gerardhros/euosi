@@ -8,6 +8,7 @@
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #'  
 #' @import data.table
 #' 
@@ -18,7 +19,7 @@
 #' The carbon index. A numeric value.
 #' 
 #' @export
-osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
+osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY,pwarning=FALSE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -53,13 +54,17 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   # checkmate for inputs
   osi_checkvar(list(B_COUNTRY = dt$B_COUNTRY,B_LU = dt$B_LU,B_BGZ = dt$B_BGZ,
                     A_CLAY_MI = dt$A_CLAY_MI, A_SAND_MI = dt$A_SAND_MI,
-                    A_C_OF = dt$A_C_OF),fname='osi_carbon')
+                    A_C_OF = dt$A_C_OF),
+               fname='osi_carbon',
+               na_allowed = TRUE,
+               unitcheck = TRUE,
+               pwarning=pwarning)
   
   # estimate texture HYPRES
   dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI,type = 'code')]
   
   # do checks on the calculated variables
-  osi_checkvar(list(B_TEXTURE_HYPRES = dt$B_TEXTURE_HYPRES),fname='osi_carbon')
+  osi_checkvar(list(B_TEXTURE_HYPRES = dt$B_TEXTURE_HYPRES),fname='osi_carbon',pwarning=pwarning)
   
   # merge with crop code
   dt <- merge(dt,

@@ -6,6 +6,7 @@
 #' @param A_CLAY_MI (numeric) The clay content of the soil (\%)
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #' 
 #' @examples 
 #' osi_p_wef(B_LU = 265, A_CLAY_MI = 4, A_SAND_MI = 15, B_COUNTRY='NL')
@@ -15,7 +16,7 @@
 #' The vulnerability of the soil for wind erosion. A numeric value.
 #'   
 #' @export
-osi_p_wef <- function(B_LU,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
+osi_p_wef <- function(B_LU,A_CLAY_MI,A_SAND_MI,B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
   id = crop_code = crop_cat1 = loam = A_SILT_MI = osi_country = NULL
@@ -26,12 +27,18 @@ osi_p_wef <- function(B_LU,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   # Load in the datasets
   dt.crops <- as.data.table(euosi::osi_crops)
 
-  # Check inputs
+  # length of inputs
   arg.length <- max(length(A_CLAY_MI), length(A_SAND_MI),length(B_COUNTRY))
-  checkmate::assert_numeric(A_CLAY_MI, lower = 0, upper = 100, any.missing = FALSE)
-  checkmate::assert_numeric(A_SAND_MI, lower = 0, upper = 100, any.missing = FALSE)
-  checkmate::assert_character(B_LU, any.missing = FALSE, min.len = 1, len = arg.length)
-  checkmate::assert_subset(B_LU, choices = unique(dt.crops$crop_code), empty.ok = FALSE)
+  
+  # Check inputs
+  osi_checkvar(parm = list(B_LU = B_LU,
+                           B_COUNTRY = B_COUNTRY,
+                           A_CLAY_MI = A_CLAY_MI,
+                           A_SAND_MI = A_SAND_MI),
+               fname = 'osi_p_wef',
+               na_allowed = TRUE,
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
