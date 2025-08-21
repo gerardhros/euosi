@@ -148,6 +148,8 @@ osi_b_pmn_nl <- function(B_LU, B_SOILTYPE_AGR,A_N_PMN, unitcheck = TRUE) {
   dt[crop_cat1 %in% c('maize','grassland') & grepl('zand|dal',B_SOILTYPE_AGR), cf := 84 / 89]
   dt[crop_cat1 %in% 'arable' & grepl('zand|dal',B_SOILTYPE_AGR), cf := 37 / 45]
   dt[crop_cat1 %in% 'arable' & grepl('klei|loess',B_SOILTYPE_AGR), cf := 22 / 42]
+  dt[crop_cat1 %in% 'permanent', cf := 1]
+  dt[crop_cat1 %in% 'arable' & grepl('veen',B_SOILTYPE_AGR), cf := 1]
   
   # Calculate PMN index for soil fertility
   dt[, value := A_N_PMN * cf]
