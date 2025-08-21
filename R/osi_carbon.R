@@ -43,7 +43,7 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY,pwarning
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
-                   B_BGZ = B_BGZ,
+                   B_BGZ = as.character(B_BGZ),
                    B_COUNTRY = B_COUNTRY,
                    A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
@@ -68,9 +68,12 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY,pwarning
   
   # merge with crop code
   dt <- merge(dt,
-              dt.crops,
+              dt.crops[,.(crop_code,osi_country,crop_cat1)],
               by.x = c('B_LU','B_COUNTRY'),
               by.y = c('crop_code','osi_country'),all.x=TRUE)
+  
+  # adjust category since threshold have only two categories and since new crop list, this needs update
+  dt[crop_cat1 %in% c('maize','permanent','cropland'), crop_cat1 := 'arable']
   
   # merge with threshold
   dt <- merge(dt,
@@ -84,6 +87,9 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY,pwarning
   
   # evaluate OSI score
   dt[, value := osi_evaluate_logistic(otratio, b=osi_st_c1,x0=	osi_st_c2,v=osi_st_c3)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)
