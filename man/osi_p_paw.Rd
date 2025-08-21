@@ -4,7 +4,7 @@
 \alias{osi_p_paw}
 \title{Calculate indicator for plant available water}
 \usage{
-osi_p_paw(A_CLAY_MI, A_SAND_MI, A_SILT_MI, A_C_OF)
+osi_p_paw(A_CLAY_MI, A_SAND_MI, A_SILT_MI, A_C_OF, pwarning = FALSE)
 }
 \arguments{
 \item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
@@ -14,6 +14,8 @@ osi_p_paw(A_CLAY_MI, A_SAND_MI, A_SILT_MI, A_C_OF)
 \item{A_SILT_MI}{(numeric) The silt content of the soil (\%)}
 
 \item{A_C_OF}{(numeric) The organic carbon content of the soil (g / kg)}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \description{
 This function calculates the plant available water index.

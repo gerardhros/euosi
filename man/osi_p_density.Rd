@@ -4,12 +4,14 @@
 \alias{osi_p_density}
 \title{Calculate the bulk density}
 \usage{
-osi_p_density(A_SOM_LOI, A_CLAY_MI)
+osi_p_density(A_SOM_LOI, A_CLAY_MI, pwarning = FALSE)
 }
 \arguments{
 \item{A_SOM_LOI}{(numeric) The percentage organic matter in the soil (\%)}
 
 \item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The bulk density of an arable soil (kg / m3) evaluated given the maximum density that limit the root penetration.

@@ -8,6 +8,7 @@
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #'  
 #' @import data.table
 #' 
@@ -18,7 +19,7 @@
 #' The carbon index. A numeric value.
 #' 
 #' @export
-osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
+osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY,pwarning=FALSE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = NULL
@@ -42,7 +43,7 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
-                   B_BGZ = B_BGZ,
+                   B_BGZ = as.character(B_BGZ),
                    B_COUNTRY = B_COUNTRY,
                    A_CLAY_MI = A_CLAY_MI,
                    A_SAND_MI = A_SAND_MI,
@@ -53,19 +54,26 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   # checkmate for inputs
   osi_checkvar(list(B_COUNTRY = dt$B_COUNTRY,B_LU = dt$B_LU,B_BGZ = dt$B_BGZ,
                     A_CLAY_MI = dt$A_CLAY_MI, A_SAND_MI = dt$A_SAND_MI,
-                    A_C_OF = dt$A_C_OF),fname='osi_carbon')
+                    A_C_OF = dt$A_C_OF),
+               fname='osi_carbon',
+               na_allowed = TRUE,
+               unitcheck = TRUE,
+               pwarning=pwarning)
   
   # estimate texture HYPRES
   dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI,type = 'code')]
   
   # do checks on the calculated variables
-  osi_checkvar(list(B_TEXTURE_HYPRES = dt$B_TEXTURE_HYPRES),fname='osi_carbon')
+  osi_checkvar(list(B_TEXTURE_HYPRES = dt$B_TEXTURE_HYPRES),fname='osi_carbon',pwarning=pwarning)
   
   # merge with crop code
   dt <- merge(dt,
-              dt.crops,
+              dt.crops[,.(crop_code,osi_country,crop_cat1)],
               by.x = c('B_LU','B_COUNTRY'),
               by.y = c('crop_code','osi_country'),all.x=TRUE)
+  
+  # adjust category since threshold have only two categories and since new crop list, this needs update
+  dt[crop_cat1 %in% c('maize','permanent','cropland'), crop_cat1 := 'arable']
   
   # merge with threshold
   dt <- merge(dt,
@@ -79,6 +87,9 @@ osi_carbon <- function(B_LU,A_C_OF, B_BGZ,A_CLAY_MI,A_SAND_MI,B_COUNTRY) {
   
   # evaluate OSI score
   dt[, value := osi_evaluate_logistic(otratio, b=osi_st_c1,x0=	osi_st_c2,v=osi_st_c3)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)

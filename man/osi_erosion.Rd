@@ -13,7 +13,8 @@ osi_erosion(
   B_RUSL_RE = NA_real_,
   B_RUSL_SE = NA_real_,
   B_RUSL_LS = NA_real_,
-  B_RUSL_CM = NA_real_
+  B_RUSL_CM = NA_real_,
+  pwarning = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ osi_erosion(
 \item{B_RUSL_LS}{Topography LS-factor used in Revised Universal Soil Loss Euqation model}
 
 \item{B_RUSL_CM}{Cover management C-factor used in Revised Universal Soil Loss Euqation model}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The water erosion index. A numeric value.

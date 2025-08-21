@@ -6,7 +6,8 @@
 #' @param A_SAND_MI (numeric) The sand content of the soil (\%)
 #' @param A_SILT_MI (numeric) The silt content of the soil (\%)
 #' @param A_C_OF (numeric) The organic carbon content of the soil (g / kg)
-#'
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
+#' 
 #' @import data.table  
 #' @import OBIC
 #'
@@ -14,7 +15,7 @@
 #' osi_p_paw(A_CLAY_MI = 4.5, A_SAND_MI = 23, A_SILT_MI = 72.5,A_C_OF = 23)
 #' 
 #' @export
-osi_p_paw <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_C_OF) {
+osi_p_paw <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_C_OF, pwarning = FALSE) {
   
   # add visual bindings
   osi_country = osi_indicator = NULL
@@ -33,7 +34,9 @@ osi_p_paw <- function(A_CLAY_MI,A_SAND_MI,A_SILT_MI,A_C_OF) {
                            A_SAND_MI = A_SAND_MI,
                            A_SILT_MI = A_SILT_MI,
                            A_C_OF = A_C_OF),
-               fname = 'osi_p_paw')
+               fname = 'osi_p_paw',
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,

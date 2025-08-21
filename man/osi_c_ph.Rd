@@ -19,7 +19,8 @@ osi_c_ph(
   A_PH_WA = NA_real_,
   A_PH_CC = NA_real_,
   A_PH_KCL = NA_real_,
-  B_COUNTRY
+  B_COUNTRY,
+  pwarning = FALSE
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ osi_c_ph(
 \item{A_PH_KCL}{(numeric) The pH measured in KCl}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The index to evaluate the soil pH

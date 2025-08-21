@@ -4,6 +4,7 @@
 #' 
 #' @param A_SOM_LOI (numeric) The percentage organic matter in the soil (\%)
 #' @param A_PH_CC (numeric) The pH measured in CaCl2 solution
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -14,7 +15,7 @@
 #' The biodiversity index. A numeric value.
 #' 
 #' @export
-osi_biodiversity <- function(A_SOM_LOI, A_PH_CC) {
+osi_biodiversity <- function(A_SOM_LOI, A_PH_CC, pwarning = FALSE) {
   
   # set visual bindings
   osi_country = osi_indicator = id = crop_cat1 = A_PH_WA = NULL
@@ -25,7 +26,7 @@ osi_biodiversity <- function(A_SOM_LOI, A_PH_CC) {
   dt.parms <- as.data.table(euosi::osi_parms)
   
   # checkmate for inputs
-  osi_checkvar(list(A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC),fname='osi_biodiversity')
+  osi_checkvar(list(A_SOM_LOI = A_SOM_LOI, A_PH_CC = A_PH_CC),fname='osi_biodiversity',pwarning = pwarning)
   
   # thresholds
   dt.thresholds <- as.data.table(euosi::osi_thresholds)

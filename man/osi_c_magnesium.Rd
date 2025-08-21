@@ -26,7 +26,8 @@ osi_c_magnesium(
   A_K_AAA = NA_real_,
   A_K_CO_PO = NA_real_,
   A_K_CC = NA_real_,
-  B_COUNTRY
+  B_COUNTRY,
+  pwarning = FALSE
 )
 }
 \arguments{
@@ -73,6 +74,8 @@ osi_c_magnesium(
 \item{A_K_CC}{(numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg per kg)}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The capacity of the soil to supply and buffer magnesium, evaluated given an optimum threshold for yield. A numeric value.

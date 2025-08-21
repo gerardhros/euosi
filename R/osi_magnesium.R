@@ -24,6 +24,7 @@
 #' @param A_K_CO_PO (numeric) The occupation of the CEC with potassium (\%)
 #' @param A_K_CC (numeric) The plant available potassium, extracted with 0.01M CaCl2 (mg per kg)
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #'  
 #' @import data.table
 #' 
@@ -39,11 +40,11 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                             A_MG_CO_PO = NA_real_, A_MG_DL = NA_real_,A_MG_KCL = NA_real_,A_MG_M3 = NA_real_,
                             A_MG_NaAAA = NA_real_,
                             A_K_AAA = NA_real_,A_K_CO_PO = NA_real_,A_K_CC = NA_real_,
-                            B_COUNTRY) {
+                            B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
   B_TEXTURE_USDA = A_SILT_MI = B_TEXTURE_GEPPA = B_TEXTURE_HYPRES = B_TEXTURE_BE = NULL
-  A_PH_WA = A_PH_KCL = NULL
+  A_PH_WA = A_PH_KCL = osi_parm_max =  NULL
   
   # desired length of inputs
   arg.length <- max(length(B_LU),length(B_SOILTYPE_AGR), length(A_CLAY_MI),length(A_SAND_MI),
@@ -102,7 +103,8 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                            A_K_CC = dt$A_K_CC),
                fname='oci_c_magnesium',
                na_allowed = TRUE,
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # estimate texture information
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
@@ -156,7 +158,8 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
                            A_MG_NaAAA = dt$A_MG_NaAAA
                            ),
                fname='oci_c_magnesium',
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # calculate the open soil index score for magnesium availability
   

@@ -2,9 +2,15 @@
 % Please edit documentation in R/osi_helpers.R
 \name{osi_checkvar}
 \alias{osi_checkvar}
-\title{Select the correct boundary values (min and max) for a given parameter}
+\title{Wrapper function to test euosi input variables for the correct input values or options}
 \usage{
-osi_checkvar(parm, fname = NULL, na_allowed = FALSE, unitcheck = TRUE)
+osi_checkvar(
+  parm,
+  fname = NULL,
+  na_allowed = FALSE,
+  unitcheck = TRUE,
+  pwarning = FALSE
+)
 }
 \arguments{
 \item{parm}{(list) The osi parameter - value combination to be checked}
@@ -13,11 +19,13 @@ osi_checkvar(parm, fname = NULL, na_allowed = FALSE, unitcheck = TRUE)
 
 \item{na_allowed}{(character) Are NA allowed in categorial inputs (TRUE or FALSE)}
 
-\item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
+\item{unitcheck}{(boolean) Option to switch off unit checks (TRUE or FALSE)}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message (TRUE or FALSE)}
 }
 \value{
 warning or error messages when parameter value is beyond the allowed range
 }
 \description{
-This function selects the correct boundary values (min and max) or possible options for a given parameter
+This function is a wrapper around the function osi_checkvarfun and allows the user to print warning messages
 }

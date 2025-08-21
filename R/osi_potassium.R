@@ -24,6 +24,7 @@
 #' @param A_K_WA (numeric) The exchangeable K-content of the soil measured via water extracton (mg K/ kg)
 #' @param A_K_NaAAA (numeric) The K-content of the soil extracted with Morgan's solution, sodium acetate acetic acid (mg/ kg)
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -38,7 +39,7 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_c
                             A_CEC_CO = NA, 
                             A_K_AAA = NA,A_K_AL = NA,A_K_AN = NA,A_K_CAL = NA,A_K_CC = NA,
                             A_K_CO_PO = NA,A_K_DL = NA,A_K_M3 = NA,A_K_NaAAA = NA, A_K_WA = NA,
-                            B_COUNTRY) {
+                            B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
   B_TEXTURE_USDA = B_TEXTURE_BE = B_TEXTURE_GEPPA = B_TEXTURE_HYPRES = NULL
@@ -95,7 +96,9 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_c
                            A_K_AAA = dt$A_K_AAA
                            ),
                fname='oci_c_potassium',
-               na_allowed = TRUE)
+               unitcheck = TRUE,
+               na_allowed = TRUE,
+               pwarning = pwarning)
   
   # estimate texture information
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
@@ -142,7 +145,8 @@ osi_c_potassium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_c
                            A_K_NaAAA = dt$A_K_NaAAA,
                            A_K_WA = dt$A_K_WA
                            ),
-               fname='oci_c_potassium')
+               fname='oci_c_potassium',
+               pwarning = pwarning)
   
   # calculate the OSI score per country
   
@@ -298,10 +302,6 @@ osi_c_potassium_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_, unitcheck
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='BE']
   
-  # thresholds
-  dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  dt.thresholds <- dt.thresholds[osi_country == 'BE' & osi_indicator =='i_c_k']
-
   # get max length of all input data
   arg.length <- max(length(B_LU), length(B_TEXTURE_BE),length(A_K_AAA))
   
@@ -320,12 +320,6 @@ osi_c_potassium_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_, unitcheck
                    A_K_AAA = A_K_AAA,
                    value = NA_real_)
   
-  # set soil type to categories
-  dt[B_TEXTURE_BE %in% c('S','Z'),B_SOILTYPE_AGR := 'zand']
-  dt[B_TEXTURE_BE %in% c('P','L'),B_SOILTYPE_AGR := 'zandleem']
-  dt[B_TEXTURE_BE %in% c('A'),B_SOILTYPE_AGR := 'leem']
-  dt[is.na(B_SOILTYPE_AGR), B_SOILTYPE_AGR := 'polder']
-  
   # merge crop properties
   dt <- merge(dt,
               dt.crops[,.(crop_code,crop_cat1)],
@@ -333,15 +327,17 @@ osi_c_potassium_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_, unitcheck
               by.y = 'crop_code',
               all.x=TRUE)
   
-  # merge thresholds
-  dt <- merge(dt,
-              dt.thresholds,
-              by.x = c('B_SOILTYPE_AGR', 'crop_cat1'),
-              by.y = c('osi_threshold_soilcat','osi_threshold_cropcat'),
-              all.x = TRUE)
-  
   # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = A_K_AAA, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  dt[crop_cat1 %in% c('arable','maize','permanent') & B_TEXTURE_BE %in% c('S','Z'),
+        value := osi_evaluate_logistic(x = A_K_AAA, b= 0.057,x0 = 85,v = 1)]
+  dt[crop_cat1 %in% c('arable','maize','permanent') & B_TEXTURE_BE %in% c('P','L','A'),
+     value := osi_evaluate_logistic(x = A_K_AAA, b= 0.050,x0 = 100,v = 1)]
+  dt[crop_cat1 %in% c('arable','maize','permanent') & !B_TEXTURE_BE %in% c('P','L','A','S','Z'),
+     value := osi_evaluate_logistic(x = A_K_AAA, b= 0.050,x0 = 120,v = 1)]
+  dt[crop_cat1 %in% c('grassland') & B_TEXTURE_BE %in% c('P','L','A','S','Z'),
+     value := osi_evaluate_logistic(x = A_K_AAA, b= 0.050,x0 = 80,v = 1)]
+  dt[crop_cat1 %in% c('grassland') & !B_TEXTURE_BE %in% c('P','L','A','S','Z'),
+     value := osi_evaluate_logistic(x = A_K_AAA, b= 0.031,x0 = 135,v = 1)]
   
   # add OSI score for "other" crops: nature, forest, other
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
@@ -542,7 +538,7 @@ osi_c_potassium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_CAL, unitc
   
   # add visual bindings
   A_SILT_MI = A_K_CAL2 = stype = B_LU_CAT = NULL
-  crop_code = crop_cat1 = osi_country = . = NULL
+  crop_code = crop_cat1 = osi_country = . = id = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -606,6 +602,9 @@ osi_c_potassium_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_CAL, unitc
   # add OSI score for "other" crops: nature, forest, other
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
+  # set the order to the original inputs
+  setorder(dt, id)
+  
   # select value and return
   value <- dt[,value]
   
@@ -668,6 +667,9 @@ osi_c_potassium_dk <- function(B_LU, A_K_AL, unitcheck = TRUE) {
   
   # add OSI score for "other" crops: nature, forest, other
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value 
   value <- dt[,value]
@@ -882,6 +884,9 @@ osi_c_potassium_es <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA, unitcheck = TRUE)
   
   # add OSI score for "other" crops: nature, forest, other
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value
   value <- dt[,value]
@@ -1286,7 +1291,7 @@ osi_c_potassium_it <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA, unitcheck = TRUE)
                unitcheck = unitcheck)
   
   # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
+  dt <- data.table(id = 1: arg.length,
                    B_LU = B_LU,
                    B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                    A_K_AAA = A_K_AAA,
@@ -1313,6 +1318,9 @@ osi_c_potassium_it <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA, unitcheck = TRUE)
   
   # add OSI score for "other" crops: nature, forest, other
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value
   value <- dt[,value]
@@ -1830,7 +1838,7 @@ osi_c_potassium_pl <- function(A_K_DL,B_TEXTURE_HYPRES,B_LU = NA_character_, uni
 osi_c_potassium_pt <- function(B_LU, A_K_AAA, unitcheck = TRUE) {
   
   # add visual binding
-  crop_cat1 = osi_country = . = crop_code = crop_cat2 = NULL
+  crop_cat1 = osi_country = . = crop_code = crop_cat2 = id = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -1864,6 +1872,9 @@ osi_c_potassium_pt <- function(B_LU, A_K_AAA, unitcheck = TRUE) {
   
   # add OSI score for "other" crops: nature, forest, other
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -1949,7 +1960,7 @@ osi_c_potassium_ro <- function(A_K_AL,B_TEXTURE_HYPRES,B_LU = NA_character_, uni
 osi_c_potassium_se <- function(B_LU, A_K_AL, unitcheck = TRUE) {
   
   # add visual binding
-  crop_cat1 = osi_country = . = crop_code = crop_cat2 = NULL
+  crop_cat1 = osi_country = . = crop_code = crop_cat2 = id = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -1983,6 +1994,9 @@ osi_c_potassium_se <- function(B_LU, A_K_AL, unitcheck = TRUE) {
   
   # add OSI score for "other" crops: nature, forest, other
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]

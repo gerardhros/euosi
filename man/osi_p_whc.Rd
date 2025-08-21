@@ -4,7 +4,14 @@
 \alias{osi_p_whc}
 \title{Calculate indicators for water holding capacity in  the topsoil}
 \usage{
-osi_p_whc(A_CLAY_MI, A_SAND_MI, A_SOM_LOI, type = "whc", ptf = "Wosten1999")
+osi_p_whc(
+  A_CLAY_MI,
+  A_SAND_MI,
+  A_SOM_LOI,
+  type = "whc",
+  ptf = "Wosten1999",
+  pwarning = FALSE
+)
 }
 \arguments{
 \item{A_CLAY_MI}{(numeric) The clay content of the soil (\%)}
@@ -16,6 +23,8 @@ osi_p_whc(A_CLAY_MI, A_SAND_MI, A_SOM_LOI, type = "whc", ptf = "Wosten1999")
 \item{type}{(character) The type of water retention index. Options include c('water holding capacity', 'whc','plant available water','paw','Ksat' or 'ksat')}
 
 \item{ptf}{(character) Pedotransfer functions to calculate van Genuchten parameters. Options include c('Wosten1999', 'Wosten2001', 'Klasse')}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The function returns by default the water holding capacity ('whc') of the top soil (in mm). A numeric value.

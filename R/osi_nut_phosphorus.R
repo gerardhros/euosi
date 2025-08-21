@@ -20,6 +20,7 @@
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P / kg)
 #' @param A_P_M3 (numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -33,7 +34,7 @@ osi_nut_p <- function(B_LU,
                       A_SOM_LOI = NA_real_, A_PH_WA = NA_real_,A_PH_CC = NA_real_, A_CACO3_IF = NA_real_,
                       A_P_OL = NA_real_, A_P_M3 = NA_real_, A_P_CAL = NA_real_,
                       A_P_AAA = NA_real_,A_P_DL = NA_real_,
-                      A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY) {
+                      A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA = NA_real_, B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
   B_TEXTURE_BE = B_TEXTURE_GEPPA = B_TEXTURE_HYPRES = B_TEXTURE_USDA = A_SILT_MI = NULL
@@ -84,7 +85,8 @@ osi_nut_p <- function(B_LU,
                            A_P_OL = dt$A_P_OL,
                            A_P_CC = dt$A_P_CC),
                fname='oci_nut_p',
-               na_allowed = TRUE)
+               na_allowed = TRUE,
+               pwarning = pwarning)
   
   
   # estimate texture information
@@ -119,7 +121,8 @@ osi_nut_p <- function(B_LU,
                            A_P_M3 = dt$A_P_M3,
                            A_P_WA = dt$A_P_WA,
                            A_P_CC = dt$A_P_CC),
-               fname='oci_nut_p')
+               fname='oci_nut_p',
+               pwarning = pwarning)
   
   # calculate the OSI score for P excess
   
@@ -531,6 +534,9 @@ osi_nut_p_de <- function(B_LU, A_SOM_LOI,A_P_CAL = NA_real_, A_P_DL = NA_real_, 
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
+  # set the order to the original inputs
+  setorder(dt, id)
+  
   # select value and return
   value <- dt[,value]
   return(value)
@@ -591,6 +597,9 @@ osi_nut_p_dk <- function(B_LU, A_P_OL, unitcheck = TRUE) {
   
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -696,7 +705,7 @@ osi_nut_p_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_, unitcheck = TRUE
 osi_nut_p_el <- function(B_LU, A_P_OL, unitcheck = TRUE) {
   
   # add visual bindings
-  osi_country = crop_code = crop_cat1 = . = NULL
+  osi_country = crop_code = crop_cat1 = . = id = NULL
   
   # crop data
   # dt.crops <- as.data.table(euosi::osi_crops)
@@ -729,6 +738,9 @@ osi_nut_p_el <- function(B_LU, A_P_OL, unitcheck = TRUE) {
   # source ChatGPT, reference to https://ir.lib.uth.gr/xmlui/bitstream/handle/11615/1729/P0001729.pdf
   dt[, value := OBIC::evaluate_logistic(A_P_OL, b = -5.169509e-02, x0 = 2.001029e+02, v = 5.130838e-04)]
   
+  # set the order to the original inputs
+  setorder(dt, id)
+  
   # select value and return
   value <- dt[,value]
   return(value)
@@ -758,7 +770,7 @@ osi_nut_p_el <- function(B_LU, A_P_OL, unitcheck = TRUE) {
 osi_nut_p_es <- function(B_LU, A_CLAY_MI,A_SAND_MI,A_P_OL, unitcheck = TRUE) {
   
   # add visual bindings
-  osi_country = crop_code = crop_cat1 = . = NULL
+  osi_country = crop_code = crop_cat1 = . = id=  NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -802,6 +814,9 @@ osi_nut_p_es <- function(B_LU, A_CLAY_MI,A_SAND_MI,A_P_OL, unitcheck = TRUE) {
   
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -1111,7 +1126,7 @@ osi_nut_p_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,B_LU = NA_charact
 osi_nut_p_ie <- function(B_LU, A_P_OL, unitcheck = TRUE) {
   
   # add visual binding
-  cropcat1 = NULL
+  cropcat1 = id = NULL
   
   # length of inputs
   arg.length <- max(length(B_LU),length(A_P_OL))
@@ -1137,6 +1152,9 @@ osi_nut_p_ie <- function(B_LU, A_P_OL, unitcheck = TRUE) {
   
   # evaluation soil P status for other crops
   dt[cropcat1 == 'arable', value := OBIC::evaluate_logistic(A_P_OL, b = -0.1299494,x0 = 24.2190050,v=  1.6273494)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -1199,6 +1217,9 @@ osi_nut_p_it <- function(B_LU, A_P_OL, unitcheck = TRUE) {
   
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -1635,7 +1656,7 @@ osi_nut_p_pl <- function(A_P_DL,B_LU = NA_character_, unitcheck = TRUE) {
 osi_nut_p_pt <- function(B_LU, A_P_OL, unitcheck = TRUE) {
   
   # add visual bindings
-  osi_country = crop_code = crop_cat1 = . = NULL
+  osi_country = crop_code = crop_cat1 = . = id = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -1672,6 +1693,9 @@ osi_nut_p_pt <- function(B_LU, A_P_OL, unitcheck = TRUE) {
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
+  # set the order to the original inputs
+  setorder(dt, id)
+  
   # select value and return
   value <- dt[,value]
   return(value)
@@ -1698,7 +1722,7 @@ osi_nut_p_pt <- function(B_LU, A_P_OL, unitcheck = TRUE) {
 osi_nut_p_ro <- function(B_LU, A_P_AL, unitcheck = TRUE) {
   
   # add visual binding
-  cropcat1 = NULL
+  cropcat1 = id = NULL
   
   # length of inputs
   arg.length <- max(length(B_LU),length(A_P_AL))
@@ -1719,6 +1743,9 @@ osi_nut_p_ro <- function(B_LU, A_P_AL, unitcheck = TRUE) {
   # evaluation soil P status
   # https://icpa.ro/site_vechi/documente/coduri/Planuri_de_fertilizare.pdf
   dt[, value := OBIC::evaluate_logistic(A_P_AL, b = -1.781695 , x0 = 56.737743, v = 69.979745)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -1746,7 +1773,7 @@ osi_nut_p_ro <- function(B_LU, A_P_AL, unitcheck = TRUE) {
 osi_nut_p_se <- function(B_LU, A_P_AL, unitcheck = TRUE) {
   
   # add visual binding
-  crop_cat1 = osi_country = . = crop_code = crop_cat2 = NULL
+  crop_cat1 = osi_country = . = crop_code = crop_cat2 = id = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -1792,6 +1819,9 @@ osi_nut_p_se <- function(B_LU, A_P_AL, unitcheck = TRUE) {
   
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]

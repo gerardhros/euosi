@@ -17,6 +17,7 @@
 #' @param A_PH_CC (numeric) The pH measured in cacl2 
 #' @param A_PH_KCL (numeric) The pH measured in KCl
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -30,7 +31,7 @@ osi_c_ph <- function(B_LU,
                      A_CEC_CO = NA_real_,
                      A_CA_CO_PO = NA_real_, A_MG_CO_PO = NA_real_,A_K_CO_PO = NA_real_, A_NA_CO_PO = NA_real_,
                      A_PH_WA = NA_real_, A_PH_CC= NA_real_, A_PH_KCL= NA_real_,
-                     B_COUNTRY) {
+                     B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
   value = B_TEXTURE_USDA = A_SILT_MI = B_TEXTURE_HYPRES = NULL
@@ -39,7 +40,7 @@ osi_c_ph <- function(B_LU,
   # desired length of inputs
   arg.length <- max(length(B_LU), 
                     length (B_SOILTYPE_AGR), length(A_CLAY_MI),length(A_SAND_MI),
-                    length(A_SOM_LOI),length(A_C_OF),
+                    length(A_SOM_LOI),length(A_C_OF),length(A_CEC_CO),
                     length(A_PH_CC), length(A_MG_CO_PO),length(A_K_CO_PO), length(A_NA_CO_PO), 
                     length(A_CA_CO_PO), length(A_PH_KCL),length(A_PH_WA), 
                     length(B_COUNTRY))
@@ -54,6 +55,7 @@ osi_c_ph <- function(B_LU,
                    A_SILT_MI = 100 - A_CLAY_MI - A_SAND_MI,
                    A_SOM_LOI = A_SOM_LOI,
                    A_C_OF = A_C_OF,
+                   A_CEC_CO = A_CEC_CO,
                    A_CA_CO_PO = A_CA_CO_PO,
                    A_MG_CO_PO = A_MG_CO_PO,
                    A_K_CO_PO = A_K_CO_PO,
@@ -78,13 +80,15 @@ osi_c_ph <- function(B_LU,
                            A_PH_CC = dt$A_PH_CC),
                fname = 'osi_c_ph',
                na_allowed = TRUE, 
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # estimate texture information
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
   dt[,B_TEXTURE_HYPRES := osi_get_TEXTURE_HYPRES(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
   dt[,B_TEXTURE_BE := osi_get_TEXTURE_BE(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
   dt[,B_TEXTURE_GEPPA := osi_get_TEXTURE_GEPPA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
+  dt[is.na(B_SOILTYPE_AGR),B_SOILTYPE_AGR := osi_get_SOILTYPE_AGR(A_CLAY_MI,A_SAND_MI,A_SOM_LOI,A_PH_CC)]
   
   # estimate missing soil properties (from defaults in LUCAS)
   dt[is.na(A_PH_WA) & !is.na(A_PH_CC), A_PH_WA := osi_conv_ph(element='A_PH_WA',A_PH_CC = A_PH_CC)]
@@ -107,7 +111,8 @@ osi_c_ph <- function(B_LU,
                            A_PH_WA = dt$A_PH_WA,
                            A_PH_KCL = dt$A_PH_KCL),
                fname = 'osi_c_ph',
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # evaluate OSI index for pH
   
@@ -1380,6 +1385,60 @@ osi_c_ph_uk <- function(B_LU, A_PH_WA,A_SOM_LOI, unitcheck = TRUE) {
      value := osi_evaluate_logistic(A_PH_WA, b = 9.7710662  , x0 = 5.3773918  , v = 0.5782954)]
   dt[A_SOM_LOI <= 20 & is.na(value), 
      value := osi_evaluate_logistic(A_PH_WA, b = 7.5257616 , x0 = 5.8837702 , v = 0.2576445)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
+  # select value
+  value <- dt[, value]
+  
+  # return
+  return(value)
+}
+
+#' Calculate the pH index in Europe when no country specific evaluation is present
+#' 
+#' This function calculates the pH index 
+#' 
+#' @param B_LU (numeric) The crop code
+#' @param A_SOM_LOI (numeric) The organic matter content of soil in percentage
+#' @param A_PH_CC (numeric) The pH measured in 0.01M CaCl2
+#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#'   
+#' @import data.table
+#' 
+#' @examples 
+#' osi_c_ph_eu(B_LU = 'testcrop1',A_PH_CC = 5, A_SOM_LOI = 4)
+#' osi_c_ph_eu(B_LU = c('testcrop1','testcrop2'),A_PH_CC = c(3.5,5.5), A_SOM_LOI = c(3.5,4))
+#' 
+#' @return 
+#' The pH index in UK A numeric value.
+#' 
+#' @export
+osi_c_ph_eu <- function(B_LU, A_PH_CC,A_SOM_LOI, unitcheck = TRUE) {
+  
+  # add visual bindings
+  crop_code = crop_cat1 = crop_name = id = . = osi_country = NULL
+  
+  # get max length of inputs
+  arg.length <- max(length(B_LU),length(A_PH_CC),length(A_SOM_LOI))
+  
+  # check inputs
+  osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
+                           A_PH_CC = A_PH_CC),
+               fname = 'osi_c_ph_eu',
+               unitcheck = unitcheck)
+  
+  # internal data.table
+  dt <- data.table(id = 1:arg.length,
+                   B_LU = as.character(B_LU),
+                   A_SOM_LOI = A_SOM_LOI,
+                   A_PH_CC = A_PH_CC,
+                   value = NA_real_)
+  
+  # pH evaluation for peat soils
+  dt[A_SOM_LOI <= 20, value := osi_evaluate_logistic(A_PH_CC, b = 2.41345731, x0 = 3.15611892, v = 0.02118277)]
+  dt[A_SOM_LOI > 20, value := osi_evaluate_logistic(A_PH_CC, b = 2.296303, x0 = 0.04295565, v = 6.418888e-05)]
   
   # set the order to the original inputs
   setorder(dt, id)

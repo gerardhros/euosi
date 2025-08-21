@@ -7,7 +7,8 @@
 #' @param A_SOM_LOI (numeric) The organic matter content of the soil (\%)
 #' @param A_PH_CC (numeric) The pH measured in CaCl2
 #' @param B_COUNTRY (character) The country code
-#'
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
+#' 
 #' @import data.table  
 #' @import OBIC
 #'
@@ -20,7 +21,7 @@
 #' The function returns the crumbleability index
 #' 
 #' @export
-osi_p_crumbleability <- function(B_LU,A_CLAY_MI,A_SOM_LOI,A_PH_CC,B_COUNTRY) {
+osi_p_crumbleability <- function(B_LU,A_CLAY_MI,A_SOM_LOI,A_PH_CC,B_COUNTRY, pwarning=FALSE) {
   
   # Add visual bindings
   id = . = crop_code = osi_country = crop_crumbleability = crop_cat1 = NULL
@@ -37,7 +38,10 @@ osi_p_crumbleability <- function(B_LU,A_CLAY_MI,A_SOM_LOI,A_PH_CC,B_COUNTRY) {
   osi_checkvar(parm = list(B_COUNTRY = B_COUNTRY, B_LU = B_LU,
                            A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI,
                            A_PH_CC = A_PH_CC),
-               fname = 'osi_p_crumbleability')
+               fname = 'osi_p_crumbleability',
+               na_allowed = TRUE,
+               unitcheck = TRUE,
+               pwarning = pwarning)
    
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,

@@ -14,7 +14,8 @@
 #' @param A_ZN_CC (numeric) The plant available content of Zn in the soil (ug  Zn per kg) extracted by 0.01M CaCl2
 #' @param A_ZN_RT (numeric) The total Zn-content of the soil via XRF or Dumas (mg Zn/kg)
 #' @param B_COUNTRY (character) The country code
-#'  
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
+#' 
 #' @import data.table
 #' 
 #' @examples 
@@ -27,7 +28,8 @@
 #' @export
 osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = NA_real_,
                        A_SOM_LOI = NA_real_,A_PH_WA = NA_real_,A_PH_CC = NA_real_,A_ZN_RT = NA_real_,
-                       A_ZN_EDTA = NA_real_,A_ZN_CC = NA_real_, A_P_OL = NA_real_, B_COUNTRY) {
+                       A_ZN_EDTA = NA_real_,A_ZN_CC = NA_real_, A_P_OL = NA_real_, B_COUNTRY,
+                       pwarning = FALSE) {
   
   # add visual bindings
   value = A_SILT_MI = A_ZN_AAA = A_P_AL = NULL
@@ -50,7 +52,9 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
                            A_PH_CC = A_PH_CC,
                            A_ZN_RT = A_ZN_RT),
                fname ='osi_c_zinc', 
-               unitcheck = TRUE)
+               na_allowed = TRUE,
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # Collect the data in an internal data.table
   dt <- data.table(id = 1:arg.length,
@@ -92,7 +96,8 @@ osi_c_zinc <- function(B_LU, A_CLAY_MI = NA_real_,A_SAND_MI = NA_real_,A_C_OF = 
                            A_ZN_CC = dt$A_ZN_CC,
                            A_ZN_EDTA = dt$A_ZN_EDTA),
                fname ='osi_c_zinc', 
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # calculate the open soil index score for Zinc availability 
   

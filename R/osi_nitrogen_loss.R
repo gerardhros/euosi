@@ -15,7 +15,8 @@
 #' @param A_CACO3_IF (numeric) The percentage of carbonated lime (\%) 
 #' @param A_N_RT (numeric) The organic nitrogen content of the soil (mg N / kg)
 #' @param B_COUNTRY (character) The country code
-#' 
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
+#'  
 #' @import data.table
 #'
 #' @return 
@@ -28,7 +29,7 @@ osi_gw_nleach <- function(B_LU = NA_character_,
                           B_PREC_SUM = NA_real_,B_PREC_WIN = NA_real_, 
                           B_PET_SUM = NA_real_,B_PET_WIN = NA_real_,
                           B_TEMP_SUM = NA_real_,B_TEMP_WIN = NA_real_,
-                          B_COUNTRY) {
+                          B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
   b_prec_sum = b_prec_win = b_pet_sum = b_pet_win = b_temp_sum = b_temp_win = NULL
@@ -56,7 +57,8 @@ osi_gw_nleach <- function(B_LU = NA_character_,
                            A_C_OF = A_C_OF,
                            A_N_RT = A_N_RT,
                            A_CACO3_IF = A_CACO3_IF),
-               fname ='osi_gw_nleach')
+               fname ='osi_gw_nleach',
+               pwarning = pwarning)
   
   # Collect data in a table
   dt <- data.table(id = 1:arg.length,
@@ -112,7 +114,8 @@ osi_gw_nleach <- function(B_LU = NA_character_,
                            B_TEXTURE_GEPPA = dt$B_TEXTURE_GEPPA,
                            A_SOM_LOI = dt$A_SOM_LOI),
                fname ='osi_gw_nleach',
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # calculate the OSI score for N leaching
   
@@ -300,7 +303,7 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   
   # calculate fle max
   dt[A_C_OF/10 > 20, flemax := 0.20]
-  dt[grepl('^Sa$|^SaL$|^SaLo$',B_TEXTURE_USDA), flemax := 1.0]
+  dt[grepl('^Sa$|^SaL$|^SaLo$|^LoSa$',B_TEXTURE_USDA), flemax := 1.0]
   dt[grepl('^CL$|^ClLo$|^L$|^SiL$|^SaCL$|^SiCL$|^SiLo$|^Lo$|^SiClLo$|^Si$',B_TEXTURE_USDA),flemax := 0.75]
   dt[grepl('^C$|^SaC$|^SaCl$|^Cl$',B_TEXTURE_USDA),flemax := 0.5]
   
@@ -495,7 +498,7 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   #dt[grepl('^Sa$|^SaL$',B_TEXTURE_USDA), flemax := 1.0]
   #dt[grepl('^CL$|^L$|^SiL$|^SaCL$',B_TEXTURE_USDA),flemax := 0.75]
   #dt[grepl('^C$|^SaC$',B_TEXTURE_USDA),flemax := 0.5]
-  dt[grepl('^Sa$|^SaL$|^SaLo$',B_TEXTURE_USDA), flemax := 1.0]
+  dt[grepl('^Sa$|^SaL$|^SaLo$|^LoSa$',B_TEXTURE_USDA), flemax := 1.0]
   dt[grepl('^CL$|^ClLo$|^L$|^SiL$|^SaCL$|^SiCL$|^SiLo$|^Lo$|^SiClLo$|^Si$',B_TEXTURE_USDA),flemax := 0.75]
   dt[grepl('^C$|^SaC$|^SaCl$|^Cl$',B_TEXTURE_USDA),flemax := 0.5]
   
@@ -668,7 +671,7 @@ osi_gw_nleach_eu <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
   #dt[grepl('^Sa$|^SaL$',B_TEXTURE_USDA), flemax := 1.0]
   #dt[grepl('^CL$|^L$|^SiL$|^SaCL$',B_TEXTURE_USDA),flemax := 0.75]
   #dt[grepl('^C$|^SaC$',B_TEXTURE_USDA),flemax := 0.5]
-  dt[grepl('^Sa$|^SaL$|^SaLo$',B_TEXTURE_USDA), flemax := 1.0]
+  dt[grepl('^Sa$|^SaL$|^SaLo$|^LoSa$',B_TEXTURE_USDA), flemax := 1.0]
   dt[grepl('^CL$|^ClLo$|^L$|^SiL$|^SaCL$|^SiCL$|^SiLo$|^Lo$|^SiClLo$|^Si$',B_TEXTURE_USDA),flemax := 0.75]
   dt[grepl('^C$|^SaC$|^SaCl$|^Cl$',B_TEXTURE_USDA),flemax := 0.5]
   

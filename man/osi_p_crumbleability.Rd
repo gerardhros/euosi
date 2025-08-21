@@ -4,7 +4,14 @@
 \alias{osi_p_crumbleability}
 \title{Calculate crumbleability index in the topsoil for all EU countries}
 \usage{
-osi_p_crumbleability(B_LU, A_CLAY_MI, A_SOM_LOI, A_PH_CC, B_COUNTRY)
+osi_p_crumbleability(
+  B_LU,
+  A_CLAY_MI,
+  A_SOM_LOI,
+  A_PH_CC,
+  B_COUNTRY,
+  pwarning = FALSE
+)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
@@ -16,6 +23,8 @@ osi_p_crumbleability(B_LU, A_CLAY_MI, A_SOM_LOI, A_PH_CC, B_COUNTRY)
 \item{A_PH_CC}{(numeric) The pH measured in CaCl2}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The function returns the crumbleability index

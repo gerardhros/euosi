@@ -20,6 +20,7 @@
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P / kg)
 #' @param A_P_WA (numeric) The P-content of the soil extracted with water (mg P / kg)
 #' @param B_COUNTRY (character) The country code
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)
 #' 
 #' @import data.table
 #' 
@@ -34,7 +35,7 @@ osi_c_phosphor <- function(B_LU,
                           A_P_AAA = NA_real_,A_P_AL = NA_real_, A_P_CAL = NA_real_,
                           A_P_CC = NA_real_, A_P_DL = NA_real_, A_P_M3 = NA_real_,
                           A_P_OL = NA_real_,A_P_WA = NA_real_, 
-                          B_COUNTRY) {
+                          B_COUNTRY, pwarning = FALSE) {
   
   # add visual bindings
   id = B_TEXTURE_USDA = B_TEXTURE_HYPRES = A_SILT_MI = value = NULL
@@ -89,7 +90,8 @@ osi_c_phosphor <- function(B_LU,
                            A_P_CC = dt$A_P_CC),
                fname='oci_c_phosphor',
                na_allowed = TRUE,
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # estimate texture information
   dt[,B_TEXTURE_USDA := osi_get_TEXTURE_USDA(A_CLAY_MI,A_SILT_MI,A_SAND_MI, type = 'code')]
@@ -120,7 +122,8 @@ osi_c_phosphor <- function(B_LU,
                            A_P_WA = dt$A_P_WA,
                            A_P_CC = dt$A_P_CC),
                fname='oci_c_phosphor',
-               unitcheck = TRUE)
+               unitcheck = TRUE,
+               pwarning = pwarning)
   
   # calculate the OSI score per country
   
@@ -221,8 +224,11 @@ osi_c_phosphor_at <- function(B_LU, A_P_CAL,unitcheck = TRUE) {
               all.x=TRUE)
   
   # convert to the OSI score
-  dt[crop_cat1 %in% c('arable','maize'),value := osi_evaluate_logistic(x = A_P_CAL, b= 0.138491,x0 = 2.81405015,v = 0.01965865)]
+  dt[crop_cat1 %in% c('arable','maize','permanent'),value := osi_evaluate_logistic(x = A_P_CAL, b= 0.138491,x0 = 2.81405015,v = 0.01965865)]
   dt[crop_cat1 =='grassland',value := osi_evaluate_logistic(x = A_P_CAL, b= 0.13874251,x0 = 2.96274411,v = 0.01992203)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -297,7 +303,10 @@ osi_c_phosphor_be <- function(B_LU, A_P_AL,unitcheck = TRUE) {
   
   # convert to the OSI score
   dt[grepl('grass',crop_cat1),value := osi_evaluate_logistic(x = A_P_AL, b= 0.34526357,x0 = -5.8598799,v = 0.01086684)]
-  dt[grepl('arable|maize',crop_cat1),value := osi_evaluate_logistic(x = A_P_AL, b= 0.22848283,x0 = -7.07661435,v = 0.01468356)]
+  dt[grepl('arable|maize|permanent',crop_cat1),value := osi_evaluate_logistic(x = A_P_AL, b= 0.22848283,x0 = -7.07661435,v = 0.01468356)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -437,6 +446,9 @@ osi_c_phosphor_cz <- function(B_LU, A_P_M3,unitcheck = TRUE) {
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = A_P_M3, b= 0.0890545,x0 = 4.429710417,v = 0.007972486)]
   
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
   # set the order to the original inputs
   setorder(dt, id)
   
@@ -473,6 +485,11 @@ osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL, A_P_DL = NA_rea
   
   # add visual bindings
   value1 = value2 = A_P_CAL2 = NULL
+  osi_country = . = crop_code = crop_cat1 = id = NULL
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='DE']
   
   # argument length
   arg.length <- max(length(B_LU),length(A_SOM_LOI),length(A_CLAY_MI),
@@ -499,6 +516,13 @@ osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL, A_P_DL = NA_rea
                    value2 = NA_real_,
                    value = NA_real_)
   
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
   # check calculated inputs
   osi_checkvar(parm = list(A_P_CAL = A_P_CAL,
                            A_P_DL = A_P_DL),
@@ -519,6 +543,12 @@ osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL, A_P_DL = NA_rea
   
   # set value
   dt[,value := fifelse(!is.na(A_P_CAL),value1,value2)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -545,6 +575,9 @@ osi_c_phosphor_de <- function(B_LU, A_SOM_LOI,A_CLAY_MI,A_P_CAL, A_P_DL = NA_rea
 #' @export
 osi_c_phosphor_dk <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   
+  # add visual bindings
+  id = NULL
+  
   # get argument length
   arg.length <- max(length(B_LU),length(A_P_OL))
   
@@ -563,6 +596,9 @@ osi_c_phosphor_dk <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   
   # evaluation P-Olsen for cropland and soil types
   dt[, value := osi_evaluate_logistic(A_P_OL, b = 0.09574493, x0 = -21.16642269,v = 0.03619003)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -590,7 +626,7 @@ osi_c_phosphor_dk <- function(B_LU, A_P_OL,unitcheck = TRUE) {
 osi_c_phosphor_el <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   
   # add visual bindings
-  osi_country = crop_code = crop_cat1 = . = NULL
+  osi_country = crop_code = crop_cat1 = . = id = NULL
   
   # crop data
   # dt.crops <- as.data.table(euosi::osi_crops)
@@ -622,6 +658,9 @@ osi_c_phosphor_el <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   # evaluation soil P status for grasslands and croplands
   # source ChatGPT, reference to https://ir.lib.uth.gr/xmlui/bitstream/handle/11615/1729/P0001729.pdf
   dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.3677886, x0 = 9.1132506, v = 1.0632264)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -730,8 +769,15 @@ osi_c_phosphor_ee <- function(A_P_M3,A_SOM_LOI,B_LU = NA_character_,unitcheck = 
 #' @export
 osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL,unitcheck = TRUE) {
   
+  # add visual bindings
+  osi_country = . = crop_code = crop_cat1 = id = NULL
+  
   # get max length of input
   arg.length <- max(length(B_LU),length(A_CLAY_MI),length(A_SAND_MI),length(A_P_OL))
+  
+  # crop data
+  dt.crops <- as.data.table(euosi::osi_crops)
+  dt.crops <- dt.crops[osi_country=='ES']
   
   # check inputs
   osi_checkvar(parm = list(B_COUNTRY = rep('ES',arg.length),
@@ -750,6 +796,13 @@ osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL,unitcheck = TRUE
                    A_P_OL = A_P_OL,
                    value = NA_real_)
   
+  # merge crop properties
+  dt <- merge(dt,
+              dt.crops[,.(crop_code,crop_cat1)],
+              by.x = 'B_LU',
+              by.y = 'crop_code',
+              all.x=TRUE)
+  
   # assess P availability for sandy soils (Arenoso)
   dt[A_CLAY_MI <= 15 & A_SAND_MI > 50, value := osi_evaluate_logistic(A_P_OL, b = 0.47947, x0 = -1.94363, v = 0.074075)]
   
@@ -758,6 +811,12 @@ osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL,unitcheck = TRUE
   
   # assess P availability for clayey soils (Arcilloso)
   dt[A_CLAY_MI > 15, value := osi_evaluate_logistic(A_P_OL, b = 0.20196, x0 = 2.87602, v = 0.133171)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -844,6 +903,9 @@ osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0.5,unitche
   
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = A_P_AAA, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -961,6 +1023,9 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
   
   # estimate OSI score
   dt[,value := osi_evaluate_logistic(x = A_P_OL, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  
+  # set value for nature to NA
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -1085,7 +1150,7 @@ osi_c_phosphor_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_P_AL,
 osi_c_phosphor_ie <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   
   # add visual binding
-  cropcat1 = NULL
+  cropcat1 = id = NULL
   
   # length of inputs
   arg.length <- max(length(B_LU),length(A_P_OL))
@@ -1112,6 +1177,9 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   
   # evaluation soil P status for other crops
   dt[cropcat1 == 'arable', value := OBIC::evaluate_logistic(A_P_OL, b = 0.50194, x0 = 3.91821, v = 0.5799892)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -1171,6 +1239,12 @@ osi_c_phosphor_it <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   
   # evaluation P-Olsen for cropland and soil types
   dt[, value := osi_evaluate_logistic(A_P_OL, b = 0.43987, x0 = -5.7314, v = 0.011909)]
+  
+  # add OSI score for "other" crops: nature, forest, other
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -1421,13 +1495,16 @@ osi_c_phosphor_nl <- function(B_LU, A_P_AL = NA_real_, A_P_CC = NA_real_, A_P_WA
   dt[grepl("maize",crop_cat1), value := A_P_CC + 0.05 * pmin(37,A_P_AL / A_P_CC)]
   
   # calculate the P-availability for arable systems, normalized to a scale with maximum around 6
-  dt[grepl("arable|cropland",crop_cat1), value := A_P_WA * 0.1]
-  
-  # calculate the P-availability for nature 
-  dt[grepl("nature|forest|perman|other",crop_cat1), value := 0]
+  dt[grepl("arable|cropland|perman",crop_cat1), value := A_P_WA * 0.1]
   
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = value, b= 1.3,x0 = 1.3,v = 0.35)]
+  
+  # add OSI score for "other" crops: nature, forest, other
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # return value
   value <- dt[, value]
@@ -1601,7 +1678,7 @@ osi_c_phosphor_pl <- function(A_P_DL,B_LU = NA_character_,unitcheck = TRUE) {
 osi_c_phosphor_pt <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   
   # add visual bindings
-  osi_country = crop_code = crop_cat1 = . = NULL
+  osi_country = crop_code = crop_cat1 = . = id = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -1635,6 +1712,12 @@ osi_c_phosphor_pt <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   # evaluation soil P status for grasslands and croplands
   dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.17869351 , x0 = 3.01230206 , v = 0.03047017 )]
   
+  # add OSI score for "other" crops: nature, forest, other
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
+  
   # select value and return
   value <- dt[,value]
   return(value)
@@ -1661,7 +1744,7 @@ osi_c_phosphor_pt <- function(B_LU, A_P_OL,unitcheck = TRUE) {
 osi_c_phosphor_ro <- function(B_LU, A_P_AL,unitcheck = TRUE) {
   
   # add visual binding
-  cropcat1 = NULL
+  cropcat1 = id = NULL
   
   # length of inputs
   arg.length <- max(length(B_LU),length(A_P_AL))
@@ -1682,6 +1765,9 @@ osi_c_phosphor_ro <- function(B_LU, A_P_AL,unitcheck = TRUE) {
   # evaluation soil P status
   # https://icpa.ro/site_vechi/documente/coduri/Planuri_de_fertilizare.pdf
   dt[, value := OBIC::evaluate_logistic(A_P_AL, b = 0.1387092 , x0 = -18.0674770, v = 0.0252298)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -1709,7 +1795,7 @@ osi_c_phosphor_ro <- function(B_LU, A_P_AL,unitcheck = TRUE) {
 osi_c_phosphor_se <- function(B_LU, A_P_AL,unitcheck = TRUE) {
   
   # add visual binding
-  crop_cat1 = osi_country = . = crop_code = crop_cat2 = NULL
+  crop_cat1 = osi_country = . = crop_code = crop_cat2 = id = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -1726,7 +1812,7 @@ osi_c_phosphor_se <- function(B_LU, A_P_AL,unitcheck = TRUE) {
                unitcheck = unitcheck)
   
   # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
+  dt <- data.table(id = 1: arg.length,
                    B_LU = B_LU,
                    A_P_AL = A_P_AL,
                    value = NA_real_)
@@ -1753,8 +1839,11 @@ osi_c_phosphor_se <- function(B_LU, A_P_AL,unitcheck = TRUE) {
   # evaluation soil P status III for maize and cereals for all other crops as well
   dt[grepl('arable|other|vegeta|fodd|legum|grass|fruit',crop_cat2), value := osi_evaluate_logistic(A_P_AL, b = 0.126197, x0 = 14.6487, v = 0.46202)]
   
-  # remaining score 1
-  dt[crop_cat2 %in% c('nature','fallow','nature'), value := 1]
+  # add OSI score for "other" crops: nature, forest, other
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -1817,6 +1906,9 @@ osi_c_phosphor_sk <- function(B_LU, B_TEXTURE_HYPRES,A_P_M3,unitcheck = TRUE) {
   dt[B_TEXTURE_HYPRES %in% c('C'),value := osi_evaluate_logistic(x = A_P_M3, b= 0.07743388,x0 = -1.23994065,v = 0.00401143)]
   dt[B_TEXTURE_HYPRES %in% c('MF','M'),value := osi_evaluate_logistic(x = A_P_M3, b= 0.07683386,x0 = -7.05760285,v = 0.00574734)]
   dt[B_TEXTURE_HYPRES %in% c('F','VF'),value := osi_evaluate_logistic(x = A_P_M3, b= 0.089515,x0 = 3.0679272,v = 0.01673862)]
+  
+  # add OSI score for "other" crops: nature, forest, other
+  dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
   # set the order to the original inputs
   setorder(dt, id)

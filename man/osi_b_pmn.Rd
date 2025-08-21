@@ -10,7 +10,8 @@ osi_b_pmn(
   A_CLAY_MI = NA_real_,
   A_N_PMN = NA_real_,
   A_N_RT = NA_real_,
-  B_COUNTRY
+  B_COUNTRY,
+  pwarning = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ osi_b_pmn(
 \item{A_N_RT}{(numeric) The organic nitrogen content of the soil in mg N / kg}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 the normalized potentially mineralizable Nitrogen pool (mg N / kg), a numeric value, converted to an OSI score.
@@ -33,8 +36,8 @@ the normalized potentially mineralizable Nitrogen pool (mg N / kg), a numeric va
 This function assesses the microbial biological activity (of microbes and fungi) via the Potentially Mineralizable N pool, also called PMN (or SoilLife by Eurofins in the past) for all European countries (if available).
 }
 \examples{
-osi_b_pmn(B_LU = 256, B_SOILTYPE_AGR = 'dekzand', A_N_PMN = 125, B_COUNTRY = 'NL')
-osi_b_pmn(B_LU = c(256,1027), B_SOILTYPE_AGR = c('dekzand','rivierklei'), 
+osi_b_pmn(B_LU = '256', B_SOILTYPE_AGR = 'dekzand', A_N_PMN = 125, B_COUNTRY = 'NL')
+osi_b_pmn(B_LU = c('256','1027'), B_SOILTYPE_AGR = c('dekzand','rivierklei'), 
 A_N_PMN = c(125,45),B_COUNTRY = c('NL','NL'))
 
 }

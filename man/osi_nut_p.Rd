@@ -22,7 +22,8 @@ osi_nut_p(
   A_P_AL = NA_real_,
   A_P_CC = NA_real_,
   A_P_WA = NA_real_,
-  B_COUNTRY
+  B_COUNTRY,
+  pwarning = FALSE
 )
 }
 \arguments{
@@ -61,6 +62,8 @@ osi_nut_p(
 \item{A_P_WA}{(numeric) The P-content of the soil extracted with water (mg P / kg)}
 
 \item{B_COUNTRY}{(character) The country code}
+
+\item{pwarning}{(boolean) Option to print a warning rather than error (stop) message for input checks (TRUE or FALSE)}
 }
 \value{
 The capacity of the soil to supply and buffer boron, evaluated given an optimum threshold for yield. A numeric value.

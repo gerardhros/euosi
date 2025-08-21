@@ -1,13 +1,14 @@
 # OSI helper functions
 
-#' Select the correct boundary values (min and max) for a given parameter
+#' Wrapper function to test euosi input variables for the correct input values or options
 #' 
-#' This function selects the correct boundary values (min and max) or possible options for a given parameter
+#' This function is a wrapper around the function osi_checkvarfun and allows the user to print warning messages
 #' 
 #' @param parm (list) The osi parameter - value combination to be checked
 #' @param fname (character) The name of the function where the check is done
 #' @param na_allowed (character) Are NA allowed in categorial inputs (TRUE or FALSE)
-#' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
+#' @param unitcheck (boolean) Option to switch off unit checks (TRUE or FALSE)
+#' @param pwarning (boolean) Option to print a warning rather than error (stop) message (TRUE or FALSE)
 #'  
 #' @import data.table
 #' 
@@ -15,7 +16,42 @@
 #' warning or error messages when parameter value is beyond the allowed range
 #' 
 #' @export
-osi_checkvar <- function(parm,fname = NULL,na_allowed = FALSE, unitcheck = TRUE) {
+osi_checkvar <- function(parm,fname = NULL,na_allowed = FALSE, 
+                         unitcheck = TRUE,pwarning = FALSE){
+  
+  # do a try catch to detect an error and print it as warning
+  if(pwarning==TRUE){
+    
+    tryCatch(
+    
+    # run the function osi_checkvarfun
+    osi_checkvarfun(parm = parm,fname = fname,na_allowed = na_allowed,unitcheck = unitcheck),
+           error = function(e) warning(e))
+  } else {
+    
+    # run osi_checkvarfun and allow errors to be generated
+    osi_checkvarfun(parm = parm,fname = fname,na_allowed = na_allowed,unitcheck = unitcheck)
+  }
+  
+  
+}
+  
+#' Test euosi input variables for the correct input values or options
+#' 
+#' This function selects the correct boundary values (min and max) or possible options for a given parameter
+#' 
+#' @param parm (list) The osi parameter - value combination to be checked
+#' @param fname (character) The name of the function where the check is done
+#' @param na_allowed (boolean) Are NA allowed in categorial inputs (TRUE or FALSE)
+#' @param unitcheck (boolean) Option to switch off unit checks (TRUE or FALSE)
+#'  
+#' @import data.table
+#' 
+#' @return 
+#' warning or error messages when parameter value is beyond the allowed range
+#' 
+#' @export
+osi_checkvarfun <- function(parm,fname = NULL,na_allowed = FALSE, unitcheck = TRUE) {
   
   # add visual bindings
   osi_parm_name = osi_parm_data_type = osi_parm_enum = osi_parm_options = NULL
@@ -73,21 +109,34 @@ osi_checkvar <- function(parm,fname = NULL,na_allowed = FALSE, unitcheck = TRUE)
         parm.options <-  dt.parms[osi_parm_name== 'B_COUNTRY',osi_parm_options]
         parm.options <- unlist(strsplit(parm.options,split="||",fixed=T))
         parm.options <- gsub('^ +| +$','',parm.options)
+        # allow NA
+        if(na_allowed){parm.options <- c(NA,parm.options)}
+        
+        # do check
         checkmate::assert_character(b_country,
                                     .var.name = paste0('B_COUNTRY is not character in ',fname))
         checkmate::assert_subset(b_country,
                                  choices = parm.options,
                                  .var.name = paste0('B_COUNTRY has wrong inputs in ',fname))
         
+        # get the crop list
+        dt.crop <- euosi::osi_crops
+        
         # subset the crop list
-        dt.crop <- euosi::osi_crops[osi_country %in% b_country]
+        if(length(b_country)==1 & sum(is.na(b_country))==1){
+          crop.options <- dt.crop[,crop_code]
+        } else {
+          crop.options <- dt.crop[osi_country %in% b_country,crop_code]
+        }
+      
+        if(na_allowed){crop.options <- c(NA_character_,crop.options)}
         
         # check crop codes
         b_crops <- unique(parm.value)
         checkmate::assert_character(b_crops,
                                     .var.name = paste0('B_LU is not character in ',fname))
         checkmate::assert_subset(b_crops,
-                                 choices = dt.crop[,crop_code],
+                                 choices = crop.options,
                                  .var.name = paste0('B_LU has wrong crop codes in ',fname))
         
       }
@@ -646,7 +695,7 @@ osi_get_TEXTURE_GEPPA <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
   dt[,cr4 := 35.5 + (cl - 20.5) * (45 - 35.5)/(0-20.5)]
   
   dt[cl <= cr1  & cl > cr2 & si <= cr3 & sa > 53, c(cols) := list('Sa','sable argileux')]
-  dt[cl <= cr1  & cl > cr2 & si > cr3 & si <= cr4 & sa > 44, c(cols) := list('SaI','sable argilo-limoneux')]
+  dt[cl <= cr1  & cl > cr2 & si > cr3 & si <= cr4 & sa > 44, c(cols) := list('Sal','sable argilo-limoneux')]
   dt[cl <= cr1  & cl > cr2 & si > cr4 & si <= cr5 & sa <= 50, c(cols) := list('Lsa','limon sablo-argileux')]
   dt[cl <= cr1  & cl > cr2 & si > cr5 & sa <= 25, c(cols) := list('L','limon')]
   
@@ -738,6 +787,9 @@ osi_get_TEXTURE_BE <- function(A_CLAY_MI, A_SILT_MI, A_SAND_MI, type='code'){
 #' @export 
 osi_get_SOILTYPE_AGR <- function(A_CLAY_MI, A_SAND_MI, A_SOM_LOI, A_PH_CC){
   
+  # add visual bindings
+  A_SILT_MI = NULL
+  
   # check inputs
   osi_checkvar(parm = list(A_CLAY_MI = A_CLAY_MI, 
                            A_SAND_MI = A_SAND_MI,
@@ -755,9 +807,10 @@ osi_get_SOILTYPE_AGR <- function(A_CLAY_MI, A_SAND_MI, A_SOM_LOI, A_PH_CC){
   
   # estimate the agricultural soil type (expert judgement Gerard)
   dt[A_SAND_MI > 80 & A_SOM_LOI <= 2 & A_PH_CC > 6, value := 'duinzand']
-  dt[A_CLAY_MI <= 20 & A_SAND_MI > 40, value := 'dekzand']
+  dt[A_CLAY_MI <= 20 & A_SAND_MI > 30 & A_SILT_MI <= 60, value := 'dekzand']
   dt[A_CLAY_MI > 20, value := 'zeeklei']
-  dt[(100 - A_CLAY_MI - A_SAND_MI)> 70, value := 'loess']
+  dt[(100 - A_CLAY_MI - A_SAND_MI)> 50, value := 'loess']
+  dt[A_SILT_MI>45 & A_SAND_MI <= 40, value:= 'loess']
   dt[A_CLAY_MI <= 20 & A_SAND_MI > 40 & A_SOM_LOI > 10, value := 'dalgrond']
   dt[A_CLAY_MI > 20 & A_SOM_LOI > 10, value := 'moerige_klei']
   dt[A_SOM_LOI > 20, value := 'veen']
