@@ -122,6 +122,9 @@ osi_conv_hwb <- function(B_SOILTYPE_AGR, A_SOM_LOI = NA_real_, A_B_CC= NA_real_,
 #' @export 
 osi_conv_ph <- function(element, A_PH_KCL = NA_real_,A_PH_CC = NA_real_, A_PH_WA = NA_real_){
   
+  # add visual bindings
+  osi_parm_name = osi_parm_min = id = NULL
+  
   # check options for element argument
   checkmate::assert_subset(element,choices = c('A_PH_CC','A_PH_KCL','A_PH_WA'),empty.ok = FALSE)
   

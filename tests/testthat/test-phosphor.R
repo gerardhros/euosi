@@ -276,7 +276,7 @@ test_that("osi_c_phosphor_fi works", {
                        B_TEXTURE_USDA = rep('Si',4),
                       A_P_AAA = rep(15,4),
                        A_C_OF = c(10,20,100,300)),
-    expected = rep(0.828,4),
+    expected = c(rep(0.828,3),NA),
     tolerance = 0.01
   )
   expect_equal(
@@ -284,7 +284,7 @@ test_that("osi_c_phosphor_fi works", {
                        B_TEXTURE_USDA = rep('Si',4),
                       A_P_AAA = c(8,15,45,90),
                        A_C_OF = c(10,20,100,300)),
-    expected = c(0.418,0.828,0.999,1),
+    expected = c(0.418,0.828,0.999,NA),
     tolerance = 0.01
   )
 })
@@ -641,3 +641,4 @@ test_that("osi_c_phosphor_uk works", {
     tolerance = 0.01
   )
 })
+

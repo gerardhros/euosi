@@ -5,7 +5,7 @@
 \alias{osi_vars_input}
 \title{A dataset with all input variables required by the euosi package}
 \format{
-An object of class \code{data.table} (inherits from \code{data.frame}) with 150 rows and 7 columns.
+An object of class \code{data.table} (inherits from \code{data.frame}) with 155 rows and 7 columns.
 }
 \usage{
 osi_vars_input
