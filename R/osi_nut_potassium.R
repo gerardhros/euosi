@@ -1220,7 +1220,7 @@ osi_nut_k_hu <- function(A_SOM_LOI,A_CLAY_MI,A_CACO3_IF,A_K_AL,B_LU = NA_charact
 osi_nut_k_ie <- function(B_LU, A_SOM_LOI,A_K_NaAAA, unitcheck = TRUE) {
   
   # add visual bindings
-  BDS = NULL
+  BDS = id = NULL
   
   # check inputs
   osi_checkvar(parm = list(A_SOM_LOI = A_SOM_LOI,
