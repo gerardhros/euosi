@@ -29,7 +29,7 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
                            A_N_RT, A_CACO3_IF = NA_real_, B_COUNTRY,pwarning = FALSE) {
   
   # add visual bindings
-  A_CN_FR = value = id = NULL
+  A_CN_FR = value = id = osi_parm_name = osi_parm_min = osi_parm_max =  NULL
   
   # note that qualitative checks on the inputs are done by the country specific functions
   
@@ -62,10 +62,21 @@ osi_c_nitrogen <- function(B_LU, B_SOILTYPE_AGR = NA_character_,A_CLAY_MI = NA_r
                unitcheck = TRUE,
                pwarning = pwarning)
   
+  # load internal table for all euosi parameters
+  dtp <- as.data.table(euosi::osi_parms)
+  
   # estimate missing properties (if applicable)
   dt[is.na(A_SOM_LOI) & !is.na(A_C_OF), A_SOM_LOI := A_C_OF * 0.1 * 2]
   dt[!is.na(A_SOM_LOI) & is.na(A_C_OF), A_C_OF := A_SOM_LOI * 10 * 0.5]
   dt[, A_CN_FR := A_C_OF * 1000/ A_N_RT]
+  
+  # avoid values beyond acceptable range
+  dt[, A_CN_FR := pmax(dtp[osi_parm_name=='A_CN_FR',osi_parm_min], A_CN_FR)]
+  dt[, A_CN_FR := pmin(dtp[osi_parm_name=='A_CN_FR',osi_parm_max], A_CN_FR)]
+  dt[, A_SOM_LOI := pmax(dtp[osi_parm_name=='A_SOM_LOI',osi_parm_min], A_SOM_LOI)]
+  dt[, A_SOM_LOI := pmin(dtp[osi_parm_name=='A_SOM_LOI',osi_parm_max], A_SOM_LOI)]
+  dt[, A_C_OF := pmax(dtp[osi_parm_name=='A_C_OF',osi_parm_min], A_C_OF)]
+  dt[, A_C_OF := pmin(dtp[osi_parm_name=='A_C_OF',osi_parm_max], A_C_OF)]
   
   # check calculated properties
   osi_checkvar(parm = list(A_CN_FR = dt$A_CN_FR,

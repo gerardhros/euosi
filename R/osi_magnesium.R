@@ -44,7 +44,7 @@ osi_c_magnesium <- function(B_LU, B_SOILTYPE_AGR = NA_character_,
   
   # add visual bindings
   B_TEXTURE_USDA = A_SILT_MI = B_TEXTURE_GEPPA = B_TEXTURE_HYPRES = B_TEXTURE_BE = NULL
-  A_PH_WA = A_PH_KCL = NULL
+  A_PH_WA = A_PH_KCL = osi_parm_max =  NULL
   
   # desired length of inputs
   arg.length <- max(length(B_LU),length(B_SOILTYPE_AGR), length(A_CLAY_MI),length(A_SAND_MI),
