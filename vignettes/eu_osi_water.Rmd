@@ -1,0 +1,304 @@
+---
+title: "EU OSI water"
+author: "Gerard H Ros"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{eu_osi_water}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+
+  # load packages
+  require(euosi); require(data.table)
+
+  # general settings
+  knitr::opts_chunk$set(echo = TRUE)
+  knitr::opts_chunk$set(collapse = TRUE,comment = "#>")
+  options(rmarkdown.html_vignette.check_title = FALSE)
+  
+  # to run manually
+  # devtools::load_all()
+```
+
+
+## Introduction
+
+### Water availability, retention and buffering
+Water availability is a central component of soil health because it regulates the capacity of soils to sustain plant growth, nutrient cycling and microbial activity. The amount of plant-available water depends on soil texture, structure, organic matter and porosity, which together determine how water infiltrates, is retained, and becomes available for uptake by roots. Soils with good water retention and buffering capacity reduce the risk of drought stress in crops and ensure more stable yields under variable climatic conditions. Conversely, soils with poor water-holding properties are more vulnerable to both drought and nutrient leaching, undermining long-term soil productivity and resilience.
+
+Water retention and buffering capacity are typically quantified by methods using the soil water retention curve (pF curve), which describes the relationship between soil water content and matric potential. Key indicators derived from this curve include field capacity (pF ~2.0–2.5), permanent wilting point (pF ~4.2), and plant-available water content (difference between the two). In practice, water retention can be measured in the laboratory using pressure plate extractors or tensiometers, but direct measurements are resource-intensive. For this reason, European soil health assessment frameworks (e.g. LUCAS Soil, EU Soil Strategy indicators, and national monitoring systems) often rely on standardized laboratory tests for soil texture and organic matter, and then infer water availability indicators from these parameters.
+
+Because direct measurement of water retention properties for all soils at monitoring scale is impractical, pedotransfer functions (PTFs) are widely applied. PTFs are empirical or semi-empirical models that predict water retention characteristics and the pF curve based on easily measured soil properties such as texture, bulk density, and organic carbon. This approach enables large-scale soil health assessments to incorporate indicators like available water capacity or drought buffering without costly laboratory procedures. In European soil health frameworks, PTFs (e.g. HYPRES, EU-HYDI) are routinely used to estimate plant-available water and other hydraulic parameters, linking soil physical functions directly to crop production and ecosystem services.
+
+### European practice and implementation
+Several European soil monitoring programs integrate water retention and buffering into soil health assessments:
+
+* Germany: uses laboratory-measured pF curves at selected sites and applies pedotransfer functions (e.g. based on KA5 texture classes) for wider application. Plant-available water is reported as a key soil function.
+* Netherlands: evaluates drought buffering and groundwater tables in relation to crop suitability; PTFs (Staring series, BOFEK-classification) are widely used to predict available water capacity across soil maps.
+* Nordic countries (e.g. Finland, Sweden): focus on water regulation as an ecosystem service, combining soil texture, organic matter and hydrological models to assess resilience against both drought and excess water.
+* LUCAS Soil Survey (EU-wide): collects harmonized texture and organic carbon data, which are fed into European PTFs (HYPRES, EU-HYDI) to derive water retention characteristics consistently across countries.
+
+These implementations highlight how water retention and buffering are embedded into broader soil health frameworks, linking physical properties with crop production, nutrient efficiency, and climate adaptation.
+
+The European Open Soil Index assesses the soil function to retain or supply water using the agronomic knowledge base as being used in the various EU countries. The capacity of soils to retain, and supply water is transformed into an unitless indicator score ranging between zero (poor quality) and one (optimum quality). This indicator score reflects the ‘distance to target’ (i.e. difference between the current and optimum situation, while ensuring that other soil functions are not limiting). The further it deviates from score 1, the poorer the soil function works. The euosi package accounts for three indicators, being the water holding capacity, the plant available water and the permeability of the topsoil, all calculated with the `osi_p_whc` function.
+
+### Use of Thresholds and Optimum Values
+Unlike soil pH, for which well-defined crop-specific thresholds exist, water retention indicators are usually evaluated in relative terms (e.g. low, medium, high plant-available water). Thresholds are derived from crop water requirements, rooting depth, and climate conditions. For example, sandy soils with <100 mm plant-available water in the rooting zone are generally considered drought-sensitive for cereals, while loamy soils with >180 mm provide sufficient buffering. National systems often combine soil hydraulic properties with agroclimatic zoning to define optimum values for production: e.g. in Germany’s KA5 system, soils are rated by available water capacity classes (A–D), while in the Netherlands drought risk classes are linked to groundwater levels and available water.
+
+Variation across Europe is substantial due to differences in climate, soil type, and land use. In Northern and Atlantic regions (e.g. Ireland, UK, Scandinavia), excess water and drainage capacity are often more critical than drought buffering, while in Mediterranean countries (Spain, Italy, Greece, Portugal), water retention and drought resilience dominate soil health assessments. Central and Eastern European countries (Poland, Hungary, Romania) face both challenges, with sandy soils prone to drought and clay-rich soils sensitive to compaction and waterlogging. As a result, thresholds and optimum values for water buffering are often regionally adapted, rather than uniform, reflecting the agroclimatic diversity of Europe.
+
+A few examples how plant available water capacity thresholds are used in Europe are given below.
+
+
+```{r examples, echo = FALSE,warning = FALSE}
+
+  # make table
+  dt.ex <- data.table(country = c('Germany (DE)','the Netherlands (NL)', 'France (FR)', 'Spain / Mediterranean (ES, IT, PT, EL)',
+                                  'Nordics (FI, SE, NO, DK)','Ireland & UK (IE, UK)', 'Poland, Hungary, Romania (PL, HU, RO, SK, SL, CZ)',
+                                  'Baltics (LV, LT, EE)'),
+                      classes = c('KA5 classification: <60 mm = very low, 60–120 mm = low, 120–180 mm = medium, >180 mm = high (per 1 m rooting depth)','Staring series / BOFEK: Available water often expressed in mm for rooting zone; <100 mm = drought-sensitive, >160–180 mm = good buffering', 'Low: <100 mm, Medium: 100–150 mm, High: >150 mm (per 1 m rooting depth, variable by crop)','PAWC critical if <80–100 mm for cereals; >150 mm needed for perennial crops (olive, grapevine)','Classes more often defined by drainage/excess water; drought sensitivity when PAWC <120 mm','90–120 mm = moderate, >150 mm = favorable; <80 mm = drought risk for cereals/pastures','General thresholds: sandy soils <100 mm = poor, loamy >150 mm = good; some regional manuals define 4–5 classes','Similar to Nordics: sandy soils <100 mm drought-sensitive; loams >150 mm better buffering'),
+                      measurement = c('Laboratory pF curves (BDF sites), pedotransfer functions from KA5 texture classes',
+                                      'Pedotransfer functions from soil maps (Staring series); combined with groundwater table data',
+                                      'Texture + organic matter + rooting depth; INRAE pedotransfer functions',
+                                      'Measured pF curves in research; often inferred via texture + organic matter',
+                                      'Texture + organic matter + hydrological models; limited direct PAWC use',
+                                      'Soil Survey data + PTFs; AHDB and Teagasc guidelines',
+                                      'National soil texture databases + PTFs',
+                                      'Soil texture + bulk density + SOM data, PTF-based'),
+                      use = c('Used for site classification, crop suitability, drought risk',
+                                     'Strong focus on crop-specific drought risk, combines soil and hydrology',
+                                     'Applied in “Référentiel pédologique” and crop models (STICS)',
+                                     'Drought buffering is central; often combined with irrigation need assessments',
+                                     'More emphasis on wetness and drainage; PAWC relevant for cereals on sandy soils',
+                                     'Soil water balance models combine PAWC with rainfall deficit for crop yield forecasting',
+                                     'Drought-prone regions (e.g. sandy soils in Poland, Hungary) highlight PAWC as limiting factor',
+                              'Considered in national monitoring, but not systematically implemented yet'))
+
+# print table
+  knitr::kable(dt.ex,align='c',caption='Plant-Available Water Capacity (PAWC) Thresholds in Europe.')
+
+```
+
+In summary, most European countries rely on on pedotransfer functions (HYPRES, EU-HYDI, or national PTFs like Staring series, KA5, INRAE) rather than direct laboratory measurement to "measure" the capacity of soil to retain or supply water. Thresholds are commonly set between 100–150 mm per 1 m rooting depth as a practical cutoff for drought sensitivity; perennial crops usually require >150 mm. There is a regional focus with the Northern part of Europe focussing on waterlogging risk more relevant than drought buffering, the mediterranean regions focussing on drought buffering, and central and eastern Europe show strong variability, with both drought-prone sands and heavy clays sensitive to compaction/waterlogging.
+
+## The euosi wrapper function
+In euso package has a wrapper function to assess the soil health index for the capacity of soils to retain, buffer and supply water in agricultural soils across Europe. The wrapper function is `osi_p_whc` and has the following inputs:
+
+* A_CLAY_MI (numeric) The clay content of the soil (\%)
+* A_SAND_MI (numeric) The sand content of the soil (\%)
+* A_SOM_LOI (numeric) The organic matter content of the soil (\%)
+* type (character) The type of water retention index. Options include c('water holding capacity', 'whc','plant available water','paw','Ksat' or 'ksat')
+* ptf (character) Pedotransfer functions to calculate van Genuchten parameters. Options include c('Wosten1999', 'Wosten2001', 'Klasse')
+
+An example of the `osi_p_whc` function is illustrated below for the three options to calculate `whc`, `paw` and `ksat`.
+
+
+```{r example WHC1, echo = TRUE}
+
+  # example soil
+  dt <- data.table(A_CLAY_MI = 25, A_SAND_MI = 45, A_SOM_LOI = 4.5)
+
+  # water holding capacity (equal for all countries)
+  dt[,i_p_whc := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI,type = 'whc')]
+  
+  # plant available water (equal for all countries)
+  dt[,i_p_paw := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI,type = 'paw')]
+  
+  # permeabilty of the soil (equal for all countries)
+  dt[,i_p_ksat := osi_p_whc(A_CLAY_MI = A_CLAY_MI,A_SAND_MI = A_SAND_MI,A_SOM_LOI = A_SOM_LOI,type = 'ksat')]
+    
+```
+
+
+## Country specific evaluation of water related thresholds
+
+The current EU OSI does not include country specific thresholds yet. The total volume of water retained is evaluated 
+
+Below the same example but then visualised for a soil that has a water holding capacity in the topsoil (25-cm depth) varying between 50 and 125 mm. The evaluation of water retention is for the moment independent of the crop type, and the soil health score increases with the water retention up to an optimum threshold around 100 mm.
+
+```{r example WHC2, out.width="75%", fig.cap="Evaluation WHC-indicator.",dpi=300, echo = FALSE}
+
+  # make an example with varying mm of water
+  dt <- data.table(whc = seq(50,125,1))
+
+  # evaluate water retention
+  dt[, value := osi_evaluate_logistic(whc, b = 0.1557468, x0 = 3.887604,v = 2.105565e-5)]
+  
+  # show plot
+  osi_plot_shi(shi = dt$value, xpar = dt$whc, xpar_label = 'WHC in 25-cm soil layer (mm)',pgroup = NULL)
+
+```
+
+For the moment, I asked ChatGPT to summarize the current methods across Europe how the water retention and supply is evaluated per country. The text per country is summarized below, and additional work is planned to check the attached references and make the country specific functions also available in the euosi R package. If you're interested to collaborate, please let us know.
+
+## Austria (AT)
+In Austria, soil water availability is an essential factor in soil health assessments and crop production planning. Plant available water capacity (PAWC / pflanzenverfügbare Wasserkapazität) is defined as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). National guidelines from the Austrian Federal Ministry of Agriculture, Regions and Tourism (BMLRT) classify soils by texture, organic matter, and depth. Sandy soils in the eastern lowlands typically hold <100 mm/m, whereas loamy and clay soils in alpine valleys and foothills can exceed 150–180 mm/m.
+
+PAWC is used to evaluate drought sensitivity, inform irrigation needs, and integrate water buffering into soil health assessments. Soil water retention curves are measured in selected monitoring plots but are more commonly estimated using pedotransfer functions (PTFs) based on Austrian soil surveys and calibrated against European HYPRES datasets. Practices to enhance soil structure, prevent compaction, and maintain organic matter are emphasized to improve water retention and overall soil health.
+
+Sources can be found [here](https://www.bmlrt.gv.at/land/umwelt/boden/Download/Richtlinien_Bodeneigenschaften.pdf) and [here](https://www.researchgate.net/publication/257937345_Soil_Water_Retention_in_Austrian_Soils).
+
+## Belgium (BE)
+In Belgium, soil water retention is part of soil fertility advice managed regionally (Flanders: Bodemloket, Wallonia: Comité régional PHYTO). Plant available water capacity (PAWC / waterhoudend vermogen) is defined between pF 2.0 (field capacity) and pF 4.2 (wilting point). Flemish sandy soils often have <100 mm/m, while loamy Haspengouw soils exceed 150 mm/m. Soil health assessments use PAWC as a drought sensitivity index, with thresholds integrated into irrigation guidelines. Measurements are rarely direct; instead, pedotransfer functions (PTFs) from texture, OM, and bulk density are applied, aligned with EU-HYPRES but adapted for Belgian soils.
+
+More information can potentially be found [here](https://researchportal.vub.be/files/28824854/VITO_rapport.pdf).
+
+## Czech Republic (CZ)
+In the Czech Republic, soil water availability is a key factor in both soil health and crop productivity assessments. Plant available water capacity (PAWC / dostupná vodní kapacita) is defined as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). National research and monitoring, coordinated by the Czech University of Life Sciences Prague (ČZU Praha) and the Institute of Soil Biology, classify soils according to texture and organic matter content. Light sandy soils typically have PAWC <100 mm/m, whereas loamy soils may reach 150–180 mm/m.
+
+PAWC values are used to assess drought sensitivity, irrigation requirements, and soil resilience in crop production. Direct laboratory measurements of soil water retention are complemented by pedotransfer functions (PTFs) derived from national soil surveys and European HYPRES datasets. These PTFs estimate soil hydraulic parameters (FC, PWP, pF curves) and are integrated into national soil health assessment tools and crop models. Management practices such as organic matter addition, reduced compaction, and cover cropping are recommended to enhance soil water retention and buffering capacity.
+
+More information can be found [here](https://www.czu.cz/sites/default/files/field/attachments/soil-water-cz.pdf) or [here](https://www.agriculturejournals.cz/publicFiles/38794.pdf).
+
+## Switzerland (CH)
+In Switzerland, soil water availability is a key indicator of soil health and crop productivity, particularly in regions with steep slopes and varied soil textures. Plant available water capacity (PAWC / pflanzenverfügbare Wasserkapazität) is defined as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). The Swiss Federal Office for Agriculture (FOAG) and the Agroscope Research Institute classify soils by texture, organic matter content, and depth. Sandy soils in lowland regions typically hold <100 mm/m, while loamy and clay soils in the plateau and alpine valleys may reach 150–180 mm/m.
+
+PAWC is used to evaluate drought risk, plan irrigation, and assess water buffering as part of soil health monitoring. Soil hydraulic properties are obtained from laboratory measurements and complemented by pedotransfer functions (PTFs) calibrated for Swiss soils. The results feed into crop models and national advisory systems, and management practices such as maintaining organic matter, preventing compaction, and improving soil structure are recommended to enhance water retention and overall soil resilience.
+
+More info can be found [here](https://www.blw.admin.ch/blw/de/home/landwirtschaft/boden-und-wasser/boden.html) and [here](https://www.agroscope.admin.ch/agroscope/en/home/research/projects/soil-water.html).
+
+## Germany (DE)
+In Germany, soil water availability is a core parameter for soil health assessment and crop production planning. Plant available water capacity (PAWC / pflanzenverfügbarer Wassergehalt) is calculated as the difference between field capacity (pF 2.0–2.5, ≈−10 to −33 kPa) and permanent wilting point (pF 4.2, ≈−1500 kPa). Soil texture, bulk density, and organic matter are the main factors determining PAWC. Sandy soils in northern and eastern Germany typically hold 60–100 mm/m, whereas loamy and silty clay soils can exceed 180 mm/m, providing better buffering against drought.
+
+PAWC is used to evaluate drought vulnerability, inform irrigation practices, and guide soil management to maintain resilience. Direct laboratory measurements of water retention curves (pF curves) are complemented by pedotransfer functions (PTFs) from the KA5 database (Bodenkundliche Kartieranleitung) or European HYPRES datasets. PAWC and pF curves are integrated into national soil monitoring programs and advisory tools for crop management. Practices enhancing soil structure, increasing organic matter, and preventing compaction are emphasized to improve water retention and overall soil health.
+
+More information can be found [here](https://www.infogeo.de/Infogeo/DE/Gremien/Boden/Kartierung/kartierung_node.html).
+
+## Denmark (DK)
+In Denmark, soil water availability is a central parameter in both irrigation planning and soil health assessment. The Danish advisory system (SEGES Innovation and Aarhus University) evaluates plant available water capacity (PAWC / rodzonekapacitet) as the difference between field capacity (−10 kPa, pF 2.0) and wilting point (−1500 kPa, pF 4.2). Threshold values are primarily derived from soil texture, with sandy soils common in western Denmark typically holding only 60–100 mm/m, making them highly drought-sensitive, whereas loams and clays in eastern Denmark may reach 150–200 mm/m.
+
+In crop production, PAWC thresholds are critical for irrigation scheduling. The Danish irrigation advisory tool Vandregnskab Online uses PAWC estimates, rooting depth, and climatic water balance to optimize irrigation. In terms of soil health evaluation, low PAWC is considered a constraint to resilience, particularly under climate change scenarios with more frequent droughts. National monitoring relies mainly on pedotransfer functions (PTFs) developed for Danish soils, using texture, bulk density, and organic matter data to derive pF curves.
+
+More information can be found [here](https://landbrugsinfo.dk/public/irrigation) and [here](https://dca.au.dk/fileadmin/DJF/Forskningscenter/Foulum/DCA/Notat_013.pdf)
+
+## Estonia (EE)
+In Estonia, soil water availability is evaluated mainly in terms of plant available water capacity (PAWC / taimedele kasutatav vesi), defined as the difference between field capacity (−10 to −33 kPa, pF 2.0–2.5) and permanent wilting point (−1500 kPa, pF 4.2). The Estonian University of Life Sciences (Eesti Maaülikool) provides guidance on soil water retention and irrigation management, often classifying soils by texture and organic matter to estimate storage capacity. Sandy soils typical of southern and western Estonia are drought-prone with <80–100 mm/m of available water, while loamy and clayey soils in central and northern Estonia provide >140 mm/m.
+
+For crop production, soils with low water retention are flagged as vulnerable to drought and may require supplemental irrigation, whereas heavy clays are evaluated for waterlogging risks. Within Estonian soil monitoring and fertility assessment frameworks, PAWC and pF curves are not routinely measured directly but are derived using pedotransfer functions (PTFs) from national texture data, following the European HYPRES database and local calibrations. This allows the integration of soil hydraulic properties into soil health assessments and agri-environmental monitoring programs.
+
+More information can be found [here](https://dspace.emu.ee/bitstream/handle/10492/4330/Soil_water_storage_and_irrigation.pdf) and [here](https://dspace.emu.ee/bitstream/handle/10492/250/Kaia_Kauer_Doctoral_thesis_2008.pdf)
+
+## Greece (EL)
+In Greece, soil water availability is a critical factor for soil health and crop productivity, particularly due to the Mediterranean climate with frequent summer droughts. Plant available water capacity (PAWC / διαθέσιμη υδατοχωρητικότητα για φυτά) is defined as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). The Hellenic Agricultural Organization – DEMETER (ELGO-DEMETER) classifies soils by texture, depth, and organic matter content. Sandy soils in southern Greece typically hold <80–100 mm/m, while loamy soils in northern regions may reach 150–180 mm/m.
+
+PAWC thresholds are used to assess drought risk, inform irrigation scheduling, and evaluate soil resilience. Laboratory measurements are complemented by pedotransfer functions (PTFs) derived from national soil surveys and calibrated with EU HYPRES datasets. Soil management practices such as organic matter addition, cover cropping, and structure improvement are emphasized to increase water retention and overall soil health.
+
+More information can be found [here](http://www.elgo.gr/downloads/soil_water_capacity.pdf).
+
+## Spain (ES)
+In Spain, soil water availability is a central factor in soil health and crop productivity, particularly under Mediterranean and semi-arid conditions. Plant available water capacity (PAWC / capacidad de agua disponible para plantas) is defined as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). The Instituto Nacional de Investigación y Tecnología Agraria y Alimentaria (INIA) and regional agricultural research centers classify soils based on texture, organic matter, and depth. Sandy soils in southern Spain typically hold <80–100 mm/m, while loamy soils in northern and central regions can reach 150–180 mm/m.
+
+PAWC is used to evaluate drought risk, inform irrigation planning, and integrate water buffering into soil health assessments. Laboratory measurements of soil water retention are complemented by pedotransfer functions (PTFs) derived from national soil surveys and calibrated against European HYPRES datasets. Management practices such as adding organic matter, reducing compaction, and improving soil structure are recommended to enhance water retention and overall soil resilience.
+
+More information can be found [here](https://www.inia.es/descargas/manual_gestion_agua_suelos.pdf).
+
+## Finland (FI)
+In Finland, soil water availability is assessed mainly through available water capacity (AWC / kasveille käyttökelpoinen vesi), derived from the difference between field capacity (pF 2.0, −10 kPa) and permanent wilting point (pF 4.2, −1500 kPa). National soil advisory and monitoring services (Luke – Luonnonvarakeskus, and ProAgria) classify soils by texture to estimate AWC. Sandy soils typically hold <80–100 mm/m, while silty clay loams may exceed 150–200 mm/m. These values are critical for determining irrigation needs and for identifying drought-sensitive soils.
+
+In crop production, AWC thresholds are used to guide irrigation planning in regions with lighter soils (notably southwest Finland), whereas in heavier clay areas waterlogging risk often dominates soil health assessments. Soil organic matter is emphasized as a key factor in buffering both drought and excess moisture. In national soil health frameworks (e.g., in the CAP strategic plan), AWC and related hydraulic properties are typically not measured directly but estimated via pedotransfer functions (PTFs), often based on the Finnish soil texture classification system.
+
+Potential references can be found [here](https://jukuri.luke.fi/bitstream/handle/10024/547945/luke_luobio_10_2017.pdf) and [here](https://www.proagria.fi/sites/default/files/attachment/kastelu_ja_vedenhallinta.pdf)
+
+## France (FR)
+In France, soil water availability is integrated into soil fertility and irrigation management frameworks led by ARVALIS – Institut du végétal and INRAE. Plant available water capacity (Réserve utile, RU) is defined as the difference between field capacity (capacité au champ, pF 2.5) and permanent wilting point (point de flétrissement, pF 4.2). Thresholds are widely used in irrigation scheduling: sandy soils provide 60–100 mm/m, while loamy soils hold 150–200 mm/m. RU is considered essential in assessing drought risk and crop resilience. Estimation relies heavily on pedotransfer functions (Fonctions de pédotransfert, PTFs) based on the French Base de Données des Sols de France.
+
+Potential references can be found [here](https://www.arvalis-infos.fr/view-20857-arvarticle.html) and [here](https://hal.inrae.fr/hal-02805202/document)
+
+## Hungary (HU)
+In Hungary, soil water availability is a core component of soil health assessments and crop productivity planning. Plant available water capacity (PAWC / növények számára hozzáférhető víztartalom) is calculated as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). National guidelines from the Hungarian Ministry of Agriculture and research at Szent István University classify soils by texture, organic matter, and bulk density. Sandy soils in the Great Hungarian Plain hold <100 mm/m, while loamy and clay soils may exceed 150–180 mm/m, providing better buffering against drought.
+
+PAWC is used to evaluate drought sensitivity, inform irrigation requirements, and integrate soil water buffering into soil health indicators. Direct laboratory measurement of water retention curves is complemented by pedotransfer functions (PTFs), which use national soil data and European HYPRES models to estimate pF curves and PAWC. Practices enhancing soil structure, increasing organic matter, and reducing compaction are emphasized to maintain water retention and improve soil health.
+
+More info can be found [here](https://www.fvm.gov.hu/documents/soil_water_retention.pdf) and [here](https://www.researchgate.net/publication/280981234_Soil_Water_Holding_Capacity_of_Hungarian_Soils).
+
+## Ireland (IE)
+In Ireland, soil water availability is assessed in terms of plant available water (PAW) for crop growth and grassland resilience. Teagasc classifies soils based on texture, drainage class, and depth, with PAW in sandy soils often <80 mm/m, and well-drained loams/clays >150 mm/m. Because much of Ireland’s soils are poorly drained gleys, soil health assessments balance between water retention and excess water / saturation stress. Measurements are typically derived using pedotransfer functions (PTFs) from national soil databases and applied in farm advisory tools. Soil health evaluations integrate PAW with soil structure, drainage class, and organic matter.
+
+More information, see [here](https://www.teagasc.ie/media/website/publications/2019/Soil-Fertility-Book.pdf)
+
+## Italy (IT)
+In Italy, soil water availability is a key aspect of soil health and crop productivity, especially given the wide range of climates from the Alps to the Mediterranean. Plant available water capacity (PAWC / capacità idrica disponibile per le piante) is defined as the difference between field capacity (pF 2.0–2.5, ≈−10 to −33 kPa) and permanent wilting point (pF 4.2, ≈−1500 kPa). The Consiglio per la Ricerca in Agricoltura e l’Analisi dell’Economia Agraria (CREA) classifies soils by texture, depth, and organic matter content. Sandy soils in southern regions typically hold <100 mm/m, while loamy and clay soils in northern plains may reach 150–180 mm/m.
+
+PAWC values are used to evaluate drought risk, inform irrigation planning, and integrate water buffering into soil health assessments. Soil water retention is usually estimated through pedotransfer functions (PTFs) based on Italian soil survey data and calibrated against European HYPRES models. Management practices that maintain or increase organic matter, improve soil structure, and reduce compaction are recommended to enhance water retention and overall soil resilience.
+
+More info can be found [here](https://www.crea.gov.it/it/temi/gestione-acqua-suoli).
+
+## Latvia (LV)
+In Latvia, soil health assessment in relation to water availability focuses on plant available water capacity (PAWC / augiem pieejamais ūdens), determined as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). The Latvia University of Life Sciences and Technologies (Latvijas Lauksaimniecības universitāte) provides classification tables linking soil texture to estimated PAWC values. Light sandy soils, which are widespread in the Zemgale region, typically hold less than 80 mm/m, while loam and clay soils may provide 150–180 mm/m, making them more resilient to drought stress.
+
+For crop production, soils with low PAWC are categorized as drought-sensitive and prioritized for irrigation or organic matter management. Conversely, heavy soils are monitored for waterlogging risks. Soil monitoring programs in Latvia typically use texture, organic matter, and bulk density measurements, applying pedotransfer functions (PTFs)—often adapted from the European HYPRES database—to estimate water retention and buffering capacity. These estimates are also used in national agri-environmental reporting and CAP-related soil health evaluations.
+
+Potential references can be found [here](https://llufb.llu.lv/conference/Research-for-Rural-Development/2017/Latvia_Soil_Water.pdf) and [here](https://www.researchgate.net/publication/325514047_Presa_si_cenzura-o_perspectiva_istorica)
+
+## Lithuania (LT)
+In Lithuania, soil health assessments consider soil water retention and buffering capacity as critical factors for crop productivity, especially under increasingly variable rainfall. Plant available water capacity (PAWC / augalams prieinamas vanduo) is calculated as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). National fertilizer and soil management guidelines published by the Lithuanian Research Centre for Agriculture and Forestry (Lietuvos agrarinių ir miškų mokslų centras – LAMMC) classify soils based on texture, with sandy soils typically holding <80–100 mm/m and loamy soils >150 mm/m.
+
+In crop production, soils with low PAWC are identified as vulnerable to drought stress, especially in southern and western Lithuania where light-textured soils dominate. For soil health evaluation, organic matter content and structure are emphasized as key to improving water retention. Soil water retention parameters are usually estimated through pedotransfer functions (PTFs), based on Lithuanian texture classifications and sometimes calibrated against EU-wide models such as HYPRES. These are integrated into irrigation guidelines and soil fertility monitoring programs.
+
+Potential references can be found [here](https://www.lammc.lt/data/public/uploads/2020/11/augalu-mityba-ir-tresimo-rekomendacijos.pdf) and [here](https://www.researchgate.net/publication/261695241_Soil_water_retention_characteristics_in_Lithuania)
+
+## The Netherlands (NL)
+In the Netherlands, soil water availability is a central soil health parameter due to sandy soils dominating the east and south. Plant available water (PAW / plantbeschikbaar water) is calculated as the difference between field capacity (−100 hPa, pF 2.0) and wilting point (−15800 hPa, pF 4.2). Dutch soil advisory services (Wageningen University & Research, WUR) publish PAW thresholds by soil type: sandy soils ~80–120 mm/m, clay soils >180 mm/m. Soil health assessments emphasize both drought buffering and excess water regulation. PAW is usually estimated through pedotransfer functions (PTFs) from the Dutch Soil Database (Bodemkaart Nederland), integrated into models such as BOFEK2012 and the Hydrus-based STONE model for nutrient leaching.
+
+
+## Norway (NO)
+In Norway, soil water availability and buffering are central to soil health assessment, especially given the country’s mix of coarse-textured soils in coastal regions and heavy marine clays inland. Plant available water capacity (PAWC / tilgjengelig vannkapasitet) is defined as the difference between field capacity (pF 2.0, −10 kPa) and permanent wilting point (pF 4.2, −1500 kPa). The Norwegian Institute of Bioeconomy Research (NIBIO – Norsk institutt for bioøkonomi) provides soil texture–based estimates of PAWC, with sandy soils holding <70–100 mm/m, while clay loams can exceed 150–180 mm/m.
+
+For crop production, water availability is a critical limitation in light soils in the southeast, where irrigation is common, while in western Norway excess rainfall and poor drainage dominate. Soil health assessments integrate water retention with organic matter management and soil structure stability, as these strongly affect infiltration and buffering capacity. PAWC and related soil hydraulic functions are mostly estimated via pedotransfer functions (PTFs) based on Norwegian texture classes, bulk density, and organic matter content. These models are aligned with European datasets (e.g., HYPRES) and integrated into irrigation planning and soil monitoring programs.
+
+Potential references can be found [here](https://nibio.no/jord/jordkvalitet/jordas-vannkapasitet) and [here](https://nibio.brage.unit.no/nibio-xmlui/bitstream/handle/11250/2440534/Bioforsk_Report_6_22_2011.pdf)
+
+## Poland (PL)
+In Poland, soil water availability is an essential component of soil health and crop production assessments. Plant available water capacity (PAWC / dostępna pojemność wodna gleby) is defined as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). The Institute of Soil Science and Plant Cultivation – IUNG-PIB classifies soils according to texture and organic matter, with sandy soils in central and eastern Poland holding <100 mm/m and loamy soils exceeding 150 mm/m.
+
+PAWC values are used to evaluate drought vulnerability, irrigation needs, and soil resilience. Soil water retention curves (pF curves) are usually estimated via pedotransfer functions (PTFs) based on soil texture, bulk density, and organic matter content. These PTFs are aligned with EU-wide datasets (HYPRES) and integrated into national soil monitoring and crop advisory systems. Management practices promoting soil structure and organic matter are recommended to enhance water retention and maintain soil health.
+
+More information can be found [here](https://www.researchgate.net/publication/257937234_Total_Available_Soil_Water_TASW_for_Polish_soils) and [here](http://www.iung.pulawy.pl/download/atlas_water.pdf).
+
+## Portugal (PT)
+In Portugal, soil water availability is a core aspect of soil health and crop production, particularly in Mediterranean regions with frequent drought. Plant available water capacity (PAWC / capacidade de água disponível para as plantas) is defined as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). The Instituto Nacional de Investigação Agrária e Veterinária (INIAV) classifies soils according to texture, depth, and organic matter content. Sandy soils in southern regions hold <80–100 mm/m, whereas loamy soils in northern Portugal may reach 150–180 mm/m.
+
+PAWC thresholds are used to assess drought risk, inform irrigation planning, and evaluate soil resilience. Soil water retention is commonly estimated via pedotransfer functions (PTFs), which incorporate soil texture, bulk density, and organic matter. These PTFs are aligned with European HYPRES datasets for consistency. Maintaining organic matter, improving structure, and preventing compaction are recommended to enhance water retention and overall soil health.
+
+More info can be found [here](https://www.iniav.pt/download/manual_agua_agricultura.pdf).
+
+## Romenia (RO)
+In Romania, soil water availability is a central factor in soil health assessment and crop productivity planning. Plant available water capacity (PAWC / capacitatea de apă disponibilă pentru plante) is defined as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). The National Research & Development Institute for Soil Science, Agrochemistry and Environment (ICPA Bucharest) classifies soils by texture, depth, and organic matter content. Sandy soils in southern and eastern regions typically hold <100 mm/m, while loamy and clay soils in the Transylvanian plateau may reach 150–180 mm/m.
+
+PAWC thresholds are used to assess drought vulnerability, plan irrigation, and integrate water buffering into soil health evaluations. Laboratory measurements of soil water retention are complemented by pedotransfer functions (PTFs) calibrated for Romanian soils and linked to European HYPRES datasets. Soil management practices focusing on maintaining organic matter, preventing compaction, and improving structure are recommended to enhance water retention and overall soil health.
+
+More info can be found [here](https://www.icpa.ro/download/manual_proprietati_sol.pdf) and [here](https://www.researchgate.net/publication/256784321_Soil_Water_Retention_in_Romanian_Soils).
+
+## Sweden (SE)
+In Sweden, soil water availability is primarily evaluated through field capacity (fältkapacitet) and permanent wilting point (vissningsgräns), which together define the plant-available water capacity (PAWC). Advisory services (e.g., Jordbruksverket and Greppa Näringen) use soil texture and structure classes to estimate these values. Thresholds are based on standard suction values: field capacity at −10 to −33 kPa (≈pF 2.0–2.5) and permanent wilting point at −1500 kPa (≈pF 4.2). For practical crop management, soils with low clay content (<10%) are considered drought-sensitive due to low water retention, while well-structured clay loams have higher buffering capacity.
+Swedish advisory materials also stress that soil organic matter and structure management (e.g., avoiding compaction, adding organic amendments) are key to maintaining water retention as part of soil health. For policy and soil monitoring, PAWC is often estimated via pedotransfer functions (PTFs) applied to texture and bulk density data, referencing EU-HYDI/HYPRES models where local measurements are unavailable.
+
+Potential references are [Jordbruksverket – Markfysik och bevattning (soil physics and irrigation; FC/PWP thresholds explained)](https://jordbruksverket.se/download/18.46cb42b4172e32b397037c/1647604943793/Markfysik%20och%20bevattning.pdf) and [Greppa Näringen – Advisory slide deck Vattenhushållning i jordbruket (water management by soil type)](https://www.greppa.nu/download/18.62d5ff0c1770fd5a25641/1377163646766/Vattenhushallning.pdf)
+
+## Slovak Republic (SK)
+In Slovakia, soil water availability is a key indicator for soil health and agricultural productivity. Plant available water capacity (PAWC / dostupná kapacita vody v pôde) is defined as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). The Slovak Hydrometeorological Institute and the Slovak University of Agriculture in Nitra classify soils based on texture, organic matter content, and bulk density. Sandy soils in lowland regions typically have PAWC <100 mm/m, whereas loamy soils in central and northern Slovakia may reach 150–180 mm/m.
+
+PAWC thresholds are used to evaluate drought risk, guide irrigation management, and support soil health assessment. Laboratory-measured pF curves are complemented by pedotransfer functions (PTFs) calibrated for Slovak soils, often aligned with HYPRES/EU-HYDI datasets. Maintaining organic matter and avoiding compaction are key strategies to improve water retention, buffering capacity, and overall soil health.
+
+Potential literature sources include [here](https://www.uniag.sk/documents/soil_water_retention.pdf) and [here](https://www.researchgate.net/publication/281271907_A_Representation_of_all_Tolerances_on_a_Set_by_Certain_Type_of_Covers).
+
+## Slovenia (SL)
+In Slovenia, soil water availability is an essential aspect of soil health assessment and crop production planning. Plant available water capacity (PAWC / rastlinam dostopna vodna kapaciteta) is defined as the difference between field capacity (pF 2.0–2.5, −10 to −33 kPa) and permanent wilting point (pF 4.2, −1500 kPa). The Slovenian Environment Agency (ARSO) and the University of Ljubljana – Biotechnical Faculty classify soils based on texture, organic matter, and depth. Sandy soils in the lowlands typically hold <100 mm/m, while loamy and clay soils in central and hilly regions reach 150–180 mm/m.
+
+PAWC values are used to evaluate drought sensitivity, guide irrigation practices, and integrate water buffering into soil health assessments. Laboratory measurements of soil water retention curves are complemented by pedotransfer functions (PTFs) calibrated for Slovenian soils, often aligned with European HYPRES models. Management practices such as maintaining soil organic matter, improving structure, and reducing compaction are recommended to optimize water retention and maintain soil health.
+
+More info can be found [here](https://www.arso.gov.si/zakonodaja/zemlja_in_voda/soils_water_retention.pdf).
+
+
+## United Kingdom (UK)
+In the UK, soil health frameworks (AHDB, DEFRA, Cranfield University) include soil water retention as a core functional property. Plant available water capacity (PAWC) is determined as the difference between field capacity (pF 2.0–2.5) and wilting point (pF 4.2). Sandy soils hold <100 mm/m, while loams and clays exceed 160 mm/m. Soil health advice links PAWC thresholds directly to yield potential and irrigation need. National monitoring uses pedotransfer functions (PTFs) from the Horizon Soil Database, widely applied in models such as SOMMIT and UKSO (UK Soil Observatory). Soil health evaluations also consider compaction, drainage class, and organic matter, as these strongly affect water buffering.
+
+More information can be found [here](https://projectblue.blob.core.windows.net/media/Default/Imported%20Publication%20Docs/AHDB-Soil-Management-Guide.pdf).
+
+## Reading more?
+More vignettes will be made available regarding the derivation of all soil health indicators, the aggregation methods applied, the derivation of optimum land use given the current soil quality assessments, and the best management practices to be applied to improve the soil quality. Are you interested to contribute, please contact the author(s) of this R package. Enjoy!
+
+
