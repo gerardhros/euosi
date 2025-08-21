@@ -1,3 +1,25 @@
+# euosi 0.9.0 2025-08-21
+
+## Added
+* argument `pwarning` to all wrapper functions to replace error (stop) messages for input checks with warnings
+* RUSL parameter definitions and ranges to `osi_parms`
+* set max values on predicted soil element contents in `osi_conv_ph`,'osi_conv_potassium`, `osi_conv_phosphor` and `osi_conv_magnesium`
+* `osi_c_ph_eu` to assess soil pH when no country specific guidelines are present (not yet implemented in wrapper)
+* set land uses with nature to NA for `osi_c_phosphor` and add correct filters for `crop_cat1`
+* add new `crop_cat1` options to osi_pmn
+
+## Changed
+* min and max values in `osi_parms` for LUCAS properties given observations in 2018-2021
+* update `osi_parms`, and `osi_vars_input`with updated parameter options
+
+## Fixed
+* missing setorder id in various `osi_nut_k`, `osi_nut_p`, `osi_c_p` and `osi_c_k` functions
+* incorrect crop_cat1 options in dt.treshold for `osi_carbon`
+* incorrect texture code for GEPPA (SaI should be Sal) and options B_SOILTYPE_AGR
+* incorrect USDA classification options in `osi_gw_nleach`
+* incorrect texture options in dt.threshold for `osi_potassium_be`
+* missing options in osi_thresholds for `i_c_k` in France, and `i_c_oc` in Europe
+
 # euosi 0.8.0 2025-08-19
 
 ## Added
