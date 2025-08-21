@@ -87,7 +87,8 @@ osi_nut_k <- function(B_LU, B_SOILTYPE_AGR = NA_character_,B_AER_FR = NA_charact
   )
   
   # check required inputs
-  osi_checkvar(parm = list(B_COUNTRY = dt$B_COUNTRY, B_LU = dt$B_LU,
+  osi_checkvar(parm = list(B_COUNTRY = dt$B_COUNTRY, 
+                           B_LU = dt$B_LU,
                            B_SOILTYPE_AGR = dt$B_SOILTYPE_AGR,
                            A_CLAY_MI = dt$A_CLAY_MI,
                            A_SAND_MI = dt$A_SAND_MI,
@@ -306,10 +307,6 @@ osi_nut_k_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_, unitcheck = TRU
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='BE']
  
-  # thresholds
-  dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  dt.thresholds <- dt.thresholds[osi_country == 'BE' & osi_indicator =='i_c_k']
-  
   # get max length of input arguments
   arg.length <- max(length(B_LU),length(B_TEXTURE_BE),length(A_K_AAA))
   
@@ -328,25 +325,12 @@ osi_nut_k_be <- function(B_LU, B_TEXTURE_BE, A_K_AAA = NA_real_, unitcheck = TRU
                    A_K_AAA = A_K_AAA,
                    value = NA_real_)
   
-  # set soil type to categories
-  dt[B_TEXTURE_BE %in% c('S','Z'),B_SOILTYPE_AGR := 'zand']
-  dt[B_TEXTURE_BE %in% c('P','L'),B_SOILTYPE_AGR := 'zandleem']
-  dt[B_TEXTURE_BE %in% c('A'),B_SOILTYPE_AGR := 'leem']
-  dt[is.na(B_SOILTYPE_AGR), B_SOILTYPE_AGR := 'polder']
-  
   # merge crop properties
   dt <- merge(dt,
               dt.crops[,.(crop_code,crop_cat1)],
               by.x = 'B_LU', 
               by.y = 'crop_code',
               all.x=TRUE)
-  
-  # merge thresholds
-  dt <- merge(dt,
-              dt.thresholds,
-              by.x = c('B_SOILTYPE_AGR', 'crop_cat1'),
-              by.y = c('osi_threshold_soilcat','osi_threshold_cropcat'),
-              all.x = TRUE)
   
   # convert to the OSI score
   dt[,value := osi_evaluate_logistic(x = A_K_AAA, b = -0.01082, x0 = 301.78, v = 1.7673)]
@@ -543,7 +527,7 @@ osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_CAL, unitcheck =
   
   # add visual bindings
   A_SILT_MI = A_K_CAL2 = stype = B_LU_CAT = NULL
-  crop_code = crop_cat1 = osi_country = . = NULL
+  crop_code = crop_cat1 = osi_country = . = id = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -563,7 +547,7 @@ osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_CAL, unitcheck =
                unitcheck = unitcheck)
   
   # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
+  dt <- data.table(id = 1: arg.length,
                    B_LU = B_LU,
                    A_C_OF= A_C_OF,
                    A_CLAY_MI = A_CLAY_MI,
@@ -606,6 +590,9 @@ osi_nut_k_de <- function(B_LU, A_C_OF, A_CLAY_MI,A_SAND_MI, A_K_CAL, unitcheck =
   
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -669,6 +656,9 @@ osi_nut_k_dk <- function(B_LU, A_K_AL, unitcheck = TRUE) {
   
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value 
   value <- dt[,value]
@@ -782,7 +772,7 @@ osi_nut_k_ee <- function(A_K_M3,B_TEXTURE_USDA,B_LU = NA_character_, unitcheck =
 osi_nut_k_el <- function(B_LU, A_K_AAA, unitcheck = TRUE) {
   
   # add visual bindings
-  osi_country = crop_code = crop_cat1 = . = NULL
+  osi_country = crop_code = crop_cat1 = . = id =NULL
   
   # crop data
   # dt.crops <- as.data.table(euosi::osi_crops)
@@ -812,6 +802,9 @@ osi_nut_k_el <- function(B_LU, A_K_AAA, unitcheck = TRUE) {
   # evaluation soil K status for grasslands and croplands
   # source ChatGPT, PhD thesis from https://ikee.lib.auth.gr/record/292420/files/GRI-2017-19713.pdf
   dt[, value := osi_evaluate_logistic(A_K_AAA, b = -0.00632, x0 = 526.88, v = 1.8346)]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
@@ -883,6 +876,9 @@ osi_nut_k_es <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA, unitcheck = TRUE) {
   
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value
   value <- dt[,value]
@@ -1249,6 +1245,9 @@ osi_nut_k_ie <- function(B_LU, A_SOM_LOI,A_K_NaAAA, unitcheck = TRUE) {
   dt[A_SOM_LOI <= 20, value := osi_evaluate_logistic(A_K_NaAAA, b = -0.01106, x0 = 285.18, v = 1.637)]
   dt[A_SOM_LOI > 20, value := osi_evaluate_logistic(A_K_NaAAA, b = -0.00578, x0 = 540.88, v = 1.6)]
   
+  # set the order to the original inputs
+  setorder(dt, id)
+  
   # select value
   value <- dt[,value]
   
@@ -1296,7 +1295,7 @@ osi_nut_k_it <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA, unitcheck = TRUE) {
                unitcheck = unitcheck)
   
   # internal data.table
-  dt <- data.table(id = 1: length(B_LU),
+  dt <- data.table(id = 1: arg.length,
                    B_LU = B_LU,
                    B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                    A_K_AAA = A_K_AAA,
@@ -1323,6 +1322,9 @@ osi_nut_k_it <- function(B_LU, B_TEXTURE_HYPRES,A_K_AAA, unitcheck = TRUE) {
   
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value
   value <- dt[,value]
@@ -1650,7 +1652,7 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   
   # subset and evaluate for maize
   dths <- dt.thresholds[osi_threshold_cropcat == 'maize']
-  dt.grass[, i_c_k := osi_evaluate_logistic(value, b = -0.91486, x0 = 4.36, v = 2.454)]
+  dt.maize[, i_c_k := osi_evaluate_logistic(value, b = -0.91486, x0 = 4.36, v = 2.454)]
   
   # subset and evaluate for arable sandy soils
   dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'sand']
@@ -1658,7 +1660,7 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
   
   # subset and evaluate for arable peat soils
   dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'peat']
-  dt.arable[grepl('peat',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = -0.08125, x0 = 38.74, v = 1.6288)]
+  dt.arable[grepl('veen',B_SOILTYPE_AGR), i_c_k := osi_evaluate_logistic(value, b = -0.08125, x0 = 38.74, v = 1.6288)]
   
   # subset and evaluate for arable clay soils
   dths <- dt.thresholds[osi_threshold_cropcat == 'arable' & osi_threshold_soilcat == 'clay']
@@ -1704,6 +1706,9 @@ osi_nut_k_nl <- function(B_LU, B_SOILTYPE_AGR,A_SOM_LOI, A_CLAY_MI,A_PH_CC,
 #' @export
 osi_nut_k_no <- function(B_LU, A_K_AL,A_CLAY_MI, unitcheck = TRUE) {
   
+  # add visual bindings
+  id = NULL
+  
   #get max length of inputs
   arg.length <- max(length(B_LU),length(A_K_AL),length(A_CLAY_MI))
   
@@ -1724,6 +1729,9 @@ osi_nut_k_no <- function(B_LU, A_K_AL,A_CLAY_MI, unitcheck = TRUE) {
   # https://www.nibio.no/tema/jord/gjodslingshandbok/korreksjonstabeller/kaliumkorreksjon-til-eng
   # https://www.nibio.no/tema/jord/gjodslingshandbok/korreksjonstabeller/kalium--korn-oljevekster-potet-og-gronnsaker
   dt[, value := OBIC::evaluate_logistic(A_K_AL,b = -0.01291, x0 = 250.2, v = 1.7261 )]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value 
   value <- dt[,value]
@@ -1840,7 +1848,7 @@ osi_nut_k_pl <- function(A_K_DL,B_TEXTURE_HYPRES,B_LU = NA_character_, unitcheck
 osi_nut_k_pt <- function(B_LU, A_K_AAA, unitcheck = TRUE) {
   
   # add visual binding
-  crop_cat1 = osi_country = . = crop_code = crop_cat2 = NULL
+  crop_cat1 = osi_country = . = crop_code = crop_cat2 = id = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -1875,6 +1883,9 @@ osi_nut_k_pt <- function(B_LU, A_K_AAA, unitcheck = TRUE) {
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
   
+  # set the order to the original inputs
+  setorder(dt, id)
+  
   # select value and return
   value <- dt[,value]
   return(value)
@@ -1901,7 +1912,7 @@ osi_nut_k_pt <- function(B_LU, A_K_AAA, unitcheck = TRUE) {
 osi_nut_k_se <- function(B_LU, A_K_AL, unitcheck = TRUE) {
   
   # add visual binding
-  crop_cat1 = osi_country = . = crop_code = crop_cat2 = NULL
+  crop_cat1 = osi_country = . = crop_code = crop_cat2 = id = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -1935,6 +1946,9 @@ osi_nut_k_se <- function(B_LU, A_K_AL, unitcheck = TRUE) {
   
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
+  
+  # set the order to the original inputs
+  setorder(dt, id)
   
   # select value and return
   value <- dt[,value]
