@@ -143,6 +143,14 @@ osi_conv_ph <- function(element, A_PH_KCL = NA_real_,A_PH_CC = NA_real_, A_PH_WA
   dt[is.na(A_PH_KCL), A_PH_KCL := (A_PH_WA - 2.23) / 0.777]
   dt[is.na(A_PH_KCL), A_PH_KCL := (A_PH_CC - 0.5262) / 0.9288]
   
+  # load internal table for all euosi parameters
+  dtp <- as.data.table(euosi::osi_parms)
+  
+  # do checks and replace minima
+  dt[, A_PH_KCL := pmax(dtp[osi_parm_name=='A_PH_KCL',osi_parm_min], A_PH_KCL)]
+  dt[, A_PH_CC := pmax(dtp[osi_parm_name=='A_PH_CC',osi_parm_min], A_PH_CC)]
+  dt[, A_PH_WA := pmax(dtp[osi_parm_name=='A_PH_WA',osi_parm_min], A_PH_WA)]
+  
   # check parameters after calculation
   osi_checkvar(parm = list(A_PH_KCL = dt$A_PH_KCL, 
                            A_PH_CC = dt$A_PH_CC, 
@@ -246,7 +254,7 @@ osi_conv_phosphor <- function(element,
                               B_SOILTYPE_AGR = NA_real_, A_PH_CC = 5){
   
   # add visual bindings
-  osi_parm_name = osi_parm_min = bd = NULL
+  osi_parm_name = osi_parm_min = osi_parm_max = bd = NULL
   
   # check inputs
   checkmate::assert_subset(element,choices = c('A_P_AL','A_P_CAL','A_P_DL','A_P_AAA','A_P_AAA_EDTA',
@@ -321,6 +329,16 @@ osi_conv_phosphor <- function(element,
     dt[, A_P_M3 := pmax(dtp[osi_parm_name=='A_P_M3',osi_parm_min], A_P_M3)]
     dt[, A_P_CC := pmax(dtp[osi_parm_name=='A_P_CC',osi_parm_min], A_P_CC)]
   
+    # do checks and replace maxima
+    dt[, A_P_AL := pmin(dtp[osi_parm_name=='A_P_AL',osi_parm_max], A_P_AL)]
+    dt[, A_P_AAA := pmin(dtp[osi_parm_name=='A_P_AAA',osi_parm_max], A_P_AAA)]
+    dt[, A_P_AAA_EDTA := pmin(dtp[osi_parm_name=='A_P_AAA_EDTA',osi_parm_max], A_P_AAA_EDTA)]
+    dt[, A_P_CAL := pmin(dtp[osi_parm_name=='A_P_CAL',osi_parm_max], A_P_CAL)]
+    dt[, A_P_DL := pmin(dtp[osi_parm_name=='A_P_DL',osi_parm_max], A_P_DL)]
+    dt[, A_P_WA := pmin(dtp[osi_parm_name=='A_P_WA',osi_parm_max], A_P_WA)]
+    dt[, A_P_M3 := pmin(dtp[osi_parm_name=='A_P_M3',osi_parm_max], A_P_M3)]
+    dt[, A_P_CC := pmin(dtp[osi_parm_name=='A_P_CC',osi_parm_max], A_P_CC)]
+    
   # check calculated inputs
   osi_checkvar(parm = list(A_P_AL = dt$A_P_AL, A_P_AAA = dt$A_P_AAA,A_P_AAA_EDTA=dt$A_P_AAA_EDTA,
                            A_P_CAL = dt$A_P_CAL,A_P_DL = dt$A_P_DL,A_P_WA = dt$A_P_WA,
@@ -358,7 +376,7 @@ osi_conv_potassium <- function(element,
                               A_CEC_CO = NA_real_,A_PH_CC = NA_real_){
   
   # add visual bindings
-  osi_parm_name = osi_parm_min = A_PH_WA = NULL
+  osi_parm_name = osi_parm_min = osi_parm_max = A_PH_WA = NULL
   
   # check inputs
   checkmate::assert_subset(element,choices = c('A_K_AL','A_K_AN','A_K_CAL','A_K_CC',
@@ -426,6 +444,16 @@ osi_conv_potassium <- function(element,
     dt[, A_K_NaAAA := pmax(dtp[osi_parm_name=='A_K_NaAAA',osi_parm_min], A_K_NaAAA)]
     dt[, A_K_WA := pmax(dtp[osi_parm_name=='A_K_WA',osi_parm_min], A_K_WA)]
   
+    # do checks and replace maxima
+    dt[, A_K_AL := pmin(dtp[osi_parm_name=='A_K_AL',osi_parm_max], A_K_AL)]
+    dt[, A_K_AN := pmin(dtp[osi_parm_name=='A_K_AN',osi_parm_max], A_K_AN)]
+    dt[, A_K_CAL := pmin(dtp[osi_parm_name=='A_K_CAL',osi_parm_max], A_K_CAL)]
+    dt[, A_K_CC := pmin(dtp[osi_parm_name=='A_K_CC',osi_parm_max], A_K_CC)]
+    dt[, A_K_CO_PO := pmin(dtp[osi_parm_name=='A_K_CO_PO',osi_parm_max], A_K_CO_PO)]
+    dt[, A_K_DL := pmin(dtp[osi_parm_name=='A_K_DL',osi_parm_max], A_K_DL)]
+    dt[, A_K_NaAAA := pmin(dtp[osi_parm_name=='A_K_NaAAA',osi_parm_max], A_K_NaAAA)]
+    dt[, A_K_WA := pmin(dtp[osi_parm_name=='A_K_WA',osi_parm_max], A_K_WA)]
+    
   # check calculated inputs
   osi_checkvar(parm = list(A_PH_WA = dt$A_PH_WA, A_K_AL = dt$A_K_AL, A_K_AN = dt$A_K_AN,
                            A_K_CAL = dt$A_K_CAL, A_K_CC = dt$A_K_CC, A_K_CO_PO = dt$A_K_CO_PO,
@@ -463,7 +491,7 @@ osi_conv_magnesium <- function(element,
                                A_CEC_CO = NA_real_,A_PH_CC = NA_real_){
   
   # add visual bindings
-  osi_parm_name = osi_parm_min = NULL
+  osi_parm_name = osi_parm_min = osi_parm_max = NULL
   
   # check inputs
   checkmate::assert_subset(element,choices = c('A_MG_AL','A_MG_AN','A_MG_CC','A_MG_CO_PO',
@@ -516,6 +544,16 @@ osi_conv_magnesium <- function(element,
     dt[, A_MG_CO_PO := pmax(dtp[osi_parm_name=='A_MG_CO_PO',osi_parm_min], A_MG_CO_PO)]
     dt[, A_MG_DL := pmax(dtp[osi_parm_name=='A_MG_DL',osi_parm_min], A_MG_DL)]
     dt[, A_MG_NaAAA := pmax(dtp[osi_parm_name=='A_MG_NaAAA',osi_parm_min], A_MG_NaAAA)]
+    
+    # do checks and replace maxima
+    dt[, A_MG_AL := pmin(dtp[osi_parm_name=='A_MG_AL',osi_parm_max], A_MG_AL)]
+    dt[, A_MG_CC := pmin(dtp[osi_parm_name=='A_MG_CC',osi_parm_max], A_MG_CC)]
+    dt[, A_MG_KCL := pmin(dtp[osi_parm_name=='A_MG_KCL',osi_parm_max], A_MG_KCL)]
+    dt[, A_MG_M3 := pmin(dtp[osi_parm_name=='A_MG_M3',osi_parm_max], A_MG_M3)]
+    dt[, A_MG_AN := pmin(dtp[osi_parm_name=='A_MG_AN',osi_parm_max], A_MG_AN)]
+    dt[, A_MG_CO_PO := pmin(dtp[osi_parm_name=='A_MG_CO_PO',osi_parm_max], A_MG_CO_PO)]
+    dt[, A_MG_DL := pmin(dtp[osi_parm_name=='A_MG_DL',osi_parm_max], A_MG_DL)]
+    dt[, A_MG_NaAAA := pmin(dtp[osi_parm_name=='A_MG_NaAAA',osi_parm_max], A_MG_NaAAA)]
     
   # check calculated inputs
   osi_checkvar(parm = list(A_MG_AL = dt$A_MG_AL, A_MG_CC = dt$A_MG_CC, A_MG_KCL = dt$A_MG_KCL,
