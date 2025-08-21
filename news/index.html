@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,38 @@
 
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.9.0" id="euosi-090-2025-08-21">euosi 0.9.0 2025-08-21<a class="anchor" aria-label="anchor" href="#euosi-090-2025-08-21"></a></h2>
+<div class="section level3">
+<h3 id="added-0-9-0">Added<a class="anchor" aria-label="anchor" href="#added-0-9-0"></a></h3>
+<ul><li>argument <code>pwarning</code> to all wrapper functions to replace error (stop) messages for input checks with warnings</li>
+<li>RUSL parameter definitions and ranges to <code>osi_parms</code>
+</li>
+<li>set max values on predicted soil element contents in <code>osi_conv_ph</code>,’osi_conv_potassium<code>,</code>osi_conv_phosphor<code>and</code>osi_conv_magnesium`</li>
+<li>
+<code>osi_c_ph_eu</code> to assess soil pH when no country specific guidelines are present (not yet implemented in wrapper)</li>
+<li>set land uses with nature to NA for <code>osi_c_phosphor</code> and add correct filters for <code>crop_cat1</code>
+</li>
+<li>add new <code>crop_cat1</code> options to osi_pmn</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changed-0-9-0">Changed<a class="anchor" aria-label="anchor" href="#changed-0-9-0"></a></h3>
+<ul><li>min and max values in <code>osi_parms</code> for LUCAS properties given observations in 2018-2021</li>
+<li>update <code>osi_parms</code>, and <code>osi_vars_input</code>with updated parameter options</li>
+</ul></div>
+<div class="section level3">
+<h3 id="fixed-0-9-0">Fixed<a class="anchor" aria-label="anchor" href="#fixed-0-9-0"></a></h3>
+<ul><li>missing setorder id in various <code>osi_nut_k</code>, <code>osi_nut_p</code>, <code>osi_c_p</code> and <code>osi_c_k</code> functions</li>
+<li>incorrect crop_cat1 options in dt.treshold for <code>osi_carbon</code>
+</li>
+<li>incorrect texture code for GEPPA (SaI should be Sal) and options B_SOILTYPE_AGR</li>
+<li>incorrect USDA classification options in <code>osi_gw_nleach</code>
+</li>
+<li>incorrect texture options in dt.threshold for <code>osi_potassium_be</code>
+</li>
+<li>missing options in osi_thresholds for <code>i_c_k</code> in France, and <code>i_c_oc</code> in Europe</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.0" id="euosi-080-2025-08-19">euosi 0.8.0 2025-08-19<a class="anchor" aria-label="anchor" href="#euosi-080-2025-08-19"></a></h2>
 <div class="section level3">
