@@ -303,7 +303,7 @@ osi_gw_nleach_be <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   
   # calculate fle max
   dt[A_C_OF/10 > 20, flemax := 0.20]
-  dt[grepl('^Sa$|^SaL$|^SaLo$',B_TEXTURE_USDA), flemax := 1.0]
+  dt[grepl('^Sa$|^SaL$|^SaLo$|^LoSa$',B_TEXTURE_USDA), flemax := 1.0]
   dt[grepl('^CL$|^ClLo$|^L$|^SiL$|^SaCL$|^SiCL$|^SiLo$|^Lo$|^SiClLo$|^Si$',B_TEXTURE_USDA),flemax := 0.75]
   dt[grepl('^C$|^SaC$|^SaCl$|^Cl$',B_TEXTURE_USDA),flemax := 0.5]
   
@@ -498,7 +498,7 @@ osi_gw_nleach_fr <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,A_CACO3_
   #dt[grepl('^Sa$|^SaL$',B_TEXTURE_USDA), flemax := 1.0]
   #dt[grepl('^CL$|^L$|^SiL$|^SaCL$',B_TEXTURE_USDA),flemax := 0.75]
   #dt[grepl('^C$|^SaC$',B_TEXTURE_USDA),flemax := 0.5]
-  dt[grepl('^Sa$|^SaL$|^SaLo$',B_TEXTURE_USDA), flemax := 1.0]
+  dt[grepl('^Sa$|^SaL$|^SaLo$|^LoSa$',B_TEXTURE_USDA), flemax := 1.0]
   dt[grepl('^CL$|^ClLo$|^L$|^SiL$|^SaCL$|^SiCL$|^SiLo$|^Lo$|^SiClLo$|^Si$',B_TEXTURE_USDA),flemax := 0.75]
   dt[grepl('^C$|^SaC$|^SaCl$|^Cl$',B_TEXTURE_USDA),flemax := 0.5]
   
@@ -671,7 +671,7 @@ osi_gw_nleach_eu <- function(B_LU, A_N_RT, A_C_OF, A_CLAY_MI, A_SAND_MI,
   #dt[grepl('^Sa$|^SaL$',B_TEXTURE_USDA), flemax := 1.0]
   #dt[grepl('^CL$|^L$|^SiL$|^SaCL$',B_TEXTURE_USDA),flemax := 0.75]
   #dt[grepl('^C$|^SaC$',B_TEXTURE_USDA),flemax := 0.5]
-  dt[grepl('^Sa$|^SaL$|^SaLo$',B_TEXTURE_USDA), flemax := 1.0]
+  dt[grepl('^Sa$|^SaL$|^SaLo$|^LoSa$',B_TEXTURE_USDA), flemax := 1.0]
   dt[grepl('^CL$|^ClLo$|^L$|^SiL$|^SaCL$|^SiCL$|^SiLo$|^Lo$|^SiClLo$|^Si$',B_TEXTURE_USDA),flemax := 0.75]
   dt[grepl('^C$|^SaC$|^SaCl$|^Cl$',B_TEXTURE_USDA),flemax := 0.5]
   
