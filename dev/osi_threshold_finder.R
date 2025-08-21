@@ -45,6 +45,12 @@ findoptvalue <- function(spool, spoolopt,p0 = NULL) {
 
 
 
+# make generic EU WHC evaluation
+spool <- c(3,4.5,5,6,6.5,7.5)*100/6.5
+spoolopt <- c(0.05,0.15,0.6,0.9,1,1)
+p0 <- list(b = 0.09371117, x0 = 2.871137, v = 0.07407514)
+findoptvalue(spool,spoolopt,p0)
+
 # make generic EU pH assessment for missing countries
 # evaluation soil (A+, A, B, C, D, E)  
 spool <- c(3,4.5,5,6,6.5,7.5)

@@ -104,6 +104,7 @@ osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SOM_LOI,type = 'whc', ptf = 'Wosten1
   # convert from % to mm (wp) and mm (fc)
   dt[,wp := wp * p.depth * 1000]
   dt[,fc := fc * p.depth * 1000]
+  dt[,whc := whc * p.depth * 1000]
   
   # select Water Retention index, and convert to a soil quality index
 
@@ -111,7 +112,7 @@ osi_p_whc <- function(A_CLAY_MI,A_SAND_MI,A_SOM_LOI,type = 'whc', ptf = 'Wosten1
     if(type %in% c('water holding capacity','whc')){
       
       dths <- dt.thresholds[osi_indicator == 'i_p_whc']
-      dt[, value := osi_evaluate_logistic(whc, b = dths[,osi_st_c1], x0 = dths[,osi_st_c2],v = dths[,osi_st_c3])]
+      dt[, value := osi_evaluate_logistic(whc, b = 0.1557468, x0 = 3.887604,v = 2.105565e-5)]
       
     }
   
