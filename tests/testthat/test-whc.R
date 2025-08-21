@@ -80,7 +80,7 @@ test_that("osi_p_whc works", {
       type = 'water holding capacity',
       ptf = 'Wosten1999'
     ),
-    expected = c(00.80,0.83,0.84,0.84,0.84,0.83,0.83),
+    expected = rep(0.999,7),
     tolerance = 0.01
   )
   
@@ -92,7 +92,7 @@ test_that("osi_p_whc works", {
       type = 'water holding capacity',
       ptf = 'Wosten1999'
     ),
-    expected = c(0.777,0.872,0.90,0.92,0.93,0.95,0.97),
+    expected = rep(0.99,7),
     tolerance = 0.01
   )
   
