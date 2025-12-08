@@ -1,3 +1,5 @@
+# euosi 0.10.0 UNRELEASED
+
 # euosi 0.9.0 2025-08-21
 
 ## Added
