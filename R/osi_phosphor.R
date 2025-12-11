@@ -1198,6 +1198,7 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL = NA_real_,A_P_MORGAN = NA_real_, uni
 #' 
 #' @param B_LU (numeric) The crop code
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg/kg)
+#' @param B_TEXTURE_HYPRES (character) The soil texture according to HYPRES classification system
 #' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #' 
 #' @import data.table
@@ -1210,7 +1211,7 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL = NA_real_,A_P_MORGAN = NA_real_, uni
 #' The phosphate availability index in Italy derived from extractable soil P fractions. A numeric value.
 #' 
 #' @export
-osi_c_phosphor_it <- function(B_LU, A_P_OL,unitcheck = TRUE) {
+osi_c_phosphor_it <- function(B_LU, A_P_OL,B_TEXTURE_HYPRES,unitcheck = TRUE) {
   
   # add visual bindings
   osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
@@ -1220,11 +1221,12 @@ osi_c_phosphor_it <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   dt.crops <- dt.crops[osi_country=='IT']
   
   # length of inputs
-  arg.length <- max(length(B_LU),length(A_P_OL))
+  arg.length <- max(length(B_LU),length(A_P_OL),length(B_TEXTURE_HYPRES))
   
   # check inputs
   osi_checkvar(parm = list(B_COUNTRY = rep('IT',arg.length),
                            B_LU = B_LU,
+                           B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                            A_P_OL = A_P_OL),
                fname = 'osi_c_phoshor_it',
                unitcheck = unitcheck)
@@ -1232,6 +1234,7 @@ osi_c_phosphor_it <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   # internal data.table
   dt <- data.table(id = 1: length(B_LU),
                    B_LU = B_LU,
+                   B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,
                    A_P_OL = A_P_OL,
                    value = NA_real_)
   
@@ -1242,8 +1245,46 @@ osi_c_phosphor_it <- function(B_LU, A_P_OL,unitcheck = TRUE) {
               by.y = 'crop_code',
               all.x=TRUE)
   
-  # evaluation P-Olsen for cropland and soil types
-  dt[, value := osi_evaluate_logistic(A_P_OL, b = 0.43987, x0 = -5.7314, v = 0.011909)]
+  
+  # evaluation P-Olsen for wheat
+  dt[grepl('wheat',crop_name) & B_TEXTURE_HYPRES %in% c('C'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.43063219  ,x0 = 0.09399143  ,v = 0.20019808)]
+  dt[grepl('wheat',crop_name) & B_TEXTURE_HYPRES %in% c('MF','M'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.28656464  ,x0 = -8.51734038 ,v = 0.02502952)]
+  dt[grepl('wheat',crop_name) & B_TEXTURE_HYPRES %in% c('F','VF'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.22085681 ,x0 = -8.90549617 ,v = 0.04152504)]
+  
+  # evaluation P-Olsen for alfalfa
+  dt[grepl('alfalfa|lucern',crop_name) & B_TEXTURE_HYPRES %in% c('C'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.2838102   ,x0 = 5.8136425   ,v = 0.6168621 )]
+  dt[grepl('alfalfa|lucern',crop_name) & B_TEXTURE_HYPRES %in% c('MF','M'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.2418668   ,x0 = 7.4056326  ,v = 0.6750988 )]
+  dt[grepl('alfalfa|lucern',crop_name) & B_TEXTURE_HYPRES %in% c('F','VF'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.2180035  ,x0 = 8.2648437  ,v = 0.6861223 )]
+  
+  # evaluation P-Olsen for beet
+  dt[grepl('beet',crop_name) & B_TEXTURE_HYPRES %in% c('C'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.3256865, x0 = -1.2506804,v = 0.1515774)]
+  dt[grepl('beet',crop_name) & B_TEXTURE_HYPRES %in% c('MF','M'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.2826866, x0 = 2.6235776,v = 0.3663801)]
+  dt[grepl('beet',crop_name) & B_TEXTURE_HYPRES %in% c('F','VF'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.2392304, x0 = 2.6488406,v = 0.3519481)]
+  
+  # evaluation P-Olsen for maize
+  dt[grepl('maiz',crop_name) & B_TEXTURE_HYPRES %in% c('C'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.60764961, x0 = -4.46897566,v = 0.01441269 )]
+  dt[grepl('maiz',crop_name) & B_TEXTURE_HYPRES %in% c('MF','M'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.4295056494 , x0 = 0.0005854614 ,v = 0.1939591225 )]
+  dt[grepl('maiz',crop_name) & B_TEXTURE_HYPRES %in% c('F','VF'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.3740301 , x0 = 2.1565367 ,v = 0.3610749 )]
+  
+  # evaluation P-Olsen for trees
+  dt[grepl('trees|orchard',crop_name) & B_TEXTURE_HYPRES %in% c('C'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.7058028 , x0 = 3.3097400 ,v = 0.6958107)]
+  dt[grepl('trees|orchard',crop_name) & B_TEXTURE_HYPRES %in% c('MF','M'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.3156081  , x0 = -7.5053082 ,v = 0.0265091)]
+  dt[grepl('trees|orchard',crop_name) & B_TEXTURE_HYPRES %in% c('F','VF'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.24595387  , x0 = -13.02767440 ,v = 0.01262824)]
+  
+  # for missing grassland crops = alfalfa
+  dt[is.na(value) & crop_cat1 %in% c('grassland') & B_TEXTURE_HYPRES %in% c('C'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.2838102   ,x0 = 5.8136425   ,v = 0.6168621 )]
+  dt[is.na(value) & crop_cat1 %in% c('grassland') & B_TEXTURE_HYPRES %in% c('MF','M'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.2418668   ,x0 = 7.4056326  ,v = 0.6750988 )]
+  dt[is.na(value) & crop_cat1 %in% c('grassland') & B_TEXTURE_HYPRES %in% c('F','VF'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.2180035  ,x0 = 8.2648437  ,v = 0.6861223 )]
+  
+  # evaluation P-Olsen for missing arable = beet
+  dt[is.na(value) & crop_cat1 %in% c('arable') & B_TEXTURE_HYPRES %in% c('C'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.3256865, x0 = -1.2506804,v = 0.1515774)]
+  dt[is.na(value) & crop_cat1 %in% c('arable') & B_TEXTURE_HYPRES %in% c('MF','M'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.2826866, x0 = 2.6235776,v = 0.3663801)]
+  dt[is.na(value) & crop_cat1 %in% c('arable') & B_TEXTURE_HYPRES %in% c('F','VF'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.2392304, x0 = 2.6488406,v = 0.3519481)]
+  
+  # evaluation P-Olsen for missing permanent crops = trees
+  dt[is.na(value) & crop_cat1 %in% c('permanent') & B_TEXTURE_HYPRES %in% c('C'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.7058028 , x0 = 3.3097400 ,v = 0.6958107)]
+  dt[is.na(value) & crop_cat1 %in% c('permanent') & B_TEXTURE_HYPRES %in% c('MF','M'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.3156081  , x0 = -7.5053082 ,v = 0.0265091)]
+  dt[is.na(value) & crop_cat1 %in% c('permanent') & B_TEXTURE_HYPRES %in% c('F','VF'),value := osi_evaluate_logistic(x = A_P_OL, b= 0.24595387  , x0 = -13.02767440 ,v = 0.01262824)]
   
   # add OSI score for "other" crops: nature, forest, other
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
