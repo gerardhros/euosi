@@ -243,6 +243,7 @@ osi_conv_npmn <- function(A_N_RT, A_CLAY_MI, med_PMN = 51.9, med_NRT = 1425, med
 #' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction
 #' @param A_P_AAA_EDTA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate+EDTA extraction
 #' @param A_P_M3 (numeric) The P-content of the soil extracted with Mehlig 3
+#' @param A_P_MORGAN (numeric) The P-content of the soil extracted with sodium acetate (mg P / L)
 #' @param B_SOILTYPE_AGR (character) The agricultural type of soil.
 #' @param A_PH_CC (numeric) The pH measured in cacl2. If missing, then assume its agronomic common value of 5. 
 #' 
@@ -254,6 +255,7 @@ osi_conv_phosphor <- function(element,
                               A_P_AL = NA_real_,A_P_CC = NA_real_, A_P_WA = NA_real_,
                               A_P_OL = NA_real_,A_P_CAL = NA_real_,A_P_DL = NA_real_,A_P_AAA = NA_real_,
                               A_P_AAA_EDTA = NA_real_,A_P_M3 = NA_real_,
+                              A_P_MORGAN = NA_real_,
                               B_SOILTYPE_AGR = NA_real_, A_PH_CC = 5){
   
   # add visual bindings
@@ -261,7 +263,7 @@ osi_conv_phosphor <- function(element,
   
   # check inputs
   checkmate::assert_subset(element,choices = c('A_P_AL','A_P_CAL','A_P_DL','A_P_AAA','A_P_AAA_EDTA',
-                                               'A_P_WA','A_P_M3','A_P_CC'),empty.ok = FALSE)
+                                               'A_P_WA','A_P_M3','A_P_CC','A_P_MORGAN'),empty.ok = FALSE)
    
   # make internal table with inputs
   dt <- data.table(A_P_AL = A_P_AL,
@@ -271,6 +273,7 @@ osi_conv_phosphor <- function(element,
                    A_P_CAL = A_P_CAL,
                    A_P_DL = A_P_DL,
                    A_P_M3 = A_P_M3,
+                   A_P_MORGAN = A_P_MORGAN,
                    A_P_AAA = A_P_AAA,
                    A_P_AAA_EDTA = A_P_AAA_EDTA,
                    B_SOILTYPE_AGR = B_SOILTYPE_AGR,
@@ -314,6 +317,10 @@ osi_conv_phosphor <- function(element,
   dt[is.na(A_P_WA) & !is.na(A_P_OL), A_P_WA := pmax(1.1,A_P_OL / mean(2.77,2.5,4,4,3,2.45))]
   dt[is.na(A_P_M3) & !is.na(A_P_OL), A_P_M3 := A_P_OL / 0.39]
   
+  # estimate P Morgan (mg P/L) using two PDFs
+  # DOI: 10.1002/jpln.202100194
+  dt[is.na(A_P_MORGAN) & is.na(A_P_OL), A_P_MORGAN := 0.5 * ((1.368 - 0.173 * A_P_OL + 0.0649 * A_PH_CC) + exp(log(A_P_OL/5.96)/0.773))]
+  
   # to do: add relationship
   dt[is.na(A_P_CC) & !is.na(A_P_OL), A_P_CC := A_P_OL/10]
   
@@ -331,7 +338,8 @@ osi_conv_phosphor <- function(element,
     dt[, A_P_WA := pmax(dtp[osi_parm_name=='A_P_WA',osi_parm_min], A_P_WA)]
     dt[, A_P_M3 := pmax(dtp[osi_parm_name=='A_P_M3',osi_parm_min], A_P_M3)]
     dt[, A_P_CC := pmax(dtp[osi_parm_name=='A_P_CC',osi_parm_min], A_P_CC)]
-  
+    dt[, A_P_MORGAN := pmax(A_P_MORGAN,0.5)]
+    
     # do checks and replace maxima
     dt[, A_P_AL := pmin(dtp[osi_parm_name=='A_P_AL',osi_parm_max], A_P_AL)]
     dt[, A_P_AAA := pmin(dtp[osi_parm_name=='A_P_AAA',osi_parm_max], A_P_AAA)]
@@ -341,6 +349,7 @@ osi_conv_phosphor <- function(element,
     dt[, A_P_WA := pmin(dtp[osi_parm_name=='A_P_WA',osi_parm_max], A_P_WA)]
     dt[, A_P_M3 := pmin(dtp[osi_parm_name=='A_P_M3',osi_parm_max], A_P_M3)]
     dt[, A_P_CC := pmin(dtp[osi_parm_name=='A_P_CC',osi_parm_max], A_P_CC)]
+    dt[, A_P_MORGAN := pmin(A_P_MORGAN,40)]
     
   # check calculated inputs
   osi_checkvar(parm = list(A_P_AL = dt$A_P_AL, A_P_AAA = dt$A_P_AAA,A_P_AAA_EDTA=dt$A_P_AAA_EDTA,
