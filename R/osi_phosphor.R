@@ -17,6 +17,7 @@
 #' @param A_P_CC (numeric) The P-content of the soil extracted with CaCl2 (mg P / kg)
 #' @param A_P_DL (numeric) The P-content of the soil extracted with double lactate (mg P / kg)
 #' @param A_P_M3 (numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)
+#' @param A_P_MORGAN (numeric) The P-content of the soil extracted with sodium acetate (mg P / L)
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P / kg)
 #' @param A_P_WA (numeric) The P-content of the soil extracted with water (mg P / kg)
 #' @param B_COUNTRY (character) The country code
@@ -34,6 +35,7 @@ osi_c_phosphor <- function(B_LU,
                           A_PH_WA = NA_real_,A_PH_CC = NA_real_,A_CACO3_IF = NA_real_,
                           A_P_AAA = NA_real_,A_P_AL = NA_real_, A_P_CAL = NA_real_,
                           A_P_CC = NA_real_, A_P_DL = NA_real_, A_P_M3 = NA_real_,
+                          A_P_MORGAN = NA_real_,
                           A_P_OL = NA_real_,A_P_WA = NA_real_, 
                           B_COUNTRY, pwarning = FALSE) {
   
@@ -47,7 +49,7 @@ osi_c_phosphor <- function(B_LU,
                     length(B_SOILTYPE_AGR),length(A_CLAY_MI), length(A_SAND_MI),
                     length(A_SOM_LOI),length(A_C_OF),
                     length(A_P_AAA),length(A_P_AL),length(A_P_CAL),
-                    length(A_P_CC),length(A_P_DL),length(A_P_M3),
+                    length(A_P_CC),length(A_P_DL),length(A_P_M3),length(A_P_MORGAN),
                     length(A_P_OL),length(A_P_WA),
                     length(B_COUNTRY))
   
@@ -69,6 +71,7 @@ osi_c_phosphor <- function(B_LU,
                    A_P_CC = A_P_CC,
                    A_P_DL = A_P_DL,
                    A_P_M3 = A_P_M3,
+                   A_P_MORGAN = A_P_MORGAN,
                    A_P_OL = A_P_OL,
                    A_P_WA = A_P_WA,
                    B_COUNTRY = B_COUNTRY,
@@ -108,6 +111,7 @@ osi_c_phosphor <- function(B_LU,
   dt[is.na(A_P_M3) & !is.na(A_P_OL), A_P_M3 := osi_conv_phosphor(element='A_P_M3',A_P_OL = A_P_OL)]
   dt[is.na(A_P_WA) & !is.na(A_P_OL), A_P_WA := osi_conv_phosphor(element='A_P_WA',A_P_OL = A_P_OL,B_SOILTYPE_AGR = B_SOILTYPE_AGR)]
   dt[is.na(A_P_CC) & !is.na(A_P_OL), A_P_CC := osi_conv_phosphor(element='A_P_CC',A_P_OL = A_P_OL)]
+  dt[is.na(A_P_MORGAN) & !is.na(A_P_OL), A_P_MORGAN := osi_conv_phosphor(element='A_P_MORGAN',A_P_OL = A_P_OL)]
   
   #check required calculated inputs
   osi_checkvar(parm = list(B_TEXTURE_USDA = dt$B_TEXTURE_USDA, 
@@ -139,12 +143,12 @@ osi_c_phosphor <- function(B_LU,
   dt[B_COUNTRY == 'EE', value := osi_c_phosphor_ee(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_M3 = A_P_M3, unitcheck = FALSE)]
   dt[B_COUNTRY == 'EL', value := osi_c_phosphor_el(B_LU = B_LU, A_P_OL = A_P_OL, unitcheck = FALSE)]
   dt[B_COUNTRY == 'ES', value := osi_c_phosphor_es(B_LU = B_LU, A_CLAY_MI = A_CLAY_MI, A_SAND_MI = A_SAND_MI, A_P_OL = A_P_OL, unitcheck = FALSE)]
-  dt[B_COUNTRY == 'FR', value := osi_c_phosphor_fr(B_LU = B_LU, B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, A_P_OL= A_P_OL,A_PH_WA=A_PH_WA, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'FR', value := osi_c_phosphor_fr(B_LU = B_LU, A_P_OL= A_P_OL,A_PH_WA=A_PH_WA, unitcheck = FALSE)]
   dt[B_COUNTRY == 'FI', value := osi_c_phosphor_fi(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_AAA = A_P_AAA, A_C_OF = A_C_OF, unitcheck = FALSE)]
   
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
   dt[B_COUNTRY == 'HU', value := osi_c_phosphor_hu(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI, A_CACO3_IF = A_CACO3_IF,A_P_AL = A_P_AL, unitcheck = FALSE)]
-  dt[B_COUNTRY == 'IE', value := osi_c_phosphor_ie(B_LU = B_LU, A_P_OL = A_P_OL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'IE', value := osi_c_phosphor_ie(B_LU = B_LU, A_P_OL = A_P_OL, A_P_MORGAN = A_P_MORGAN, unitcheck = FALSE)]
   dt[B_COUNTRY == 'IT', value := osi_c_phosphor_it(B_LU = B_LU, A_P_OL = A_P_OL, unitcheck = FALSE)]
   dt[B_COUNTRY == 'LV', value := osi_c_phosphor_lv(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_DL = A_P_DL, unitcheck = FALSE)]
   dt[B_COUNTRY == 'LT', value := osi_c_phosphor_lt(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_AL = A_P_AL, unitcheck = FALSE)]
@@ -660,11 +664,15 @@ osi_c_phosphor_el <- function(B_LU, A_P_OL,unitcheck = TRUE) {
   # updated by Elise:
   # Stampoulos, G, 2000. Availability of soil phosphorus and determination of phosphorus in tobacco in characteristic Territorial Units of Thessaly. (Table Page 40)
   
+  # temporary fix since crop codes are unknown
+  dt[grepl('grass',B_LU),cropcat1 := 'grassland']
+  dt[!grepl('grass',B_LU),cropcat1 := 'arable']
+  
   # evaluate P olsen for grassland
-  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.12764972 , x0 = -12.12405646, v = 0.03103546)]
+  dt[cropcat1 =='grassland', value := OBIC::evaluate_logistic(A_P_OL, b = 0.12764972 , x0 = -12.12405646, v = 0.03103546)]
   
   # evaluate for cropland
-  dt[, value := OBIC::evaluate_logistic(A_P_OL, b = 0.30203251 , x0 = -3.27824283, v = 0.01150028 )]
+  dt[cropcat1 == 'arable', value := OBIC::evaluate_logistic(A_P_OL, b = 0.30203251 , x0 = -3.27824283, v = 0.01150028 )]
   
   # set the order to the original inputs
   setorder(dt, id)
@@ -839,7 +847,7 @@ osi_c_phosphor_es <- function(B_LU, A_CLAY_MI,A_SAND_MI, A_P_OL,unitcheck = TRUE
 #' @param B_LU (character) The crop code
 #' @param B_TEXTURE_USDA (character) The soil texture according to USDA classification system
 #' @param A_C_OF (numeric) The organic carbon content in the soil (g C / kg)
-#' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction
+#' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction (mg P/kg)
 #' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
 #'  
 #' @import data.table
@@ -903,15 +911,16 @@ osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0.5,unitche
   dt[grepl('^ClLo$|^SiClLo$|^Lo$|^SiLo$|^LoSa$|^Si$|^SaClLo$',B_TEXTURE_USDA), B_SOILTYPE_AGR := 'loam']
   dt[is.na(B_SOILTYPE_AGR),B_SOILTYPE_AGR := 'sand']
   
-  # merge thresholds
-  dt <- merge(dt,
-              dt.thresholds,
-              by.x = 'B_SOILTYPE_AGR',
-              by.y = 'osi_threshold_soilcat',
-              all.x = TRUE)
+  # convert from mg / kg to mg / liter soil sample volume
+  dt[, BD := (1/(0.02525 * (A_C_OF * 0.1 * 2) + 0.6541))]
+  dt[, A_P_AAA := A_P_AAA * BD]
   
-  # convert to the OSI score
-  dt[,value := osi_evaluate_logistic(x = A_P_AAA, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  # evaluation from Eurofins report (from Elise) in units mg P/L
+  # since method A_P_AAA is in mg/kg, and SSR is 1:10, adjust
+  dt[B_SOILTYPE_AGR =='clay',value := osi_evaluate_logistic(x = A_P_AAA, b= 0.442872 ,x0 = 7.948519 ,v = 1.160189 )]
+  dt[B_SOILTYPE_AGR =='loam',value := osi_evaluate_logistic(x = A_P_AAA, b= 0.14013150  ,x0 = -15.76962688 ,v = 0.03193195)]
+  dt[B_SOILTYPE_AGR =='sand',value := osi_evaluate_logistic(x = A_P_AAA, b= 0.162814448   ,x0 = -25.836568167 ,v = 0.004510061 )]
+  dt[B_SOILTYPE_AGR =='organic',value := osi_evaluate_logistic(x = A_P_AAA, b= 0.172803388   ,x0 = -45.940731793 ,v = 0.000134853 )]
   
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
@@ -932,8 +941,6 @@ osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0.5,unitche
 #' This function calculates the phosphate availability. 
 #' 
 #' @param B_LU (character) The crop code
-#' @param B_SOILTYPE_AGR (character) The soil type in a particular region. Optional.
-#' @param B_AER_FR (character) An agroeconomic region in France. Optional.
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen (mg P/ kg)
 #' @param A_PH_WA (numeric) The pH measured in water.
 #' @param unitcheck (character) Option to switch off unit checks (TRUE or FALSE)
@@ -941,46 +948,28 @@ osi_c_phosphor_fi <- function(B_LU, B_TEXTURE_USDA, A_P_AAA,A_C_OF = 0.5,unitche
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_fr(B_LU = 'SOJ', A_P_OL = 45, 
-#' B_SOILTYPE_AGR = 'limons battants', B_AER_FR = 'nord-picardie')
+#' osi_c_phosphor_fr(B_LU = 'SOJ', A_P_OL = 45)
 #' 
 #' @details
-#' The function has two optional arguments soil type (B_SOILTYPE_AGR) and agricultural region (B_AER_FR). When these are unknown, then the soil type is estimated based on the pH value. Threshold values are then generalized for calcareous and non-calcareous soils.
 #' 
 #' @return 
 #' The phosphate availability index in France estimated from extractable soil P Olsen (a numeric value). 
 #' 
 #' @export
-osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER_FR = NA_character_, 
-                              A_PH_WA = NA_real_,unitcheck = TRUE) {
+osi_c_phosphor_fr <- function(B_LU, A_P_OL,A_PH_WA = NA_real_,unitcheck = TRUE) {
   
   # set visual bindings
   value = osi_country = osi_indicator = id = crop_cat1 = NULL
   crop_code = crop_p = osi_st_c1 = osi_st_c2 = osi_st_c3 = . = NULL
-  osi_threshold_region = NULL
-  
+
   # Load in the interal datasets
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
   dt.crops <- dt.crops[osi_country=='FR']
   
-  # thresholds
-  dt.thresholds <- as.data.table(euosi::osi_thresholds)
-  dt.thresholds <- dt.thresholds[osi_country == 'FR' & osi_indicator =='i_c_p']
-  
-  # filter the thresholds when no B_AER_FR is given
-  if(sum(is.na(B_AER_FR))>0){
-    dt.thresholds <- dt.thresholds[is.na(osi_threshold_region)]
-  } else {
-    dt.thresholds <- dt.thresholds[!is.na(osi_threshold_region)]
-  }
-  
-  # soil types
-  dt.soiltype <- as.data.table(euosi::osi_soiltype)
-  
   # Check length of desired input
-  arg.length <- max(length(B_LU),length(A_P_OL),length(B_SOILTYPE_AGR), length(B_AER_FR),length(A_PH_WA))
+  arg.length <- max(length(B_LU),length(A_P_OL),length(A_PH_WA))
   
   # repeat A_PH_WA if only one default is given
   if(length(A_PH_WA)==1 & arg.length > 1){A_PH_WA <- rep(A_PH_WA,arg.length)}
@@ -993,22 +982,10 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
                fname = 'osi_c_phoshor_fr',
                unitcheck = unitcheck)
   
-  # check optional parameters 
-  if(sum(!is.na(B_SOILTYPE_AGR))>0){
-    checkmate::assert_character(B_SOILTYPE_AGR, any.missing = TRUE, min.len = 1, len = arg.length)
-    checkmate::assert_subset(B_SOILTYPE_AGR, choices = c(NA,unique(dt.soiltype$osi_soil_cat1)), empty.ok = FALSE)
-  }
-  if(sum(!is.na(B_AER_FR))>0){
-    checkmate::assert_character(B_AER_FR, any.missing = TRUE, min.len = 1, len = arg.length)
-    checkmate::assert_subset(B_AER_FR, choices = unique(dt.thresholds$osi_threshold_region), empty.ok = FALSE)
-  }
-  
   # Collect the data into a table
   dt <- data.table(id = 1:arg.length,
                    B_LU = B_LU,
-                   B_SOILTYPE_AGR = B_SOILTYPE_AGR,
-                   B_AER_FR = B_AER_FR,
-                   A_P_OL = A_P_OL * 2.291,
+                   A_P_OL = A_P_OL,
                    A_PH_WA = A_PH_WA,
                    value = NA_real_)
   
@@ -1019,19 +996,18 @@ osi_c_phosphor_fr <- function(B_LU, A_P_OL,B_SOILTYPE_AGR = NA_character_, B_AER
               by.y = 'crop_code',
               all.x=TRUE)
   
-  # estimate agricultural soil type
-  dt[is.na(B_SOILTYPE_AGR), B_SOILTYPE_AGR := fifelse(A_PH_WA > 8,'craie','general')]
-  dt[is.na(B_SOILTYPE_AGR) & is.na(A_PH_WA), B_SOILTYPE_AGR := 'general']
+  # update with more generic assessment all soils (input Elise)
+  dt[(A_PH_WA <= 8 | is.na(A_PH_WA)) & crop_p =='high',
+     value := osi_evaluate_logistic(x = A_P_OL, b= 0.1315210,x0 = 12.4776644,v = 0.2292241)]
+  dt[(A_PH_WA <= 8 | is.na(A_PH_WA)) & crop_p =='moderate',
+     value := osi_evaluate_logistic(x = A_P_OL, b= 0.16655505,x0 = 1.00887810,v = 0.04520388)]
+  dt[(A_PH_WA <= 8 | is.na(A_PH_WA)) & crop_p =='low',
+     value := osi_evaluate_logistic(x = A_P_OL, b= 0.63653193,x0 = 0.92884029,v = 0.01649963)]
   
-  # merge thresholds
-  dt <- merge(dt,
-              dt.thresholds,
-              by.x = c('B_SOILTYPE_AGR','B_AER_FR', 'crop_p'),
-              by.y = c('osi_threshold_soilcat','osi_threshold_region','osi_threshold_cropcat'),
-              all.x = TRUE)
-  
-  # estimate OSI score
-  dt[,value := osi_evaluate_logistic(x = A_P_OL, b= osi_st_c1,x0 = osi_st_c2,v = osi_st_c3)]
+  # update with more generic assessment calcareous soils (input Elise)
+  dt[A_PH_WA > 8 & crop_p =='high',value := osi_evaluate_logistic(x = A_P_OL, b= 0.05164429 ,x0 = -15.84740833,v = 0.02403234 )]
+  dt[A_PH_WA > 8 & crop_p =='moderate',value := osi_evaluate_logistic(x = A_P_OL, b= 0.1859116 ,x0 = 44.8868208,v = 1.1969239 )]
+  dt[A_PH_WA > 8 & crop_p =='low',value := osi_evaluate_logistic(x = A_P_OL, b= 0.26836 ,x0 = -15.77183,v = 1.265049e-04)]
   
   # set value for nature to NA
   dt[crop_cat1 %in% c('nature','forest','other'), value := NA_real_]
