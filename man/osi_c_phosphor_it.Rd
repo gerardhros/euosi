@@ -4,12 +4,14 @@
 \alias{osi_c_phosphor_it}
 \title{Calculate the phosphate availability index in Italy}
 \usage{
-osi_c_phosphor_it(B_LU, A_P_OL, unitcheck = TRUE)
+osi_c_phosphor_it(B_LU, A_P_OL, B_TEXTURE_HYPRES, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_P_OL}{(numeric) The P-content of the soil extracted with Olsen (mg/kg)}
+
+\item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
 
 \item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
@@ -20,7 +22,8 @@ The phosphate availability index in Italy derived from extractable soil P fracti
 This function calculates the phosphate availability.
 }
 \examples{
-osi_c_phosphor_it(B_LU = '3301061299',A_P_OL = 5)
-osi_c_phosphor_it(B_LU = c('3301061299','3301000000'),A_P_OL = c(3.5,5.5))
+osi_c_phosphor_it(B_LU = '3301061299',A_P_OL = 5,B_TEXTURE_HYPRES ='C')
+osi_c_phosphor_it(B_LU = c('3301061299','3301000000'),
+A_P_OL = c(3.5,5.5),B_TEXTURE_HYPRES =c('C','C'))
 
 }

@@ -22,6 +22,6 @@ The phosphorus availability index in Lithuania estimated from extractable phosph
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_lt(B_LU = 'testcrop1', A_P_AL = 45,A_SOM_LOI = 4.5)
+osi_c_phosphor_lt(B_LU = '3301000000', A_P_AL = 45,A_SOM_LOI = 4.5)
 
 }

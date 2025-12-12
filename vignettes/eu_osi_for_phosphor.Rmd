@@ -278,7 +278,7 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example EL1, out.width="75%", fig.cap="Evaluation P-indicator for Greece.",dpi=300, echo = FALSE}
 
 # make an example with varying P-OL content for two land uses
-dt <- CJ(B_LU = c('cropland'),
+dt <- CJ(B_LU = c('3301000000'),
          A_P_OL = seq(1,30,0.1))
 dt[,osi_c_p := osi_c_phosphor_el(B_LU,A_P_OL = A_P_OL)]
 
@@ -365,7 +365,6 @@ The euosi package the soil health score for P supply can be calculated with `osi
 
 The soil pH is used to distinghuish between calcareous and non-calcareous soils. If not given, then the function assumes the soil is not calcareous.
 
-If one likes to adress the regional differences, it is also possible to add the agroeconomic region in France (argument `B_AER_FR`) and the agricultural soil type (argument `B_SOILTYPE_AGR`). These two arguments are optional. There are 40 soil types that can be selected (see below for the exact types possible). 
 
 ```{r table FR1, echo = FALSE,warning = FALSE}
 
@@ -377,7 +376,7 @@ If one likes to adress the regional differences, it is also possible to add the 
                        dt.soiltype[27:40,.(type)])
 
   # print table
-  knitr::kable(dt.soiltype,align='c',caption='Soil types used for P soil health assessment.')
+  knitr::kable(dt.soiltype,align='c',caption='Soil types used for P soil health assessment (Deprecated).')
 ```
 
 
@@ -408,10 +407,6 @@ An example of the `osi_c_phosphor_fr` function is illustrated below for potato (
 c(osi_c_phosphor_fr(B_LU = 'PTC', A_P_OL = 20),
   osi_c_phosphor_fr(B_LU = 'PRL', A_P_OL = 20))
 
-# show an example with regional information available
-osi_c_phosphor_fr(B_LU = 'SOJ', A_P_OL = 45, 
-                  B_SOILTYPE_AGR = 'limons battants', 
-                  B_AER_FR = 'nord-picardie')
 ```
 
 Below the same example but then visualised for a series of soils with a P-Olsen value ranging from 0 to 30 mg P per kg (equal to 0 to 69 mg P2O5 /kg) for two crops: grassland and potato. From this example one can see that the soil health index score varies from very low to very high, depending on the content of P-Olsen (mg P/kg).
@@ -420,7 +415,7 @@ Below the same example but then visualised for a series of soils with a P-Olsen 
 
 # make an example with varying P-Olsen content
 dt <- CJ(B_LU = c('PTC','PRL'),
-         A_P_OL = seq(1,30,0.5),
+         A_P_OL = seq(1,60,1),
          A_PH_WA = 7.5)
 dt[,landuse := fifelse(B_LU=='PTC','potato','grassland')]
 dt[,osi_c_p := osi_c_phosphor_fr(B_LU,A_P_OL = A_P_OL, A_PH_WA = A_PH_WA)]
@@ -449,7 +444,7 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example HU1, out.width="75%", fig.cap="Evaluation P-indicator for Hungary.",dpi=300, echo = FALSE}
 
 # make an example with varying P-AL content for two soil types
-dt <- CJ(B_LU = c('cropland'),
+dt <- CJ(B_LU = c('3301000000'),
          A_SOM_LOI = c(25,25),
          A_CACO3_IF = c(0.5,15),
          A_CLAY_MI = c(7.5,7.5),
@@ -481,10 +476,10 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example IE1, out.width="75%", fig.cap="Evaluation P-indicator for Ireland.",dpi=300, echo = FALSE}
 
 # make an example with varying P-OL content for two land uses
-dt <- CJ(B_LU = c('cropland','grassland'),
-         A_P_OL = seq(1,20,0.1))
-dt[,landuse := fifelse(B_LU == 'grassland' ,'grassland','cropland')]
-dt[,osi_c_p := osi_c_phosphor_ie(B_LU,A_P_OL = A_P_OL)]
+dt <- CJ(B_LU = c('3301000000','3301090205'),
+         A_P_OL = seq(1,100,1))
+dt[,landuse := fifelse(B_LU == '3301090205' ,'grassland','cropland')]
+dt[,osi_c_p := osi_c_phosphor_ie(B_LU,A_P_OL = A_P_OL,A_P_MORGAN = NA_real_)]
 
 # show plot
 osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_OL, xpar_label = 'P-OL (mg P/kg)',pgroup = dt$landuse)
@@ -509,8 +504,9 @@ Below an example is visualized how the soil health index varies in relation to v
 
 # make an example with varying P-OL content
 dt <- CJ(B_LU = c('3301090400'),
-         A_P_OL = seq(1,25,0.1))
-dt[,osi_c_p := osi_c_phosphor_it(B_LU,A_P_OL = A_P_OL)]
+         A_P_OL = seq(0.1,15,0.1),
+         B_TEXTURE_HYPRES ='C')
+dt[,osi_c_p := osi_c_phosphor_it(B_LU,A_P_OL = A_P_OL,B_TEXTURE_HYPRES=B_TEXTURE_HYPRES)]
 
 # show plot
 osi_plot_shi(shi = dt$osi_c_p, xpar = dt$A_P_OL, xpar_label = 'P-OL (mg P/kg)',pgroup = NULL)
@@ -535,7 +531,7 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example LV1, out.width="75%", fig.cap="Evaluation P-indicator for Latvia.",dpi=300, echo = FALSE}
 
 # make an example with varying P-M3 content for two soil types
-dt <- CJ(B_LU = c('cropland'),
+dt <- CJ(B_LU = c('3301000000'),
          B_TEXTURE_USDA = c('Sa','Lo','Cl'),
          A_P_DL = seq(1,60,1))
 dt[,stype := fifelse(B_TEXTURE_USDA=='Sa','sand',
@@ -564,7 +560,7 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example LT1, out.width="75%", fig.cap="Evaluation P-indicator for Lithuania.",dpi=300, echo = FALSE}
 
 # make an example with varying P-M3 content for two soil types
-dt <- CJ(B_LU = c('cropland'),
+dt <- CJ(B_LU = c('3301000000'),
          A_SOM_LOI = c(5,25),
          A_P_AL = seq(1,100,5))
 dt[,stype := fifelse(A_SOM_LOI <= 20,'mineral soils','peat soils')]
@@ -629,7 +625,7 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example NO1, out.width="75%", fig.cap="Evaluation P-indicator for Norway.",dpi=300, echo = FALSE}
 
 # make an example with varying P-AL content
-dt <- CJ(B_LU = c('cropland'),
+dt <- CJ(B_LU = c('3301000000'),
          A_P_AL = seq(1,100,0.1))
 dt[,osi_c_p := osi_c_phosphor_no(B_LU,A_P_AL = A_P_AL)]
 
@@ -655,7 +651,7 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example PL1, out.width="75%", fig.cap="Evaluation P-indicator for Poland.",dpi=300, echo = FALSE}
 
 # make an example with varying P-DL
-dt <- CJ(B_LU = c('cropland'),
+dt <- CJ(B_LU = c('3301000000'),
          A_P_DL = seq(1,100,1))
 dt[,osi_c_p := osi_c_phosphor_pl(B_LU,A_P_DL = A_P_DL)]
 
@@ -817,10 +813,10 @@ Below an example is visualized how the soil health index varies in relation to v
 ```{r example UK1, out.width="75%", fig.cap="Evaluation P-indicator for the UK.",dpi=300, echo = FALSE}
 
 # make an example with varying P-OL content for two land uses
-dt <- CJ(B_LU = c('potato','grassland'),
+dt <- CJ(B_LU = c('3301030000','3301090205'),
          A_SOM_LOI = 2.5,
          A_P_OL = seq(1,40,0.1))
-dt[,landuse := fifelse(B_LU == 'grassland' ,'grassland','potato')]
+dt[,landuse := fifelse(B_LU == '3301090205' ,'grassland','potato')]
 dt[,osi_c_p := osi_c_phosphor_uk(B_LU,A_P_OL = A_P_OL,A_SOM_LOI=A_SOM_LOI)]
 
 # show plot

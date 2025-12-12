@@ -4,12 +4,19 @@
 \alias{osi_c_phosphor_ie}
 \title{Calculate the phosphate availability index in Ireland}
 \usage{
-osi_c_phosphor_ie(B_LU, A_P_OL, unitcheck = TRUE)
+osi_c_phosphor_ie(
+  B_LU,
+  A_P_OL = NA_real_,
+  A_P_MORGAN = NA_real_,
+  unitcheck = TRUE
+)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_P_OL}{(numeric) The P-content of the soil extracted with Olsen (mg/kg)}
+
+\item{A_P_MORGAN}{(numeric) The P-content of the soil extracted with sodium acetate (mg P / L)}
 
 \item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }
@@ -20,7 +27,7 @@ The phosphate availability index in Ireland derived from extractable soil P frac
 This function calculates the phosphate availability.
 }
 \examples{
-osi_c_phosphor_ie(B_LU = 'testcrop1',A_P_OL = 5)
-osi_c_phosphor_ie(B_LU = c('testcrop1','testcrop2'),A_P_OL = c(3.5,5.5))
+osi_c_phosphor_ie(B_LU = '3301000000',A_P_OL = 5)
+osi_c_phosphor_ie(B_LU = c('3301000000','3301010101'),A_P_OL = c(3.5,5.5))
 
 }

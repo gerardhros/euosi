@@ -73,7 +73,7 @@ test_that("osi_field works", {
   
   expect_equal(
     dim(dt.test),
-    expected = c(56,30),
+    expected = c(104,30),
     tolerance = 0.01
   )
   expect_equal(
@@ -84,7 +84,7 @@ test_that("osi_field works", {
   
   expect_equal(
     as.numeric(dt.test[ID==34,c('i_c_p','i_c_mg','i_p_wef','i_p_cr','s_euosi_ess_prod','s_euosi_total')]),
-    expected = c(0.816,0.644,0.606,0.945,0.77,0.84),
+    expected = c(0.245, 0.207, 0.952, 0.738, 0.680, 0.780),
     tolerance = 0.01
   )
   

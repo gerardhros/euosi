@@ -1784,6 +1784,9 @@ osi_c_magnesium_ro <- function(B_LU, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES,A_CEC_C
   arg.length <- max(length(B_LU),length(A_PH_WA),length(A_MG_CC),
                     length(A_CEC_CO),length(A_MG_CO_PO),length(A_K_CO_PO))
   
+  # check length of pH
+  if(length(A_PH_WA)==1){A_PH_WA <- rep(A_PH_WA,arg.length)}
+  
   # check inputs
   osi_checkvar(parm = list(A_PH_WA = A_PH_WA,
                            A_CEC_CO = A_CEC_CO,

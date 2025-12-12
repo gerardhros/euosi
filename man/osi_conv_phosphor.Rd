@@ -15,6 +15,7 @@ osi_conv_phosphor(
   A_P_AAA = NA_real_,
   A_P_AAA_EDTA = NA_real_,
   A_P_M3 = NA_real_,
+  A_P_MORGAN = NA_real_,
   B_SOILTYPE_AGR = NA_real_,
   A_PH_CC = 5
 )
@@ -34,11 +35,13 @@ osi_conv_phosphor(
 
 \item{A_P_DL}{(numeric) The P-content of the soil extracted with double lactate (mg P / kg)}
 
-\item{A_P_AAA}{(numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction}
+\item{A_P_AAA}{(numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction (mg P/ kg)}
 
 \item{A_P_AAA_EDTA}{(numeric) The exchangeable P-content of the soil measured via acid ammonium acetate+EDTA extraction}
 
 \item{A_P_M3}{(numeric) The P-content of the soil extracted with Mehlig 3}
+
+\item{A_P_MORGAN}{(numeric) The P-content of the soil extracted with sodium acetate (mg P / L)}
 
 \item{B_SOILTYPE_AGR}{(character) The agricultural type of soil.}
 

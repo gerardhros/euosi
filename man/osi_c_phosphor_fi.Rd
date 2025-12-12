@@ -17,7 +17,7 @@ osi_c_phosphor_fi(
 
 \item{B_TEXTURE_USDA}{(character) The soil texture according to USDA classification system}
 
-\item{A_P_AAA}{(numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction}
+\item{A_P_AAA}{(numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction (mg P/kg)}
 
 \item{A_C_OF}{(numeric) The organic carbon content in the soil (g C / kg)}
 
@@ -30,7 +30,7 @@ The phosphorus availability index in Finland estimated from extractable phosphor
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_fi(B_LU = '4010', B_TEXTURE_USDA = 'Si',
+osi_c_phosphor_fi(B_LU = '3301000000', B_TEXTURE_USDA = 'Si',
 A_P_AAA = 45,A_C_OF=1.5)
 
 }

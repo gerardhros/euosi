@@ -20,6 +20,6 @@ The phosphorus availability index in Switzerland estimated from extractable phos
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_ch(B_LU = 'testcrop1',A_P_AAA = 50)
+osi_c_phosphor_ch(B_LU = '3301000000',A_P_AAA = 50)
 
 }

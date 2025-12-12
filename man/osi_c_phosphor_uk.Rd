@@ -22,7 +22,7 @@ The phosphate availability index in United Kingdom derived from extractable soil
 This function calculates the phosphate availability.
 }
 \examples{
-osi_c_phosphor_uk(B_LU = 'testcrop1',A_SOM_LOI = 3,A_P_OL = 5)
-osi_c_phosphor_uk(B_LU = c('testcrop1','testcrop2'),A_SOM_LOI = c(3,4),A_P_OL = c(3.5,5.5))
+osi_c_phosphor_uk(B_LU = '3301000000',A_SOM_LOI = 3,A_P_OL = 5)
+osi_c_phosphor_uk(B_LU = c('3301000000','3301010102'),A_SOM_LOI = c(3,4),A_P_OL = c(3.5,5.5))
 
 }

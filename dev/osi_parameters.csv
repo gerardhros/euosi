@@ -121,7 +121,7 @@ osi_parm_id;osi_parm_name;osi_parm_type;osi_parm_description;osi_parm_unit;osi_p
 120;B_AER_CBS_NAME;field property;name of agricultural economic region in NL cbs2016;-;;;char;FALSE;
 121;B_ALT_AHN_3;field property;elevation from ahn3;m;-8;320;num;FALSE;
 122;B_AREA;field property;area of the field;m^2;0;;num;FALSE;
-123;B_COUNTRY;field property;country code;-;;;char;TRUE;AX||AL||AD||AT||BY||BE||BA||BG||HR||CY||CZ||DK||EE||ET||FO||FI||FR||DE||GI||GR||GG||VA||HU||IS||IE||IM||IT||JE||LV||LI||LT||LU||MK||MT||MD||MC||ME||NL||NO||PL||PT||RO||SM||RS||SK||SI||ES||SJ||SE||CH||UA||GB
+123;B_COUNTRY;field property;country code;-;;;char;TRUE;AX||AL||AD||AT||BY||BE||BA||BG||HR||CY||CZ||DK||EE||ET||FO||FI||FR||DE||GI||GR||GG||VA||HU||IS||IE||IM||IT||JE||LV||LI||LT||LU||MK||MT||MD||MC||ME||NL||NO||PL||PT||RO||SM||RS||SK||SI||ES||SJ||SE||CH||UA||GB||EL||UK||SL
 124;B_DER;field property;derogation permit;-;;;bool;FALSE;
 125;B_EROSION;field property;soil erosion;-;0;;num;FALSE;
 126;B_FERT_NORM_FR;field property;the fraction of the fertilizer norm applied on the field;-;0;1;num;FALSE;

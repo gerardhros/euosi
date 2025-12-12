@@ -1,3 +1,18 @@
+# euosi 0.10.0 2025-12-12
+
+## Added
+* IACS crop codes for all EU countries in `osi_crops`, copied from DE
+* P-Olsen to P-Morgen conversion in `osi_conv_phosphor`
+* P-Morgan assessment for Ireland as default in `osi_c_phosphor_ie`
+* argument `B_TEXTURE_HYPRES` in P assessment for `osi_c_phosphor_it`
+
+## Changed
+* removed region specific P assessment for France in `osi_c_phosphor_fr`
+* crop specific P assessment for Italy in `osi_c_phopsphor_it`
+* all B_LU checks for `osi_c_phosphor` functions
+* updated all evaluate functions for P with improved lowest threshold values
+* explicit P evaluation functions for `osi_c_phosphor_fi` in units mg P per liter
+
 # euosi 0.9.0 2025-08-21
 
 ## Added

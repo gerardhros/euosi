@@ -27,6 +27,6 @@ The phosphorus availability index in Latvia estimated from extractable phosphoru
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_lv(B_LU ='testcrop1',A_P_DL = 45,B_TEXTURE_USDA = 'Sa')
+osi_c_phosphor_lv(B_LU ='3301000000',A_P_DL = 45,B_TEXTURE_USDA = 'Sa')
 
 }
