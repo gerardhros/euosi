@@ -20,7 +20,7 @@ The phosphate availability index in Romenia derived from extractable soil P frac
 This function calculates the phosphate availability.
 }
 \examples{
-osi_c_phosphor_ro(B_LU = 'testcrop1',A_P_AL = 5)
-osi_c_phosphor_ro(B_LU = c('testcrop1','testcrop2'),A_P_AL = c(3.5,5.5))
+osi_c_phosphor_ro(B_LU = '3301000000',A_P_AL = 5)
+osi_c_phosphor_ro(B_LU = c('3301000000','3301010102'),A_P_AL = c(3.5,5.5))
 
 }

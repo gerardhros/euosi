@@ -4,12 +4,14 @@
 \alias{osi_c_phosphor_it}
 \title{Calculate the phosphate availability index in Italy}
 \usage{
-osi_c_phosphor_it(B_LU, A_P_OL, unitcheck = TRUE)
+osi_c_phosphor_it(B_LU, A_P_OL, B_TEXTURE_HYPRES, unitcheck = TRUE)
 }
 \arguments{
 \item{B_LU}{(numeric) The crop code}
 
 \item{A_P_OL}{(numeric) The P-content of the soil extracted with Olsen (mg/kg)}
+
+\item{B_TEXTURE_HYPRES}{(character) The soil texture according to HYPRES classification system}
 
 \item{unitcheck}{(character) Option to switch off unit checks (TRUE or FALSE)}
 }

@@ -20,6 +20,6 @@ The phosphorus availability index in Poland estimated from extractable phosphoru
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_pl(B_LU = 'testcrop1',A_P_DL = 45)
+osi_c_phosphor_pl(B_LU = '3301000000',A_P_DL = 45)
 
 }

@@ -22,6 +22,6 @@ The phosphorus availability index in Estonia estimated from extractable phosphor
 This function calculates the phosphorus availability.
 }
 \examples{
-osi_c_phosphor_ee(A_P_M3 = 45,A_SOM_LOI = 3, B_LU='testcrop1')
+osi_c_phosphor_ee(A_P_M3 = 45,A_SOM_LOI = 3, B_LU='3301000000')
 
 }

@@ -20,6 +20,7 @@ osi_c_phosphor(
   A_P_CC = NA_real_,
   A_P_DL = NA_real_,
   A_P_M3 = NA_real_,
+  A_P_MORGAN = NA_real_,
   A_P_OL = NA_real_,
   A_P_WA = NA_real_,
   B_COUNTRY,
@@ -56,6 +57,8 @@ osi_c_phosphor(
 \item{A_P_DL}{(numeric) The P-content of the soil extracted with double lactate (mg P / kg)}
 
 \item{A_P_M3}{(numeric) The exchangeable P-content of the soil measured via Mehlich 3 extracton (mg P/ kg)}
+
+\item{A_P_MORGAN}{(numeric) The P-content of the soil extracted with sodium acetate (mg P / L)}
 
 \item{A_P_OL}{(numeric) The P-content of the soil extracted with Olsen (mg P / kg)}
 
