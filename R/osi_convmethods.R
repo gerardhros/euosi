@@ -240,7 +240,7 @@ osi_conv_npmn <- function(A_N_RT, A_CLAY_MI, med_PMN = 51.9, med_NRT = 1425, med
 #' @param A_P_OL (numeric) The P-content of the soil extracted with Olsen
 #' @param A_P_CAL (numeric) The P-content of the soil extracted with ammonium lactate(mg P2O5 / 100g)
 #' @param A_P_DL (numeric) The P-content of the soil extracted with double lactate (mg P / kg)
-#' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction
+#' @param A_P_AAA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate extraction (mg P/ kg)
 #' @param A_P_AAA_EDTA (numeric) The exchangeable P-content of the soil measured via acid ammonium acetate+EDTA extraction
 #' @param A_P_M3 (numeric) The P-content of the soil extracted with Mehlig 3
 #' @param A_P_MORGAN (numeric) The P-content of the soil extracted with sodium acetate (mg P / L)
