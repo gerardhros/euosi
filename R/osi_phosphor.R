@@ -149,7 +149,7 @@ osi_c_phosphor <- function(B_LU,
   # Hungary (HU), Ireland (IE), Italy (IT), Latvia (LV), Lithuania (LT)
   dt[B_COUNTRY == 'HU', value := osi_c_phosphor_hu(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_CLAY_MI = A_CLAY_MI, A_CACO3_IF = A_CACO3_IF,A_P_AL = A_P_AL, unitcheck = FALSE)]
   dt[B_COUNTRY == 'IE', value := osi_c_phosphor_ie(B_LU = B_LU, A_P_OL = A_P_OL, A_P_MORGAN = A_P_MORGAN, unitcheck = FALSE)]
-  dt[B_COUNTRY == 'IT', value := osi_c_phosphor_it(B_LU = B_LU, A_P_OL = A_P_OL, unitcheck = FALSE)]
+  dt[B_COUNTRY == 'IT', value := osi_c_phosphor_it(B_LU = B_LU, A_P_OL = A_P_OL, B_TEXTURE_HYPRES = B_TEXTURE_HYPRES, unitcheck = FALSE)]
   dt[B_COUNTRY == 'LV', value := osi_c_phosphor_lv(B_LU = B_LU, B_TEXTURE_USDA = B_TEXTURE_USDA, A_P_DL = A_P_DL, unitcheck = FALSE)]
   dt[B_COUNTRY == 'LT', value := osi_c_phosphor_lt(B_LU = B_LU, A_SOM_LOI = A_SOM_LOI, A_P_AL = A_P_AL, unitcheck = FALSE)]
   
@@ -1184,8 +1184,9 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL = NA_real_,A_P_MORGAN = NA_real_, uni
 #' @import data.table
 #' 
 #' @examples 
-#' osi_c_phosphor_it(B_LU = '3301061299',A_P_OL = 5)
-#' osi_c_phosphor_it(B_LU = c('3301061299','3301000000'),A_P_OL = c(3.5,5.5))
+#' osi_c_phosphor_it(B_LU = '3301061299',A_P_OL = 5,B_TEXTURE_HYPRES ='C')
+#' osi_c_phosphor_it(B_LU = c('3301061299','3301000000'),
+#' A_P_OL = c(3.5,5.5),B_TEXTURE_HYPRES =c('C','C'))
 #' 
 #' @return 
 #' The phosphate availability index in Italy derived from extractable soil P fractions. A numeric value.
@@ -1194,7 +1195,7 @@ osi_c_phosphor_ie <- function(B_LU, A_P_OL = NA_real_,A_P_MORGAN = NA_real_, uni
 osi_c_phosphor_it <- function(B_LU, A_P_OL,B_TEXTURE_HYPRES,unitcheck = TRUE) {
   
   # add visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = crop_code = . = NULL
+  osi_country = osi_indicator = id = crop_cat1 = crop_code = crop_name = . = NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -1298,7 +1299,7 @@ osi_c_phosphor_it <- function(B_LU, A_P_OL,B_TEXTURE_HYPRES,unitcheck = TRUE) {
 osi_c_phosphor_lv <- function(A_P_DL,B_TEXTURE_USDA, B_LU = NA_character_,unitcheck = TRUE) {
   
   # set visual bindings
-  osi_country = osi_indicator = id = crop_cat1 = crop_code = NULL
+  osi_country = osi_indicator = id = . = crop_cat1 = crop_code = NULL
 
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)
@@ -2011,7 +2012,7 @@ osi_c_phosphor_sl <- function(A_P_AL,B_LU = NA_character_,unitcheck = TRUE) {
 osi_c_phosphor_uk <- function(B_LU, A_SOM_LOI,A_P_OL,unitcheck = TRUE) {
   
   # set visual bindings
-  osi_country = . = crop_code = crop_cat1 = id = NULL
+  osi_country = . = crop_code = crop_cat1 = id = BD = crop_name =  NULL
   
   # crop data
   dt.crops <- as.data.table(euosi::osi_crops)

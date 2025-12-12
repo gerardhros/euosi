@@ -17,7 +17,7 @@ test_that("osi_carbon works", {
                A_CLAY_MI = rep(5,7),
                A_SAND_MI = rep(25,7),
                B_COUNTRY= c('NL','BE','DE','FI','SE','LV','SK')),
-    expected = c(0.957,0.267,0.957,0.957,0.957,NA,0.957),
+    expected = c(0.957,0.267,0.957,0.957,0.957,0.957,0.957),
     tolerance = 0.01
   )
   
@@ -28,7 +28,7 @@ test_that("osi_carbon works", {
                A_CLAY_MI = rep(5,7),
                A_SAND_MI = rep(25,7),
                B_COUNTRY= c('NL','BE','DE','FI','SE','LV','SK')),
-    expected = c(0.047,0.802,0.997,NA,1,NA,1),
+    expected = c(0.047,0.802,0.997,0.999,1,0.999,1),
     tolerance = 0.01
   )
 
