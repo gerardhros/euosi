@@ -319,7 +319,7 @@ osi_conv_phosphor <- function(element,
   
   # estimate P Morgan (mg P/L) using two PDFs
   # DOI: 10.1002/jpln.202100194
-  dt[is.na(A_P_MORGAN) & is.na(A_P_OL), A_P_MORGAN := 0.5 * ((1.368 - 0.173 * A_P_OL + 0.0649 * A_PH_CC) + exp(log(A_P_OL/5.96)/0.773))]
+  dt[is.na(A_P_MORGAN) & !is.na(A_P_OL), A_P_MORGAN := 0.5 * ((1.368 - 0.173 * A_P_OL + 0.0649 * A_PH_CC) + exp(log(A_P_OL/5.96)/0.773))]
   
   # to do: add relationship
   dt[is.na(A_P_CC) & !is.na(A_P_OL), A_P_CC := A_P_OL/10]
