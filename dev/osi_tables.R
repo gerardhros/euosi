@@ -78,6 +78,23 @@
                                    crop_cat1 = tolower(crop_cat1),
                                    crop_cat2 = tolower(crop_cat2),
                                    crop_n,crop_p,crop_k,crop_c,crop_s,crop_crumbleability)])
+  
+  # missing countries without IACS data
+  cols <- c('CH','EE','EL','FI','HU','IE','LV','LT','NO','SK','SL','PL','RO','UK')
+  cols <- cols[!cols %in% osi_crops2$osi_country]
+  
+  # duplicate Germany for all missing countries
+  osi_crops3 <- osi_crops2[osi_country=='DE']
+  osi_crops3 <- osi_crops3[rep(1:nrow(osi_crops3),length(cols))]
+  osi_crops3[,osi_country := rep(cols,each = osi_crops2[osi_country=='DE',.N])]
+  
+  # add to osi_crops
+  osi_crops <- rbind(osi_crops,
+                     osi_crops3[,.(osi_country,crop_code,
+                                   crop_name = tolower(crop_name),
+                                   crop_cat1 = tolower(crop_cat1),
+                                   crop_cat2 = tolower(crop_cat2),
+                                   crop_n,crop_p,crop_k,crop_c,crop_s,crop_crumbleability)])
   # save updated crop table
   usethis::use_data(osi_crops,overwrite = TRUE)
 
