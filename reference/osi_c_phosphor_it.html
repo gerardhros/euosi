@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">osi_c_phosphor_it</span><span class="op">(</span><span class="va">B_LU</span>, <span class="va">A_P_OL</span>, unitcheck <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">osi_c_phosphor_it</span><span class="op">(</span><span class="va">B_LU</span>, <span class="va">A_P_OL</span>, <span class="va">B_TEXTURE_HYPRES</span>, unitcheck <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -65,6 +65,10 @@
 <dd><p>(numeric) The P-content of the soil extracted with Olsen (mg/kg)</p></dd>
 
 
+<dt id="arg-b-texture-hypres">B_TEXTURE_HYPRES<a class="anchor" aria-label="anchor" href="#arg-b-texture-hypres"></a></dt>
+<dd><p>(character) The soil texture according to HYPRES classification system</p></dd>
+
+
 <dt id="arg-unitcheck">unitcheck<a class="anchor" aria-label="anchor" href="#arg-unitcheck"></a></dt>
 <dd><p>(character) Option to switch off unit checks (TRUE or FALSE)</p></dd>
 
@@ -76,10 +80,11 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">osi_c_phosphor_it</span><span class="op">(</span>B_LU <span class="op">=</span> <span class="st">'3301061299'</span>,A_P_OL <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4747443</span>
-<span class="r-in"><span><span class="fu">osi_c_phosphor_it</span><span class="op">(</span>B_LU <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'3301061299'</span>,<span class="st">'3301000000'</span><span class="op">)</span>,A_P_OL <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>,<span class="fl">5.5</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2380736 0.5496788</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">osi_c_phosphor_it</span><span class="op">(</span>B_LU <span class="op">=</span> <span class="st">'3301061299'</span>,A_P_OL <span class="op">=</span> <span class="fl">5</span>,B_TEXTURE_HYPRES <span class="op">=</span><span class="st">'C'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4449934</span>
+<span class="r-in"><span><span class="fu">osi_c_phosphor_it</span><span class="op">(</span>B_LU <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'3301061299'</span>,<span class="st">'3301000000'</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>A_P_OL <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>,<span class="fl">5.5</span><span class="op">)</span>,B_TEXTURE_HYPRES <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'C'</span>,<span class="st">'C'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2799838 0.4994822</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -92,7 +97,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

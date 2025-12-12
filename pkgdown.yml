@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.1.3
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   description_osi_crops_table: description_osi_crops_table.html
@@ -11,7 +11,7 @@ articles:
   eu_osi_for_potassium: eu_osi_for_potassium.html
   eu_osi_introduction: eu_osi_introduction.html
   eu_osi_variables: eu_osi_variables.html
-last_built: 2025-08-21T00:46Z
+last_built: 2025-12-12T09:32Z
 urls:
   reference: https://gerardhros.github.io/euosi/reference
   article: https://gerardhros.github.io/euosi/articles

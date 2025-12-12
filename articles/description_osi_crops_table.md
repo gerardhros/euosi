@@ -1,0 +1,41 @@
+# Description of osi_crops table
+
+This document shows the references of the data presented in the
+osi_crop_table
+
+## Description of the columns
+
+osi_country: crop_code: Crop code from national tables crop_name: Crop
+name from national tables crop_waterstress: crop_intensity: ? crop_eos:?
+crop_eos_residue: ? crop_category: ? crop_rotation: ?
+crop_crumbleability: crop_phosphate:Category to define phosphate soil
+threshold values crop_sealing: crop_n: category to define nitrogen soil
+threshold values crop_k: category to define potassium soil threshold
+values crop_measure: ? nf_clay: ? nf_sand.other: ? nf_sand.south: ?
+nf_loess: ? nf_peat: ? crop_name_scientific: Scientific name if
+available crop_season: ? crop_makkink: ?
+
+## Netherlands:
+
+## Belgium (Flanders):
+
+CROP CODES:
+
+<https://lv.vlaanderen.be/subsidies/verzamelaanvraag-en-bedrijfssubsidies/verzamelaanvraag-2015/tabellen>
+
+Downloaded: Tabel teeltcodes - combinaties VLM BO (April 2023); Data
+extracted: Omschrijving hoofdteelt / Object, Teeltcode, Groep
+
+## France:
+
+CROP CODES:
+
+<https://www.data.gouv.fr/fr/datasets/codes-cultures-pac/>
+
+Downloaded: n-cultures-2022.ods (April 2023); Data extracted:
+code_culture, nom_culture
+
+P AND K CATEGORIES: Comifer, 2019, La fertilisation P-K-Mg; Les bases
+due raisonnement, Page 18. If crops are not mentioned, we take them as
+moderate sensitive as done by Arvalis (communicated during meeting May
+2023)

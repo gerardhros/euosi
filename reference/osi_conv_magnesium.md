@@ -1,0 +1,82 @@
+# Estimate soil extractable magnesium (-)
+
+Estimate soil extractable magnesium (-)
+
+## Usage
+
+``` r
+osi_conv_magnesium(
+  element,
+  A_MG_AAA = NA_real_,
+  A_MG_AL = NA_real_,
+  A_MG_AN = NA_real_,
+  A_MG_CC = NA_real_,
+  A_MG_CO_PO = NA_real_,
+  A_MG_DL = NA_real_,
+  A_MG_KCL = NA_real_,
+  A_MG_M3 = NA_real_,
+  A_MG_NaAAA = NA_real_,
+  A_CEC_CO = NA_real_,
+  A_PH_CC = NA_real_
+)
+```
+
+## Arguments
+
+- element:
+
+  (character) the method requested to be calculated
+
+- A_MG_AAA:
+
+  (numeric) The exchangeable K-content of the soil measured via acid
+  ammonium acetate extraction
+
+- A_MG_AL:
+
+  (numeric) The exchangeable Mg-content of the soil measured via
+  Ammonium Lactate extraction (mg Mg/ kg)
+
+- A_MG_AN:
+
+  (numeric) The Mg-content of the soil extracted with ammonium nitrate
+  (mg Mg /kg)
+
+- A_MG_CC:
+
+  (numeric) The plant available content of Mg in the soil (mg Mg per kg)
+  extracted by 0.01M CaCl2
+
+- A_MG_CO_PO:
+
+  (numeric) The exchangeable Mg-content of the soil measured via Cohex
+  extracton, percentage occupation at CEC (%)
+
+- A_MG_DL:
+
+  (numeric) The exchangeable Mg-content of the soil measured via Double
+  Lactate extraction (mg Mg/ kg)
+
+- A_MG_KCL:
+
+  (numeric) The plant available potassium, extracted with KCL (mg per
+  kg)
+
+- A_MG_M3:
+
+  (numeric) The exchangeable Mg-content of the soil measured via Mehlich
+  3 extracton (mg Mg/ kg)
+
+- A_MG_NaAAA:
+
+  (numeric) The Mg-content of the soil extracted with Morgan's solution,
+  sodium acetate acetic acid (mg/ kg)
+
+- A_CEC_CO:
+
+  (numeric) The cation exchange capacity of the soil, measured via
+  Cohenx (mmol+ / kg)
+
+- A_PH_CC:
+
+  (numeric) The pH measured in cacl2

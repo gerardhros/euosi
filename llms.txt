@@ -1,0 +1,507 @@
+# euosi
+
+The Open Soil Index (OSI) is a method to evaluate the quality of soils
+of agricultural fields and the sustainability of the current
+agricultural practices. The OSI score is based on four main criteria:
+chemical, physical, biological and management. This package is the
+European implementation of the Dutch Open Bodem Index Calculator (OBIC).
+By providing results of a soil analysis and management info the ‘euosi’
+package can be use to calculate the scores, indicators and derivatives
+that are used to evaluate soil quality.
+
+The current R package is still in development. If you want to
+contribute, please contact the main developers Gerard Ros or Elise van
+Eynde.
+
+More information about the Open soil Index can be found at
+<https://pubs.acs.org/doi/10.1021/acs.est.2c04516#>.
+
+# Package index
+
+## All functions
+
+- [`cf_ind_importance()`](https://gerardhros.github.io/euosi/reference/cf_ind_importance.md)
+  : Helper function to weight and correct the risk and scores
+- [`oci_c_magnesium_cz()`](https://gerardhros.github.io/euosi/reference/oci_c_magnesium_cz.md)
+  : Calculate the magnesium availability index in Czech Republic
+- [`oci_c_magnesium_ee()`](https://gerardhros.github.io/euosi/reference/oci_c_magnesium_ee.md)
+  : Calculate the magnesium availability index in Estonia
+- [`osi_b_pmn()`](https://gerardhros.github.io/euosi/reference/osi_b_pmn.md)
+  : Calculate the index for the microbial biological activity (wrapper
+  function)
+- [`osi_b_pmn_eu()`](https://gerardhros.github.io/euosi/reference/osi_b_pmn_eu.md)
+  : Calculate the index for the microbial biological activity across the
+  EU
+- [`osi_b_pmn_nl()`](https://gerardhros.github.io/euosi/reference/osi_b_pmn_nl.md)
+  : Calculate the index for the microbial biological activity in the
+  Netherlands
+- [`osi_biodiversity()`](https://gerardhros.github.io/euosi/reference/osi_biodiversity.md)
+  : Calculate a biodiversity index
+- [`osi_c_boron()`](https://gerardhros.github.io/euosi/reference/osi_c_boron.md)
+  : Calculate the boron availability index (wrapper function)
+- [`osi_c_boron_ch()`](https://gerardhros.github.io/euosi/reference/osi_c_boron_ch.md)
+  : Calculate the boron availability index in Switzerland
+- [`osi_c_boron_de()`](https://gerardhros.github.io/euosi/reference/osi_c_boron_de.md)
+  : Calculate the boron availability index in Germany
+- [`osi_c_boron_fr()`](https://gerardhros.github.io/euosi/reference/osi_c_boron_fr.md)
+  : Calculate the B availability index for agricultural soils in France
+- [`osi_c_boron_ie()`](https://gerardhros.github.io/euosi/reference/osi_c_boron_ie.md)
+  : Calculate the boron availability index in Ireland
+- [`osi_c_boron_nl()`](https://gerardhros.github.io/euosi/reference/osi_c_boron_nl.md)
+  : Calculate the B availability index for agricultural soils in the
+  Netherlands
+- [`osi_c_boron_pt()`](https://gerardhros.github.io/euosi/reference/osi_c_boron_pt.md)
+  : Calculate the boron availability index in Portugal
+- [`osi_c_boron_se()`](https://gerardhros.github.io/euosi/reference/osi_c_boron_se.md)
+  : Calculate the boron availability index in Sweden
+- [`osi_c_boron_uk()`](https://gerardhros.github.io/euosi/reference/osi_c_boron_uk.md)
+  : Calculate the boron availability index in United Kingdom
+- [`osi_c_copper()`](https://gerardhros.github.io/euosi/reference/osi_c_copper.md)
+  : Calculate the copper availability index (wrapper function)
+- [`osi_c_copper_fr()`](https://gerardhros.github.io/euosi/reference/osi_c_copper_fr.md)
+  : Calculate the Cu availability index for France
+- [`osi_c_copper_ro()`](https://gerardhros.github.io/euosi/reference/osi_c_copper_ro.md)
+  : Calculate the Cu availability index for agricultural soils in
+  Romania
+- [`osi_c_magnesium()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium.md)
+  : Calculate the magnesium availability index (wrapper function)
+- [`osi_c_magnesium_at()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_at.md)
+  : Calculate the magnesium availability index in Austria
+- [`osi_c_magnesium_be()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_be.md)
+  : Calculate the magnesium availability index in Belgium
+- [`osi_c_magnesium_ch()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_ch.md)
+  : Calculate the magnesium availability index in Switzerland
+- [`osi_c_magnesium_de()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_de.md)
+  : Calculate the magnesium availability index in Germany
+- [`osi_c_magnesium_dk()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_dk.md)
+  : Calculate the magnesium availability index in Denmark
+- [`osi_c_magnesium_es()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_es.md)
+  : Calculate the magnesium availability index in Spain
+- [`osi_c_magnesium_fi()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_fi.md)
+  : Calculate the magnesium availability index in Finland
+- [`osi_c_magnesium_fr()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_fr.md)
+  : Calculate the Mg availability index for France
+- [`osi_c_magnesium_hu()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_hu.md)
+  : Calculate the magnesium availability index in Hungary
+- [`osi_c_magnesium_ie()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_ie.md)
+  : Calculate the magnesium availability index in Ireland
+- [`osi_c_magnesium_it()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_it.md)
+  : Calculate the magnesium availability index in Italy
+- [`osi_c_magnesium_lt()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_lt.md)
+  : Calculate the magnesium availability index in Lithuania
+- [`osi_c_magnesium_lv()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_lv.md)
+  : Calculate the magnesium availability index in Latvia
+- [`osi_c_magnesium_nl()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_nl.md)
+  : Calculate the capacity of soils to supply Magnesium
+- [`osi_c_magnesium_no()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_no.md)
+  : Calculate the magnesium availability index in Norway
+- [`osi_c_magnesium_pl()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_pl.md)
+  : Calculate the magnesium availability index in Poland
+- [`osi_c_magnesium_pt()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_pt.md)
+  : Calculate the magnesium availability index in Portugal
+- [`osi_c_magnesium_ro()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_ro.md)
+  : Calculate the magnesium availability index in Romenia
+- [`osi_c_magnesium_se()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_se.md)
+  : Calculate the magnesium availability index in Sweden
+- [`osi_c_magnesium_sk()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_sk.md)
+  : Calculate the magnesium availability index in Slovak Republic
+- [`osi_c_magnesium_sl()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_sl.md)
+  : Calculate the magnesium availability index in Slovenia
+- [`osi_c_magnesium_uk()`](https://gerardhros.github.io/euosi/reference/osi_c_magnesium_uk.md)
+  : Calculate the magnesium availability index in United Kingdom
+- [`osi_c_nitrogen()`](https://gerardhros.github.io/euosi/reference/osi_c_nitrogen.md)
+  : Calculate the soil nitrogen supplying capacity (wrapper function)
+- [`osi_c_nitrogen_be()`](https://gerardhros.github.io/euosi/reference/osi_c_nitrogen_be.md)
+  : Calculate the soil nitrogen supplying capacity in Belgium
+- [`osi_c_nitrogen_de()`](https://gerardhros.github.io/euosi/reference/osi_c_nitrogen_de.md)
+  : Calculate the soil nitrogen supplying capacity in Germany
+- [`osi_c_nitrogen_eu()`](https://gerardhros.github.io/euosi/reference/osi_c_nitrogen_eu.md)
+  : Calculate the soil nitrogen supplying capacity template in Europe
+- [`osi_c_nitrogen_fr()`](https://gerardhros.github.io/euosi/reference/osi_c_nitrogen_fr.md)
+  : Calculate the soil nitrogen supplying capacity in France
+- [`osi_c_nitrogen_nl()`](https://gerardhros.github.io/euosi/reference/osi_c_nitrogen_nl.md)
+  : Calculate the soil nitrogen supplying capacity in the Netherlands
+- [`osi_c_ph()`](https://gerardhros.github.io/euosi/reference/osi_c_ph.md)
+  : Calculate the pH index (wrapper function)
+- [`osi_c_ph_at()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_at.md)
+  : Calculate the pH index in Austria
+- [`osi_c_ph_be()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_be.md)
+  : Calculate the pH index for Belgium
+- [`osi_c_ph_ch()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_ch.md)
+  : Calculate the pH index for Switzerland
+- [`osi_c_ph_de()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_de.md)
+  : Calculate the pH index for soils in Germany
+- [`osi_c_ph_el()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_el.md)
+  : Calculate the pH index in Greece
+- [`osi_c_ph_eu()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_eu.md)
+  : Calculate the pH index in Europe when no country specific evaluation
+  is present
+- [`osi_c_ph_fi()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_fi.md)
+  : Calculate the pH index for Finland
+- [`osi_c_ph_fr()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_fr.md)
+  : Calculate the pH index for France
+- [`osi_c_ph_ie()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_ie.md)
+  : Calculate the pH index in Ireland
+- [`osi_c_ph_nl()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_nl.md)
+  : Calculate the distance for target for soil pH in view of the crop
+  production function
+- [`osi_c_ph_pt()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_pt.md)
+  : Calculate the pH index for Portugal
+- [`osi_c_ph_ro()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_ro.md)
+  : Calculate the pH index in Romenia
+- [`osi_c_ph_se()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_se.md)
+  : Calculate the pH index in Sweden
+- [`osi_c_ph_uk()`](https://gerardhros.github.io/euosi/reference/osi_c_ph_uk.md)
+  : Calculate the pH index in United Kingdom
+- [`osi_c_phosphor()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor.md)
+  : Calculate the phosphate availability index (wrapper function)
+- [`osi_c_phosphor_at()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_at.md)
+  : Calculate the phosphorus availability index in Austria
+- [`osi_c_phosphor_be()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_be.md)
+  : Calculate the phosphorus availability index in Belgium
+- [`osi_c_phosphor_ch()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_ch.md)
+  : Calculate the phosphorus availability index in Switzerland
+- [`osi_c_phosphor_cz()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_cz.md)
+  : Calculate the phosphorus availability index in Czech Republic
+- [`osi_c_phosphor_de()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_de.md)
+  : Calculate the phosphate availability index in Germany
+- [`osi_c_phosphor_dk()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_dk.md)
+  : Calculate the phosphate availability index in Denmark
+- [`osi_c_phosphor_ee()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_ee.md)
+  : Calculate the phosphorus availability index in Estonia
+- [`osi_c_phosphor_el()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_el.md)
+  : Calculate the phosphate availability index in Greece
+- [`osi_c_phosphor_es()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_es.md)
+  : Calculate the phosphate availability index in Spain
+- [`osi_c_phosphor_fi()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_fi.md)
+  : Calculate the phosphorus availability index in Finland
+- [`osi_c_phosphor_fr()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_fr.md)
+  : Calculate the phosphate availability index in France
+- [`osi_c_phosphor_hu()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_hu.md)
+  : Calculate the phosphorus availability index in Hungary
+- [`osi_c_phosphor_ie()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_ie.md)
+  : Calculate the phosphate availability index in Ireland
+- [`osi_c_phosphor_it()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_it.md)
+  : Calculate the phosphate availability index in Italy
+- [`osi_c_phosphor_lt()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_lt.md)
+  : Calculate the phosphorus availability index in Lithuania
+- [`osi_c_phosphor_lv()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_lv.md)
+  : Calculate the phosphorus availability index in Latvia
+- [`osi_c_phosphor_nl()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_nl.md)
+  : Calculate the phosphate availability index in the Netherlands
+- [`osi_c_phosphor_no()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_no.md)
+  : Calculate the phosphorus availability index in Norway
+- [`osi_c_phosphor_pl()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_pl.md)
+  : Calculate the phosphorus availability index in Poland
+- [`osi_c_phosphor_pt()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_pt.md)
+  : Calculate the phosphate availability index in Portugal
+- [`osi_c_phosphor_ro()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_ro.md)
+  : Calculate the phosphate availability index in Romenia
+- [`osi_c_phosphor_se()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_se.md)
+  : Calculate the phosphate availability index in Sweden
+- [`osi_c_phosphor_sk()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_sk.md)
+  : Calculate the phosphorus availability index in Slovak Republic
+- [`osi_c_phosphor_sl()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_sl.md)
+  : Calculate the phosphorus availability index in Slovenia
+- [`osi_c_phosphor_uk()`](https://gerardhros.github.io/euosi/reference/osi_c_phosphor_uk.md)
+  : Calculate the phosphate availability index in United Kingdom
+- [`osi_c_potassium()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium.md)
+  : Calculate the K availability index (wrapper function)
+- [`osi_c_potassium_at()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_at.md)
+  : Calculate the potassium availability index in Austria
+- [`osi_c_potassium_be()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_be.md)
+  : Calculate the potassium availability index in Belgium
+- [`osi_c_potassium_ch()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_ch.md)
+  : Calculate the potassium availability index in Switzerland
+- [`osi_c_potassium_cz()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_cz.md)
+  : Calculate the potassium availability index in Czech Republic
+- [`osi_c_potassium_de()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_de.md)
+  : Calculate the potassium availability index in Germany
+- [`osi_c_potassium_dk()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_dk.md)
+  : Calculate the potassium availability index in Denmark
+- [`osi_c_potassium_ee()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_ee.md)
+  : Calculate the potassium availability index in Estonia
+- [`osi_c_potassium_el()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_el.md)
+  : Calculate the potassium availability index in Greece
+- [`osi_c_potassium_es()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_es.md)
+  : Calculate the potassium availability index in Spain
+- [`osi_c_potassium_fi()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_fi.md)
+  : Calculate the potassium availability index in Finland
+- [`osi_c_potassium_fr()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_fr.md)
+  : Calculate the potassium availability index in France
+- [`osi_c_potassium_hu()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_hu.md)
+  : Calculate the potassium availability index in Hungary
+- [`osi_c_potassium_ie()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_ie.md)
+  : Calculate the potassium availability index in Ireland
+- [`osi_c_potassium_it()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_it.md)
+  : Calculate the potassium availability index in Italy
+- [`osi_c_potassium_lt()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_lt.md)
+  : Calculate the potassium availability index in Lithuania
+- [`osi_c_potassium_lv()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_lv.md)
+  : Calculate the potassium availability index in Latvia
+- [`osi_c_potassium_nl()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_nl.md)
+  : Calculate the K availability index for the Netherlands
+- [`osi_c_potassium_no()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_no.md)
+  : Calculate the potassium availability index in Norway
+- [`osi_c_potassium_pl()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_pl.md)
+  : Calculate the potassium availability index in Poland
+- [`osi_c_potassium_pt()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_pt.md)
+  : Calculate the potassium availability index in Portugal
+- [`osi_c_potassium_ro()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_ro.md)
+  : Calculate the potassium availability index in Romenia
+- [`osi_c_potassium_se()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_se.md)
+  : Calculate the potassium availability index in Sweden
+- [`osi_c_potassium_sk()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_sk.md)
+  : Calculate the potassium availability index in Slovak Republic
+- [`osi_c_potassium_sl()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_sl.md)
+  : Calculate the potassium availability index in Slovenia
+- [`osi_c_potassium_uk()`](https://gerardhros.github.io/euosi/reference/osi_c_potassium_uk.md)
+  : Calculate the potassium availability index in United Kingdom
+- [`osi_c_zinc()`](https://gerardhros.github.io/euosi/reference/osi_c_zinc.md)
+  : Calculate the Zinc availability index for agricultural soils
+  (wrapper function)
+- [`osi_c_zinc_de()`](https://gerardhros.github.io/euosi/reference/osi_c_zinc_de.md)
+  : Calculate the zinc availability index in Germany
+- [`osi_c_zinc_fr()`](https://gerardhros.github.io/euosi/reference/osi_c_zinc_fr.md)
+  : Calculate the Zn availability index for agricultural soils in France
+- [`osi_c_zinc_ie()`](https://gerardhros.github.io/euosi/reference/osi_c_zinc_ie.md)
+  : Calculate the Zn availability index for agricultural soils in
+  Ireland
+- [`osi_c_zinc_nl()`](https://gerardhros.github.io/euosi/reference/osi_c_zinc_nl.md)
+  : Calculate the Zn availability index for the Netherlands
+- [`osi_c_zinc_pt()`](https://gerardhros.github.io/euosi/reference/osi_c_zinc_pt.md)
+  : Calculate the Zn availability index for Portugal
+- [`osi_c_zinc_ro()`](https://gerardhros.github.io/euosi/reference/osi_c_zinc_ro.md)
+  : Calculate the Zn availability index for agricultural soils in
+  Romenia
+- [`osi_c_zinc_uk()`](https://gerardhros.github.io/euosi/reference/osi_c_zinc_uk.md)
+  : Calculate the Zn availability index for agricultural soils in United
+  Kingdom
+- [`osi_carbon()`](https://gerardhros.github.io/euosi/reference/osi_carbon.md)
+  : Calculate a carbon index
+- [`osi_checkvar()`](https://gerardhros.github.io/euosi/reference/osi_checkvar.md)
+  : Wrapper function to test euosi input variables for the correct input
+  values or options
+- [`osi_checkvarfun()`](https://gerardhros.github.io/euosi/reference/osi_checkvarfun.md)
+  : Test euosi input variables for the correct input values or options
+- [`osi_clim`](https://gerardhros.github.io/euosi/reference/osi_clim.md)
+  : Averaged climatic conditions per country
+- [`osi_conv_hwb()`](https://gerardhros.github.io/euosi/reference/osi_conv_hwb.md)
+  : Calculate A_B_HW
+- [`osi_conv_magnesium()`](https://gerardhros.github.io/euosi/reference/osi_conv_magnesium.md)
+  : Estimate soil extractable magnesium (-)
+- [`osi_conv_npmn()`](https://gerardhros.github.io/euosi/reference/osi_conv_npmn.md)
+  : Calculate potential mineralizable N for agricultural soils default
+  values are taken from global ISRIC database
+- [`osi_conv_ph()`](https://gerardhros.github.io/euosi/reference/osi_conv_ph.md)
+  : Estimate soil pH values (-)
+- [`osi_conv_phosphor()`](https://gerardhros.github.io/euosi/reference/osi_conv_phosphor.md)
+  : Estimate soil extractable phosphorus (-)
+- [`osi_conv_potassium()`](https://gerardhros.github.io/euosi/reference/osi_conv_potassium.md)
+  : Estimate soil extractable potassium (-)
+- [`osi_conv_som()`](https://gerardhros.github.io/euosi/reference/osi_conv_som.md)
+  : Estimate soil organic matter and nutrient values (-)
+- [`osi_conv_zinc()`](https://gerardhros.github.io/euosi/reference/osi_conv_zinc.md)
+  : Estimate soil extractable zinc (-)
+- [`osi_countries`](https://gerardhros.github.io/euosi/reference/osi_countries.md)
+  : Table with country codes used in the package
+- [`osi_crops`](https://gerardhros.github.io/euosi/reference/osi_crops.md)
+  : Linking table between crops and different functions in OBIC
+- [`osi_erosion()`](https://gerardhros.github.io/euosi/reference/osi_erosion.md)
+  : Calculate the water erosion index using RUSLE approach
+- [`osi_evaluate_logistic()`](https://gerardhros.github.io/euosi/reference/osi_evaluate_logistic.md)
+  : Evaluate a soil quality function using the general logistic function
+- [`osi_evaluate_logistic_gaus_down()`](https://gerardhros.github.io/euosi/reference/osi_evaluate_logistic_gaus_down.md)
+  : Evaluate logistically initially and gausian eventually
+- [`osi_evaluate_parabolic()`](https://gerardhros.github.io/euosi/reference/osi_evaluate_parabolic.md)
+  : Evaluate a soil quality function using a parabolic function
+- [`osi_farm`](https://gerardhros.github.io/euosi/reference/osi_farm.md)
+  : Example farm database to illustrate the functionality of the euosi
+  package
+- [`osi_field()`](https://gerardhros.github.io/euosi/reference/osi_field.md)
+  : Calculate the Open Soil Index score for a single field using input
+  from LUCAS
+- [`osi_field_dt()`](https://gerardhros.github.io/euosi/reference/osi_field_dt.md)
+  : Calculate the OSI score for one field using a data.table as input
+- [`osi_get_SOILTYPE_AGR()`](https://gerardhros.github.io/euosi/reference/osi_get_SOILTYPE_AGR.md)
+  : Estimate agricultural soil type classification used in the
+  Netherlands
+- [`osi_get_TEXTURE_BE()`](https://gerardhros.github.io/euosi/reference/osi_get_TEXTURE_BE.md)
+  : Estimate soil texture according to Belgium classification
+- [`osi_get_TEXTURE_GEPPA()`](https://gerardhros.github.io/euosi/reference/osi_get_TEXTURE_GEPPA.md)
+  : Estimate soil texture according to GEPPA classification
+- [`osi_get_TEXTURE_HYPRES()`](https://gerardhros.github.io/euosi/reference/osi_get_TEXTURE_HYPRES.md)
+  : Estimate soil texture according to HYPRES classification
+- [`osi_get_TEXTURE_USDA()`](https://gerardhros.github.io/euosi/reference/osi_get_TEXTURE_USDA.md)
+  : Estimate soil texture according to USDA classification
+- [`osi_gw_nleach()`](https://gerardhros.github.io/euosi/reference/osi_gw_nleach.md)
+  : Calculate the risk for nitrogen leaching in Europe
+- [`osi_gw_nleach_be()`](https://gerardhros.github.io/euosi/reference/osi_gw_nleach_be.md)
+  : Calculate the risk for nitrogen leaching in Belgium
+- [`osi_gw_nleach_eu()`](https://gerardhros.github.io/euosi/reference/osi_gw_nleach_eu.md)
+  : Calculate the risk for nitrogen leaching template for EU
+- [`osi_gw_nleach_fr()`](https://gerardhros.github.io/euosi/reference/osi_gw_nleach_fr.md)
+  : Calculate the risk for nitrogen leaching in France
+- [`osi_nut_k()`](https://gerardhros.github.io/euosi/reference/osi_nut_k.md)
+  : Calculate the K excess index (wrapper function)
+- [`osi_nut_k_at()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_at.md)
+  : Calculate the potassium excess index in Austria
+- [`osi_nut_k_be()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_be.md)
+  : Calculate the potassium excess index in Belgium
+- [`osi_nut_k_ch()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_ch.md)
+  : Calculate the potassium excess index in Switzerland
+- [`osi_nut_k_cz()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_cz.md)
+  : Calculate the potassium excess index in Czech Republic
+- [`osi_nut_k_de()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_de.md)
+  : Calculate the potassium excess index in Germany
+- [`osi_nut_k_dk()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_dk.md)
+  : Calculate the potassium excess index in Denmark
+- [`osi_nut_k_ee()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_ee.md)
+  : Calculate the potassium excess index in Estonia
+- [`osi_nut_k_el()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_el.md)
+  : Calculate the potassium excess index in Greece
+- [`osi_nut_k_es()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_es.md)
+  : Calculate the potassium excess index in Spain
+- [`osi_nut_k_fi()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_fi.md)
+  : Calculate the potassium excess index in Finland
+- [`osi_nut_k_fr()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_fr.md)
+  : Calculate the potassium excess index in France
+- [`osi_nut_k_hu()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_hu.md)
+  : Calculate the potassium excess index in Hungary
+- [`osi_nut_k_ie()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_ie.md)
+  : Calculate the potassium excess index in Ireland
+- [`osi_nut_k_it()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_it.md)
+  : Calculate the potassium excess index in Italy
+- [`osi_nut_k_lt()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_lt.md)
+  : Calculate the potassium excess index in Lithuania
+- [`osi_nut_k_lv()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_lv.md)
+  : Calculate the potassium excess index in Latvia
+- [`osi_nut_k_nl()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_nl.md)
+  : Calculate the K excess index for the Netherlands
+- [`osi_nut_k_no()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_no.md)
+  : Calculate the potassium excess index in Norway
+- [`osi_nut_k_pl()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_pl.md)
+  : Calculate the potassium excess index in Poland
+- [`osi_nut_k_pt()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_pt.md)
+  : Calculate the potassium excess index index in Portugal
+- [`osi_nut_k_ro()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_ro.md)
+  : Calculate thepotassium excess index in Romenia
+- [`osi_nut_k_se()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_se.md)
+  : Calculate the potassium excess index in Sweden
+- [`osi_nut_k_sk()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_sk.md)
+  : Calculate the potassium excess index in Slovak Republic
+- [`osi_nut_k_sl()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_sl.md)
+  : Calculate the potassium excess index in Slovenia
+- [`osi_nut_k_uk()`](https://gerardhros.github.io/euosi/reference/osi_nut_k_uk.md)
+  : Calculate the potassium excess index in United Kingdom
+- [`osi_nut_p()`](https://gerardhros.github.io/euosi/reference/osi_nut_p.md)
+  : Calculate the phoshporus excesss index (wrapper function)
+- [`osi_nut_p_at()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_at.md)
+  : Calculate the phosphorus excess index in Austria
+- [`osi_nut_p_be()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_be.md)
+  : Calculate the phosphorus excess index in Belgium
+- [`osi_nut_p_ch()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_ch.md)
+  : Calculate the phosphorus excess index in Switzerland
+- [`osi_nut_p_cz()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_cz.md)
+  : Calculate the phosphorus excess index in Czech Republic
+- [`osi_nut_p_de()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_de.md)
+  : Calculate the phosphate excess index in Germany
+- [`osi_nut_p_dk()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_dk.md)
+  : Calculate the phosphate excess index in Denmark
+- [`osi_nut_p_ee()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_ee.md)
+  : Calculate the phosphorus excess index in Estonia
+- [`osi_nut_p_el()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_el.md)
+  : Calculate the phosphate excess index in Greece
+- [`osi_nut_p_es()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_es.md)
+  : Calculate the phosphate excess index in Spain
+- [`osi_nut_p_fi()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_fi.md)
+  : Calculate the phosphorus excess index in Finland
+- [`osi_nut_p_fr()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_fr.md)
+  : Calculate the phosphorus excess index in France
+- [`osi_nut_p_hu()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_hu.md)
+  : Calculate the phosphorus excess index in Hungary
+- [`osi_nut_p_ie()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_ie.md)
+  : Calculate the phosphate excess index in Ireland
+- [`osi_nut_p_it()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_it.md)
+  : Calculate the phosphate excess index in Italy
+- [`osi_nut_p_lt()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_lt.md)
+  : Calculate the phosphorus excess index in Lithuania
+- [`osi_nut_p_lv()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_lv.md)
+  : Calculate the phosphorus excess index in Latvia
+- [`osi_nut_p_nl()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_nl.md)
+  : Calculate the phosphate excess index in the Netherlands
+- [`osi_nut_p_no()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_no.md)
+  : Calculate the phosphorus excess index in Norway
+- [`osi_nut_p_pl()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_pl.md)
+  : Calculate the phosphorus excess index in Poland
+- [`osi_nut_p_pt()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_pt.md)
+  : Calculate the phosphate excess index in Portugal
+- [`osi_nut_p_ro()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_ro.md)
+  : Calculate the phosphate excess index index in Romenia
+- [`osi_nut_p_se()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_se.md)
+  : Calculate the phosphate excess index in Sweden
+- [`osi_nut_p_sk()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_sk.md)
+  : Calculate the phosphorus excess index in Slovak Republic
+- [`osi_nut_p_sl()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_sl.md)
+  : Calculate the phosphorus excess index in Slovenia
+- [`osi_nut_p_uk()`](https://gerardhros.github.io/euosi/reference/osi_nut_p_uk.md)
+  : Calculate the phosphate excess index in United Kingdom
+- [`osi_p_crumbleability()`](https://gerardhros.github.io/euosi/reference/osi_p_crumbleability.md)
+  : Calculate crumbleability index in the topsoil for all EU countries
+- [`osi_p_density()`](https://gerardhros.github.io/euosi/reference/osi_p_density.md)
+  : Calculate the bulk density
+- [`osi_p_paw()`](https://gerardhros.github.io/euosi/reference/osi_p_paw.md)
+  : Calculate indicator for plant available water
+- [`osi_p_wef()`](https://gerardhros.github.io/euosi/reference/osi_p_wef.md)
+  : Calculate indicator for wind erodibility
+- [`osi_p_whc()`](https://gerardhros.github.io/euosi/reference/osi_p_whc.md)
+  : Calculate indicators for water holding capacity in the topsoil
+- [`osi_parms`](https://gerardhros.github.io/euosi/reference/osi_parms.md)
+  : Table with OSI parameters being used in the package
+- [`osi_plot_shi()`](https://gerardhros.github.io/euosi/reference/osi_plot_shi.md)
+  : This function calculates the phosphate availability.
+- [`osi_soiltype`](https://gerardhros.github.io/euosi/reference/osi_soiltype.md)
+  : Table with country specific soil types being used to evaluate soil
+  quality
+- [`osi_thresholds`](https://gerardhros.github.io/euosi/reference/osi_thresholds.md)
+  : Table with country specific threshold values to evaluate
+  soilquality' This table contains the evaluation coefficients to
+  convert a soil function value into a soil quality score ranging from 0
+  to 1. The scoring function migh vary per country, indicator and
+  subcatogries defined by variable categories of soil and crop types.
+- [`osi_vars_input`](https://gerardhros.github.io/euosi/reference/osi_vars_input.md)
+  : A dataset with all input variables required by the euosi package
+- [`osi_vars_output`](https://gerardhros.github.io/euosi/reference/osi_vars_output.md)
+  : A dataset with all output variables generated by the euosi package
+- [`pF_curve()`](https://gerardhros.github.io/euosi/reference/pF_curve.md)
+  : Water retention curve
+- [`pFpara_class()`](https://gerardhros.github.io/euosi/reference/pFpara_class.md)
+  : Parameter estimation based on class of Staringreeks (Tabel 3, Wosten
+  2001)
+- [`pFpara_ptf_Wosten1999()`](https://gerardhros.github.io/euosi/reference/pFpara_ptf_Wosten1999.md)
+  : Estimate water retention curve parameters based on Wosten 1999
+- [`pFpara_ptf_Wosten2001()`](https://gerardhros.github.io/euosi/reference/pFpara_ptf_Wosten2001.md)
+  : Estimate water retention curve parameters based on Wosten 2001
+
+# Articles
+
+### All vignettes
+
+- [Description of osi_crops
+  table](https://gerardhros.github.io/euosi/articles/description_osi_crops_table.md):
+- [EU OSI
+  aggregation](https://gerardhros.github.io/euosi/articles/eu_osi_aggregation.md):
+- [EU OSI soil
+  acidity](https://gerardhros.github.io/euosi/articles/eu_osi_for_acidity.md):
+- [EU OSI for
+  magnesium](https://gerardhros.github.io/euosi/articles/eu_osi_for_magnesium.md):
+- [EU OSI for
+  nitrogen](https://gerardhros.github.io/euosi/articles/eu_osi_for_nitrogen.md):
+- [EU OSI for
+  phosphor](https://gerardhros.github.io/euosi/articles/eu_osi_for_phosphor.md):
+- [EU OSI for
+  potassium](https://gerardhros.github.io/euosi/articles/eu_osi_for_potassium.md):
+- [EU OSI
+  introduction](https://gerardhros.github.io/euosi/articles/eu_osi_introduction.md):
+- [EU OSI
+  variables](https://gerardhros.github.io/euosi/articles/eu_osi_variables.md):

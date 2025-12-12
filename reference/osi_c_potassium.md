@@ -1,0 +1,144 @@
+# Calculate the K availability index (wrapper function)
+
+This function calculates the potassium availability for all European
+countries (if available).
+
+## Usage
+
+``` r
+osi_c_potassium(
+  B_LU,
+  B_SOILTYPE_AGR = NA_character_,
+  B_AER_FR = NA_character_,
+  A_SOM_LOI = NA,
+  A_C_OF = NA,
+  A_CLAY_MI = NA,
+  A_SAND_MI = NA,
+  A_PH_CC = NA,
+  A_PH_WA = NA,
+  A_CACO3_IF = NA,
+  A_CEC_CO = NA,
+  A_K_AAA = NA,
+  A_K_AL = NA,
+  A_K_AN = NA,
+  A_K_CAL = NA,
+  A_K_CC = NA,
+  A_K_CO_PO = NA,
+  A_K_DL = NA,
+  A_K_M3 = NA,
+  A_K_NaAAA = NA,
+  A_K_WA = NA,
+  B_COUNTRY,
+  pwarning = FALSE
+)
+```
+
+## Arguments
+
+- B_LU:
+
+  (numeric) The crop code
+
+- B_SOILTYPE_AGR:
+
+  (character) The agricultural type of soil
+
+- B_AER_FR:
+
+  (character) An agroeconomic region in France
+
+- A_SOM_LOI:
+
+  (numeric) The organic matter content of the soil (%)
+
+- A_C_OF:
+
+  (numeric) The organic carbon content in the soil (g C / kg)
+
+- A_CLAY_MI:
+
+  (numeric) The clay content of the soil (%)
+
+- A_SAND_MI:
+
+  (numeric) The sand content of the soil (%)
+
+- A_PH_CC:
+
+  (numeric) The acidity of the soil, measured in 0.01M CaCl2 (-)
+
+- A_PH_WA:
+
+  (numeric) The acidity of the soil, measured in water (-)
+
+- A_CACO3_IF:
+
+  (numeric) the percentage of CaCO3 (%)
+
+- A_CEC_CO:
+
+  (numeric) The cation exchange capacity of the soil (mmol+ / kg),
+  analyzed via Cobalt-hexamine extraction
+
+- A_K_AAA:
+
+  (numeric) The exchangeable K-content of the soil measured via ammonium
+  acetate extraction
+
+- A_K_AL:
+
+  (numeric) The exchangeable K-content of the soil measured via Ammonium
+  Lactate extracton (mg K/ kg)
+
+- A_K_AN:
+
+  (numeric) The K-content of the soil extracted with ammonium nitrate
+  (mg K /kg)
+
+- A_K_CAL:
+
+  (numeric) The exchangeable K-content of the soil measured via Calcium
+  Ammonium Lactate (mg K/ kg)
+
+- A_K_CC:
+
+  (numeric) The plant available potassium, extracted with 0.01M CaCl2
+  (mg / kg),
+
+- A_K_CO_PO:
+
+  (numeric) The occupation of the CEC with potassium (%)
+
+- A_K_DL:
+
+  (numeric) The exchangeable K-content of the soil measured via Double
+  Lactate extraction (mg K/ kg)
+
+- A_K_M3:
+
+  (numeric) The exchangeable K-content of the soil measured via Mehlich
+  3 extracton (mg K/ kg)
+
+- A_K_NaAAA:
+
+  (numeric) The K-content of the soil extracted with Morgan's solution,
+  sodium acetate acetic acid (mg/ kg)
+
+- A_K_WA:
+
+  (numeric) The exchangeable K-content of the soil measured via water
+  extracton (mg K/ kg)
+
+- B_COUNTRY:
+
+  (character) The country code
+
+- pwarning:
+
+  (boolean) Option to print a warning rather than error (stop) message
+  for input checks (TRUE or FALSE)
+
+## Value
+
+The capacity of the soil to supply and buffer potassium, evaluated given
+an optimum threshold for yield. A numeric value.

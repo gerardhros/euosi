@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">euosi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,7 @@
                         <h4 data-toc-skip class="author">Gerard Ros
 &amp; Elise van Eynde</h4>
             
-            <h4 data-toc-skip class="date">2025-08-21</h4>
+            <h4 data-toc-skip class="date">2025-12-12</h4>
       
 
       <div class="d-none name"><code>eu_osi_for_phosphor.Rmd</code></div>
@@ -213,7 +213,7 @@ threshold is around 60 mg P/kg and actually not different between both
 land uses. P deficiency symptoms start to occur when the P-CAL becomes
 lower than 30 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20AT1-1.png" alt="Evaluation P-indicator for Austria." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20AT1-1.png" class="r-plt" alt="Evaluation P-indicator for Austria." width="75%"><p class="caption">
 Evaluation P-indicator for Austria.
 </p>
 </div>
@@ -243,14 +243,14 @@ and a grassland (code = 60) for a single soil with P-content of 25 mg P
 <code class="sourceCode R"><span><span class="co"># show an example for sugar beet crop (code = 91) and grassland (code = 60)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/osi_c_phosphor_be.html">osi_c_phosphor_be</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="st">'91'</span>, A_P_AL <span class="op">=</span> <span class="fl">250</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="../reference/osi_c_phosphor_be.html">osi_c_phosphor_be</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="st">'60'</span>, A_P_AL <span class="op">=</span> <span class="fl">250</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.9563046 0.9978318</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.9999987 0.9871195</span></span></code></pre>
 <p>Below the same example but then visualised for a series of soils with
 a P-AL value ranging from 0 to 300 mg P per kg (equal to 0 to 30 mg
 P/100g) for two crops: grassland and sugar beet. From this example one
 can see that the soil health index score varies from very low to very
 high, depending on the content of P-AL (mg P/kg).</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20BE2-1.png" alt="Evaluation P-indicator for the Belgium." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20BE2-1.png" class="r-plt" alt="Evaluation P-indicator for the Belgium." width="75%"><p class="caption">
 Evaluation P-indicator for the Belgium.
 </p>
 </div>
@@ -276,7 +276,7 @@ relation to variation in P-AAA. The optimum soil P threshold value for
 sustainable crop production is around 75 mg P/ kg, and the soil index
 decreases to zero when P-AAA values decreases down to 20 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20CH1-1.png" alt="Evaluation P-indicator for Switzerland." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20CH1-1.png" class="r-plt" alt="Evaluation P-indicator for Switzerland." width="75%"><p class="caption">
 Evaluation P-indicator for Switzerland.
 </p>
 </div>
@@ -305,7 +305,7 @@ value for sustainable crop production is around 125 mg P/ kg, and the
 soil index rapidly decreases to zero when P Mehlich-III values decreases
 down to 50 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20CZ1-1.png" alt="Evaluation P-indicator for Czech Republic." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20CZ1-1.png" class="r-plt" alt="Evaluation P-indicator for Czech Republic." width="75%"><p class="caption">
 Evaluation P-indicator for Czech Republic.
 </p>
 </div>
@@ -342,7 +342,7 @@ around 100 mg P/kg for mineral soils. The soil index decreases when P-AL
 values decreases down to 20 mg P/kg (peat soils) or 50 mg P/kg (mineral
 soils).</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20DE1-1.png" alt="Evaluation P-indicator for Germany." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20DE1-1.png" class="r-plt" alt="Evaluation P-indicator for Germany." width="75%"><p class="caption">
 Evaluation P-indicator for Germany.
 </p>
 </div>
@@ -371,7 +371,7 @@ threshold value for sustainable crop production is around 50 mg P/ kg
 for all soils. The soil index decreases when P-Olsen values decreases
 down to 30 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20DK1-1.png" alt="Evaluation P-indicator for the Denmark." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20DK1-1.png" class="r-plt" alt="Evaluation P-indicator for the Denmark." width="75%"><p class="caption">
 Evaluation P-indicator for the Denmark.
 </p>
 </div>
@@ -405,7 +405,7 @@ soil types (low and high in soil organic matter), and the soil index
 rapidly decreases when P Mehlich-III values decreases down to 5 (humus
 rich soils) or 25 (humus poor soils) mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20EE1-1.png" alt="Evaluation P-indicator for Estonia." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20EE1-1.png" class="r-plt" alt="Evaluation P-indicator for Estonia." width="75%"><p class="caption">
 Evaluation P-indicator for Estonia.
 </p>
 </div>
@@ -434,7 +434,7 @@ sustainable crop production is around 15 mg P/ kg for both land uses.
 Phosphorus deficiency occurs when the P-OL value decreases below around
 8 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20EL1-1.png" alt="Evaluation P-indicator for Greece." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20EL1-1.png" class="r-plt" alt="Evaluation P-indicator for Greece." width="75%"><p class="caption">
 Evaluation P-indicator for Greece.
 </p>
 </div>
@@ -466,7 +466,7 @@ types. The soil index decreases more stronger on the sandy soils, in
 particular when P-Olsen values decreases down to 18 mg P/kg. For the
 clay soil the P availability remains quite high down to 5 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20ES1-1.png" alt="Evaluation P-indicator for Spain." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20ES1-1.png" class="r-plt" alt="Evaluation P-indicator for Spain." width="75%"><p class="caption">
 Evaluation P-indicator for Spain.
 </p>
 </div>
@@ -499,7 +499,7 @@ value for sustainable crop production is around 25 mg P/ kg for the four
 soil types evaluated (clay, sand,loam and peat), and the soil index
 decreases when P-AAA values decreases down to 5 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20FI1-1.png" alt="Evaluation P-indicator for Finland." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20FI1-1.png" class="r-plt" alt="Evaluation P-indicator for Finland." width="75%"><p class="caption">
 Evaluation P-indicator for Finland.
 </p>
 </div>
@@ -530,14 +530,9 @@ original crop code and IACS codes are present in
 <p>The soil pH is used to distinghuish between calcareous and
 non-calcareous soils. If not given, then the function assumes the soil
 is not calcareous.</p>
-<p>If one likes to adress the regional differences, it is also possible
-to add the agroeconomic region in France (argument
-<code>B_AER_FR</code>) and the agricultural soil type (argument
-<code>B_SOILTYPE_AGR</code>). These two arguments are optional. There
-are 40 soil types that can be selected (see below for the exact types
-possible).</p>
 <table class="table">
-<caption>Soil types used for P soil health assessment.</caption>
+<caption>Soil types used for P soil health assessment
+(Deprecated).</caption>
 <colgroup>
 <col width="25%">
 <col width="37%">
@@ -677,20 +672,14 @@ illustrated below for potato (crop code PTC) and permanent grassland
 <code class="sourceCode R"><span><span class="co"># show an example for soil P asssesment for potato crop (code = PTC) and grassland (code = PRL)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/osi_c_phosphor_fr.html">osi_c_phosphor_fr</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="st">'PTC'</span>, A_P_OL <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="../reference/osi_c_phosphor_fr.html">osi_c_phosphor_fr</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="st">'PRL'</span>, A_P_OL <span class="op">=</span> <span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.9906090 0.9993112</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># show an example with regional information available</span></span>
-<span><span class="fu"><a href="../reference/osi_c_phosphor_fr.html">osi_c_phosphor_fr</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="st">'SOJ'</span>, A_P_OL <span class="op">=</span> <span class="fl">45</span>, </span>
-<span>                  B_SOILTYPE_AGR <span class="op">=</span> <span class="st">'limons battants'</span>, </span>
-<span>                  B_AER_FR <span class="op">=</span> <span class="st">'nord-picardie'</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.9984474</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.2517881 0.3999479</span></span></code></pre>
 <p>Below the same example but then visualised for a series of soils with
 a P-Olsen value ranging from 0 to 30 mg P per kg (equal to 0 to 69 mg
 P2O5 /kg) for two crops: grassland and potato. From this example one can
 see that the soil health index score varies from very low to very high,
 depending on the content of P-Olsen (mg P/kg).</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20FR2-1.png" alt="Evaluation P-indicator for France." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20FR2-1.png" class="r-plt" alt="Evaluation P-indicator for France." width="75%"><p class="caption">
 Evaluation P-indicator for France.
 </p>
 </div>
@@ -728,7 +717,7 @@ sustainable crop production is around 120 mg P/ kg for both soil types
 (peat and mineral soils), and the soil index rapidly decreases when P-AL
 values decreases down to 60 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20HU1-1.png" alt="Evaluation P-indicator for Hungary." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20HU1-1.png" class="r-plt" alt="Evaluation P-indicator for Hungary." width="75%"><p class="caption">
 Evaluation P-indicator for Hungary.
 </p>
 </div>
@@ -758,7 +747,7 @@ sustainable crop production is around 15 mg P/ kg for both land uses.
 Phosphorus deficiency occurs when the P-OL value decreases below around
 7.5 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20IE1-1.png" alt="Evaluation P-indicator for Ireland." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20IE1-1.png" class="r-plt" alt="Evaluation P-indicator for Ireland." width="75%"><p class="caption">
 Evaluation P-indicator for Ireland.
 </p>
 </div>
@@ -787,7 +776,7 @@ sustainable crop production is around 10-15 mg P/ kg for both land uses.
 Phosphorus deficiency occurs when the P-OL value decreases below around
 5 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20IT1-1.png" alt="Evaluation P-indicator for Italy." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20IT1-1.png" class="r-plt" alt="Evaluation P-indicator for Italy." width="75%"><p class="caption">
 Evaluation P-indicator for Italy.
 </p>
 </div>
@@ -821,7 +810,7 @@ sustainable crop production is around 60 mg P/ kg for the three soil
 types evaluated (clay, sand and loam), and the soil index rapidly
 decreases when P-DL values decreases down to 10-20 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20LV1-1.png" alt="Evaluation P-indicator for Latvia." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20LV1-1.png" class="r-plt" alt="Evaluation P-indicator for Latvia." width="75%"><p class="caption">
 Evaluation P-indicator for Latvia.
 </p>
 </div>
@@ -854,7 +843,7 @@ sustainable crop production is around 75 mg P/ kg for both soil types
 (peat and mineral soils), and the soil index rapidly decreases when P-AL
 values decreases down to 30 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20LT1-1.png" alt="Evaluation P-indicator for Lithuania." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20LT1-1.png" class="r-plt" alt="Evaluation P-indicator for Lithuania." width="75%"><p class="caption">
 Evaluation P-indicator for Lithuania.
 </p>
 </div>
@@ -891,7 +880,7 @@ context).</li>
 </ul>
 <p>An example is illustrated below for a maize crop (crop code 265) and
 a single soil is:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># show an example for maize crop</span></span>
 <span><span class="fu"><a href="../reference/osi_c_phosphor_nl.html">osi_c_phosphor_nl</a></span><span class="op">(</span>B_LU <span class="op">=</span> <span class="fl">265</span>, A_P_AL <span class="op">=</span> <span class="fl">197</span>, A_P_CC <span class="op">=</span> <span class="fl">2.5</span>,A_P_WA<span class="op">=</span><span class="fl">85</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0.9067799</span></span></code></pre>
@@ -902,7 +891,7 @@ and maize. From this example one can see that the soil health index
 score varies from very low to very high, depending on the content of
 P-CaCl2.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20NL2-1.png" alt="Evaluation P-indicator for the Netherlands." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20NL2-1.png" class="r-plt" alt="Evaluation P-indicator for the Netherlands." width="75%"><p class="caption">
 Evaluation P-indicator for the Netherlands.
 </p>
 </div>
@@ -932,7 +921,7 @@ relation to variation in P-AL. The optimum soil P threshold value for
 sustainable crop production is around 50 mg P/ kg. Phosphorus deficiency
 occurs when the P-OL value decreases below around 25 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20NO1-1.png" alt="Evaluation P-indicator for Norway." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20NO1-1.png" class="r-plt" alt="Evaluation P-indicator for Norway." width="75%"><p class="caption">
 Evaluation P-indicator for Norway.
 </p>
 </div>
@@ -960,7 +949,7 @@ relation to variation in P-DL. The optimum soil P threshold value for
 sustainable crop production is around 65 mg P/ kg, and the soil index
 decreases when P-DL values decreases down to 30 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20PL1-1.png" alt="Evaluation P-indicator for Poland." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20PL1-1.png" class="r-plt" alt="Evaluation P-indicator for Poland." width="75%"><p class="caption">
 Evaluation P-indicator for Poland.
 </p>
 </div>
@@ -988,7 +977,7 @@ sustainable crop production is around 18 mg P/ kg, and the soil index
 decreases when P-OL values decreases down to 10 mg P/kg. There is no
 differentiation among soil types of land uses.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20PT1-1.png" alt="Evaluation P-indicator for Portugal." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20PT1-1.png" class="r-plt" alt="Evaluation P-indicator for Portugal." width="75%"><p class="caption">
 Evaluation P-indicator for Portugal.
 </p>
 </div>
@@ -1016,7 +1005,7 @@ sustainable crop production is around 35 mg P/ kg, and the soil index
 decreases when P-AL values decreases down to 10 mg P/kg. There is no
 differentiation among soil types of land uses.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20RO1-1.png" alt="Evaluation P-indicator for Romenia." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20RO1-1.png" class="r-plt" alt="Evaluation P-indicator for Romenia." width="75%"><p class="caption">
 Evaluation P-indicator for Romenia.
 </p>
 </div>
@@ -1046,7 +1035,7 @@ cereals. Phosphorus deficiency occurs when the P-AL values decrease
 below around 30 mg P/kg for potato and below 10 mg/kg for cereals. The
 response for oil crop is in between the other two crops.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20SE1-1.png" alt="Evaluation P-indicator for Sweden." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20SE1-1.png" class="r-plt" alt="Evaluation P-indicator for Sweden." width="75%"><p class="caption">
 Evaluation P-indicator for Sweden.
 </p>
 </div>
@@ -1081,7 +1070,7 @@ types evaluated (clay, sand and loam), and the soil index rapidly
 decreases when P-M3 values decreases down to 50-70 mg P/kg, with the
 quickest decline for the sandy soils (low in buffering capacity).</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20SK1-1.png" alt="Evaluation P-indicator for Slovak Republic." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20SK1-1.png" class="r-plt" alt="Evaluation P-indicator for Slovak Republic." width="75%"><p class="caption">
 Evaluation P-indicator for Slovak Republic.
 </p>
 </div>
@@ -1112,7 +1101,7 @@ sustainable crop production is around 80 mg P/ kg for the three soil
 types evaluated (clay, sand and loam), and the soil index rapidly
 decreases when P-AL values decreases down to 30 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20SL1-1.png" alt="Evaluation P-indicator for Slovenia." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20SL1-1.png" class="r-plt" alt="Evaluation P-indicator for Slovenia." width="75%"><p class="caption">
 Evaluation P-indicator for Slovenia.
 </p>
 </div>
@@ -1145,7 +1134,7 @@ sustainable crop production is around 15 mg P/ kg for grassland and
 around 25 for potato crop. Phosphorus deficiency occurs when the P-OL
 value decreases below around 7.5 to 15 mg P/kg.</p>
 <div class="figure">
-<img src="eu_osi_for_phosphor_files/figure-html/example%20UK1-1.png" alt="Evaluation P-indicator for the UK." width="75%"><p class="caption">
+<img src="eu_osi_for_phosphor_files/figure-html/example%20UK1-1.png" class="r-plt" alt="Evaluation P-indicator for the UK." width="75%"><p class="caption">
 Evaluation P-indicator for the UK.
 </p>
 </div>
@@ -1161,7 +1150,7 @@ Evaluation P-indicator for the UK.
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
